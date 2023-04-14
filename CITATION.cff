@@ -1,0 +1,42 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: ConStrain
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Xuechen
+    family-names: Lei
+    email: xuechen.lei@pnnl.gov
+    affiliation: Pacific Northwest National Laboratory
+    orcid: 'https://orcid.org/0000-0003-3310-9750'
+  - given-names: Jeremy
+    family-names: Lerond
+    email: jeremy.lerond@pnnl.gov
+    affiliation: Pacific Northwest National Laboratory
+    orcid: 'https://orcid.org/0000-0002-1630-6886'
+  - given-names: Yun Joon
+    family-names: Jung
+    orcid: 'https://orcid.org/0000-0003-1311-8932'
+    affiliation: Pacific Northwest National Laboratory
+    email: yunjoon.jung@pnnl.gov
+  - given-names: Yan
+    family-names: Chen
+    email: yan.chen@pnnl.gov
+    affiliation: Pacific Northwest National Laboratory
+    orcid: 'https://orcid.org/0000-0002-2988-9136'
+identifiers:
+  - type: url
+    value: 'https://github.com/github/ConStrain'
+repository-code: 'https://github.com/github/ConStrain'
+url: 'https://pnnl.github.io/ConStrain/'
+abstract: >-
+  Control Strainer (ConStrain): A Data-driven Control
+  Performance Verification Framework (formally known as
+  ANIMATE)
+commit: a8b74df506f141d7840403a06a255959157bcc1e
+version: 0.1.0
+date-released: '2023-03-31'
