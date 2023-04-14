@@ -2,7 +2,7 @@
 
 <!-- # ANIMATE: a dAtadriveN buildIng perforMance verificATion framEwork -->
 
-Unit tests status: ![Tests](https://github.com/pnnl/ANIMATE/actions/workflows/unit_tests.yml/badge.svg)
+Unit tests status: ![Tests](https://github.com/pnnl/ConStrain/actions/workflows/unit_tests.yml/badge.svg)
 
 # Background and Motivation
 
@@ -18,7 +18,7 @@ While the development of ConStrain was motivated by use cases with building ener
 
 ![Overview of ConStrain](constrain_overview.png)
 
-# Current Version of _ANIMATE_?
+# Current Version of _ConStrain_?
 
 The current version of ANIMATE includes the framework implementation, a preliminary development and implementation of the verification library (based on ASHRAE 90.1-2016 and GPC36 requirement with a focus on control), and the test cases of verification algorithms using prototype building models. The current list of implemented verification algorithms includes supply air temperature control, economizer high limit, integrated economizer control, zone temperature control (dead band), zone temperature control (setback), hot water temperature reset, chilled water temperature reset, etc.
 
@@ -29,7 +29,7 @@ See the Publications section for more information and example of uses of the fra
 ## Get Started
 
 - Demos are located in `demo/`
-- Visit [API documentation page](https://pnnl.github.io/ANIMATE/) to learn about how to use the ConStrain API.
+- Visit [API documentation page](https://pnnl.github.io/ConStrain/) to learn about how to use the ConStrain API.
 
 <!-- ## Note
 
@@ -50,7 +50,7 @@ See the Publications section for more information and example of uses of the fra
 | test_cases/                                  | verification test cases input and related files                                      |
 | test_cases/verif_mtd_pp/create_test_cases.py | verification case instantiator                                                       |
 | demo/verification_approach_demo              | 3 different verification methods demo outputs                                        |
-| demo/library_item_demo                       | verification cases demo run in Ipython Notebook with associated case definition json | -->
+| demo/library_item_demo                       | verification cases demo run in Ipython Notebook with associated case definition json | --> |
 
 ## License
 
@@ -62,4 +62,4 @@ See the Publications section for more information and example of uses of the fra
 
 If you wish to cite ConStrain in academic work please cite the above publication.
 
-<!-- Chen Y, Lei X, Lerond J. 2021. _ANIMATE_. https://github.com/pnnl/ANIMATE. -->
+<!-- Pending DOI for new ConStrain -->
