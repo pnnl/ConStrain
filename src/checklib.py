@@ -227,7 +227,7 @@ class CheckLibBase(ABC):
         # Looking for day with most balanced pass/fail samples
         for one_day in self.daterange(date(2000, 1, 1), date(2001, 1, 1)):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
-            daydf = self.df[daystr]
+            daydf = self.df.loc[daystr]
             day = self.result[daystr]
             if (trueday is None) and len(day[day == True]) > 0:
                 trueday = day
