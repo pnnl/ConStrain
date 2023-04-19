@@ -37,6 +37,7 @@ abstract: >-
   Control Strainer (ConStrain): A Data-driven Control
   Performance Verification Framework (formally known as
   ANIMATE)
+license: BSD-2-Clause
 commit: a8b74df506f141d7840403a06a255959157bcc1e
 version: 0.1.0
 date-released: '2023-03-31'
