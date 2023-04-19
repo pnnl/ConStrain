@@ -33,7 +33,7 @@ class SupplyAirTempReset(RuleCheckBase):
         """over write method to select day for day plot"""
         for one_day in self.daterange(date(2000, 1, 1), date(2001, 1, 1)):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
-            daydf = self.df[daystr]
+            daydf = self.df.loc[daystr]
             day = self.result[daystr]
             if daydf["T_sa_set"].max() - daydf["T_sa_set"].min() > 0:
                 return day, daydf
