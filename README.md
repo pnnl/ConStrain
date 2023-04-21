@@ -6,21 +6,31 @@ Unit tests status: ![Tests](https://github.com/pnnl/ConStrain/actions/workflows/
 
 # Background and Motivation
 
-Building energy modeling (BEM) has been widely used to quantify the energy impact of new building technologies, energy policy development, and other virtual demonstrations of building energy usage. Quality assurance (QA) and quality control (QC) are essential parts of such BEM analysis. This is especially true for whole-building energy modeling (BEM) which mostly deals with complex models, driven by a very large number of input data. The QA/QC approaches typically rely heavily on either simulation inputs and/or reported (summarized) outputs. While this seems like an adequate evidence at first glance, it makes the assumptions that 1) the simulation software or reference cases are free of errors, which is not always the case, and 2) there is always a unique (or set of unique) and consistent approach(es) that can be used to gauge whether simulation results are correct or not, just by reviewing inputs. In most instances, QA/QC approaches require a modeler or reviewer to spend a considerable amount of time reviewing inputs, outputs, and/or metrics to ensure that the outcome of a simulation is acceptable. Unfortunately, both 1) and 2) are rarely true because 1) simulation engines are constantly evolving (bug fixes and new features), so the reference cases might be not free of errors, and 2) time-series output verification (with a combination of summarized inputs and outputs) is the only way to ensure that models behave as expected. Reviewing only model inputs will not guarantee the model performance. To address these challenges/gaps, we propose ConStrain, a data-driven control verification framework that enables automatic control verification.
+Advances in building control have shown significant potential for improving building energy performance and decarbonization. For example, studies show that designs utilizing optimized controls that are properly tuned could cut commercial building energy consumption by approximately 29% - equivalent to 4-5 Quads, or 4-5% of the energy consumed in the United States. Driven by the significant control-related energy-saving potential, commercial building energy codes (such as ASHRAE 90.1) have progressed with many control-related addenda. For example, from the publication of 90.1-2004 to 90.1-2016 (four code cycles), 30% of the new requirements are related to building control (with most of them focused on HVAC system control).  
+
+However, one of the challenges to realizing those savings is the correct implementation of such advanced control strategies and regularly verifying their actual operational performance. A field study found that only 50% of systems observed have their control system correctly configured to meet the energy codes requirement, and control-related compliance verification is typically not included in the commissioning (Cx) scope. The current control verification is often manually conducted, which is time-consuming, ad-hoc, incomplete, and error-prone.
 
 # What is _ConStrain_?
 
-ConStrain is a framework that conducts automated output-based verification of building operations requirements. The figure below shows an overview of ConStrain and how it can be used. ConStrain was born out of the need of automating the verification of time-series data describing the behavior of building components, especially the control performance.
+ConStrain is data-driven knowledge-integrated framework that automatically verifies that controls function as intended. The figure below shows an overview of ConStrain and how it can be used. ConStrain was born out of the need of automating the verification of time-series data describing the behavior of building components, especially the control functions.
 
 ConStrain is designed around three key features: building control knowledge integration, analytics, and automation. The framework includes three major components: a control verification algorithm library (rule-based, procedure-based, and AI-based), an automated preparation process and verification case generation, a standardized performance evaluation and reporting process.
 
-While the development of ConStrain was motivated by use cases with building energy modeling (BEM), it can be used for other applications such as the performance verification of real buildings.
+While the development of ConStrain was motivated by use cases with building energy modeling (BEM), it is now evolved for more application scenarios towards real building control verification.
 
 ![Overview of ConStrain](constrain_overview.png)
 
+# Who shall be interested in this framework?
+* Cx agent – reduce effort and cost, while increasing rigor.
+* Building operator – implement Continuous Commissioning (CCx) to avoid performance drift.
+* Authority having jurisdiction (AHJ) – achieve better compliance rates for control provisions in code.
+* Mechanical engineer/energy modeler – ensure that chosen systems and their controls will comply with code.
+* Energy code/control guideline developer – identify ambiguity in code languages. 
+* BEM software developer – identify control related issues in simulation engine.  
+
 # Current Version of _ConStrain_?
 
-The current version of ANIMATE includes the framework implementation, a preliminary development and implementation of the verification library (based on ASHRAE 90.1-2016 and GPC36 requirement with a focus on control), and the test cases of verification algorithms using prototype building models. The current list of implemented verification algorithms includes supply air temperature control, economizer high limit, integrated economizer control, zone temperature control (dead band), zone temperature control (setback), hot water temperature reset, chilled water temperature reset, etc.
+The current version of ConStrain includes the framework implementation, a preliminary development and implementation of the verification library (based on ASHRAE 90.1-2016 control related requirement), and the test cases of verification algorithms using prototype building models. The current list of implemented verification algorithms includes supply air temperature control, economizer high limit, integrated economizer control, zone temperature control (dead band), zone temperature control (setback), hot water temperature reset, chilled water temperature reset, etc.
 
 A newly released API helps users to use ConStrain more easily. An API workflow demo is provided at `demo/api_demo` and `test/api/test_workflow.py`
 
