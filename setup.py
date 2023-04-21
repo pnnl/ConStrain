@@ -24,6 +24,6 @@ setup(
         "eppy",
         "fuzzywuzzy",
         "tqdm",
-        "scikit-learn"
+        "scikit-learn",
     ],
 )

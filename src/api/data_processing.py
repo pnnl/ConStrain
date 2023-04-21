@@ -289,9 +289,7 @@ class DataProcessing:
                 return None
 
             # perform concatenation
-            concatenated_datasets = datasets[0]
-            for ds in datasets[1:]:
-                concatenated_datasets = concatenated_datasets.append(ds)
+            concatenated_datasets = pd.concat(datasets)
             concatenated_datasets.sort_index(axis="index", inplace=True)
 
         else:  # axis == 0

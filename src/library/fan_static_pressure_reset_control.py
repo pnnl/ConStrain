@@ -47,7 +47,7 @@ class FanStaticPressureResetControl(RuleCheckBase):
             ),
         ):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
-            daydf = self.df[daystr]
+            daydf = self.df.loc[daystr]
             day = self.result[daystr]
 
             return day, daydf
