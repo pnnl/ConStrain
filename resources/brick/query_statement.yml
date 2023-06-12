@@ -1,0 +1,195 @@
+# Brick query statement for ConStrain
+
+ ZoneTempControl: "SELECT ?cooling_setpoint ?heating_setpoint ?hvac_zone
+                  WHERE {
+                          ?hvac_zone a brick:HVAC_Zone .
+                          ?cooling_setpoint a brick:Zone_Air_Cooling_Temperature_Setpoint .
+                          ?heating_setpoint a brick:Zone_Air_Heating_Temperature_Setpoint .
+                          ?hvac_zone brick:hasPoint ?cooling_setpoint, ?heating_setpoint .  
+                        }"
+
+ ZoneHeatSetpointMinimum: "SELECT ?heating_setpoint ?hvac_zone
+                          WHERE {
+                                  ?hvac_zone a brick:HVAC_Zone .
+                                  ?heating_setpoint a brick:Zone_Air_Heating_Temperature_Setpoint .
+                                  ?hvac_zone brick:hasPoint ?heating_setpoint .
+                                }"
+
+ ZoneHeatingResetDepth: "SELECT ?heating_setpoint ?hvac_zone
+                        WHERE {
+                                ?hvac_zone a brick:HVAC_Zone .
+                                ?heating_setpoint a brick:Zone_Air_Heating_Temperature_Setpoint .
+                                ?hvac_zone brick:hasPoint ?heating_setpoint .
+                              }"
+
+ ZoneCoolingSetpointMaximum: "SELECT ?cooling_setpoint ?hvac_zone
+                              WHERE {
+                                      ?hvac_zone a brick:HVAC_Zone .
+                                      ?cooling_setpoint a brick:Zone_Air_Cooling_Temperature_Setpoint .
+                                      ?hvac_zone brick:hasPoint ?cooling_setpoint .
+                                    }"
+
+ ZoneCoolingResetDepth: "SELECT ?cooling_setpoint ?hvac_zone
+                        WHERE {
+                                ?hvac_zone a brick:HVAC_Zone .
+                                ?cooling_setpoint a brick:Zone_Air_Cooling_Temperature_Setpoint .
+                                ?hvac_zone brick:hasPoint ?cooling_setpoint .
+                              }"
+
+ NightCycleOperation: "SELECT ?zone_air_temperature_sensor ?heating_setpoint ?cooling_setpoint ?hvac_zone ?ahu_fan_on_off_status ?ahu_fan_electrical_meeter
+                      WHERE {
+                              ?hvac_zone a brick:HVAC_Zone .
+                              ?zone_air_temperature_sensor a brick:Zone_Air_Temperature_Sensor .
+                              ?heating_setpoint a brick:Zone_Air_Heating_Temperature_Setpoint .
+                              ?cooling_setpoint a brick:Zone_Air_Cooling_Temperature_Setpoint .
+                              ?ahu a brick:AHU .
+                              ?ahu_fan a brick:Fan .
+                              ?ahu_fan_on_off_status a brick:Fan_On_Off_Status .
+                              ?ahu_fan_electrical_meeter a brick:Electrical_Meter .
+                              ?ahu brick:hasPart ?ahu_fan .
+                              ?ahu_fan brick:hasPart ?ahu_fan_electrical_meeter .
+                              ?ahu_fan brick:hasPoint ?ahu_fan_on_off_status .
+                            }"
+
+# Question) Do we need to have relationships between economizer, ahu, and vav?
+ AutomaticOADamperControl: "SELECT ?zone_occupancy_sensor ?vav_air_flow_sensor ?economizer_on_off_status
+                            WHERE {
+                                    ?hvac_zone a brick:HVAC_Zone .
+                                    ?zone_occupancy_sensor a brick:Occupancy_Sensor .
+                                    ?hvac_zone brick:hasPoint ?zone_occupancy_sensor .
+                                    ?ahu a brick:AHU .
+                                    ?economizer a brick:Economizer .
+                                    ?economizer_on_off_status a brick:On_Off_Status .
+                                    ?economizer brick:hasPoint ?economizer_on_off_status .                                    
+                                    ?vav a brick:Variable_Air_Volume_Box .
+                                    ?vav_air_flow_sensor a brick:Air_Flow_Sensor .
+                                    ?vav brick:hasPoint ?vav_air_flow_sensor .                                   
+                                  }"
+                          
+ AutomaticShutdown: "SELECT ?ahu_fan_on_off_status
+                    WHERE {
+                            ?ahu a brick:AHU .
+                            ?ahu_fan a brick:Fan .
+                            ?ahu_fan_on_off_status a brick:Fan_On_Off_Status .
+                            ?ahu brick:hasPart ?ahu_fan .
+                            ?ahu_fan brick:hasPoint ?ahu_fan_on_off_status .
+                          }"
+                    
+ VAVStaticPressureSensorLocation: "SELECT ?static_pressure_setpoint
+                                  WHERE {
+                                          ?vav a brick:Variable_Air_Volume_Box .
+                                          ?static_pressure_setpoint a brick:Static_Pressure_Setpoint .
+                                          ?vav brick:hasPoint ?static_pressure_setpoint .
+                                        }"
+
+ SupplyAirTempReset: "SELECT ?ahu_fan_supply_air_temperature_sensor
+                      WHERE {
+                              ?ahu a brick:AHU .
+                              ?ahu_fan a brick:Fan .
+                              ?ahu_fan_supply_air_temperature_sensor a brick:Supply_Air_Temperature_Sensor .
+                              ?ahu brick:hasPart ?ahu_fan .
+                              ?ahu_fan brick:hasPoint ?ahu_fan_supply_air_temperature_sensor .
+                            }"
+
+# assumed 'oa_threshold' and 'oa_min_flow' datapoints are parameters
+ EconomizerHighLimitA: "SELECT ?outside_air_temperature_sensor ?outside_air_flow_sensor
+                        WHERE {
+                                ?outside_air_temperature_sensor a brick:Outside_Air_Temperature_Sensor .
+                                ?outside_air_flow_sensor a brick:Outside_Air_Flow_Sensor .
+                                }"
+
+# return_air_temp has to be modeled.
+ EconomizerHighLimitB: "SELECT ?outside_air_temperature_sensor ?outside_air_flow_sensor
+                        WHERE {
+                                ?outside_air_temperature_sensor a brick:Outside_Air_Temperature_Sensor .
+                                ?outside_air_flow_sensor a brick:Outside_Air_Flow_Sensor .
+                                }"
+
+# assumed 'oa_threshold', 'oa_min_flow', 'oa_enth_threshold' are parameters.
+ EconomizerHighLimitC: "SELECT ?outside_air_temperature_sensor ?outside_air_flow_sensor ?outside_air_enthalpy_sensor
+                        WHERE {
+                                ?outside_air_temperature_sensor a brick:Outside_Air_Temperature_Sensor .
+                                ?outside_air_flow_sensor a brick:Outside_Air_Flow_Sensor .
+                                ?outside_air_enthalpy_sensor a brick:Outside_Air_Enthalpy_Sensor .
+                              }"
+
+# assumed 'oa_threshold', 'oa_min_flow' are parameters. 'ret_a_enth' should be added.
+ EconomizerHighLimitD: "SELECT ?outside_air_temperature_sensor ?outside_air_flow_sensor ?outside_air_enthalpy_sensor
+                        WHERE {
+                                ?outside_air_temperature_sensor a brick:Outside_Air_Temperature_Sensor .
+                                ?outside_air_flow_sensor a brick:Outside_Air_Flow_Sensor .
+                                ?outside_air_enthalpy_sensor a brick:Outside_Air_Enthalpy_Sensor .
+                              }"
+ 
+ # Question) should we include the relationship btw cooling coil and oa_flow?
+ IntegratedEconomizerControl: "SELECT ?outside_air_flow_sensor ?cooling_coil_thermal_power_meter
+                              WHERE {
+                                      ?outside_air_flow_sensor a brick:Outside_Air_Flow_Sensor .
+                                      ?cooling_coil a brick:Cooling_Coil .
+                                      ?cooling_coil_thermal_power_meter a brick:Thermal_Power_Meter .
+                                      ?cooling_coil brick:hasPart ?cooling_coil_thermal_power_meter .
+                                    }"
+
+ HWReset: "SELECT ?outside_air_temperature_sensor ?boiler_hot_water_flow_sensor ?boiler_hot_water_return_temperature_sensor
+        WHERE {
+                ?outside_air_temperature_sensor a brick:Outside_Air_Temperature_Sensor .
+                ?boiler a brick:Boiler . 
+                ?boiler_hot_water_flow_sensor a brick:Hot_Water_Flow_Sensor .
+                ?boiler_hot_water_return_temperature_sensor a brick:Hot_Water_Return_Temperature_Sensor .
+                ?boiler brick:hasPoint ?boiler_hot_water_flow_sensor, ?boiler_hot_water_return_temperature_sensor .                    
+                }"
+
+ CHWReset: "SELECT ?outside_air_temperature_sensor ?chiller_chilled_water_flow_sensor ?chiller_chilled_water_return_temperature_sensor
+            WHERE {
+                    ?outside_air_temperature_sensor a brick:Outside_Air_Temperature_Sensor .
+                    ?chiller a brick:Chiller . 
+                    ?chiller_chilled_water_flow_sensor a brick:Chilled_Water_Flow_Sensor .
+                    ?chiller_chilled_water_return_temperature_sensor a brick:Chilled_Water_Return_Temperature_Sensor .
+                    ?chiller brick:hasPoint ?chiller_chilled_water_flow_sensor, ?chiller_chilled_water_return_temperature_sensor .                  
+                  }"
+
+ WLHPLoopHeatRejectionControl: "SELECT ?chilled_water_pump ?cooling_tower_return_condenser_water_temperature_sensor ?boiler_hot_water_return_temperature_sensor
+                                WHERE {
+                                        ?chiller a brick:Chiller .
+                                        ?cooling_tower a brick:Cooling_Tower .
+                                        ?chilled_water_pump a brick:Chilled_Water_Pump.
+                                        ?pump_water_flow_sensor a brick:Water_Flow_Sensor .
+                                        ?cooling_tower_return_condenser_water_temperature_sensor a brick:Return_Condenser_Water_Temperature_Sensor .
+                                        ?boiler a brick:Boiler . 
+                                        ?boiler_hot_water_return_temperature_sensor a brick:Hot_Water_Return_Temperature_Sensor .
+                                        ?chilled_water_pump brick:hasPoint ?pump_water_flow_sensor .
+                                        ?cooling_tower brick:hasPoint ?cooling_tower_return_condenser_water_temperature_sensor .
+                                        ?boiler brick:hasPoint ?boiler_hot_water_return_temperature_sensor .
+                                      }"
+
+# Do we need to specify the object properties btw ahu, damper, zone, etc.?
+ DemandControlVentilation: "SELECT ?outside_air_flow_sensor ?ahu_fan_on_off_status ?economizer_on_off_status ?occupancy_sensor ?hvac_zone
+                           WHERE {
+                                ?outside_air_flow_sensor a brick:Outside_Air_Flow_Sensor .
+                                ?outside_damper a brick:Outside_Damper .
+                                ?economizer a brick:Economizer .
+                                ?economizer_on_off_status a brick:On_Off_Status .
+                                ?economizer brick:hasPart ?outside_damper .
+                                ?economizer brick:hasPoint ?economizer_on_off_status .                                 
+                                ?ahu a brick:AHU .
+                                ?ahu_fan a brick:Fan . 
+                                ?ahu_fan_on_off_status a brick:Fan_On_Off_Status .
+                                ?ahu brick:hasPart ?ahu_fan .
+                                ?ahu_fan brick:hasPoint ?ahu_fan_on_off_status .  
+                                ?hvac_zone a brick:HVAC_Zone .
+                                ?occupancy_sensor a brick:Occupancy_Sensor .
+                                ?hvac_zone brick:hasPoint ?occupancy_sensor .
+                                }" 
+
+# GuestRoomControlTemp will be checked again once the pseudo-code is updated.
+ GuestRoomControlTemp: "SELECT ?heating_setpoint ?cooling_setpoint ?hvac_zone ?zone_occ_sensor
+                        WHERE {
+                                ?hvac_zone a brick:HVAC_Zone .
+                                ?heating_setpoint a brick:Zone_Air_Heating_Temperature_Setpoint .
+                                ?cooling_setpoint a brick:Zone_Air_Cooling_Temperature_Setpoint .
+                                ?zone_occ_sensor a brick:Occupancy_Sensor .
+                                ?hvac_zone brick:hasPoint ?heating_setpoint, ?cooling_setpoint, ?zone_occ_sensor .
+                                }"
+
+# GuestRoomControlVent will be updated once the pseudo-code is updated.
+ GuestRoomControlVent: ""

@@ -1,0 +1,40 @@
+# 
+
+ZoneTempControl:
+  default:
+    T_z_set_cool:
+      - ''  
+      - cooling_setpoint
+    T_z_set_heat:
+      - ''  
+      - heating_setpoint
+
+  EnergyPlus_var_name:
+    T_z_set_cool:
+      - hvac_zone
+      - cooling_setpoint
+    T_z_set_heat:
+      - hvac_zone  
+      - Zone Thermostat Heating Setpoint Temperature
+
+ZoneHeatSetpointMinimum:
+  default:
+    T_heat_set:
+      - ''  
+      - heating_setpoint
+
+  EnergyPlus_var_name:
+    T_heat_set:
+      - hvac_zone
+      - Zone Thermostat Heating Setpoint Temperature
+
+ZoneHeatingResetDepth:
+  default:
+    T_heat_set:
+      - ''
+      - heating_setpoint
+
+  EnergyPlus_var_name:
+    T_heat_set:
+      - hvac_zone
+      - Zone Thermostat Heating Setpoint Temperature
