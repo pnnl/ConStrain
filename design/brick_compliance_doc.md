@@ -1,13 +1,13 @@
 ### Brick API documentation
 
-`Class BrickQueryCompliance` <!-- Class name to be updated.-->
+`Class BrickQueryCompliance`  
 
 - [X] `__init__(`_brick_instance_path: str_`)`    
 Instantiate a `BrickQueryCompliance` class object and load specified brick schema and brick instance.   
     - **Parameters**  
         - **brick_instance_path**: `str` path to a brick instance to be used for query. For now, only `.ttl` format is accepted.   
 
-- [X] `validate_instance()`    <!-- consider using building motif, validation report: same, help us correct the model -->
+- [X] `validate_instance()`     
 Validate a brick instance against the brick schema.   
     - **Parameters**  
         - **brick_schema_path_str**: `str` path to the brick schema to be used for validation.  
@@ -21,7 +21,7 @@ Get applicable control verificaton cases among the `verification_item_names` lis
     - **Returns**: `list` of `str` including available verification library item names from a brick instance.  
 
 - [X] `query_verification_case_datapoints(`_verification_item_lib_name: [str, list[str]]_`, `_energyplus_naming_assembly:bool = False_`)`  
-Query datapoints required for given verification item lib.
+Query datapoints required for given verification item lib(s).
     - **Parameters**  
         - **verification_item_lib_name**: `str` or `list` of `str` verification item library to be quried. If only one verification item library is quried, one `str` argument type is paased. If multiple verification item libraries are queried, `list` of `str` argument type is passed.    
         - **energyplus_naming_assembly**: `bool` (default: False) whether to convert the queried datapoints' name to EnergyPlus style variable name.   
@@ -39,7 +39,6 @@ Query datapoints with a customized query statement. When implemented, the qualit
 
 ```python
 import animate as an
-
 
 # Instantiate BrickQueryCompliance obj
 brick_instance_path = "./testing_brick_instance.ttl"

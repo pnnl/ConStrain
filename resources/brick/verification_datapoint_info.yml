@@ -1,40 +1,19 @@
-# 
-
-ZoneTempControl:
-  default:
-    T_z_set_cool:
-      - ''  
-      - cooling_setpoint
-    T_z_set_heat:
-      - ''  
-      - heating_setpoint
-
-  EnergyPlus_var_name:
-    T_z_set_cool:
-      - hvac_zone
-      - cooling_setpoint
-    T_z_set_heat:
-      - hvac_zone  
-      - Zone Thermostat Heating Setpoint Temperature
+# yml file for datapoint mapping
 
 ZoneHeatSetpointMinimum:
-  default:
-    T_heat_set:
-      - ''  
+  T_heat_set:
+    default:
+      - null  
       - heating_setpoint
-
-  EnergyPlus_var_name:
-    T_heat_set:
+    EnergyPlus_var:
       - hvac_zone
       - Zone Thermostat Heating Setpoint Temperature
 
-ZoneHeatingResetDepth:
-  default:
-    T_heat_set:
-      - ''
+ZoneCoolingSetpointMaximum:
+  T_cool_set:
+    default:
+      - null  
       - heating_setpoint
-
-  EnergyPlus_var_name:
-    T_heat_set:
+    EnergyPlus_var:
       - hvac_zone
       - Zone Thermostat Heating Setpoint Temperature
