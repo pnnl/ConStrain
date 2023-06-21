@@ -2,14 +2,13 @@ import unittest, sys
 
 sys.path.append("./src")
 from lib_unit_test_runner import *
-from library import *
 
 import pandas as pd
 import numpy as np
 
 
 class TestG36ReturnAirDamperPositionForReliefDamperOrFanConfig(unittest.TestCase):
-    def test_return_air_damper_positiong(self):
+    def test_return_air_damper_position(self):
         points = [
             "heating_output",
             "cooling_output",
