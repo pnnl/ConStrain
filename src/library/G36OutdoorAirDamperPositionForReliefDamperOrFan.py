@@ -50,7 +50,7 @@ from checklib import RuleCheckBase
 import numpy as np
 
 
-class G36OutdoorAirDamperPositionForReliefDamperOrFanConfig(RuleCheckBase):
+class G36OutdoorAirDamperPositionForReliefDamperOrFan(RuleCheckBase):
     points = [
         "heating_output",
         "cooling_output",

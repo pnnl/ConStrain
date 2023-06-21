@@ -12,11 +12,12 @@ from .ventilation_fan_controls import *
 from .wlhp_loop_heat_rejection_controls import *
 from .supply_air_temp_reset import *
 from .G36SimultaneousHeatingCooling import *
-from .G36ReturnAirDamperPositionForReliefDamperOrFanConfig import *
+from .G36ReturnAirDamperPositionForReliefDamperOrFan import *
 from .G36ReturnAirDamperPositionForReturnFanAirflowTracking import *
 from .G36ReliefAirDamperPositionForReturnFanAirflowTracking import *
-from .G36OutdoorAirDamperPositionForReliefDamperOrFanConfig import *
+from .G36OutdoorAirDamperPositionForReliefDamperOrFan import *
 from .G36OutdoorAirDamperPositionForReturnFanAirflowTracking import *
+from .G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -36,9 +37,10 @@ __all__ = [
     "WLHPLoopHeatRejectionControl",
     "SupplyAirTempReset",
     "G36SimultaneousHeatingCooling",
-    "G36ReturnAirDamperPositionForReliefDamperOrFanConfig",
+    "G36ReturnAirDamperPositionForReliefDamperOrFan",
     "G36ReturnAirDamperPositionForReturnFanAirflowTracking",
     "G36ReliefAirDamperPositionForReturnFanAirflowTracking",
-    "G36OutdoorAirDamperPositionForReliefDamperOrFanConfig",
+    "G36OutdoorAirDamperPositionForReliefDamperOrFan",
     "G36OutdoorAirDamperPositionForReturnFanAirflowTracking",
+    "G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure",
 ]

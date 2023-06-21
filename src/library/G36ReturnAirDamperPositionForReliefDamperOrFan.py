@@ -42,7 +42,7 @@ from checklib import RuleCheckBase
 import numpy as np
 
 
-class G36ReturnAirDamperPositionForReliefDamperOrFanConfig(RuleCheckBase):
+class G36ReturnAirDamperPositionForReliefDamperOrFan(RuleCheckBase):
     points = [
         "heating_output",
         "cooling_output",
