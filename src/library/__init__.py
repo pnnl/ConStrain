@@ -14,6 +14,7 @@ from .supply_air_temp_reset import *
 from .G36SimultaneousHeatingCooling import *
 from .G36ReturnAirDamperPositionForReliefDamperOrFanConfig import *
 from .G36OutdoorAirDamperPositionForReliefDamperOrFanConfig import *
+from .G36OutdoorAirDamperPositionForReturnFanAirflowTracking import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -35,4 +36,5 @@ __all__ = [
     "G36SimultaneousHeatingCooling",
     "G36ReturnAirDamperPositionForReliefDamperOrFanConfig",
     "G36OutdoorAirDamperPositionForReliefDamperOrFanConfig",
+    "G36OutdoorAirDamperPositionForReturnFanAirflowTracking",
 ]
