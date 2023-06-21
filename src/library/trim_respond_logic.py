@@ -15,7 +15,7 @@ def TrimRespondLogic(
     SPres_max: Union[float, int],
     tol: Union[float, int],
     controller_type: str,
-) -> pd.DataFrame:
+) -> Union[None, pd.DataFrame]:
     """Trim and respond logic verification logic.
 
     Args:
@@ -34,6 +34,17 @@ def TrimRespondLogic(
     """
 
     # check the given arguments type
+    if not isinstance(df, pd.DataFrame):
+        logging.error(
+            f"The type of the `df` arg must be a dataframe. It cannot be {type(df)}."
+        )
+        return None
+
+    for col in ["Date/Time", "setpoint", "number_of_requests"]:
+        if col not in df.columns:
+            logging.error(f"{col} column doesn't exist in the `df`.")
+            return None
+
     if not isinstance(Td, (float, int)):
         logging.error(
             f"The type of the `Td` arg must be a float or int. It cannot be {type(Td)}."
