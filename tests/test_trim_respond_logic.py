@@ -10,7 +10,7 @@ from library.trim_respond_logic import TrimRespondLogic
 start_date = "2023-06-21 12:00:00"  # Start date and time
 end_date = "2023-06-21 12:59:59"  # End date and time
 
-data = pd.DataFrame(columns=["Date/Time", "static_setpoint", "number_of_requests"])
+data = pd.DataFrame(columns=["Date/Time", "setpoint", "number_of_requests"])
 timestamps = pd.date_range(start=start_date, end=end_date, freq="2T")
 data["Date/Time"] = timestamps
 # fmt: off
