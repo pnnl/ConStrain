@@ -8,7 +8,7 @@ import numpy as np
 
 
 class TestG36ReturnAirDamperPositionForReturnFanAirflowTracking(unittest.TestCase):
-    def test_return_air_damper_position(self):
+    def test_return_air_damper_position_for_return_fan_airflow_tracking(self):
         points = [
             "heating_output",
             "cooling_output",
