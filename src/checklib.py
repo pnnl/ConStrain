@@ -323,11 +323,13 @@ class CheckLibBase(ABC):
 
 
 class RuleCheckBase(CheckLibBase):
-    def check_bool(self) -> bool:
+    def check_bool(self):
         if len(self.result[self.result == False] > 0):
             return False
-        else:
+        elif len(self.result[self.result == True] > 0):
             return True
+        else:
+            return "Untested"
 
     def check_detail(self) -> Dict:
         output = {
