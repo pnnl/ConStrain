@@ -7,7 +7,9 @@ import pandas as pd
 import numpy as np
 
 
-class TestG36ReturnAirDamperPositionForReturnFanAirflowTracking(unittest.TestCase):
+class TestG36ReturnAirDamperPositionForReturnFanDirectBuildingPressure(
+    unittest.TestCase
+):
     def test_return_air_damper_position(self):
         points = [
             "heating_output",
@@ -29,7 +31,7 @@ class TestG36ReturnAirDamperPositionForReturnFanAirflowTracking(unittest.TestCas
         df = pd.DataFrame(data, columns=points)
 
         verification_obj = run_test_verification_with_data(
-            "G36ReturnAirDamperPositionForReturnFanAirflowTracking", df
+            "G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure", df
         )
 
         results = pd.Series(list(verification_obj.result))
