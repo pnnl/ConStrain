@@ -7,7 +7,7 @@ Section 5.16.2.3
 
 ### Verification logic
 
-```python
+```
 if heating_output > 0 and cooling_output > 0
     fail
 else

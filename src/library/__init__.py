@@ -12,6 +12,7 @@ from .ventilation_fan_controls import *
 from .wlhp_loop_heat_rejection_controls import *
 from .supply_air_temp_reset import *
 from .G36SimultaneousHeatingCooling import *
+from .G36ReturnAirDamperPositionForReliefDamperOrFanConfig import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -31,4 +32,5 @@ __all__ = [
     "WLHPLoopHeatRejectionControl",
     "SupplyAirTempReset",
     "G36SimultaneousHeatingCooling",
+    "G36ReturnAirDamperPositionForReliefDamperOrFanConfig",
 ]
