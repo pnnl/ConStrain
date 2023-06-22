@@ -16,17 +16,17 @@ def TrimRespondLogic(
     tol: Union[float, int],
     controller_type: str,
 ) -> Union[None, pd.DataFrame]:
-    """Trim and respond logic verification logic.
+    """Trim and respond logic verification.
 
     Args:
         df (dataframe): dataframe that must include timestamp (`Date/Time` column), time-series data of setpoint (`setpoint` column), number of requests (`number_of_requests` column name),
         Td (float or int): Time delay in minutes.
         ignored_requests (int): Number of ignored requests.
-        SPtrim (float or int): Minimum setpoint.
-        SPres (float or int): Maximum setpoint.
-        SPmin (float or int):
-        SPmax (float or int): Maximum response per time interval.
-        SPres_max (float or int):
+        SPtrim (float or int): Trim amount.
+        SPres (float or int): Respond amount.
+        SPmin (float or int): Minimum setpoint.
+        SPmax (float or int): Maximum setpoint.
+        SPres_max (float or int): Maximum response per time interval.
         tol (float or int): tolerance.
         controller_type (str): either `direct_acting` or `reverse_acting` depending on whether output increases/decreases as the measurement increases/decreases.
 
