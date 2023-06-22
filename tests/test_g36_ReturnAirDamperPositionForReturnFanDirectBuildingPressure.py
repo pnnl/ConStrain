@@ -4,7 +4,6 @@ sys.path.append("./src")
 from lib_unit_test_runner import *
 
 import pandas as pd
-import numpy as np
 
 
 class TestG36ReturnAirDamperPositionForReturnFanDirectBuildingPressure(

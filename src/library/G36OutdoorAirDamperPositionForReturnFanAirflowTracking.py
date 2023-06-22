@@ -17,9 +17,7 @@ end
 
 """
 
-import pandas as pd
 from checklib import RuleCheckBase
-import numpy as np
 
 
 class G36OutdoorAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):

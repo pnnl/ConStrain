@@ -16,9 +16,8 @@ end
 ``` 
 
 """
-import pandas as pd
+
 from checklib import RuleCheckBase
-import numpy as np
 
 
 class G36SimultaneousHeatingCooling(RuleCheckBase):
@@ -35,7 +34,7 @@ class G36SimultaneousHeatingCooling(RuleCheckBase):
             lambda d: self.simultaneous_heating_and_cooling(d), axis=1
         )
 
-    def check_obool(self):
+    def check_bool(self):
         if len(self.result[self.result == False] > 0):
             return False
         else:

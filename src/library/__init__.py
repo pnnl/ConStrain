@@ -19,6 +19,7 @@ from .G36ReliefAirDamperPositionForReturnFanAirflowTracking import *
 from .G36OutdoorAirDamperPositionForReliefDamperOrFan import *
 from .G36OutdoorAirDamperPositionForReturnFanAirflowTracking import *
 from .G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure import *
+from .G36SupplyAirTemperatureSetpoint import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -45,4 +46,5 @@ __all__ = [
     "G36OutdoorAirDamperPositionForReliefDamperOrFan",
     "G36OutdoorAirDamperPositionForReturnFanAirflowTracking",
     "G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure",
+    "G36SupplyAirTemperatureSetpoint",
 ]

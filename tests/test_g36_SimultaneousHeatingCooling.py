@@ -2,10 +2,8 @@ import unittest, sys
 
 sys.path.append("./src")
 from lib_unit_test_runner import *
-from library import *
 
 import pandas as pd
-import numpy as np
 
 
 class TestG36SimultaneousHeatingCooling(unittest.TestCase):
