@@ -14,6 +14,7 @@ from .supply_air_temp_reset import *
 from .G36OutputChangeRateLimit import *
 from .G36SupplyFanStatus import *
 from .G36MinOAwEconomizer import *
+from .G36MinOAwoEconomizer import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -35,4 +36,5 @@ __all__ = [
     "G36OutputChangeRateLimit",
     "G36SupplyFanStatus",
     "G36MinOAwEconomizer",
+    "G36MinOAwoEconomizer",
 ]

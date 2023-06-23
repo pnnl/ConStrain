@@ -41,8 +41,6 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
         self.assertTrue(results.equals(expected_results))
 
-        pass
-
 
 if __name__ == "__main__":
     unittest.main()
