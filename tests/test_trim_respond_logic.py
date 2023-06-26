@@ -43,24 +43,24 @@ class TestTrimRespond(unittest.TestCase):
                 logobs.output[0],
             )
 
-            # check `data` (missing column)
-            with self.assertLogs() as logobs:
-                TrimRespondLogic(
-                    data.drop("setpoint", axis=1),
-                    Td="0",
-                    ignored_requests=2,
-                    SPtrim=-0.04,
-                    SPres=0.06,
-                    SPmin=0.15,
-                    SPmax=1.5,
-                    SPres_max=0.15,
-                    tol=0.01,
-                    controller_type="direct_acting",
-                )
-                self.assertEqual(
-                    "ERROR:root:setpoint column doesn't exist in the `df`.",
-                    logobs.output[0],
-                )
+        # check `data` (missing column)
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data.drop("setpoint", axis=1),
+                Td="0",
+                ignored_requests=2,
+                SPtrim=-0.04,
+                SPres=0.06,
+                SPmin=0.15,
+                SPmax=1.5,
+                SPres_max=0.15,
+                tol=0.01,
+                controller_type="direct_acting",
+            )
+            self.assertEqual(
+                "ERROR:root:setpoint column doesn't exist in the `df`.",
+                logobs.output[0],
+            )
 
         # check `Td`
         with self.assertLogs() as logobs:
