@@ -16,6 +16,7 @@ from .G36SupplyFanStatus import *
 from .G36MinOAwEconomizer import *
 from .G36MinOAwoEconomizer import *
 from .G36ReliefDamperStatus import *
+from .G36FreezeProtectionStage1 import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -39,4 +40,5 @@ __all__ = [
     "G36MinOAwEconomizer",
     "G36MinOAwoEconomizer",
     "G36ReliefDamperStatus",
+    "G36FreezeProtectionStage1",
 ]
