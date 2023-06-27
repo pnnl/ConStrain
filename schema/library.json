@@ -532,5 +532,291 @@
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
-    }
+    },
+    "G36_SupplyAirTemperatureSetpoint": {
+        "library_item_id": 30,
+        "description_brief": "Supply air temperature operation following the Guideline 36 recommendations",
+        "description_detail": "Verify that the supply air temperature setpoint of a system follows the Guideline 36 recommendations",
+        "description_index": ["Section 5.16.2.2 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "operation_mode": "System operation mode",
+          "oa_t": "Outdoor air temperature",
+          "t_max": "Maximum supply air temperature setpoint based on requests",
+          "sa_t_sp_ac": "Actual supply air temperature setpoint",
+          "oa_t_min": "Minimum outdoor air temperature for linear SAT reset",
+          "oa_t_max": "Maximum outdoor air temperature for linear SAT reset",
+          "min_clg_sa_t_sp": "Minimum cooling supply air temperature setpoint",
+          "max_clg_sa_t_sp": "Maximum cooling supply air temperature setpoint",
+          "sa_sp_tol": "supply air temperature tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if t_max > max_clg_sa_t_sp",
+            "    fail",
+            "end",
+            "",
+            "switch operation_mode",
+            "case 'cooldown'",
+            "    sa_t_sp = min_clg_sa_t_sp",
+            "case 'warmup', 'setback",
+            "    sa_t_sp = 35 # 95 F",
+            "case 'occupied', 'setup'",
+            "    if oa_t <= oa_t_min",
+            "        sa_t_sp = t_max",
+            "    else if oa_t >= oa_t_max",
+            "        sa_t_sp = min_clg_sa_t_sp",
+            "    else",
+            "        sa_t_sp = (oa_t - oa_t_min) * (t_max - min_clg_sa_t_sp) / (oa_t_min - oa_t_max) + t_max ","# linear interpolation",
+            "    end",
+            "end",
+            "",
+            "if abs(sa_t_sp - sa_t_s_ac) < sa_sp_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+      },
+      "G36_SimultaneousHeatingCooling": {
+        "library_item_id": 31,
+        "description_brief": "Verifiy that both the heating and cooling coil are not operating at the same time",
+        "description_index": ["Section 5.16.2.3 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "heating_output": "AHU heating coil output",
+          "cooling_output": "AHU cooling coil output"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0 and cooling_output > 0",
+            "    fail",
+            "else",
+            "    pass",
+            "end"
+        ]
+      },
+      "G36_ReturnAirDamperWithReturnPathNoAirFlowTracking": {
+        "library_item_id": 32,
+        "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with relief damper/fan",
+        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": ["Section 5.16.2.3 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "max_ra_p": "Maximum return air damper position",
+          "ra_p_tol": "Return air damper position tolerance",
+          "ra_p": "Return air damper position",
+          "oa_p": "Outdoor air damper position",
+          "max_oa_p": "Maximum outdoor air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0",
+            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if cooling_output > 0",
+            "    if abs(ra_p - 0) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if oa_p < max_oa_p",
+            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if abs(oa - max_oa_p) < oa_p_tol",
+            "    if ra_p < max_ra_p",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "end"
+        ]
+    
+      },
+      "G36_OutdoorAirDamperWithReturnPathNoAirFlowTracking": {
+        "library_item_id": 33,
+        "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with relief damper/fan",
+        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": ["Section 5.16.2.3 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "heating_output": "AHU heating coil output",
+          "cooling_output": "AHU cooling coil output",
+          "economizer_high_limit_reached": "Economizer high limit flag",
+          "oa_p": "Outdoor air damper position",
+          "min_oa_p": "Minimum outdoor air damper position",
+          "max_oa_p": "Maximum outdoor air damper position",
+          "oa_p_tol": "Outdoor air damper position tolerance",
+          "ra_p_tol": "Return air damper position tolerance",
+          "ra_p": "Return air damper position",
+          "max_ra_p": "Maximum return air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0",
+            "    if abs(oa_p - min_oa_p) < oa_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if cooling_output > 0",
+            "    if economizer_high_limit_reached",
+            "        if abs(oa_p - min_oa_p) < oa_p_tol",
+            "            pass",
+            "        else",
+            "            fail",
+            "        end",
+            "    else",
+            "        if abs(oa_p - max_oa_p) < oa_p_tol",
+            "            pass",
+            "        else",
+            "            fail",
+            "        end",
+            "    end",
+            "else if ra_p < max_ra_p",
+            "    if abs(oa_p - max_oa_p) < oa_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if abs(ra_p - max_ra_p) < ra_p_tol",
+            "    if min_oa_p < oa_p < max_oa_p",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "end"
+        ]
+      },
+      "G36_ReturnAirDamperWithReturnPathWithAirFlowTracking": {
+        "library_item_id": 34,
+        "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
+        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": ["Section 5.16.2.3 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "heating_output": "AHU heating coil output",
+          "cooling_output": "AHU cooling coil output",
+          "max_ra_p": "Maximum return air damper position",
+          "ra_p_tol": "Return air damper position tolerance",
+          "ra_p": "Return air damper position",
+          "rea_p": "Relief air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+      },
+      "G36_OutdoorAirDamperWithReturnPathWithAirFlowTracking": {
+        "library_item_id": 35,
+        "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
+        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": ["Section 5.16.2.3 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "oa_p": "Outdoor air damper position",
+          "max_oa_p": "Maximum outdoor air damper position",
+          "oa_p_tol": "Outdoor air damper position tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if abs(oa_p - max_oa_p) < oa_p_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+      },
+      "G36_ReliefAirDamperWithReturnPathWithAirFlowTracking": {
+        "library_item_id": 36,
+        "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
+        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": ["Section 5.16.2.3 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "heating_output": "AHU heating coil output",
+          "cooling_output": "AHU cooling coil output",
+          "max_rea_p": "Maximum return air damper position",
+          "rea_p_tol": "Return air damper position tolerance",
+          "rea_p": "Return air damper position",
+          "ra_p": "Relief air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0",
+            "    if abs(rea_p - 0) < rea_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if cooling_output > 0",
+            "    if abs(rea_p - max_rea_p) < rea_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if abs(rea_p - (1 - ra_p) * max_rea_p) < rea_p_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+      },
+      "G36_ReturnAirDamperWithReturnWithBuildingPressureControl": {
+        "library_item_id": 37,
+        "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with return fan with direct building pressure control",
+        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": ["Section 5.16.2.3 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "heating_output": "AHU heating coil output",
+          "cooling_output": "AHU cooling coil output",
+          "max_ra_p": "Maximum return air damper position",
+          "ra_p_tol": "Return air damper position tolerance",
+          "ra_p": "Return air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0",
+            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if cooling_output > 0",
+            "    if abs(ra_p - 0) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if abs(ra_p - (1 - rea_p) * max_ra_p) < ra_p_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+      },
+      "G36_OutdoorAirDamperWithReturnWithBuildingPressureControl": {
+        "library_item_id": 38,
+        "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with direct building pressure control",
+        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": ["Section 5.16.2.3 in ASHRAE Guideline 36-2021"],
+        "description_datapoints": {
+          "oa_p": "Outdoor air damper position",
+          "max_oa_p": "Maximum outdoor air damper position",
+          "oa_p_tol": "Outdoor air damper position tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if abs(oa_p - max_oa_p) < oa_p_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+      }
 }
