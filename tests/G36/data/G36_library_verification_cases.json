@@ -51,7 +51,7 @@
             },
             "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"
         },
-		{
+        {
             "no": 2,
             "run_simulation": false,
             "simulation_IO": {
@@ -112,7 +112,7 @@
             },
             "verification_class": "G36OutdoorAirDamperPositionForReliefDamperOrFan"
         },
-		{
+        {
             "no": 3,
             "run_simulation": false,
             "simulation_IO": {

@@ -26,7 +26,7 @@
       "Next": "Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data",
       "Start": "True"
     },
-	"Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data": {
+    "Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data": {
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
@@ -39,7 +39,7 @@
       },
       "Next": "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data",
     },
-	"Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data": {
+    "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data": {
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
@@ -52,7 +52,6 @@
       },
       "Next": "Initialize verification object",
     },
-	
     "Initialize verification object": {
       "Type": "MethodCall",
       "MethodCall": "Verification",
