@@ -66,7 +66,7 @@ class G36FreezeProtectionStage2(RuleCheckBase):
                     freeze_timer_start = i
                     freeze_timer_list.append(0)
                 else:
-                    time_delta = (i - lt3p3_timer_start).total_seconds() / 60
+                    time_delta = (i - freeze_timer_start).total_seconds() / 60
                     freeze_timer_list.append(time_delta)
                     if time_delta >= 60:
                         # reset

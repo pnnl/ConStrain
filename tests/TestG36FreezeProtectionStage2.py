@@ -47,12 +47,13 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
             datetime(2023, 3, 1, 3, 5, 30),
             datetime(2023, 3, 1, 3, 18, 0),
             datetime(2023, 3, 1, 3, 22, 0),
+            datetime(2023, 3, 1, 3, 24, 0),
         ]
 
-        data = [[3, 90], [3, 50], [1, 50], [3, 20], [3, 20], [3, 0.1]]
+        data = [[3, 90], [3, 50], [1, 50], [3, 20], [3, 20], [3, 20], [3, 20]]
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
-        expected_results = pd.Series([True, False, True, True, False, True])
+        expected_results = pd.Series([True, False, False, True, True, True, False])
 
         verification_obj = run_test_verification_with_data(
             "G36FreezeProtectionStage2", df
