@@ -55,5 +55,6 @@ class TestG36OutputChangeRateLimit(unittest.TestCase):
 
         self.assertTrue(results.equals(expected_results))
 
+
 if __name__ == "__main__":
     unittest.main()

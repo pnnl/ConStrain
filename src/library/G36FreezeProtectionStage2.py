@@ -33,9 +33,7 @@ class G36FreezeProtectionStage2(RuleCheckBase):
     def ts_verify_logic(self, t):
         if not t["freeze_status"]:
             return True
-        if (t["sat_lowerthan_3.3_timer"] > 5) and (
-            t["outdoor_damper_command"] > 1
-        ):
+        if (t["sat_lowerthan_3.3_timer"] > 5) and (t["outdoor_damper_command"] > 1):
             return False
         else:
             return True
