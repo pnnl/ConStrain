@@ -1,0 +1,91 @@
+{
+  "workflow_name": "G36 testing workflow",
+  "meta": {
+    "author": "author of the workflow",
+    "date": "modified date",
+    "version": "version number of the workflow",
+    "description": "Narrative description of the workflow"
+  },
+  "imports": [
+    "numpy as np",
+    "pandas as pd",
+    "datetime"
+  ],
+  "states": {
+    "Load G36_SupplyAirTemperatureSetpoint_data": {
+      "Type": "MethodCall",
+      "MethodCall": "DataProcessing",
+      "Parameters": {
+        "data_path": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv",
+        "data_source": "EnergyPlus"
+      },
+      "Payloads": {
+        "data": "$.data",
+        "data_processing_obj": "$"
+      },
+      "Next": "Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data",
+      "Start": "True"
+    },
+	"Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data": {
+      "Type": "MethodCall",
+      "MethodCall": "DataProcessing",
+      "Parameters": {
+        "data_path": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv",
+        "data_source": "EnergyPlus"
+      },
+      "Payloads": {
+        "data": "$.data",
+        "data_processing_obj": "$"
+      },
+      "Next": "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data",
+    },
+	"Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data": {
+      "Type": "MethodCall",
+      "MethodCall": "DataProcessing",
+      "Parameters": {
+        "data_path": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv",
+        "data_source": "EnergyPlus"
+      },
+      "Payloads": {
+        "data": "$.data",
+        "data_processing_obj": "$"
+      },
+      "Next": "Initialize verification object",
+    },
+	
+    "Initialize verification object": {
+      "Type": "MethodCall",
+      "MethodCall": "Verification",
+      "Parameters": {
+        "verification_cases_path": "./tests/G36/data/G36_library_verification_cases.json.json"
+      },
+      "Payloads": {
+        "verification": "$"
+      },
+      "Next": "Run verification"
+    },
+    "Run verification": {
+      "Type": "MethodCall",
+      "MethodCall": "Payloads['verification'].run",
+      "Parameters": {},
+      "Payloads": {
+        "verification_md": "$.md",
+        "verification_flag": "$.check_bool"
+      },
+      "Next": "Reporting"
+    },
+    "Reporting": {
+      "Type": "MethodCall",
+      "MethodCall": "Reporting",
+      "Parameters": {
+        "verification_md": "Payloads['verification_md']",
+        "report_path": "x/yy.md",
+        "report_format": "markdown"
+      },
+      "Payloads": {
+        "verification": "$"
+      },
+      "End": "True"
+    }
+  }
+}

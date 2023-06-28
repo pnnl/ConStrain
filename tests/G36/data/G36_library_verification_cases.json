@@ -1,0 +1,176 @@
+{
+    "cases": [
+        {
+            "no": 1,
+            "run_simulation": false,
+            "simulation_IO": {
+                "idf": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv",
+                "idd": "",
+                "weather": "",
+                "output": "",
+                "ep_path": ""
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "heating_output": {
+                        "subject": "",
+                        "variable": "heating_output",
+                        "frequency": ""
+                    },
+					"cooling_output": {
+                        "subject": "",
+                        "variable": "cooling_output",
+                        "frequency": ""
+                    },
+					"ra_p": {
+                        "subject": "",
+                        "variable": "ra_p",
+                        "frequency": ""
+                    },
+					"max_ra_p": {
+                        "subject": "",
+                        "variable": "max_ra_p",
+                        "frequency": ""
+                    },
+					"oa_p": {
+                        "subject": "",
+                        "variable": "oa_p",
+                        "frequency": ""
+                    },
+					"max_oa_p": {
+                        "subject": "",
+                        "variable": "max_oa_p",
+                        "frequency": ""
+                    }
+                },
+                "parameters": {
+                    "ra_p_tol": 0.01,
+					"oa_p_tol": 0.01
+                }
+            },
+            "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"
+        },
+		{
+            "no": 2,
+            "run_simulation": false,
+            "simulation_IO": {
+                "idf": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv",
+                "idd": "",
+                "weather": "",
+                "output": "",
+                "ep_path": ""
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "heating_output": {
+                        "subject": "",
+                        "variable": "heating_output",
+                        "frequency": ""
+                    },
+					"cooling_output": {
+                        "subject": "",
+                        "variable": "cooling_output",
+                        "frequency": ""
+                    },
+					"ra_p": {
+                        "subject": "",
+                        "variable": "ra_p",
+                        "frequency": ""
+                    },
+					"max_ra_p": {
+                        "subject": "",
+                        "variable": "max_ra_p",
+                        "frequency": ""
+                    },
+					"oa_p": {
+                        "subject": "",
+                        "variable": "oa_p",
+                        "frequency": ""
+                    },
+					"min_oa_p": {
+                        "subject": "",
+                        "variable": "min_oa_p",
+                        "frequency": ""
+                    },
+					"max_oa_p": {
+                        "subject": "",
+                        "variable": "max_oa_p",
+                        "frequency": ""
+                    },
+					"economizer_high_limit_reached": {
+                        "subject": "",
+                        "variable": "economizer_high_limit_reached",
+                        "frequency": ""
+                    },
+                },
+                "parameters": {
+                    "ra_p_tol": 0.01,
+					"oa_p_tol": 0.01
+                }
+            },
+            "verification_class": "G36OutdoorAirDamperPositionForReliefDamperOrFan"
+        },
+		{
+            "no": 3,
+            "run_simulation": false,
+            "simulation_IO": {
+                "idf": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv",
+                "idd": "",
+                "weather": "",
+                "output": "",
+                "ep_path": ""
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "operation_mode": {
+                        "subject": "",
+                        "variable": "operation_mode",
+                        "frequency": ""
+                    },
+					"oa_t": {
+                        "subject": "",
+                        "variable": "oa_t",
+                        "frequency": ""
+                    },
+					"t_max": {
+                        "subject": "",
+                        "variable": "t_max",
+                        "frequency": ""
+                    },
+					"sa_t_sp_ac": {
+                        "subject": "",
+                        "variable": "sa_t_sp_ac",
+                        "frequency": ""
+                    },
+					"oa_t_min": {
+                        "subject": "",
+                        "variable": "oa_t_min",
+                        "frequency": ""
+                    },
+					"oa_t_max": {
+                        "subject": "",
+                        "variable": "oa_t_max",
+                        "frequency": ""
+                    },
+					"min_clg_sa_t_sp": {
+                        "subject": "",
+                        "variable": "min_clg_sa_t_sp",
+                        "frequency": ""
+                    },
+					"max_clg_sa_t_sp": {
+                        "subject": "",
+                        "variable": "max_clg_sa_t_sp",
+                        "frequency": ""
+                    }
+                },
+                "parameters": {
+					"sa_sp_tol": 0.1
+                }
+            },
+            "verification_class": "G36SupplyAirTemperatureSetpoint"
+        },
+    ]
+}
