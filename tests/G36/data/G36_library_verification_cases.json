@@ -167,7 +167,7 @@
                     }
                 },
                 "parameters": {
-					"sa_sp_tol": 0.1
+                    "sa_sp_tol": 0.1
                 }
             },
             "verification_class": "G36SupplyAirTemperatureSetpoint"
