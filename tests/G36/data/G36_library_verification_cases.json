@@ -18,27 +18,27 @@
                         "variable": "heating_output",
                         "frequency": ""
                     },
-					"cooling_output": {
+                    "cooling_output": {
                         "subject": "",
                         "variable": "cooling_output",
                         "frequency": ""
                     },
-					"ra_p": {
+                    "ra_p": {
                         "subject": "",
                         "variable": "ra_p",
                         "frequency": ""
                     },
-					"max_ra_p": {
+                    "max_ra_p": {
                         "subject": "",
                         "variable": "max_ra_p",
                         "frequency": ""
                     },
-					"oa_p": {
+                    "oa_p": {
                         "subject": "",
                         "variable": "oa_p",
                         "frequency": ""
                     },
-					"max_oa_p": {
+                    "max_oa_p": {
                         "subject": "",
                         "variable": "max_oa_p",
                         "frequency": ""
@@ -46,7 +46,7 @@
                 },
                 "parameters": {
                     "ra_p_tol": 0.01,
-					"oa_p_tol": 0.01
+                    "oa_p_tol": 0.01
                 }
             },
             "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"
@@ -69,37 +69,37 @@
                         "variable": "heating_output",
                         "frequency": ""
                     },
-					"cooling_output": {
+                    "cooling_output": {
                         "subject": "",
                         "variable": "cooling_output",
                         "frequency": ""
                     },
-					"ra_p": {
+                    "ra_p": {
                         "subject": "",
                         "variable": "ra_p",
                         "frequency": ""
                     },
-					"max_ra_p": {
+                    "max_ra_p": {
                         "subject": "",
                         "variable": "max_ra_p",
                         "frequency": ""
                     },
-					"oa_p": {
+                    "oa_p": {
                         "subject": "",
                         "variable": "oa_p",
                         "frequency": ""
                     },
-					"min_oa_p": {
+                    "min_oa_p": {
                         "subject": "",
                         "variable": "min_oa_p",
                         "frequency": ""
                     },
-					"max_oa_p": {
+                    "max_oa_p": {
                         "subject": "",
                         "variable": "max_oa_p",
                         "frequency": ""
                     },
-					"economizer_high_limit_reached": {
+                    "economizer_high_limit_reached": {
                         "subject": "",
                         "variable": "economizer_high_limit_reached",
                         "frequency": ""
@@ -107,7 +107,7 @@
                 },
                 "parameters": {
                     "ra_p_tol": 0.01,
-					"oa_p_tol": 0.01
+                    "oa_p_tol": 0.01
                 }
             },
             "verification_class": "G36OutdoorAirDamperPositionForReliefDamperOrFan"
@@ -130,37 +130,37 @@
                         "variable": "operation_mode",
                         "frequency": ""
                     },
-					"oa_t": {
+                    "oa_t": {
                         "subject": "",
                         "variable": "oa_t",
                         "frequency": ""
                     },
-					"t_max": {
+                    "t_max": {
                         "subject": "",
                         "variable": "t_max",
                         "frequency": ""
                     },
-					"sa_t_sp_ac": {
+                    "sa_t_sp_ac": {
                         "subject": "",
                         "variable": "sa_t_sp_ac",
                         "frequency": ""
                     },
-					"oa_t_min": {
+                    "oa_t_min": {
                         "subject": "",
                         "variable": "oa_t_min",
                         "frequency": ""
                     },
-					"oa_t_max": {
+                    "oa_t_max": {
                         "subject": "",
                         "variable": "oa_t_max",
                         "frequency": ""
                     },
-					"min_clg_sa_t_sp": {
+                    "min_clg_sa_t_sp": {
                         "subject": "",
                         "variable": "min_clg_sa_t_sp",
                         "frequency": ""
                     },
-					"max_clg_sa_t_sp": {
+                    "max_clg_sa_t_sp": {
                         "subject": "",
                         "variable": "max_clg_sa_t_sp",
                         "frequency": ""
