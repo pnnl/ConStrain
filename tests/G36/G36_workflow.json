@@ -101,13 +101,13 @@
         "reporting_obj": "$"
       },
       "Next": "report_cases"
-      },
-      "report_cases": {
-        "Type": "MethodCall",
-        "MethodCall": "Payloads['reporting_obj'].report_multiple_cases",
-        "Parameters": {},
-        "Payloads": {},
-        "End": "True"
-      }
+    },
+    "report_cases": {
+      "Type": "MethodCall",
+      "MethodCall": "Payloads['reporting_obj'].report_multiple_cases",
+      "Parameters": {},
+      "Payloads": {},
+      "End": "True"
+    }
   }
 }
