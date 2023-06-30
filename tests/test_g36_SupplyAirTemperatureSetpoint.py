@@ -4,6 +4,7 @@ sys.path.append("./src")
 from lib_unit_test_runner import *
 
 import pandas as pd
+import numpy as np
 
 
 class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
@@ -16,7 +17,7 @@ class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
             "oa_t",
             "oa_t_min",
             "oa_t_max",
-            "sa_t_s_ac",
+            "sa_t_sp_ac",
             "sa_sp_tol",
         ]
         data = [
@@ -68,7 +69,7 @@ class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
                 False,
                 True,
                 False,
-                "Untested",
+                np.nan,
             ]
         )
         self.assertTrue(results.equals(expected_results))
