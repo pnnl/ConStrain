@@ -1,0 +1,113 @@
+{
+  "workflow_name": "G36 Demo workflow",
+  "meta": {
+    "author": "ConStrain Team",
+    "date": "06/29/2023",
+    "version": "1.0",
+    "description": "Demo workflow to showcase G36 verification item development"
+  },
+  "imports": [
+    "numpy as np",
+    "pandas as pd"
+  ],
+  "states": {
+    "Load G36_SupplyAirTemperatureSetpoint_data": {
+      "Type": "MethodCall",
+      "MethodCall": "DataProcessing",
+      "Parameters": {
+        "data_path": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv",
+	"data_source": "EnergyPlus"
+      },
+      "Payloads": {
+        "data_processing_SATSP_obj": "$"
+      },
+      "Start": "True",
+      "Next": "Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data"
+    },
+    "Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data": {
+      "Type": "MethodCall",
+      "MethodCall": "DataProcessing",
+      "Parameters": {
+        "data_path": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv",
+	"data_source": "EnergyPlus"
+      },
+      "Payloads": {
+        "data_processing_OADPRDF_obj": "$"
+      },
+      "Next": "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data"
+    },
+    "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data": {
+      "Type": "MethodCall",
+      "MethodCall": "DataProcessing",
+      "Parameters": {
+        "data_path": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv",
+	"data_source": "EnergyPlus"
+      },
+      "Payloads": {
+        "data_processing_RADPRDF_obj": "$"
+      },
+      "Next": "load_verification_case"
+    },
+    "load_verification_case": {
+      "Type": "MethodCall",
+      "MethodCall": "VerificationCase",
+      "Parameters": {
+        "json_case_path": "./tests/G36/data/G36_library_verification_cases.json"
+      },
+      "Payloads": {
+        "verification_case_obj": "$"
+      },
+      "Next": "setup_verification"
+    },
+    "setup_verification": {
+      "Type": "MethodCall",
+      "MethodCall": "Verification",
+      "Parameters": {
+        "verifications": "Payloads['verification_case_obj']"
+      },
+      "Payloads": {
+        "verification_obj": "$"
+      },
+      "Next": "configure_verification_runner"
+    },
+    "configure_verification_runner": {
+      "Type": "MethodCall",
+      "MethodCall": "Payloads['verification_obj'].configure",
+      "Parameters": {
+        "output_path": "./tests/G36",
+        "lib_items_path": "./schema/library.json"
+      },
+      "Payloads": {},
+      "Next": "Run_verification"
+    },
+    "Run_verification": {
+      "Type": "MethodCall",
+      "MethodCall": "Payloads['verification_obj'].run",
+      "Parameters": {},
+      "Payloads": {
+        "verification_md": "$.md"
+      },
+      "Next": "reporting_object_instantiation"
+    },
+    "reporting_object_instantiation": {
+      "Type": "MethodCall",
+      "MethodCall": "Reporting",
+      "Parameters": {
+        "verification_json": "./tests/G36/*_md.json",
+        "result_md_name": "report_summary.md",
+        "report_format": "markdown"
+      },
+      "Payloads": {
+        "reporting_obj": "$"
+      },
+      "Next": "report_cases"
+    },
+    "report_cases": {
+      "Type": "MethodCall",
+      "MethodCall": "Payloads['reporting_obj'].report_multiple_cases",
+      "Parameters": {},
+      "Payloads": {},
+      "End": "True"
+    }
+  }
+}
