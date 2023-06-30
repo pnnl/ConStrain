@@ -446,7 +446,7 @@
             "L_op": "Heating Coil Runtime Fraction",
             "C_t_mod": "Heating Coil Heating Rate",
             "P_supp_ht": "Heating Coil Gas Rate",
-            "C_ff_mod":  "Heating Capacity Function of Flow Fraction Curve",
+            "C_ff_mod": "Heating Capacity Function of Flow Fraction Curve",
             "L_defrost": "Defrost load on the heating coil"
         },
         "description_assertions": [
@@ -529,6 +529,225 @@
         },
         "description_assertions": [
             "Check the two different airflow control logics when the room is/isn't rented out"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36FreezeProtectionStage1": {
+        "library_item_id": 39,
+        "description_brief": "G36 freeze protection stage 1 requirements",
+        "description_index": [
+            "Section 5.16.12.1. in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "supply_air_temp": "supply air temperature",
+            "outdoor_damper_command": "outdoor air damper",
+            "outdoor_damper_minimum": "outdoor air damper minimum position"
+        },
+        "description_assertions": [
+            "if supply_air_temp < 4.4 (continuously 5 minutes) and outdoor_damper_command > outdoor_damper_minimum:",
+            "  fail",
+            "elif outdoor_damper_command > outdoor_damper_minimum and not (supply_air_temp > 7 (continuously 5 minutes)):",
+            "  fail",
+            "else:",
+            "  pass",
+            "",
+            "if never (supply_air_temp < 4.4 (continuously 5 minutes)):",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36FreezeProtectionStage2": {
+        "library_item_id": 40,
+        "description_brief": "G36 freeze protection stage 2 requirements",
+        "description_index": [
+            "Section 5.16.12.2. in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "supply_air_temp": "supply air temperature",
+            "outdoor_damper_command": "outdoor air damper"
+        },
+        "description_assertions": [
+            "if supply_air_temp < 3.3 (continuously 5 minutes) and outdoor_damper_command > 0 (ever in the following hour):",
+            "  fail",
+            "else:",
+            "  pass",
+            "if never (supply_air_temp < 3.3 (continuously 5 minutes)):",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36FreezeProtectionStage3": {
+        "library_item_id": 41,
+        "description_brief": "G36 freeze protection stage 3 (highest) requirements",
+        "description_index": [
+            "Section 5.16.12.3. in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "freeze_stat": "(optional, set to False if system does not have it) binary freeze-stat",
+            "supply_air_temp": "supply air temperature",
+            "outdoor_damper_command": "outdoor air damper",
+            "supply_fan_status": "supply fan status (speed): [1, 0] (can be replaced by binary or numeric variables)",
+            "return_fan_status": "(optional, set to False if system does not have it) return fan status (speed)",
+            "relief_fan_status": "(optional, set to False if system does not have it) relief fan status (speed)",
+            "cooling_coil_command": "cooling coil command",
+            "heating_coil_command": "heating coil command"
+        },
+        "description_assertions": [
+            "if supply_air_temp < 3.3 (continuously 15 minutes) or",
+            "  supply_air_temp < 1 (continuously 5 minutes) or",
+            "  freeze_stat == True",
+            "  if not (",
+            "    outdoor_damper_command == 0 and",
+            "    supply_fan_status == 'off' and",
+            "    return_fan_status == 'off' and",
+            "    relief_fan_status == 'off' and",
+            "    cooling_coil_command == 100 and",
+            "    heating_coil_command > 0",
+            "  ):",
+            "    fail",
+            "  else:",
+            "    pass",
+            "if never (",
+            "  supply_air_temp < 3.3 (continuously 15 minutes) or",
+            "  supply_air_temp < 1 (continuously 5 minutes) or",
+            "  freeze_stat == True",
+            "):",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36MinOAwEconomizer": {
+        "library_item_id": 42,
+        "description_brief": "G36 minimum outdoor air control when economizer is active",
+        "description_index": [
+            "Section 5.16 in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "outdoor_air_temp": "outdoor air temperature",
+            "economizer_high_limit_sp": "economizer lockout high limit set point",
+            "outdoor_damper_command": "outdoor air damper command",
+            "min_oa_p": "minimum outdoor air damper position set point",
+            "min_oa_sp": "minimum outdoor air flow rate setpoint",
+            "outdoor_air_flow": "outdoor air flow rate",
+            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']"
+        },
+        "description_assertions": [
+            "if not economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':",
+            "  if oudoor_damper_command >= MinOA-P and outdoor_air_flow >= MinOAsp:",
+            "    pass",
+            "  else:",
+            "    fail",
+            "else:",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36MinOAwoEconomizer": {
+        "library_item_id": 43,
+        "description_brief": "G36 minimum outdoor air control when economizer is in lockout",
+        "description_index": [
+            "Section 5.16 in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "outdoor_air_temp": "outdoor air temperature",
+            "economizer_high_limit_sp": "economizer lockout high limit set point",
+            "outdoor_damper_command": "outdoor air damper command",
+            "return_damper_command": "return air damper command",
+            "outdoor_air_flow": "outdoor air flow rate",
+            "min_oa_sp": "minimum outdoor air flow rate setpoint",
+            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']"
+        },
+        "description_assertions": [
+            "if economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':",
+            "  if outdoor_air_flow < MinOAsp (continuously (e.g. fall below the sp for a consecutive 1 hr)):",
+            "    if outdoor_damper_command == 100 and return_damper_command == 0:",
+            "      pass",
+            "    else:",
+            "      fail",
+            "  elif outdoor_air_flow > MinOAsp (continuously):",
+            "    if outdoor_damper_command == 0 and return_damper_command == 100:",
+            "      pass",
+            "    else:",
+            "      fail",
+            "  else:",
+            "    pass (essentially untested yet)",
+            "else:",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36OutputChangeRateLimit": {
+        "library_item_id": 44,
+        "description_brief": "G36 requirement of controller command change rate limit",
+        "description_index": [
+            "Section 5.1.9 in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "command": "control command to be verified with command range being (0-100)",
+            "max_rate_of_change_per_min": "control loop output maximum rate of change, default to 25."
+        },
+        "description_assertions": [
+            "if abs(command(current_t) - command(prev_t)) > max_rage_of_change_per_min and (current_t - prev_t <= 1 minute):",
+            "  fail",
+            "else:",
+            "  pass"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36ReliefDamperStatus": {
+        "library_item_id": 45,
+        "description_brief": "G36 relief dampers shall be enabled when the associated supply fan is proven ON, and disabled otherwise.",
+        "description_index": [
+            "Section 5.16.8.1 in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "relief_damper_command": "relief damper opening (0-100)",
+            "supply_fan_status": "supply fan status (speed) [1, 0] (can be replaced by binary or numeric variables)"
+        },
+        "description_assertions": [
+            "if relief_damper_command > 0 and supply_fan_status == 'on':",
+            "  pass",
+            "elif supply_fan_status == 'off' and relief_damper_command == 0:",
+            "  pass",
+            "else:",
+            "  fail",
+            "if not ['on', 'off'] in supply_fan_status:",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36SupplyFanStatus": {
+        "library_item_id": 46,
+        "description_brief": "G36 supply fan on/off requirements",
+        "description_index": [
+            "Section 5.16.1.1. in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']",
+            "has_reheat_box_on_perimeter_zones": "binary flag of If there are any VAV-reheat boxes on perimeter zones.",
+            "supply_fan_status": "supply fan status (speed) [1, 0] (can be replaced by binary or numeric variables)"
+        },
+        "description_assertions": [
+            "if has_reheat_box_on_perimeter_zones == True:",
+            "    if sys_mode != 'unoccupied' and supply_fan_status == 'off':",
+            "        fail",
+            "",
+            "else:",
+            "    if sys_mode in ['occupied', 'setup', 'cooldown'] and supply_fan_staus == 'off':",
+            "        fail",
+            "",
+            "if ['occupied', 'unoccupied'] in sys_mode:",
+            "  pass",
+            "else:",
+            "  untested"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"

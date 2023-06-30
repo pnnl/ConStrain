@@ -34,12 +34,12 @@ if never (
 
 ### Data requirements
 
-- freeze_stat (optional): binary freeze-stat
+- freeze_stat: (optional, set to False if system does not have it) binary freeze-stat
 - supply_air_temp: supply air temperature
 - outdoor_damper_command: outdoor air damper
-- supply_fan_status: supply fan status (speed): ['on', 'off'] (can be replaced by binary or numeric variables)
-- return_fan_status (optional, set to off if system does not have it): return fan status (speed)
-- relief_fan_status (optional, set to off if system does not have it): relief fan status (speed)
+- supply_fan_status: supply fan status (speed): [1, 0] (can be replaced by binary or numeric variables)
+- return_fan_status: (optional, set to False if system does not have it) return fan status (speed)
+- relief_fan_status: (optional, set to False if system does not have it) relief fan status (speed)
 - cooling_coil_command: cooling coil command
 - heating_coil_command: heating coil command
 """

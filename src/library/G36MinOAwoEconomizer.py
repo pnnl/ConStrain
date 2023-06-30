@@ -3,6 +3,8 @@ G36 2021
 
 ### Description
 
+Section 5.16 interpretation:
+
 - With Relief damper or relief fan
   - when economizer control is not in lockout, and actual damper positions are controlled by the SAT control loop. Above only set the lower limit for OA damper. Track MinOAsp with a reverse-acting loop and map output to
     - OA (economizer) damper minimum position MinOA-P
@@ -35,6 +37,14 @@ if economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode =
 else:
   untested
 ```
+
+- outdoor_air_temp: outdoor air temperature
+- economizer_high_limit_sp: economizer lockout high limit set point
+- outdoor_damper_command: outdoor air damper command
+- return_damper_command: return air damper command
+- outdoor_air_flow: outdoor air flow rate
+- min_oa_sp: minimum outdoor air flow rate setpoint
+- sys_mode: AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']
 
 """
 
