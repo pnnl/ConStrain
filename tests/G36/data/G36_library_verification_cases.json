@@ -103,7 +103,7 @@
                         "subject": "",
                         "variable": "economizer_high_limit_reached",
                         "frequency": ""
-                    },
+                    }
                 },
                 "parameters": {
                     "ra_p_tol": 0.01,
@@ -171,6 +171,6 @@
                 }
             },
             "verification_class": "G36SupplyAirTemperatureSetpoint"
-        },
+        }
     ]
 }

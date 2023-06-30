@@ -8,32 +8,31 @@
   },
   "imports": [
     "numpy as np",
-    "pandas as pd",
-    "datetime"
+    "pandas as pd"
   ],
   "states": {
     "Load G36_SupplyAirTemperatureSetpoint_data": {
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
-        "data_path": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv"
+        "data_path": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv",
+	"data_source": "EnergyPlus"
       },
       "Payloads": {
-        "data": "$.data",
-        "data_processing_obj": "$"
+        "data_processing_SATSP_obj": "$"
       },
-      "Next": "Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data",
-      "Start": "True"
+      "Start": "True",
+      "Next": "Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data"
     },
     "Load_G36OutdoorAirDamperPositionForReliefDamperOrFan_data": {
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
-        "data_path": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv"
+        "data_path": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv",
+	"data_source": "EnergyPlus"
       },
       "Payloads": {
-        "data": "$.data",
-        "data_processing_obj": "$"
+        "data_processing_OADPRDF_obj": "$"
       },
       "Next": "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data"
     },
@@ -41,47 +40,45 @@
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
-        "data_path": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv"
+        "data_path": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv",
+	"data_source": "EnergyPlus"
       },
       "Payloads": {
-        "data": "$.data",
-        "data_processing_obj": "$"
+        "data_processing_RADPRDF_obj": "$"
       },
-      "Next": "Initialize verification object"
+      "Next": "load_verification_case"
     },
-    "Initialize verification object": {
+    "load_verification_case": {
+      "Type": "MethodCall",
+      "MethodCall": "VerificationCase",
+      "Parameters": {
+        "json_case_path": "./tests/G36/data/G36_library_verification_cases.json"
+      },
+      "Payloads": {
+        "verification_case_obj": "$"
+      },
+      "Next": "Run_verification"
+    },
+    "setup_verification": {
       "Type": "MethodCall",
       "MethodCall": "Verification",
       "Parameters": {
-        "verification_cases_path": "./tests/G36/data/G36_library_verification_cases.json.json"
+        "verifications": "Payloads['verification_case_obj']"
       },
       "Payloads": {
-        "verification": "$"
+        "verification_obj": "$"
       },
-      "Next": "Run verification"
+      "Next": "Run_verification"
     },
-    "Run verification": {
+    "Run_verification": {
       "Type": "MethodCall",
-      "MethodCall": "Payloads['verification'].run",
+      "MethodCall": "Payloads['verification_obj'].run",
       "Parameters": {},
       "Payloads": {
         "verification_md": "$.md",
         "verification_flag": "$.check_bool"
       },
       "Next": "Reporting"
-    },
-    "Reporting": {
-      "Type": "MethodCall",
-      "MethodCall": "Reporting",
-      "Parameters": {
-        "verification_md": "Payloads['verification_md']",
-        "report_path": "x/yy.md",
-        "report_format": "markdown"
-      },
-      "Payloads": {
-        "verification": "$"
-      },
-      "End": "True"
     }
   }
 }
