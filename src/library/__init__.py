@@ -20,6 +20,14 @@ from .G36OutdoorAirDamperPositionForReliefDamperOrFan import *
 from .G36OutdoorAirDamperPositionForReturnFanAirflowTracking import *
 from .G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure import *
 from .G36SupplyAirTemperatureSetpoint import *
+from .G36OutputChangeRateLimit import *
+from .G36SupplyFanStatus import *
+from .G36MinOAwEconomizer import *
+from .G36MinOAwoEconomizer import *
+from .G36ReliefDamperStatus import *
+from .G36FreezeProtectionStage1 import *
+from .G36FreezeProtectionStage2 import *
+from .G36FreezeProtectionStage3 import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -47,4 +55,12 @@ __all__ = [
     "G36OutdoorAirDamperPositionForReturnFanAirflowTracking",
     "G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure",
     "G36SupplyAirTemperatureSetpoint",
+    "G36OutputChangeRateLimit",
+    "G36SupplyFanStatus",
+    "G36MinOAwEconomizer",
+    "G36MinOAwoEconomizer",
+    "G36ReliefDamperStatus",
+    "G36FreezeProtectionStage1",
+    "G36FreezeProtectionStage2",
+    "G36FreezeProtectionStage3",
 ]

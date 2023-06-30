@@ -10,7 +10,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 # %% import packages
 import datetime
 from datetime import timedelta, date
-from typing import List, Dict
+from typing import List, Dict, Union
 from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -323,11 +323,13 @@ class CheckLibBase(ABC):
 
 
 class RuleCheckBase(CheckLibBase):
-    def check_bool(self) -> bool:
+    def check_bool(self) -> Union[bool, str]:
         if len(self.result[self.result == False] > 0):
             return False
-        else:
+        elif len(self.result[self.result == True] > 0):
             return True
+        else:
+            return "Untested"
 
     def check_detail(self) -> Dict:
         output = {
