@@ -15,6 +15,11 @@ else:
 
 ```
 
+### Data requirements
+
+- command: control command to be verified with command range being (0-100)
+- max_rate_of_change_per_min: control loop output maximum rate of change, default to 25.
+
 """
 import pandas as pd
 from checklib import RuleCheckBase

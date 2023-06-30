@@ -16,9 +16,9 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "outdoor_air_temp",
             "economizer_high_limit_sp",
             "outdoor_damper_command",
-            "MinOA-P",
+            "min_oa_p",
             "outdoor_air_flow",
-            "MinOAsp",
+            "min_oa_sp",
             "sys_mode",
         ]
 

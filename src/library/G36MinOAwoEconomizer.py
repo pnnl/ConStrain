@@ -4,9 +4,9 @@ G36 2021
 ### Description
 
 - With Relief damper or relief fan
-  - when eonomizer control is not in lockout, and actual damper positions are controlled by the SAT control loop. Above only set the lower limit for OA damper. Track MinOAsp with a reverse-acting loop and map output to
+  - when economizer control is not in lockout, and actual damper positions are controlled by the SAT control loop. Above only set the lower limit for OA damper. Track MinOAsp with a reverse-acting loop and map output to
     - OA (economizer) damper minimum position MinOA-P
-    - return air damper maximum positivion MaxRA-P
+    - return air damper maximum position MaxRA-P
   - when economizer is in lockout for more than 10 minutes (exceeding economizer high limit conditions in Section 5.1.17), the dampers are controlled to meet minimum OA requirements
     - fully open RA damper
     - set MaxOA-P = MinOA-P, control OA damper to meet MinOAsp
@@ -14,7 +14,7 @@ G36 2021
 
 Verification Item 2:
 
-- when economizer condition okay and occupied, check OA beyond minOA, leave actual control of dampers to SAT control
+- when economizer condition is not okay and occupied, control dampers to maintain outdoor air flow setpoint
 
 ### Verification logic
 
@@ -49,12 +49,12 @@ class G36MinOAwoEconomizer(RuleCheckBase):
         "outdoor_damper_command",
         "return_damper_command",
         "outdoor_air_flow",
-        "MinOAsp",
+        "min_oa_sp",
         "sys_mode",
     ]
 
-    def economizer_lockout(self, outdoor_air_temp, economizer_hjgh_limit_sp):
-        if outdoor_air_temp > economizer_hjgh_limit_sp:
+    def economizer_lockout(self, outdoor_air_temp, economizer_high_limit_sp):
+        if outdoor_air_temp > economizer_high_limit_sp:
             return True
         else:
             return False
@@ -94,7 +94,7 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                 and t["sys_mode"].strip().lower() == "occupied"
             ):
                 # only count the timers when it is in occupied mode with economizer lockout
-                if t["outdoor_air_flow"] < t["MinOAsp"]:
+                if t["outdoor_air_flow"] < t["min_oa_sp"]:
                     high_timer_start = None
                     high_timer_list.append(0)
                     if low_timer_start is None:
@@ -104,7 +104,7 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                         low_timer_list.append(
                             (i - low_timer_start).total_seconds() / 60
                         )
-                if t["outdoor_air_flow"] > t["MinOAsp"]:
+                if t["outdoor_air_flow"] > t["min_oa_sp"]:
                     low_timer_start = None
                     low_timer_list.append(0)
                     if high_timer_start is None:

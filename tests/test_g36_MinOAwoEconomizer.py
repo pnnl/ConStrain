@@ -18,7 +18,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "outdoor_damper_command",
             "return_damper_command",
             "outdoor_air_flow",
-            "MinOAsp",
+            "min_oa_sp",
             "sys_mode",
         ]
 
@@ -54,7 +54,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "outdoor_damper_command",
             "return_damper_command",
             "outdoor_air_flow",
-            "MinOAsp",
+            "min_oa_sp",
             "sys_mode",
         ]
 
@@ -90,7 +90,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "outdoor_damper_command",
             "return_damper_command",
             "outdoor_air_flow",
-            "MinOAsp",
+            "min_oa_sp",
             "sys_mode",
         ]
 
@@ -126,7 +126,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "outdoor_damper_command",
             "return_damper_command",
             "outdoor_air_flow",
-            "MinOAsp",
+            "min_oa_sp",
             "sys_mode",
         ]
 

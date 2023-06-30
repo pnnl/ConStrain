@@ -25,6 +25,12 @@ else:
   untested
 ```
 
+### Data requirements
+
+- sys_mode: AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']
+- has_reheat_box_on_perimeter_zones: binary flag of If there are any VAV-reheat boxes on perimeter zones.
+- supply_fan_status: supply fan status (speed): ['on', 'off'] (can be replaced by binary or numeric variables)
+
 """
 import pandas as pd
 from checklib import RuleCheckBase
