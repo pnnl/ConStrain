@@ -4,10 +4,10 @@
             "no": 1,
             "run_simulation": false,
             "simulation_IO": {
-                "idf": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv",
+                "idf": "",
                 "idd": "",
                 "weather": "",
-                "output": "",
+                "output": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv",
                 "ep_path": ""
             },
             "expected_result": "pass",
@@ -55,10 +55,10 @@
             "no": 2,
             "run_simulation": false,
             "simulation_IO": {
-                "idf": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv",
+                "idf": "",
                 "idd": "",
                 "weather": "",
-                "output": "",
+                "output": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv",
                 "ep_path": ""
             },
             "expected_result": "pass",
@@ -116,10 +116,10 @@
             "no": 3,
             "run_simulation": false,
             "simulation_IO": {
-                "idf": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv",
+                "idf": "",
                 "idd": "",
                 "weather": "",
-                "output": "",
+                "output": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv",
                 "ep_path": ""
             },
             "expected_result": "pass",

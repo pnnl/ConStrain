@@ -1,10 +1,10 @@
 {
-  "workflow_name": "G36 testing workflow",
+  "workflow_name": "G36 Demo workflow",
   "meta": {
-    "author": "author of the workflow",
-    "date": "modified date",
-    "version": "version number of the workflow",
-    "description": "Narrative description of the workflow"
+    "author": "ConStrain Team",
+    "date": "06/29/2023",
+    "version": "1.0",
+    "description": "Demo workflow to showcase G36 verification item development"
   },
   "imports": [
     "numpy as np",
@@ -16,8 +16,7 @@
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
-        "data_path": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv",
-        "data_source": "EnergyPlus"
+        "data_path": "./tests/G36/data/G36_SupplyAirTemperatureSetpoint.csv"
       },
       "Payloads": {
         "data": "$.data",
@@ -30,27 +29,25 @@
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
-        "data_path": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv",
-        "data_source": "EnergyPlus"
+        "data_path": "./tests/G36/data/G36OutdoorAirDamperPositionForReliefDamperOrFan.csv"
       },
       "Payloads": {
         "data": "$.data",
         "data_processing_obj": "$"
       },
-      "Next": "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data",
+      "Next": "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data"
     },
     "Load_G36ReturnAirDamperPositionForReliefDamperOrFan_data": {
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
-        "data_path": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv",
-        "data_source": "EnergyPlus"
+        "data_path": "./tests/G36/data/G36ReturnAirDamperPositionForReliefDamperOrFan.csv"
       },
       "Payloads": {
         "data": "$.data",
         "data_processing_obj": "$"
       },
-      "Next": "Initialize verification object",
+      "Next": "Initialize verification object"
     },
     "Initialize verification object": {
       "Type": "MethodCall",
