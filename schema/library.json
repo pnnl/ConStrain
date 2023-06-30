@@ -533,7 +533,7 @@
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
     },
-    "G36_SupplyAirTemperatureSetpoint": {
+    "G36SupplyAirTemperatureSetpoint": {
         "library_item_id": 30,
         "description_brief": "Supply air temperature operation following the Guideline 36 recommendations",
         "description_detail": "Verify that the supply air temperature setpoint of a system follows the Guideline 36 recommendations",
@@ -581,7 +581,7 @@
             "end"
         ]
     },
-    "G36_SimultaneousHeatingCooling": {
+    "G36SimultaneousHeatingCooling": {
         "library_item_id": 31,
         "description_brief": "Verifiy that both the heating and cooling coil are not operating at the same time",
         "description_index": [
@@ -601,7 +601,7 @@
             "end"
         ]
     },
-    "G36_ReturnAirDamperWithReturnPathNoAirFlowTracking": {
+    "G36ReturnAirDamperPositionForReliefDamperOrFan": {
         "library_item_id": 32,
         "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with relief damper/fan",
         "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
@@ -645,7 +645,7 @@
             "end"
         ]
     },
-    "G36_OutdoorAirDamperWithReturnPathNoAirFlowTracking": {
+    "G36OutdoorAirDamperPositionForReliefDamperOrFan": {
         "library_item_id": 33,
         "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with relief damper/fan",
         "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
@@ -702,7 +702,7 @@
             "end"
         ]
     },
-    "G36_ReturnAirDamperWithReturnPathWithAirFlowTracking": {
+    "G36ReturnAirDamperPositionForReturnFanAirflowTracking": {
         "library_item_id": 34,
         "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
         "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
@@ -720,7 +720,7 @@
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
     },
-    "G36_OutdoorAirDamperWithReturnPathWithAirFlowTracking": {
+    "G36OutdoorAirDamperPositionForReturnFanAirflowTracking": {
         "library_item_id": 35,
         "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
         "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
@@ -742,7 +742,7 @@
             "end"
         ]
     },
-    "G36_ReliefAirDamperWithReturnPathWithAirFlowTracking": {
+    "G36ReliefAirDamperPositionForReturnFanAirflowTracking": {
         "library_item_id": 36,
         "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
         "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
@@ -779,7 +779,7 @@
             "end"
         ]
     },
-    "G36_ReturnAirDamperWithReturnWithBuildingPressureControl": {
+    "G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure": {
         "library_item_id": 37,
         "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with return fan with direct building pressure control",
         "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
@@ -815,7 +815,7 @@
             "end"
         ]
     },
-    "G36_OutdoorAirDamperWithReturnWithBuildingPressureControl": {
+    "G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure": {
         "library_item_id": 38,
         "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with direct building pressure control",
         "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
