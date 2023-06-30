@@ -297,9 +297,9 @@ class VerificationCase:
             },
             "expected_result": str,
             "datapoints_source": {
-                "idf_output_variables": {
-                    "*": {"subject": str, "variable": str, "frequency": str}
-                },
+                # "idf_output_variables": { # @TODO: allow idf output variable to be pure string as well for data variables directly.
+                #     "*": {"subject": str, "variable": str, "frequency": str}
+                # },
                 "parameters": {"*": float},
             },
             "verification_class": str,

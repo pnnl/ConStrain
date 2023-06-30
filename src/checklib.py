@@ -202,14 +202,18 @@ class CheckLibBase(ABC):
         pt_nan = self.df.isnull().any().to_dict()
         i = 2
         for pt in plt_pts:
-            axx = plt.subplot(num_plots, 1, i)
-            if pt_nan[pt]:
-                self.df[pt].plot(ax=axx, marker=".")
-            else:
-                self.df[pt].plot(ax=axx)
-            plt.title(f"All samples - {pt} - {self.__class__.__name__}")
-            i += 1
-            axx.ticklabel_format(useOffset=False, axis="y")
+            try:
+                axx = plt.subplot(num_plots, 1, i)
+                if pt_nan[pt]:
+                    self.df[pt].plot(ax=axx, marker=".")
+                else:
+                    self.df[pt].plot(ax=axx)
+                plt.title(f"All samples - {pt} - {self.__class__.__name__}")
+                i += 1
+                axx.ticklabel_format(useOffset=False, axis="y")
+            except:
+                print(f"{pt} cannot be plotted by itself, ignored in the plot.")
+
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/All_plot_obo.png")
         print()
@@ -225,7 +229,12 @@ class CheckLibBase(ABC):
         ratio = -0.5
 
         # Looking for day with most balanced pass/fail samples
-        for one_day in self.daterange(date(2000, 1, 1), date(2001, 1, 1)):
+        for one_day in self.daterange(
+            date(self.df.index[0].year, self.df.index[0].month, self.df.index[0].day),
+            date(
+                self.df.index[-1].year, self.df.index[-1].month, self.df.index[-1].day
+            ),
+        ):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
             daydf = self.df.loc[daystr]
             day = self.result[daystr]
@@ -305,14 +314,17 @@ class CheckLibBase(ABC):
         pt_nan = plotdaydf.isnull().any().to_dict()
         i = 2
         for pt in plt_pts:
-            axx = plt.subplot(num_plots, 1, i)
-            if pt_nan[pt]:
-                plotdaydf[pt].plot(ax=axx, marker=".")
-            else:
-                plotdaydf[pt].plot(ax=axx)
-            plt.title(f"Example day - {pt} - {self.__class__.__name__}")
-            i += 1
-            axx.ticklabel_format(useOffset=False, axis="y")
+            try:
+                axx = plt.subplot(num_plots, 1, i)
+                if pt_nan[pt]:
+                    plotdaydf[pt].plot(ax=axx, marker=".")
+                else:
+                    plotdaydf[pt].plot(ax=axx)
+                plt.title(f"Example day - {pt} - {self.__class__.__name__}")
+                i += 1
+                axx.ticklabel_format(useOffset=False, axis="y")
+            except:
+                print(f"{pt} cannot be plotted by itself, ignored in the plot.")
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/Day_plot_obo.png")
         print()

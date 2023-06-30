@@ -27,7 +27,7 @@ case "occupied", "setup"
     end
 end
 
-if abs(sa_t_sp - sa_t_s_ac) < sa_sp_tol
+if abs(sa_t_sp - sa_t_sp_ac) < sa_sp_tol
     pass
 else
     fail
@@ -36,6 +36,7 @@ end
 
 """
 from checklib import RuleCheckBase
+import numpy as np
 
 
 class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
@@ -47,7 +48,7 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
         "oa_t",
         "oa_t_min",
         "oa_t_max",
-        "sa_t_s_ac",
+        "sa_t_sp_ac",
         "sa_sp_tol",
     ]
 
@@ -69,8 +70,8 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
                     data["t_max"] - data["min_clg_sa_t_sp"]
                 ) / (data["oa_t_min"] - data["oa_t_max"]) + data["t_max"]
         if sa_t_sp == -999:
-            return "Untested"
-        if abs(sa_t_sp - data["sa_t_s_ac"]) < data["sa_sp_tol"]:
+            return np.nan
+        if abs(sa_t_sp - data["sa_t_sp_ac"]) < data["sa_sp_tol"]:
             return True
         else:
             return False
@@ -79,12 +80,3 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
         self.result = self.df.apply(
             lambda d: self.supply_air_temperature_setpoint(d), axis=1
         )
-
-    def check_bool(self):
-        if len(self.result[self.result == False] > 0):
-            return False
-        else:
-            if len(self.result[self.result == "Untested"] > 0):
-                return "Untested"
-            else:
-                return True

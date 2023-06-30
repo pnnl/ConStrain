@@ -113,6 +113,8 @@ class Item:
                     self.idf_variables_dict[new_point.variable_name] = pointname
                 if pointtype == "dev_settings":
                     self.buildpoints.append(DevSettingPoint(pointname, pointinfo))
+                    new_point = IdfOutputPoint(pointname, pointinfo)
+                    self.idf_variables_dict[new_point.variable_name] = pointname
 
         # Drop None values in pointname and buildpoints caused by no points for certain point types.
         self.pointnamelist = [i for i in self.pointnamelist if i]
