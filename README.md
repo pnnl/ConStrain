@@ -41,6 +41,7 @@ See the Publications section for more information and example of uses of the fra
 
 - Demos are located in `demo/`
 - Visit [API documentation page](https://pnnl.github.io/ConStrain/) to learn about how to use the ConStrain API.
+- Visit [Guideline 36 Verification Items List](./design/g36_lib_contents.md) to learn more about the ASHRAE Guideline 36 related verification in ConStrain verification library.
 
 <!-- ## Note
 
