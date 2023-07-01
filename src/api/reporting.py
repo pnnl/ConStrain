@@ -94,7 +94,7 @@ class Reporting:
         self.md_full_string0 = """
 # Verification Results:
 
-| Case No.               | Simulation Model                           | Verification Class | Sample # | Pass # | Fail # | Verification Passed? |
+| Case No.               | Data Source                                | Verification Class | Sample # | Pass # | Fail # | Verification Passed? |
 | ---------------------- | ------------------------------------------ | ------------------ | -------- | ------ | ------ | -------------------- |
 """
 
