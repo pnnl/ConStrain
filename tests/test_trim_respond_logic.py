@@ -10,9 +10,10 @@ from library.trim_respond_logic import TrimRespondLogic
 start_date = "2023-06-21 12:00:00"  # Start date and time
 end_date = "2023-06-21 12:59:59"  # End date and time
 
-data = pd.DataFrame(columns=["Date/Time", "setpoint", "number_of_requests"])
-timestamps = pd.date_range(start=start_date, end=end_date, freq="2T")
-data["Date/Time"] = timestamps
+data = pd.DataFrame(
+    columns=["setpoint", "number_of_requests"],
+    index=pd.date_range(start=start_date, end=end_date, freq="2T"),
+)
 # fmt: off
 # The below data is from Figure 5.1.14.4 in the ASHRAE G36-2021
 data["setpoint"] = [0.50, 0.46, 0.42, 0.48,0.60, 0.75, 0.81, 0.77, 0.73, 0.69, 0.65, 0.61, 0.57, 0.53, 0.49, 0.45, 0.41, 0.37, 0.33, 0.29, 0.25, 0.21, 0.36, 0.51, 0.66, 0.81, 0.77, 0.73, 0.85, 0.81]
@@ -30,6 +31,7 @@ class TestTrimRespond(unittest.TestCase):
                 dict(data),
                 Td="0",
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin=0.15,
@@ -43,12 +45,33 @@ class TestTrimRespond(unittest.TestCase):
                 logobs.output[0],
             )
 
+        # check `data` index type
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data.reset_index(drop=True),
+                Td=0,
+                ignored_requests=2,
+                SP0=0.5,
+                SPtrim=-0.04,
+                SPres=0.06,
+                SPmin=0.15,
+                SPmax=1.5,
+                SPres_max=0.15,
+                tol=0.01,
+                controller_type="direct_acting",
+            )
+            self.assertEqual(
+                "ERROR:root:Index's format is not in datetime format.",
+                logobs.output[0],
+            )
+
         # check `data` (missing column)
         with self.assertLogs() as logobs:
             TrimRespondLogic(
                 data.drop("setpoint", axis=1),
                 Td="0",
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin=0.15,
@@ -68,6 +91,7 @@ class TestTrimRespond(unittest.TestCase):
                 data,
                 Td="0",
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin=0.15,
@@ -87,6 +111,7 @@ class TestTrimRespond(unittest.TestCase):
                 data,
                 Td=0,
                 ignored_requests="2",
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin=0.15,
@@ -99,12 +124,34 @@ class TestTrimRespond(unittest.TestCase):
                 "ERROR:root:The type of the `ignored_requests` arg must be an int. It cannot be <class 'str'>.",
                 logobs.output[0],
             )
+
+        # check `SP0`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=4,
+                ignored_requests=2,
+                SP0="0.5",
+                SPtrim=-0.04,
+                SPres=0.06,
+                SPmin=0.15,
+                SPmax=1.5,
+                SPres_max=0.15,
+                tol="0.01",
+                controller_type="direct_acting",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `SP0` arg must be a float or int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
         # check `SPtrim`
         with self.assertLogs() as logobs:
             TrimRespondLogic(
                 data,
                 Td=0,
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim="-0.04",
                 SPres=0.06,
                 SPmin=0.15,
@@ -124,6 +171,7 @@ class TestTrimRespond(unittest.TestCase):
                 data,
                 Td=0,
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres="0.06",
                 SPmin=0.15,
@@ -143,6 +191,7 @@ class TestTrimRespond(unittest.TestCase):
                 data,
                 Td=0,
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin="0.15",
@@ -162,6 +211,7 @@ class TestTrimRespond(unittest.TestCase):
                 data,
                 Td=0,
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin=0.15,
@@ -181,6 +231,7 @@ class TestTrimRespond(unittest.TestCase):
                 data,
                 Td=0,
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin=0.15,
@@ -200,6 +251,7 @@ class TestTrimRespond(unittest.TestCase):
                 data,
                 Td=0,
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin=0.15,
@@ -219,6 +271,7 @@ class TestTrimRespond(unittest.TestCase):
                 data,
                 Td=0,
                 ignored_requests=2,
+                SP0=0.5,
                 SPtrim=-0.04,
                 SPres=0.06,
                 SPmin=0.15,
@@ -232,13 +285,35 @@ class TestTrimRespond(unittest.TestCase):
                 logobs.output[0],
             )
 
+        # check if delayed timestamp is in the `df`'s index
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=5,
+                ignored_requests=2,
+                SP0=0.5,
+                SPtrim=-0.04,
+                SPres=0.06,
+                SPmin=0.15,
+                SPmax=1.5,
+                SPres_max=0.15,
+                tol=0.01,
+                controller_type="direct_acting",
+            )
+            self.assertEqual(
+                "ERROR:root:The delayed timestamp must be included in the `df` timestamp.",
+                logobs.output[0],
+            )
+
     def test_TR_logic_verification(self):
         """test whether the T&R logic was implemented correctly."""
 
+        # verify the verification was implemented correctly
         tr_obj = TrimRespondLogic(
             data,
             Td=0,
             ignored_requests=2,
+            SP0=0.5,
             SPtrim=-0.04,
             SPres=0.06,
             SPmin=0.15,
@@ -247,7 +322,15 @@ class TestTrimRespond(unittest.TestCase):
             tol=0.01,
             controller_type="direct_acting",
         )
-        self.assertTrue(all(tr_obj))
+
+        # check if all verification passed
+        self.assertTrue(all(tr_obj["verification"]))
+
+        # check if the setpoint is in the correct range
+        # assume if original and calculated setpoints are within the 1% range, the results are acceptable
+        self.assertTrue(
+            all(abs(tr_obj["setpoint"] - data["setpoint"]) / data["setpoint"] <= 0.01)
+        )
 
 
 if __name__ == "__main__":
