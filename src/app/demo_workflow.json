@@ -1,0 +1,184 @@
+{
+    "workflow_name": "Demo workflow",
+    "meta": {
+        "author": "Xuechen (Jerry) Lei",
+        "date": "03/15/2023",
+        "version": "1.0",
+        "description": "Demo workflow to showcase core Workflow API functionalities"
+    },
+    "imports": [
+        "numpy as np",
+        "pandas as pd",
+        "datetime",
+        "glob"
+    ],
+    "states": {
+        "load data": {
+            "Type": "MethodCall",
+            "MethodCall": "DataProcessing",
+            "Parameters": {
+                "data_path": "./demo/api_demo/demo_dataset.csv",
+                "data_source": "EnergyPlus"
+            },
+            "Payloads": {
+                "data_processing_obj": "$"
+            },
+            "Start": "True",
+            "Next": "slice data to get the first two months"
+        },
+        "slice data to get the first two months": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['data_processing_obj'].slice",
+            "Parameters": {
+                "start_time": {
+                    "Type": "Embedded MethodCall",
+                    "MethodCall": "datetime.datetime",
+                    "Parameters": [
+                        2000,
+                        1,
+                        1,
+                        0
+                    ]
+                },
+                "end_time": {
+                    "Type": "Embedded MethodCall",
+                    "MethodCall": "datetime.datetime",
+                    "Parameters": [
+                        2000,
+                        3,
+                        1,
+                        0
+                    ]
+                }
+            },
+            "Payloads": {
+                "sliced_data": "$"
+            },
+            "Next": "load original verification case"
+        },
+        "load original verification case": {
+            "Type": "MethodCall",
+            "MethodCall": "VerificationCase",
+            "Parameters": {
+                "json_case_path": "./demo/api_demo/demo_verification_cases.json"
+            },
+            "Payloads": {
+                "verification_case_obj": "$",
+                "original_case_keys": "$.case_suite.keys()"
+            },
+            "Next": "check original case length"
+        },
+        "check original case length": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Value": "len(Payloads['original_case_keys']) == 3",
+                    "Equals": "True",
+                    "Next": "validate cases"
+                }
+            ],
+            "Default": "Report Error in workflow"
+        },
+        "validate cases": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Value": "Payloads['verification_case_obj'].validate()",
+                    "Equals": "True",
+                    "Next": "setup verification"
+                }
+            ],
+            "Default": "Report Error in workflow"
+        },
+        "setup verification": {
+            "Type": "MethodCall",
+            "MethodCall": "Verification",
+            "Parameters": {
+                "verifications": "Payloads['verification_case_obj']"
+            },
+            "Payloads": {
+                "verification_obj": "$"
+            },
+            "Next": "configure verification runner"
+        },
+        "configure verification runner": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['verification_obj'].configure",
+            "Parameters": {
+                "output_path": "./demo/api_demo",
+                "lib_items_path": "./schema/library.json",
+                "plot_option": "+x None",
+                "fig_size": "+x (6, 5)",
+                "num_threads": 1,
+                "preprocessed_data": "Payloads['sliced_data']"
+            },
+            "Payloads": {},
+            "Next": "run verification"
+        },
+        "run verification": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['verification_obj'].run",
+            "Parameters": {},
+            "Payloads": {"verification_return": "$"},
+            "Next": "check results"
+        },
+        "check results": {
+            "Type": "MethodCall",
+            "MethodCall": "glob.glob",
+            "Parameters": [
+                "./demo/api_demo/*_md.json"
+            ],
+            "Payloads": {
+                "length_of_mdjson": "len($)"
+            },
+            "Next": "check number of result files"
+        },
+        "check number of result files": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Value": "Payloads['length_of_mdjson']",
+                    "Equals": "3",
+                    "Next": "reporting_object_instantiation"
+                }
+            ],
+            "Default": "Report Error in workflow"
+        },
+        "reporting_object_instantiation": {
+            "Type": "MethodCall",
+            "MethodCall": "Reporting",
+            "Parameters": {
+                "verification_json": "./demo/api_demo/*_md.json",
+                "result_md_name": "report_summary.md",
+                "report_format": "markdown"
+            },
+            "Payloads": {
+                "reporting_obj": "$"
+            },
+            "Next": "report_cases"
+        },
+        "report_cases": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['reporting_obj'].report_multiple_cases",
+            "Parameters": {},
+            "Payloads": {},
+            "Next": "Success"
+        },
+        "Success": {
+            "Type": "MethodCall",
+            "MethodCall": "print",
+            "Parameters": [
+                "Congratulations! the demo workflow is executed with expected results and no error!"
+            ],
+            "End": "True"
+        },
+        "Report Error in workflow": {
+            "Type": "MethodCall",
+            "MethodCall": "logging.error",
+            "Parameters": [
+                "Something is wrong in the workflow execution"
+            ],
+            "End": "True"
+        }
+    }
+}
