@@ -1,4 +1,13 @@
-from PyQt6.QtWidgets import QLabel, QLineEdit, QVBoxLayout, QWidget, QPushButton, QHBoxLayout, QListWidget
+from PyQt6.QtWidgets import (
+    QLabel,
+    QLineEdit,
+    QVBoxLayout,
+    QWidget,
+    QPushButton,
+    QHBoxLayout,
+    QListWidget,
+)
+
 
 class ImportForm(QWidget):
     def __init__(self):
@@ -6,7 +15,7 @@ class ImportForm(QWidget):
 
         import_label = QLabel("Imports:")
         self.import_input = QLineEdit()
-        add_button = QPushButton('Add')
+        add_button = QPushButton("Add")
         self.import_list = QListWidget()
 
         middle = QHBoxLayout()
@@ -27,7 +36,6 @@ class ImportForm(QWidget):
 
         self.setLayout(layout)
 
-
     def add_import(self):
         import_text = self.import_input.text()
         if import_text:
@@ -41,7 +49,6 @@ class ImportForm(QWidget):
                 self.imports.append(i)
                 self.import_list.addItem(i)
         self.update()
-        
 
     def get_imports(self):
         return self.imports

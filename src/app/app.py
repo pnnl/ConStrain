@@ -1,5 +1,19 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QHBoxLayout, QListWidget, QFrame, QDialog, QLabel, QToolBar, QMenu, QFileDialog
+from PyQt6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QVBoxLayout,
+    QWidget,
+    QPushButton,
+    QHBoxLayout,
+    QListWidget,
+    QFrame,
+    QDialog,
+    QLabel,
+    QToolBar,
+    QMenu,
+    QFileDialog,
+)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 from import_form import ImportForm
@@ -9,10 +23,11 @@ from rect_connect import CustomItem
 import json
 
 
-with open('dependencies.json') as file:
+with open("dependencies.json") as file:
     data = json.load(file)
 
 form = {}
+
 
 class GUI(QMainWindow):
     def __init__(self, setting):
@@ -25,14 +40,14 @@ class GUI(QMainWindow):
         self.initialize_ui(setting)
 
     def initialize_ui(self, setting):
-        self.setWindowTitle('ConStrain')
-        
+        self.setWindowTitle("ConStrain")
+
         self.meta_form = MetaForm()
         self.import_form = ImportForm()
         self.states_form = WorkflowDiagram(setting)
 
         self.column_list = QListWidget()
-        self.column_list.addItems(['Meta', 'Imports', 'State'])
+        self.column_list.addItems(["Meta", "Imports", "State"])
         self.column_list.currentItemChanged.connect(self.display_form)
 
         self.column_frame = QFrame()
@@ -46,13 +61,13 @@ class GUI(QMainWindow):
         middle_layout.addWidget(self.column_frame)
         middle_layout.addWidget(self.meta_form)
         middle_layout.addWidget(self.import_form)
-        middle_layout.addWidget(self.states_form)           
+        middle_layout.addWidget(self.states_form)
 
-        self.validate_button = QPushButton('Validate')
+        self.validate_button = QPushButton("Validate")
         self.validate_button.setFixedSize(100, 20)
         self.validate_button.clicked.connect(self.validate_form)
 
-        self.submit_button = QPushButton('Submit')
+        self.submit_button = QPushButton("Submit")
         self.submit_button.setEnabled(False)
         self.submit_button.setFixedSize(100, 20)
         self.submit_button.clicked.connect(self.submit_form)
@@ -76,49 +91,49 @@ class GUI(QMainWindow):
         toolbar = QToolBar()
         self.addToolBar(toolbar)
 
-        file_menu = QMenu('File', self)
+        file_menu = QMenu("File", self)
 
-        import_action = QAction('Import', self)
+        import_action = QAction("Import", self)
         import_action.triggered.connect(self.importFile)
         file_menu.addAction(import_action)
 
-        export_action = QAction('Export', self)
+        export_action = QAction("Export", self)
         export_action.triggered.connect(self.exportFile)
         file_menu.addAction(export_action)
 
-        toolbar.addAction(file_menu.menuAction()) 
+        toolbar.addAction(file_menu.menuAction())
 
     def exportFile(self):
-
-        fp, _ = QFileDialog.getSaveFileName(self, 'Save JSON File', '', 'JSON Files (*.json);;All Files (*)')
+        fp, _ = QFileDialog.getSaveFileName(
+            self, "Save JSON File", "", "JSON Files (*.json);;All Files (*)"
+        )
 
         if fp:
             try:
                 workflow = self.get_workflow()
-                with open(fp, 'w', encoding='utf-8') as f:
+                with open(fp, "w", encoding="utf-8") as f:
                     json.dump(self.create_json(workflow), f, indent=4)
             except Exception:
-                print('error')
+                print("error")
 
     def importFile(self):
         file_dialog = QFileDialog()
-        file_dialog.setWindowTitle('Select a JSON File')
+        file_dialog.setWindowTitle("Select a JSON File")
         file_dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
-        file_dialog.setNameFilter('JSON files (*.json)')
+        file_dialog.setNameFilter("JSON files (*.json)")
         if file_dialog.exec() == QFileDialog.DialogCode.Accepted:
             file_path = file_dialog.selectedFiles()[0]
-            with open(file_path, 'r') as f:
+            with open(file_path, "r") as f:
                 workflow = json.load(f)
                 if isinstance(workflow, dict):
-                    self.meta_form.read_import(workflow.get('workflow_name'), workflow.get('meta'))
-                    self.import_form.read_import(workflow.get('imports'))
-                    self.states_form.read_import(workflow.get('states'))
+                    self.meta_form.read_import(
+                        workflow.get("workflow_name"), workflow.get("meta")
+                    )
+                    self.import_form.read_import(workflow.get("imports"))
+                    self.states_form.read_import(workflow.get("states"))
                     self.get_workflow()
                 else:
-                    print('error')
-                
-                
-
+                    print("error")
 
     def display_form(self, current_item):
         if current_item.text() == self.column_list.item(0).text():
@@ -135,20 +150,28 @@ class GUI(QMainWindow):
             self.states_form.show()
 
     def create_json(self, workflow):
-        data = {'workflow_name': self.meta_form.get_workflow_name(), 'meta': self.meta_form.get_meta(), 
-                'imports': self.import_form.get_imports(), 'states': {}}
+        data = {
+            "workflow_name": self.meta_form.get_workflow_name(),
+            "meta": self.meta_form.get_meta(),
+            "imports": self.import_form.get_imports(),
+            "states": {},
+        }
         for item in workflow:
             copy_item = dict(item)
-            title = copy_item.pop('Title')
-            data['states'][title] = copy_item
+            title = copy_item.pop("Title")
+            data["states"][title] = copy_item
         json_data = data
         return json_data
 
     def submit_form(self):
-        self.submit_button.setEnabled(False)  
+        self.submit_button.setEnabled(False)
 
     def get_workflow(self):
-        items = [item for item in self.states_form.scene.items() if isinstance(item, CustomItem)]
+        items = [
+            item
+            for item in self.states_form.scene.items()
+            if isinstance(item, CustomItem)
+        ]
         roots = []
         for i in items:
             parent = True
@@ -158,17 +181,17 @@ class GUI(QMainWindow):
                     break
             if parent:
                 roots.append(i)
-        
+
                 visited = set()
         paths = []
 
         def dfs_helper(item, path):
             path.append(item)
             visited.add(item)
-            
+
             if item not in items or not item.children:
-                item.setBrush('red')
-                item.state['End'] = 'True'
+                item.setBrush("red")
+                item.state["End"] = "True"
                 paths.append(path[:])
             else:
                 item.setBrush()
@@ -181,11 +204,11 @@ class GUI(QMainWindow):
             visited.remove(item)
 
         for root in roots:
-            root.state['Start'] = 'True'
+            root.state["Start"] = "True"
             self.states_form.view.arrange_tree(root, 0, 0, 150)
             if root not in visited:
                 dfs_helper(root, [])
-            root.setBrush('green')
+            root.setBrush("green")
 
         workflow_path = []
         visited = set()
@@ -203,14 +226,15 @@ class GUI(QMainWindow):
         if valid:
             self.submit_button.setEnabled(True)
 
+
 class UserSetting(QDialog):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('ConStrain')
-        query = QLabel('Advanced or basic user settings?')
-        self.advanced_button = QPushButton('Advanced')
+        self.setWindowTitle("ConStrain")
+        query = QLabel("Advanced or basic user settings?")
+        self.advanced_button = QPushButton("Advanced")
         self.advanced_button.clicked.connect(self.showAdvanced)
-        self.basic_button = QPushButton('Basic')
+        self.basic_button = QPushButton("Basic")
         self.basic_button.clicked.connect(self.showBasic)
 
         form_layout = QVBoxLayout()
@@ -226,12 +250,12 @@ class UserSetting(QDialog):
 
     def showBasic(self):
         self.close()
-        self.gui = GUI('basic')
+        self.gui = GUI("basic")
         self.gui.show()
 
     def showAdvanced(self):
         self.close()
-        self.gui = GUI('advanced')
+        self.gui = GUI("advanced")
         self.gui.show()
 
 

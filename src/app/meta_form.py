@@ -1,19 +1,28 @@
-from PyQt6.QtWidgets import QLabel, QLineEdit, QDateEdit, QTextEdit, QVBoxLayout, QWidget, QHBoxLayout
+from PyQt6.QtWidgets import (
+    QLabel,
+    QLineEdit,
+    QDateEdit,
+    QTextEdit,
+    QVBoxLayout,
+    QWidget,
+    QHBoxLayout,
+)
 from PyQt6.QtCore import QDate
+
 
 class MetaForm(QWidget):
     def __init__(self):
         super().__init__()
 
-        name_label = QLabel('Workflow Name:')
+        name_label = QLabel("Workflow Name:")
         self.name_input = QLineEdit()
 
-        author_label = QLabel('Author:')
+        author_label = QLabel("Author:")
         self.author_input = QLineEdit()
 
-        date_label = QLabel('Date:')
+        date_label = QLabel("Date:")
         self.date_input = QDateEdit()
-        self.date_format = 'MM/dd/yyyy'
+        self.date_format = "MM/dd/yyyy"
         self.date_input.setDisplayFormat(self.date_format)
 
         version_label = QLabel("Version:")
@@ -40,50 +49,51 @@ class MetaForm(QWidget):
 
         self.setLayout(layout)
 
-
     def get_meta(self):
-        return {'author': self.author_input.text(), 'date': self.date_input.text(),
-                'version': self.version_input.text(), 'description': self.description_input.toPlainText()}
-    
-    
-    def read_import(self, workflow_name=None, meta=None):
+        return {
+            "author": self.author_input.text(),
+            "date": self.date_input.text(),
+            "version": self.version_input.text(),
+            "description": self.description_input.toPlainText(),
+        }
 
+    def read_import(self, workflow_name=None, meta=None):
         def isStr(input):
             return isinstance(input, str)
-        
+
         if workflow_name:
             if isStr(workflow_name):
                 self.name_input.setText(workflow_name)
             else:
-                print('error')
+                print("error")
 
         if isinstance(meta, dict):
-            if 'author' in meta.keys():
-                author = meta['author']
+            if "author" in meta.keys():
+                author = meta["author"]
                 if isStr(author):
                     self.author_input.setText(author)
                 else:
-                    print('invalid author')
-            if 'date' in meta.keys():
-                date = meta['date']
+                    print("invalid author")
+            if "date" in meta.keys():
+                date = meta["date"]
                 if isStr(date):
                     d = QDate.fromString(date, self.date_format)
                     self.date_input.setDate(d)
                 else:
-                    print('invalid date')
-            if 'version' in meta.keys():
-                version = meta['version']
+                    print("invalid date")
+            if "version" in meta.keys():
+                version = meta["version"]
                 if isStr(version):
                     self.version_input.setText(version)
                 else:
-                    print('invalid version')
-            if 'description' in meta.keys():
-                description = meta['description']
+                    print("invalid version")
+            if "description" in meta.keys():
+                description = meta["description"]
                 if isStr(description):
                     self.description_input.setText(description)
                 else:
-                    print('invalid description')
+                    print("invalid description")
         self.update()
-    
+
     def get_workflow_name(self):
         return self.name_input.text()
