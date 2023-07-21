@@ -205,12 +205,13 @@ class PopupWindow(QDialog):
             if "Payloads" in state["MethodCall"]:
                 # if regular method call
                 object, method = self.get_object_method_from_call(state["MethodCall"])
+                parameters["Object"] = object
                 object_type = self.get_api_from_method(method)
                 method = self.format_method(method)
                 if "Parameters" in state.keys():
                     for p in state["Parameters"]:
                         parameters[self.format_method(p)] = str(state["Parameters"][p])
-                state["Object"] = object
+                # state["Object"] = object
 
             elif state["MethodCall"] in [api.replace(" ", "") for api in schema.keys()]:
                 # if initialization
@@ -506,8 +507,8 @@ class PopupWindow(QDialog):
 
             if not text:
                 message = f"No input for {parameter}"
-                self.send_error(message)
-                self.error = True
+                # self.send_error(message)
+                # self.error = True
                 break
 
             if parameter == "Name of State":
