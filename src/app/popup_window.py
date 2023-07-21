@@ -22,11 +22,8 @@ with open("dependencies.json") as file:
 
 
 class PopupWindow(QDialog):
-    def __init__(self, schema, payloads={}, edit=False, rect=None):
+    def __init__(self, payloads={}, edit=False, rect=None):
         super().__init__()
-        self.schema = schema
-        self.edit = edit
-        self.rect_item = rect
         self.current_payloads = None
         self.current_params = None
         self.current_choices = None
@@ -63,22 +60,19 @@ class PopupWindow(QDialog):
         self.initialize_ui()
 
     def initialize_ui(self):
-        if self.edit:
-            self.setWindowTitle("Edit State")
-        else:
-            self.setWindowTitle("Add State")
+        self.setWindowTitle("Add State")
 
         layout = QVBoxLayout()
         self.setLayout(layout)
 
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
 
-        object_types = list(self.schema.keys())
+        object_types = list(schema.keys())
         object_types.insert(0, "")
         object_types.append("Custom")
 
         self.object_type_combo_box.addItems(object_types)
-        self.method_combo_box.addItems(self.schema[object_types[1]])
+        self.method_combo_box.addItems(schema[object_types[1]])
 
         layout.addWidget(self.type_combo_box)
         layout.addWidget(self.object_type_combo_box)
@@ -96,14 +90,21 @@ class PopupWindow(QDialog):
             lambda: self.update_form(False)
         )
 
-    def edit_mode(self, payloads):
+    def edit_mode(self, payloads, rect):
         self.setWindowTitle("Edit State")
         self.payloads = payloads
         if self.payloads and self.payload_combo_box:
+            payload_objects_created_in_popup = rect.get_objects_created()
+            current = self.payload_combo_box.currentText()
             self.payload_combo_box.clear()
-            payloads_formatted = [f"{item}" for item in self.payloads]
+            payloads_formatted = [
+                f"{item}"
+                for item in self.payloads
+                if item not in payload_objects_created_in_popup
+            ]
             payloads_formatted.insert(0, "")
             self.payload_combo_box.addItems(payloads_formatted)
+            self.payload_combo_box.setCurrentText(current)
 
     def on_type_selected(self):
         type = self.type_combo_box.currentText()
@@ -160,7 +161,7 @@ class PopupWindow(QDialog):
         if object_type == "Custom":
             self.update_form(custom=True)
         else:
-            methods = self.schema[object_type].keys()
+            methods = schema[object_type].keys()
             self.method_combo_box.addItems(methods)
             self.method_combo_box.show()
 
@@ -169,11 +170,11 @@ class PopupWindow(QDialog):
             object_type = self.object_type_combo_box.currentText()
             method = self.method_combo_box.currentText()
             try:
-                fields = self.schema[object_type][method]
+                fields = schema[object_type][method]
             except KeyError:
                 object_type = "Verification Case"
                 method = "Initialize"
-                fields = self.schema[object_type][method]
+                fields = schema[object_type][method]
 
         self.clear_form()
         self.current_payloads = {}

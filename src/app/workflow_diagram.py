@@ -173,10 +173,10 @@ class WorkflowDiagram(QWidget):
         if self.setting == "basic":
             payloads = self.scene.getObjectsCreated()
             if rect:
-                rect.popup.edit_mode(payloads)
+                rect.popup.edit_mode(payloads, rect)
                 self.popup = rect.popup
             else:
-                self.popup = PopupWindow(data, payloads)
+                self.popup = PopupWindow(payloads)
         else:
             self.popup = AdvancedPopup(rect, edit)
 
