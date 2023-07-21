@@ -174,7 +174,7 @@ class WorkflowDiagram(QWidget):
             payloads = self.scene.getObjectsCreated()
             if rect:
                 if not rect.popup:
-                    rect.popup = PopupWindow(payloads, rect, load=True)
+                    rect.popup = PopupWindow(payloads, rect=rect, load=True)
                 rect.popup.edit_mode(payloads, rect, load=True)
                 self.popup = rect.popup
             else:

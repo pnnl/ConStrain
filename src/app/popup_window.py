@@ -97,106 +97,185 @@ class PopupWindow(QDialog):
             lambda: self.update_form(False)
         )
 
+    def get_object_method_from_call(self, call):
+        print(call)
+        object_pattern = r"Payloads\['(.*?)'\]"
+        method_pattern = r"Payloads\['\w+'\]\.(\w+)"
+
+        object_match = re.search(object_pattern, call)
+        if object_match:
+            object = object_match.group(1)
+        else:
+            object = None
+
+        method_match = re.search(method_pattern, call)
+        if method_match:
+            method = method_match.group(1)
+        else:
+            method = None
+
+        return object, method
+
+    def get_api_from_method(self, method):
+        for api in api_to_method.keys():
+            if method in api_to_method[api]:
+                return api
+        return None
+
+    def format_method(self, method):
+        lowercase_words = ["of", "in"]
+        result = " ".join(word.capitalize() for word in method.split("_"))
+
+        result = result.replace("Json", "JSON")
+
+        for word in lowercase_words:
+            if " " + word + " " in result:
+                result = result.replace(" " + word + " ", " " + word.lower() + " ")
+
+        return result
+
+    def set_state(self, to_set):
+        for i in range(self.form_layout.count()):
+            item = self.form_layout.itemAt(i).widget()
+            parameter = item.title()
+            if parameter in to_set.keys():
+                if item.findChild(QLineEdit):
+                    item.findChild(QLineEdit).setText(to_set[parameter])
+                elif item.findChild(QComboBox):
+                    item.findChild(QComboBox).setCurrentText(to_set[parameter])
+
     def load_ui(self, rect):
-        def get_object_method_from_call(call):
-            print(call)
-            object_pattern = r"Payloads\['(.*?)'\]"
-            method_pattern = r"Payloads\['\w+'\]\.(\w+)"
-
-            object_match = re.search(object_pattern, call)
-            if object_match:
-                object = object_match.group(1)
-            else:
-                object = None
-
-            method_match = re.search(method_pattern, call)
-            if method_match:
-                method = method_match.group(1)
-            else:
-                method = None
-
-            return object, method
-
-        def get_api_from_method(method):
-            for api in api_to_method.keys():
-                if method in api_to_method[api]:
-                    return api
-            return None
-
-        def format_method(method):
-            lowercase_words = ["of", "in"]
-            result = " ".join(word.capitalize() for word in method.split("_"))
-
-            if "json" in result:
-                result = result.replace("json", "JSON")
-
-            for word in lowercase_words:
-                if " " + word + " " in result:
-                    result = result.replace(" " + word + " ", " " + word.lower() + " ")
-
-            return result
-
-        state = rect.state
-        type = state["Type"]
-        title = state["Title"]
-        self.type_combo_box.setCurrentText(type)
-        if type == "MethodCall":
-            if "Payloads" in state["MethodCall"]:
-                object, method = get_object_method_from_call(state["MethodCall"])
-                object_type = get_api_from_method(method)
-                method = format(method)
-                parameters = []
-                if "Parameters" in state.keys():
-                    for p in state["Parameters"]:
-                        parameters.append(
-                            {format_method(p): str(state["Parameters"][p])}
-                        )
-            elif state["MethodCall"] in [api.replace(" ", "") for api in schema.keys()]:
-                object_type = re.sub(r"([a-z])([A-Z])", r"\1 \2", state["MethodCall"])
-                method = "Initialize"
-            else:
-                object_type, method = "Custom", state["MethodCall"]
-                if "Parameters" in state.keys():
-                    parameters = state["Parameters"]
-            current_payloads = []
-            if "Payloads" in state.keys():
-                for p in state["Payloads"]:
-                    current_payloads.append({p: str(state["Payloads"][p])})
-            next = ""
-            if "Next" in state.keys():
-                next = state["Next"]
-
         self.setWindowTitle("Add State")
 
         layout = QVBoxLayout()
         self.setLayout(layout)
 
+        state = rect.state
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
+
+        type = state["Type"]
+        if type == "MethodCall":
+            self.load_method_ui(state, layout)
+        elif type == "Choice":
+            self.load_choice_ui(state, layout)
+        else:
+            return
+
+    def load_choice_ui(self, state, layout):
+        print("arrived")
+        layout = layout
+        state = state
 
         object_types = list(schema.keys())
         object_types.insert(0, "")
         object_types.append("Custom")
+        type = state["Type"]
+        title = state["Title"]
+
+        self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
+        parameters = {}
+
+        if "Choices" in state.keys():
+            current_choices = state["Choices"]
+
+        if "Default" in state.keys():
+            parameters["Default"] = state["Default"]
+
+        parameters["Name of State"] = title
+
+        layout.addWidget(self.type_combo_box)
+        self.type_combo_box.setCurrentText("Choice")
+        layout.addLayout(self.form_layout)
+        layout.addLayout(self.buttons)
+        self.set_state(parameters)
+
+    def load_method_ui(self, state, layout):
+        layout = layout
+        state = state
+
+        object_types = list(schema.keys())
+        object_types.insert(0, "")
+        object_types.append("Custom")
+        type = state["Type"]
+        title = state["Title"]
+        self.type_combo_box.setCurrentText(type)
+        parameters = {}
+        current_payloads = {}
+        if type == "MethodCall":
+            if "Payloads" in state["MethodCall"]:
+                # if regular method call
+                object, method = self.get_object_method_from_call(state["MethodCall"])
+                object_type = self.get_api_from_method(method)
+                method = self.format_method(method)
+                if "Parameters" in state.keys():
+                    for p in state["Parameters"]:
+                        parameters[self.format_method(p)] = str(state["Parameters"][p])
+                state["Object"] = object
+
+            elif state["MethodCall"] in [api.replace(" ", "") for api in schema.keys()]:
+                # if initialization
+                object_type = re.sub(r"([a-z])([A-Z])", r"\1 \2", state["MethodCall"])
+                method = "Initialize"
+                if "Parameters" in state.keys():
+                    for p in state["Parameters"]:
+                        parameters[self.format_method(p)] = str(state["Parameters"][p])
+            else:
+                # if custom
+                object_type = "Custom"
+                # if "Parameters" in state.keys():
+                # parameters = state["Parameters"]
+                parameters["MethodCall"] = state["MethodCall"]
+                custom_parameters = state["Parameters"]
+
+            if "Payloads" in state.keys():
+                for p in state["Payloads"]:
+                    current_payloads[p] = str(state["Payloads"][p])
+
+            next = ""
+            if "Next" in state.keys():
+                next = state["Next"]
 
         self.object_type_combo_box.addItems(object_types)
-        self.method_combo_box.addItems(schema[object_types[1]])
 
-        self.type_combo_box.setCurrentText(type)
-        self.object_type_combo_box.setCurrentText(object_type)
-        self.method_combo_box.setCurrentText(method)
+        self.method_combo_box.addItem("")
+        if object_type != "Custom":
+            self.object_type_combo_box.setCurrentText(object_type)
+        else:
+            self.method_combo_box.hide()
+
+        if object_type in schema.keys():
+            self.method_combo_box.addItems(schema[object_type])
 
         layout.addWidget(self.type_combo_box)
         layout.addWidget(self.object_type_combo_box)
         layout.addWidget(self.method_combo_box)
-        print("arrived")
 
         layout.addLayout(self.form_layout)
         layout.addLayout(self.buttons)
 
         self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
         self.object_type_combo_box.currentIndexChanged.connect(self.on_state_selected)
-        self.method_combo_box.currentIndexChanged.connect(
-            lambda: self.update_form(False)
-        )
+
+        if object_type != "Custom":
+            self.method_combo_box.currentIndexChanged.connect(
+                lambda: self.update_form(False)
+            )
+            self.method_combo_box.setCurrentText(method)
+        else:
+            self.object_type_combo_box.setCurrentText(object_type)
+            self.method_combo_box.currentIndexChanged.connect(
+                lambda: self.update_form(True)
+            )
+            self.current_params = custom_parameters
+            for item in custom_parameters:
+                self.parameter_list_widget.addItem(item)
+
+        parameters["Name of State"] = title
+        parameters["Next"] = next
+        self.set_state(parameters)
+        self.current_payloads = current_payloads
+        for item in current_payloads.keys():
+            self.payload_list_widget.addItem(f"{item}: {current_payloads[item]}")
 
     def edit_mode(self, payloads, rect, load=False):
         self.setWindowTitle("Edit State")
@@ -310,7 +389,7 @@ class PopupWindow(QDialog):
         make_gb("Name of State", QLineEdit())
 
         if custom or method != "Initialize":
-            make_gb("Object:", self.payload_combo_box)
+            make_gb("Object", self.payload_combo_box)
 
         if custom:
             layout = QVBoxLayout()
