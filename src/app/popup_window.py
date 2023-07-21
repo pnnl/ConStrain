@@ -96,8 +96,14 @@ class PopupWindow(QDialog):
             lambda: self.update_form(False)
         )
 
-    def load_ui(self):
-        print("yo")
+    def edit_mode(self, payloads):
+        self.setWindowTitle("Edit State")
+        self.payloads = payloads
+        if self.payloads and self.payload_combo_box:
+            self.payload_combo_box.clear()
+            payloads_formatted = [f"{item}" for item in self.payloads]
+            payloads_formatted.insert(0, "")
+            self.payload_combo_box.addItems(payloads_formatted)
 
     def on_type_selected(self):
         type = self.type_combo_box.currentText()

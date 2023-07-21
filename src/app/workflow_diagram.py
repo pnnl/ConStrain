@@ -122,10 +122,11 @@ class WorkflowDiagram(QWidget):
         if "Type" in state.keys() and state["Type"] not in ["Choice", "MethodCall"]:
             return
 
+        print("hello?")
         self.create_item(state)
 
     def create_item(self, state):
-        rect_item = CustomItem(state, left=True)
+        rect_item = CustomItem(state, left=True, popup=self.popup)
 
         def connect_rects(parent, child):
             child_control = child.controls[2]
@@ -148,11 +149,14 @@ class WorkflowDiagram(QWidget):
                 if next == state["Title"]:
                     connect_rects(rect, rect_item)
 
+        print("how")
         self.scene.addItem(rect_item)
         self.update()
 
     def edit_state(self, rect):
+        print("here")
         current_state = self.popup.get_state()
+
         if current_state["Type"] not in ["Choice", "MethodCall"]:
             return
 
@@ -168,12 +172,19 @@ class WorkflowDiagram(QWidget):
     def call_popup(self, rect=None, edit=False):
         if self.setting == "basic":
             payloads = self.scene.getObjectsCreated()
-            self.popup = PopupWindow(data, payloads, rect, edit)
+            if rect:
+                rect.popup.edit_mode(payloads)
+                self.popup = rect.popup
+            else:
+                self.popup = PopupWindow(data, payloads)
         else:
             self.popup = AdvancedPopup(rect, edit)
 
         if edit and rect:
-            self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
+            try:
+                self.popup.save_button.clicked.disconnect(self.add_state)
+            except TypeError:
+                self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
             self.popup.save_button.clicked.connect(self.add_state)
         self.popup.exec()

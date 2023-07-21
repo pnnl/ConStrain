@@ -204,7 +204,7 @@ class CustomItem(QtWidgets.QGraphicsItem):
     pen = QtGui.QPen(QtGui.QColor(98, 99, 102, 255))
     controlBrush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
 
-    def __init__(self, state, left=False, right=False, *args, **kwargs):
+    def __init__(self, state, left=False, right=False, popup=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.brush = QtGui.QBrush(QtGui.QColor(214, 127, 46))
         self.state = state
@@ -212,6 +212,7 @@ class CustomItem(QtWidgets.QGraphicsItem):
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
         self.rect = QtCore.QRectF(0, 0, 100, 30)
         self.titleItem = QtWidgets.QGraphicsTextItem(parent=self)
+        self.popup = popup
 
         self.children = []
         self.controls = []
@@ -444,7 +445,7 @@ class Scene(QtWidgets.QGraphicsScene):
         rect_items = [item for item in self.items() if isinstance(item, CustomItem)]
         objects_in_use = []
         for rect_item in rect_items:
-            rect_item_objects = rect_item.get_objcts_created()
+            rect_item_objects = rect_item.get_objects_created()
             for rect_item_object in rect_item_objects:
                 objects_in_use.append(rect_item_object)
         return objects_in_use

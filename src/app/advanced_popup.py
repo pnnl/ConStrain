@@ -1,6 +1,5 @@
 from PyQt6.QtWidgets import (
     QLabel,
-    QLineEdit,
     QVBoxLayout,
     QPushButton,
     QDialog,
@@ -9,7 +8,6 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QFontMetricsF
 import json
-import re
 
 
 class AdvancedPopup(QDialog):
@@ -29,7 +27,7 @@ class AdvancedPopup(QDialog):
             self.state_input.setText(rect.get_state_string())
 
         font = self.state_input.font()
-        fontMtrics = QFontMetricsF(font)
+        fontMetrics = QFontMetricsF(font)
         spaceWidth = fontMetrics.horizontalAdvance(" ")
         self.state_input.setTabStopDistance(spaceWidth * 4)
 
