@@ -119,7 +119,6 @@ class WorkflowDiagram(QWidget):
             return
 
         state = self.popup.get_state()
-        print(state)
         if "Type" in state.keys() and state["Type"] not in ["Choice", "MethodCall"]:
             return
 
@@ -174,7 +173,9 @@ class WorkflowDiagram(QWidget):
         if self.setting == "basic":
             payloads = self.scene.getObjectsCreated()
             if rect:
-                rect.popup.edit_mode(payloads, rect)
+                if not rect.popup:
+                    rect.popup = PopupWindow(payloads, rect, load=True)
+                rect.popup.edit_mode(payloads, rect, load=True)
                 self.popup = rect.popup
             else:
                 self.popup = PopupWindow(payloads)

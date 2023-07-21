@@ -212,7 +212,10 @@ class CustomItem(QtWidgets.QGraphicsItem):
         self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
         self.rect = QtCore.QRectF(0, 0, 100, 30)
         self.titleItem = QtWidgets.QGraphicsTextItem(parent=self)
+
         self.popup = popup
+        if self.popup is None:
+            self.loadPopup()
 
         self.children = []
         self.controls = []
@@ -277,6 +280,9 @@ class CustomItem(QtWidgets.QGraphicsItem):
             painter.drawRoundedRect(self.rect, 4, 4)
         painter.restore()
 
+    def loadPopup(self):
+        return None
+
     def setBrush(self, color="orange"):
         if color == "red":
             color = QtGui.QColor(214, 54, 64)
@@ -320,7 +326,6 @@ class CustomItem(QtWidgets.QGraphicsItem):
         error_msg.exec()
 
     def get_objects_created(self):
-        print(self.state)
         if self.state["Type"] == "MethodCall":
             if "Payloads" in self.state:
                 payloads = self.state["Payloads"]
