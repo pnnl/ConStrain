@@ -103,6 +103,7 @@ class WorkflowDiagram(QWidget):
         self.scene = Scene()
         self.view = Zoom(self.scene)
         self.view.clicked.connect(self.item_clicked)
+        self.popup = None
 
         self.add_button = QPushButton("Add")
         self.add_button.setFixedSize(100, 20)
@@ -122,11 +123,13 @@ class WorkflowDiagram(QWidget):
         if "Type" in state.keys() and state["Type"] not in ["Choice", "MethodCall"]:
             return
 
-        print("hello?")
         self.create_item(state)
 
     def create_item(self, state):
-        rect_item = CustomItem(state, left=True, popup=self.popup)
+        if self.popup:
+            rect_item = CustomItem(state, left=True, popup=self.popup)
+        else:
+            rect_item = CustomItem(state, left=True)
 
         def connect_rects(parent, child):
             child_control = child.controls[2]
@@ -149,12 +152,10 @@ class WorkflowDiagram(QWidget):
                 if next == state["Title"]:
                     connect_rects(rect, rect_item)
 
-        print("how")
         self.scene.addItem(rect_item)
         self.update()
 
     def edit_state(self, rect):
-        print("here")
         current_state = self.popup.get_state()
 
         if current_state["Type"] not in ["Choice", "MethodCall"]:

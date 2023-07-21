@@ -17,12 +17,15 @@ from PyQt6.QtGui import QAction
 import json
 import re
 
-with open("dependencies.json") as file:
-    schema = json.load(file)
+with open("dependencies.json") as f:
+    schema = json.load(f)
+
+with open("api_to_method.json") as f:
+    api_to_method = json.load(f)
 
 
 class PopupWindow(QDialog):
-    def __init__(self, payloads={}, edit=False, rect=None):
+    def __init__(self, payloads={}, edit=False, state=None):
         super().__init__()
         self.current_payloads = None
         self.current_params = None

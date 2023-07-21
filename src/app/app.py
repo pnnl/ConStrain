@@ -21,6 +21,7 @@ from meta_form import MetaForm
 from workflow_diagram import WorkflowDiagram
 from rect_connect import CustomItem
 import json
+import time
 
 
 with open("dependencies.json") as file:

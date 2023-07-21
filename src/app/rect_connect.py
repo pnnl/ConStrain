@@ -320,9 +320,11 @@ class CustomItem(QtWidgets.QGraphicsItem):
         error_msg.exec()
 
     def get_objects_created(self):
+        print(self.state)
         if self.state["Type"] == "MethodCall":
-            payloads = self.state["Payloads"]
-            return [object_name for object_name in payloads]
+            if "Payloads" in self.state:
+                payloads = self.state["Payloads"]
+                return [object_name for object_name in payloads]
         return []
 
     # get objects that are used in a state
