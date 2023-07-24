@@ -162,21 +162,19 @@ class PopupWindow(QDialog):
             return
 
     def load_choice_ui(self, state, layout):
-        print("arrived")
         layout = layout
         state = state
 
         object_types = list(schema.keys())
         object_types.insert(0, "")
         object_types.append("Custom")
-        type = state["Type"]
         title = state["Title"]
 
         self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
         parameters = {}
 
         if "Choices" in state.keys():
-            current_choices = state["Choices"]
+            self.current_choices = state["Choices"]
 
         if "Default" in state.keys():
             parameters["Default"] = state["Default"]
@@ -188,6 +186,18 @@ class PopupWindow(QDialog):
         layout.addLayout(self.form_layout)
         layout.addLayout(self.buttons)
         self.set_state(parameters)
+
+        for choice in self.current_choices:
+            object, method = self.get_object_method_from_call(choice["Value"])
+            if not object or not method:
+                method = choice["Value"]
+                object = ""
+                widget_line = f"{method} = {choice['Equals']} -> {choice['Next']}"
+            else:
+                widget_line = (
+                    f"{method}({object}) = {choice['Equals']} -> {choice['Next']}"
+                )
+            self.choice_list_widget.addItem(widget_line)
 
     def load_method_ui(self, state, layout):
         layout = layout
@@ -282,10 +292,7 @@ class PopupWindow(QDialog):
         self.setWindowTitle("Edit State")
         self.payloads = payloads
 
-        if load:
-            print("yo")
-
-        elif self.payloads:
+        if not load and self.payloads:
             payload_objects_created_in_popup = rect.get_objects_created()
             current = self.payload_combo_box.currentText()
             self.payload_combo_box.clear()
@@ -341,7 +348,7 @@ class PopupWindow(QDialog):
         make_gb("Default", QLineEdit())
 
     def choice_popup(self):
-        choice_popup = ChoicesPopup(self.payloads)
+        choice_popup = ChoicesPopup(self.payloads, self.current_choices)
         if choice_popup.exec() == QDialog.DialogCode.Accepted:
             self.current_choices = choice_popup.get_input()
             self.update_list(self.choice_list_widget)
@@ -457,7 +464,7 @@ class PopupWindow(QDialog):
             to_add = self.current_choices
             for input in to_add:
                 list_widget.addItem(
-                    f"{input[0]}({input[1]}) equals {input[2]}: {input[3]}"
+                    f"{input[1]}({input[0]}) = {input[2]} -> {input[3]}"
                 )
 
     def clear_form(self):
@@ -490,7 +497,7 @@ class PopupWindow(QDialog):
             else:
                 method = (method.lower()).replace(" ", "_")
                 object = self.payload_combo_box.currentText()
-                self.form_data["MethodCall"] = f"Payloads['{object}'].{method}()"
+                self.form_data["MethodCall"] = f"Payloads['{object}'].{method}"
 
         self.error = False
 
@@ -532,27 +539,17 @@ class PopupWindow(QDialog):
 
     def get_state(self):
         if self.current_payloads is not None and len(self.current_payloads) > 0:
-            print(self.current_payloads)
             self.form_data["Payloads"] = self.current_payloads
 
         if self.current_params is not None and len(self.current_params) > 0:
-            print(self.current_params)
             self.form_data["Parameters"] = self.current_params
 
         if self.current_choices is not None and len(self.current_choices) > 0:
+            print(self.current_choices)
+            print(type(self.current_choices))
             self.form_data["Choices"] = []
             for c in self.current_choices:
-                if len(c) == 4:
-                    method = (c[1].lower()).replace(" ", "_") + "()"
-                    value = f"Payloads['{c[0]}'].{method}"
-                    self.form_data["Choices"].append(
-                        {"Value": value, "Equals": c[2], "Next": c[3]}
-                    )
-                elif len(c) == 3:
-                    self.form_data["Choices"].append(
-                        {"Value": c[0], "Equals": c[1], "Next": c[2]}
-                    )
-
+                self.form_data["Choices"].append(c)
         return self.form_data
 
 
@@ -667,7 +664,6 @@ class ChoicesPopup(QDialog):
 
         self.payloads = payloads
         self.current_input = choices
-        self.input_dict = {}
 
         self.initialize_ui()
 
@@ -764,18 +760,37 @@ class ChoicesPopup(QDialog):
             widget = item.widget()
             widget.deleteLater()
 
+    def get_object_method_from_call(self, call):
+        print(call)
+        object_pattern = r"Payloads\['(.*?)'\]"
+        method_pattern = r"Payloads\['\w+'\]\.(\w+)"
+
+        object_match = re.search(object_pattern, call)
+        if object_match:
+            object = object_match.group(1)
+        else:
+            object = None
+
+        method_match = re.search(method_pattern, call)
+        if method_match:
+            method = method_match.group(1)
+        else:
+            method = None
+
+        return object, method
+
     def populate_input_list(self):
         self.input_list.clear()
 
-        if self.current_input:
-            if len(self.current_input) == 3:
-                for method, equals, next in self.current_input:
-                    new_input = f"{method} equals {equals}: {next}"
+        for choice in self.current_input:
+            object, method = self.get_object_method_from_call(choice["Value"])
+            if not object or not method:
+                method = choice["Value"]
+                object = ""
+                widget_line = f"{method} = {choice['Equals']} -> {choice['Next']}"
             else:
-                for object, method, equals, next in self.current_input:
-                    new_input = f"{method}({object}) equals {equals}: {next}"
-            self.input_dict[new_input] = self.current_input[0]
-            self.input_list.addItem(new_input)
+                widget_line = f"Payloads['{object}'].{method} = {choice['Equals']} -> {choice['Next']}"
+            self.input_list.addItem(widget_line)
 
     def add_input(self):
         object = self.object_input.currentText()
@@ -787,10 +802,11 @@ class ChoicesPopup(QDialog):
         next = self.next_input.text()
 
         if method and equals and next:
-            if object:
-                self.current_input.append((object, method, equals, next))
+            if object != "":
+                value = f"Payloads['{object}'].{method}"
             else:
-                self.current_input.append((method, equals, next))
+                value = method
+            self.current_input.append({"Value": value, "Equals": equals, "Next": next})
             self.populate_input_list()
             self.equals_input.clear()
             self.next_input.clear()
@@ -810,11 +826,8 @@ class ChoicesPopup(QDialog):
         menu.exec(self.input_list.mapToGlobal(position))
 
     def delete_input(self, item):
-        self.current_input.remove(self.input_dict[item.text()])
-        self.input_dict.pop(item.text())
         self.populate_input_list()
         self.input_list.takeItem(self.input_list.row(item))
 
     def get_input(self):
-        print(self.current_input)
         return self.current_input
