@@ -22,6 +22,9 @@ from workflow_diagram import WorkflowDiagram
 from rect_connect import CustomItem
 import json
 import time
+from api.workflow import Workflow
+import warnings
+import unittest, sys, datetime, copy
 
 
 with open("dependencies.json") as file:
@@ -191,10 +194,12 @@ class GUI(QMainWindow):
             visited.add(item)
 
             if item not in items or not item.children:
+                # item is a leaf node
                 item.setBrush("red")
                 item.state["End"] = "True"
                 paths.append(path[:])
             else:
+                # item is not a leaf node
                 item.setBrush()
 
             for child in item.children:
@@ -223,9 +228,11 @@ class GUI(QMainWindow):
     def validate_form(self, data):
         workflow_path = self.get_workflow()
         json_data = self.create_json(workflow_path)
-        valid = True
-        if valid:
-            self.submit_button.setEnabled(True)
+        current_workflow = "current_workflow.json"
+        test = TestWorkflow(current_workflow)
+        test.test_run_workflow()
+        # if valid:
+        # self.submit_button.setEnabled(True)
 
 
 class UserSetting(QDialog):
@@ -258,6 +265,18 @@ class UserSetting(QDialog):
         self.close()
         self.gui = GUI("advanced")
         self.gui.show()
+
+
+class TestWorkflow(unittest.TestCase):
+    def __init__(self, workflow):
+        super().__init__()
+        self.workflow = workflow
+
+    def test_run_workflow(self):
+        warnings.simplefilter(action="ignore", category=FutureWarning)
+        warnings.simplefilter(action="ignore", category=ResourceWarning)
+        workflow = Workflow(workflow="current_workflow.json")
+        workflow.run_workflow(verbose=True)
 
 
 app = QApplication(sys.argv)
