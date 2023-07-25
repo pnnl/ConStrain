@@ -1,0 +1,32 @@
+{
+    "slice data to get the first two months": {
+        "Type": "MethodCall",
+        "MethodCall": "Payloads['data_processing_obj'].slice",
+        "Parameters": {
+            "start_time": {
+                "Type": "Embedded MethodCall",
+                "MethodCall": "datetime.datetime",
+                "Parameters": [
+                    2000,
+                    1,
+                    1,
+                    0
+                ]
+            },
+            "end_time": {
+                "Type": "Embedded MethodCall",
+                "MethodCall": "datetime.datetime",
+                "Parameters": [
+                    2000,
+                    3,
+                    1,
+                    0
+                ]
+            }
+        },
+        "Payloads": {
+            "sliced_data": "$"
+        },
+        "Next": "load original verification case"
+    }
+}

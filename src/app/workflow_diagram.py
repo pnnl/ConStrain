@@ -115,9 +115,6 @@ class WorkflowDiagram(QWidget):
         self.setLayout(layout)
 
     def add_state(self):
-        if self.popup.error:
-            return
-
         state = self.popup.get_state()
         if "Type" in state.keys() and state["Type"] not in ["Choice", "MethodCall"]:
             return
