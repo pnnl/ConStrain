@@ -1,0 +1,92 @@
+{
+    "cases": [
+        {
+            "no": "0",
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/tspr_cases/sat_reset/sat_reset.idf",
+                "idd": "../resources/Energy+V9_2_0.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-2-0\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "verification_class": "SupplyAirTempReset",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "T_sa_set": {
+                        "subject": "Node 85",
+                        "variable": "System Node Setpoint Temperature",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "T_z_coo": 24
+                }
+            }
+        },
+        {
+            "no": "1",
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/tspr_cases/sat_reset/sat_reset2.idf",
+                "idd": "../resources/Energy+V9_2_0.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-2-0\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "verification_class": "SupplyAirTempReset",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "T_sa_set": {
+                        "subject": "Node 85",
+                        "variable": "System Node Setpoint Temperature",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "T_z_coo": 24
+                }
+            }
+        },
+        {
+            "no": "2",
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/tspr_cases/chw_reset/chw_reset.idf",
+                "idd": "../resources/Energy+V9_2_0.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-2-0\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "verification_class": "CHWReset",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "T_oa_db": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Drybulb Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "T_chw": {
+                        "subject": "Node 71",
+                        "variable": "System Node Setpoint Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "m_chw": {
+                        "subject": "Chiller for plant plant_loops-1903",
+                        "variable": "Chiller Evaporator Mass Flow Rate",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {
+                    "T_oa_max": 26.67,
+                    "T_oa_min": 15.67,
+                    "T_chw_max_st": 12.22,
+                    "T_chw_min_st": 6.67
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,1059 @@
+{
+    "SupplyAirTempReset": {
+        "library_item_id": 1,
+        "description_brief": "Cooling supply air temperature reset scale (25%)",
+        "description_detail": "Multiple zone HVAC systems must include controls that automatically reset the supply air temperature in response to representative building loads, or to outdoor air temperature. The controls shall reset the supply air temperature at least 25% of the difference between the design supply air temperature and the design room air temperature. Controls that adjust the reset based on zone humidity are allowed. Zones that are expected to experience relatively constant loads, such as electronic equipment rooms, shall be designed for the fully reset supply temperature.",
+        "description_index": [
+            "Section 6.5.3.5 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_sa_set": "AHU supply air temperature setpoint",
+            "T_z_coo": "Design zone cooling air temperature"
+        },
+        "description_assertions": [
+            "Max(T_sa_set) - Min(T_sa_set) >= (T_z_coo - Min(T_sa_set)) * 0.25"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "EconomizerHighLimitA": {
+        "library_item_id": 2,
+        "description_brief": "Fixed dry bulb economizer high limit",
+        "description_detail": "Economizer needs to be OFF when High-Limit Condition was satisfied. Y_e_HL =f($Climate Zone, $Toa, $Tra, $hoa, $hra)",
+        "description_index": [
+            "Table 6.5.1.1.3 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_oa_db": "OA dry bulb temperature",
+            "oa_threshold": "OA dry bulb threshold",
+            "oa_min_flow": "OA minimum airflow setpoint",
+            "oa_flow": "OA airflow"
+        },
+        "description_assertions": [
+            "(oa_flow > oa_min_flow) AND (T_oa_db > oa_threshold)"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "fail"
+    },
+    "EconomizerHighLimitB": {
+        "library_item_id": 3,
+        "description_brief": "Differential dry bulb economizer high limit",
+        "description_detail": "Check the 90.1-2016 table",
+        "description_index": [
+            "Table 6.5.1.1.3 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_oa_db": "OA dry bulb temperature",
+            "ret_a_temp": "Retuan air temperature",
+            "oa_min_flow": "OA minimum airflow setpoint",
+            "oa_flow": "OA airflow"
+        },
+        "description_assertions": [
+            "(oa_flow > oa_min_flow) AND (ret_a_temp < T_oa_db)"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "fail"
+    },
+    "EconomizerHighLimitC": {
+        "library_item_id": 4,
+        "description_brief": "Fixed enthalpy + fixed dry bulb economizer high limit",
+        "description_detail": "N/A",
+        "description_index": [
+            "Table 6.5.1.1.3 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_oa_db": "OA dry bulb temperature",
+            "oa_threshold": "OA dry bulb threshold",
+            "oa_min_flow": "OA minimum airflow setpoint",
+            "oa_flow": "OA airflow",
+            "oa_enth": "OA enthalpy",
+            "oa_enth_threshold": "OA enthalpy threshold"
+        },
+        "description_assertions": [
+            "(oa_flow > oa_min_flow) AND ((T_oa_db > oa_threshold) OR (oa_enth > oa_enth_threshold))"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "fail"
+    },
+    "EconomizerHighLimitD": {
+        "library_item_id": 5,
+        "description_brief": "Differential enthalpy + fixed dry bulb economizer high limit (case study)",
+        "description_detail": "N/A",
+        "description_index": [
+            "Table 6.5.1.1.3 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_oa_db": "OA dry bulb temperature",
+            "oa_threshold": "OA dry bulb threshold",
+            "oa_min_flow": "OA minimum airflow setpoint",
+            "oa_flow": "OA airflow",
+            "oa_enth": "OA enthalpy",
+            "ret_a_enth": "Return air enthalpy"
+        },
+        "description_assertions": [
+            "oa_flow > oa_min_flow) AND ((ret_a_enth < oa_enth) OR (T_oa_db > oa_threshold))"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "fail"
+    },
+    "IntegratedEconomizerControl": {
+        "library_item_id": 6,
+        "description_brief": "Economizer shall be integrated with mechanical cooling",
+        "description_detail": "Economizer systems shall be integrated with the mechanical cooling system and be capable of and configured to provide partial cooling even when additional mechanical cooling is required to meet the remainder of the cooling load. Controls shall not false load the mechanical cooling systems by limiting or disabling the economizer or by any other means, such as hot-gas bypass, except at the lowest stage of mechanical cooling. (case study, add non-integrated economizer (check each seprate on, but not both on)",
+        "description_index": [
+            "Section 6.5.1.3 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "oa_min_flow": "OA minimum airflow setpoint",
+            "oa_flow": "OA airflow",
+            "ccoil_out": "Cooling coil transfer"
+        },
+        "description_assertions": [
+            "((oa_flow > oa_min_flow) AND (ccoil_out > 0)) never happens"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "fail"
+    },
+    "ERVRatio": {
+        "library_item_id": 7,
+        "description_brief": "ERV ratio of at least 50%",
+        "description_detail": "Energy recovery systems required by this section shall result in an enthalpy recovery ratio of at least 50%. A 50% enthalpy recovery ratio shall mean a change in the enthalpy of the outdoor air supply equal to 50% of the difference between the outdoor air and entering exhaust air enthalpies at design conditions.",
+        "description_index": [
+            "Section 6.5.6.1 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "oa_enth": "OA enthalpy",
+            "ret_enth": "Return air enthalpy",
+            "oa_enth_ERV": "OA enthalpy after ERV"
+        },
+        "description_assertions": [
+            "(oa_enth_ERV - oa_enth)/(ret_enth - oa_enth) > = 50%  happens at least once in winter design day"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ZoneTempControl": {
+        "library_item_id": 8,
+        "description_brief": "Zone temperature setpoint deadband >= 5F (2.77C)",
+        "description_detail": "Where used to control both heating and cooling, zone thermostatic controls shall be capable of and configured to provide a temperature range or dead band of at least 5°F within which the supply of heating and cooling energy to the zone is shut off or reduced to a minimum. (case study for zone temperature reset, not for this one)",
+        "description_index": [
+            "Section 6.4.3.1.2 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_set_cool": "Zone cooling temperature setpoint",
+            "T_set_heat": "Zone heating temperature setpoint"
+        },
+        "description_assertions": [
+            "T_set_cool - T_set_heat > 5F (2.77C)"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "HWReset": {
+        "library_item_id": 9,
+        "description_brief": "Hot water supply water temperature reset",
+        "description_detail": "Hot-water systems with a design capacity exceeding 300,000 Btu/h supplying heated water to comfort conditioning systems shall include controls that automatically reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. Where DDC is used to control valves, the set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached. (case study)",
+        "description_index": [
+            "Section 6.5.4.4 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_oa_db": "OA dry-bulb temperature",
+            "T_oa_max": "OA dry-bulb upper threshold",
+            "T_oa_min": "OA dry-bulb lower threshold",
+            "T_hw": "Hot water temp observed from the system node",
+            "m_hw": "Hot water flow rate",
+            "T_hw_max_set": "Hot water maximum temp setpoint",
+            "T_hw_min_set": "Hot water minimum temp setpoint"
+        },
+        "description_assertions": [
+            "When m_hw > 0, T_hw <= T_hw_max_set and T_hw >= T_hw_min_set; When m_hw < 0, always pass"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "CHWReset": {
+        "library_item_id": 10,
+        "description_brief": "Chilled water supply water temperature reset",
+        "description_detail": "Chilled-water systems with a design capacity exceeding 300,000 Btu/h supplying chilled water to comfort conditioning systems shall include controls that automatically reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. Where DDC is used to control valves, the set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached. (case study)",
+        "description_index": [
+            "Section 6.5.4.4 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_oa_db": "OA dry-bulb temperature",
+            "T_oa_max": "OA dry-bulb upper threshold",
+            "T_oa_min": "OA dry-bulb lower threshold",
+            "T_chw": "Chilled water temp observed from the system node",
+            "m_chw": "Chilled water flow rate",
+            "T_chw_max_set": "Chilled water maximum temp setpoint",
+            "T_chw_min_set": "Chilled water minimum temp setpoint"
+        },
+        "description_assertions": [
+            "When m_chw > 0, T_chw <= T_chw_max_set and T_chw >= T_chw_min_set; When m_chw <= 0 , always pass"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "ZoneHeatSetpointMinimum": {
+        "library_item_id": 11,
+        "description_brief": "Zone heating setpoint reset temperature minimum value check",
+        "description_detail": "Heating systems located in climate zones 2-8 shall be equipped with controls that have the capability to automatically restart and temporarily operate the system as required to maintain zone temperatures above a heating setpoint adjustable down to 55°F or lower. (case study)",
+        "description_index": [
+            "Section 6.4.3.2.2 in 90.1-2004"
+        ],
+        "description_datapoints": {
+            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature"
+        },
+        "description_assertions": [
+            "if min(T_heat_set) <= 55°F, then pass"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ZoneCoolingSetpointMaximum": {
+        "library_item_id": 12,
+        "description_brief": " Cooling systems located in climate zones 1b, 2b, and 3b shall be equipped with controls that have the capability to automatically restart and temporarily operate the system as required to maintain zone temperatures below a cooling setpoint adjustable up to 90°F or higher or to prevent high space humidity levels. (case study)",
+        "description_index": [
+            "Section 6.4.3.2.2 in 90.1-2004"
+        ],
+        "description_datapoints": {
+            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature"
+        },
+        "description_assertions": [
+            "if max(T_cool_set) >= 90F, then pass"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ZoneHeatingResetDepth": {
+        "library_item_id": 13,
+        "description_brief": "Heating systems shall be equipped with controls capable of and configured to automatically restart and temporarily operate the system as required to maintain zone temperatures above an adjustable heating set point at least 10°F below (will be 60°F) the occupied heating set point. (case study)",
+        "description_index": [
+            "Section 6.4.3.3.2 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature"
+        },
+        "description_assertions": [
+            "if max(T_heat_set) - min(T_heat_set) >= 10F, then pass"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ZoneCoolingResetDepth": {
+        "library_item_id": 14,
+        "description_brief": "Cooling systems shall be equipped with controls capable of and configured to automatically restart and temporarily operate the mechanical cooling system as required to maintain zone temperatures below an adjustable cooling set point at least 5°F above the occupied cooling set point or to prevent high space humidity levels. (case study)",
+        "description_index": [
+            "Section 6.4.3.3.2 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature"
+        },
+        "description_assertions": [
+            "if max(T_cool_set) - min(T_cool_set) >= 5F, then pass"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "NightCycleOperation": {
+        "library_item_id": 15,
+        "description_brief": "TSPR tool software development",
+        "description_index": [
+            null
+        ],
+        "description_datapoints": {
+            "T_zone": "Zone Air Temperature",
+            "HVAC_operation_sch": "HVAC Operation Schedule",
+            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature",
+            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature",
+            "Fan_elec_rate": "Fan Electricity Rate"
+        },
+        "description_assertions": [
+            "if T_heat_set <= T_zone <= T_cool_set and Fan_elec_rate ==0 then x1=0 else x1=1, if (T_zone > T_cool_set and Fan_elec_rate >= 0) and (T_zone < T_heat_set and Fan_elec_rate>0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ERVTemperatureControl": {
+        "library_item_id": 16,
+        "description_brief": "TSPR tool software development",
+        "description_index": [
+            null
+        ],
+        "description_datapoints": {
+            "MIN_OA_FLOW": "Minimum outdoor air flow rate",
+            "OA_FLOW": "Outdoor air flow rate",
+            "NOM_FLOW": "Heat exchanger's norminal flow rate",
+            "HX_DSN_EFF_HTG": "Heat exchanger heating effectiveness at the nominal air flow rate",
+            "HX_DSN_EFF_HTG_75_PCT": "Heat exchanger heating effectiveness at 75% of the nominal air flow rate",
+            "HX_DSN_EFF_CLG": "Heat exchanger cooling effectiveness at the nominal air flow rate",
+            "HX_DSN_EFF_CLG_75_PCT": "Heat exchanger cooling effectiveness at 75% of the nominal air flow rate",
+            "T_OA": "Outdoor air dry-bulb temperature",
+            "T_SO": "Supply air temperature",
+            "T_SO_SP": "Supply air temperature setpoint",
+            "T_EI": "Zone air temperature"
+        },
+        "description_assertions": [
+            "Check that the ERV is bypassed during economizer operation; During non-economizer operation, if the outdoor air flow rate, 1) if T_SO > T_SO_SP the ERV is not operating correctly if T_OA < T_EI and the ERV is running, T_OA > T_EI and the ERV is NOT running and the operating sensible efficiency of the ERV is NOT close to the operating design value, 2) if T_SO < T_SO_SP the ERV is NOT running and the operating sensible efficiency of the ERV is NOT close to the operating design value"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "AutomaticOADamperControl": {
+        "library_item_id": 17,
+        "description_brief": "HVAC system shall be turned on and off everyday",
+        "description_index": [
+            "Section 6.4.3.4.2 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "no_of_occ": "Number of occupants",
+            "m_oa": "Air terminal outdoor air volume flow rate",
+            "eco_onoff": "Air System Outdoor Air Economizer Status",
+            "tol": "Tolerance for the num of occupants"
+        },
+        "description_assertions": [
+            "if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0, then false else pass"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "FanStaticPressureResetControl": {
+        "library_item_id": 18,
+        "description_brief": "The set point is reset lower until one zone damper is nearly wide open",
+        "description_index": [
+            "Section 6.5.3.2.3 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "p_set": "Static pressure setpoint",
+            "d_VAV_x": "VAV Damper x Position (includes all VAV dampers served by the system under test",
+            "tol": "Tolerance for VAV box damper position openings",
+            "p_set_min": ": Minimum static pressure setpoint threshold"
+        },
+        "description_assertions": [
+            "if d_VAV(n) (n=1,2,...,N) < 0.9 and p_set(t) > p_set(t-1), then fail else pass"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "HeatRejectionFanVariableFlowControlsCells": {
+        "library_item_id": 19,
+        "description_brief": "Heat rejection fan variable flow controls cells",
+        "description_index": [
+            "Section 6.5.5.2.2 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "ct_op_cells": "Number of operating cooling tower cells",
+            "ct_cells": "Number of cooling tower cells",
+            "ct_m": "Cooling tower mass flow rate",
+            "ct_m_des": "Cooling tower design mass flow rate",
+            "min_flow_frac_per_cell": "Minimum flow fraction per cooling tower cell",
+            "ct_P_fan": "Cooling tower fan power"
+        },
+        "description_assertions": [
+            "if the number of operating cooling tower cells is equal to the maximum number of cooling tower cells then pass else fail"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ServiceWaterHeatingSystemControl": {
+        "library_item_id": 20,
+        "description_brief": "Service water heating system control",
+        "description_index": [
+            "Section 7.4.4.3 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_wh_inlet": "Water temperature on demand side from the water heater"
+        },
+        "description_assertions": [
+            "if maximum(T_wh_inlet) < 43.33 °C Then pass else fail"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "VAVStaticPressureSensorLocation": {
+        "library_item_id": 21,
+        "description_brief": "VAV static pressure sensor location requirement",
+        "description_index": [
+            "Section 6.5.3.2.2 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "p_fan_set": "Static pressure setpoint",
+            "tol_P_fan": "Tolerance for VAV box static pressure sensor"
+        },
+        "description_assertions": [
+            "if static pressure setpoint is no greater than 1.2 in of water (298.608 Pa) then pass else fail"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "VentilationFanControl": {
+        "library_item_id": 22,
+        "description_brief": "Ventilation fan control",
+        "description_index": [
+            "Section 6.4.3.4.4 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "no_of_occ": "People Occupant Count",
+            "Q_load": "Zone Predicted Sensible Load to Setpoint Heat Transfer Rate",
+            "P_fan": "Fan Electric Power"
+        },
+        "description_assertions": [
+            "if Q_load = 0 and no_of_occ = 0 and P_fan != 0 then fail else pass"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "WLHPLoopHeatRejectionControl": {
+        "library_item_id": 23,
+        "description_brief": "Water-loop heat pump heat rejection control",
+        "description_index": [
+            "Section 6.5.2.2.3 (a) in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_max_heating_loop": "maximum temperature of heating loop",
+            "T_min_cooling_loop": "minimum temperature of cooling loop",
+            "m_pump": "Pump Mass Flow Rate",
+            "tol": "Tolerance for water-loop temperature difference"
+        },
+        "description_assertions": [
+            "If the temperature difference between the maximum heating loop and minimum heating loop when the pump runs is greater than 11.11 °C, then pass else fail"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "AutomaticShutdown": {
+        "library_item_id": 24,
+        "description_brief": "Off Hour Automatic Temperature Setback and System Shutoff",
+        "description_index": [
+            null
+        ],
+        "description_datapoints": {
+            "hvac_set": "HVAC Operation Schedule"
+        },
+        "description_assertions": [
+            "if minimum start_time != maximum start_time and minimum end_time != maximum end_time then pass else fail"
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "HeatPumpSupplementalHeatLockout": {
+        "library_item_id": 25,
+        "description_brief": "Supplemental heating coil should be off when the heat pump can meet the load by itself",
+        "description_index": [
+            "Section 6.4.3.5 Heat Pump Auxiliary Heat Control and 6.3.2.h Criteria in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "C_ref": "Heating Coil Reference Capacity",
+            "L_op": "Heating Coil Runtime Fraction",
+            "C_t_mod": "Heating Coil Heating Rate",
+            "P_supp_ht": "Heating Coil Gas Rate",
+            "C_ff_mod": "Heating Capacity Function of Flow Fraction Curve",
+            "L_defrost": "Defrost load on the heating coil"
+        },
+        "description_assertions": [
+            "If C_ref * C_t_mod >= L_op and P_supp_ht == 0 then pass else fail"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "HeatRejectionFanVariableFlowControl": {
+        "library_item_id": 26,
+        "description_brief": "The cooling tower fan power is 30% of the design value at 50% flow",
+        "description_index": [
+            "Section 6.5.5.2.1 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "ct_P_fan": "Cooling Tower Fan Power",
+            "ct_P_fan_dsgn": "Cooling Tower Design Fan Power",
+            "ct_m_fan_ratio": "Cooling Tower Air Flow Rate Ratio",
+            "ct_m_fan_dsgn": "Cooling Tower Design Air Flow"
+        },
+        "description_assertions": [
+            "Verify that at 5% flow, the cooling tower fan power is 30% of the design value. Since simulation results might not include that exact point, we use a regression based approach to determining if the code requirement is met"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "DemandControlVentilation": {
+        "library_item_id": 27,
+        "description_brief": "Demand control ventilation verification for high-occupancy areas",
+        "description_index": [
+            "Section 6.4.3.8 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "v_oa": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+            "s_ahu": "status of HVAC system operation",
+            "s_eco": "Air System Outdoor Air Economizer Status",
+            "no_of_occ": "People Occupant Count"
+        },
+        "description_assertions": [
+            "i) If v_oa is constant over time, NO DCV presents. ii) If v_oa has two clusters, DCV with hbinary control presents. iii) v_oa is linearly correlated to o_ahu, DCV with occupant-counting based control presents"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "GuestRoomControlTemp": {
+        "library_item_id": 28,
+        "description_brief": "Verify whether there is guest room temperature control during operation hours",
+        "description_index": [
+            "Section 6.4.3.3.5 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "T_z_hea_set": "Zone Thermostat Heating Setpoint Temperature",
+            "T_z_coo_set": "Zone Thermostat Cooling Setpoint Temperature",
+            "O_sch": "Occupant Schedule",
+            "tol_occ": "Tolerence for Occupant Schedule",
+            "tol_temp": "Tolerance for Temperature"
+        },
+        "description_assertions": [
+            "Check the two different temperature control logics when the room is/isn't rented out"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "GuestRoomControlVent": {
+        "library_item_id": 29,
+        "description_brief": "Verify whether there is guest room outdoor airflow control during operation hours",
+        "description_index": [
+            "Section 6.4.3.3.5.2 in 90.1-2016"
+        ],
+        "description_datapoints": {
+            "damper_sch": "Damper Schdule",
+            "m_oa_fraction": "Air System Outdoor Air Flow Fraction",
+            "O_sch": "Occupant schedule",
+            "m_oa_heat_design": "Design Heating Air Flow Rate",
+            "m_oa_cool_design": "Design Cooling Air Flow Rate",
+            "volume": "Zone Volume",
+            "v_outdoor_per_zone": "Outdoor Air Flow per Zone Floor Area",
+            "tol_occ": "Tolerence for occupant Schedule",
+            "tol_oa_flow": "Tolerance for Outdoor Airflow"
+        },
+        "description_assertions": [
+            "Check the two different airflow control logics when the room is/isn't rented out"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36SupplyAirTemperatureSetpoint": {
+        "library_item_id": 30,
+        "description_brief": "Supply air temperature operation following the Guideline 36 recommendations",
+        "description_detail": "Verify that the supply air temperature setpoint of a system follows the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.16.2.2 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "operation_mode": "System operation mode",
+            "oa_t": "Outdoor air temperature",
+            "t_max": "Maximum supply air temperature setpoint based on requests",
+            "sa_t_sp_ac": "Actual supply air temperature setpoint",
+            "oa_t_min": "Minimum outdoor air temperature for linear SAT reset",
+            "oa_t_max": "Maximum outdoor air temperature for linear SAT reset",
+            "min_clg_sa_t_sp": "Minimum cooling supply air temperature setpoint",
+            "max_clg_sa_t_sp": "Maximum cooling supply air temperature setpoint",
+            "sa_sp_tol": "supply air temperature tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if t_max > max_clg_sa_t_sp",
+            "    fail",
+            "end",
+            "",
+            "switch operation_mode",
+            "case 'cooldown'",
+            "    sa_t_sp = min_clg_sa_t_sp",
+            "case 'warmup', 'setback",
+            "    sa_t_sp = 35 # 95 F",
+            "case 'occupied', 'setup'",
+            "    if oa_t <= oa_t_min",
+            "        sa_t_sp = t_max",
+            "    else if oa_t >= oa_t_max",
+            "        sa_t_sp = min_clg_sa_t_sp",
+            "    else",
+            "        sa_t_sp = (oa_t - oa_t_min) * (t_max - min_clg_sa_t_sp) / (oa_t_min - oa_t_max) + t_max ",
+            "# linear interpolation",
+            "    end",
+            "end",
+            "",
+            "if abs(sa_t_sp - sa_t_s_ac) < sa_sp_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36SimultaneousHeatingCooling": {
+        "library_item_id": 31,
+        "description_brief": "Verifiy that both the heating and cooling coil are not operating at the same time",
+        "description_index": [
+            "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "heating_output": "AHU heating coil output",
+            "cooling_output": "AHU cooling coil output"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0 and cooling_output > 0",
+            "    fail",
+            "else",
+            "    pass",
+            "end"
+        ]
+    },
+    "G36ReturnAirDamperPositionForReliefDamperOrFan": {
+        "library_item_id": 32,
+        "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with relief damper/fan",
+        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": [
+            "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "max_ra_p": "Maximum return air damper position",
+            "ra_p_tol": "Return air damper position tolerance",
+            "ra_p": "Return air damper position",
+            "oa_p": "Outdoor air damper position",
+            "max_oa_p": "Maximum outdoor air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0",
+            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if cooling_output > 0",
+            "    if abs(ra_p - 0) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if oa_p < max_oa_p",
+            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if abs(oa - max_oa_p) < oa_p_tol",
+            "    if ra_p < max_ra_p",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "end"
+        ]
+    },
+    "G36OutdoorAirDamperPositionForReliefDamperOrFan": {
+        "library_item_id": 33,
+        "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with relief damper/fan",
+        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": [
+            "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "heating_output": "AHU heating coil output",
+            "cooling_output": "AHU cooling coil output",
+            "economizer_high_limit_reached": "Economizer high limit flag",
+            "oa_p": "Outdoor air damper position",
+            "min_oa_p": "Minimum outdoor air damper position",
+            "max_oa_p": "Maximum outdoor air damper position",
+            "oa_p_tol": "Outdoor air damper position tolerance",
+            "ra_p_tol": "Return air damper position tolerance",
+            "ra_p": "Return air damper position",
+            "max_ra_p": "Maximum return air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0",
+            "    if abs(oa_p - min_oa_p) < oa_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if cooling_output > 0",
+            "    if economizer_high_limit_reached",
+            "        if abs(oa_p - min_oa_p) < oa_p_tol",
+            "            pass",
+            "        else",
+            "            fail",
+            "        end",
+            "    else",
+            "        if abs(oa_p - max_oa_p) < oa_p_tol",
+            "            pass",
+            "        else",
+            "            fail",
+            "        end",
+            "    end",
+            "else if ra_p < max_ra_p",
+            "    if abs(oa_p - max_oa_p) < oa_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if abs(ra_p - max_ra_p) < ra_p_tol",
+            "    if min_oa_p < oa_p < max_oa_p",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "end"
+        ]
+    },
+    "G36ReturnAirDamperPositionForReturnFanAirflowTracking": {
+        "library_item_id": 34,
+        "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
+        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": [
+            "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "heating_output": "AHU heating coil output",
+            "cooling_output": "AHU cooling coil output",
+            "max_ra_p": "Maximum return air damper position",
+            "ra_p_tol": "Return air damper position tolerance",
+            "ra_p": "Return air damper position",
+            "rea_p": "Relief air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "G36OutdoorAirDamperPositionForReturnFanAirflowTracking": {
+        "library_item_id": 35,
+        "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
+        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": [
+            "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "oa_p": "Outdoor air damper position",
+            "max_oa_p": "Maximum outdoor air damper position",
+            "oa_p_tol": "Outdoor air damper position tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if abs(oa_p - max_oa_p) < oa_p_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36ReliefAirDamperPositionForReturnFanAirflowTracking": {
+        "library_item_id": 36,
+        "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
+        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": [
+            "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "heating_output": "AHU heating coil output",
+            "cooling_output": "AHU cooling coil output",
+            "max_rea_p": "Maximum return air damper position",
+            "rea_p_tol": "Return air damper position tolerance",
+            "rea_p": "Return air damper position",
+            "ra_p": "Relief air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0",
+            "    if abs(rea_p - 0) < rea_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if cooling_output > 0",
+            "    if abs(rea_p - max_rea_p) < rea_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if abs(rea_p - (1 - ra_p) * max_rea_p) < rea_p_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure": {
+        "library_item_id": 37,
+        "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with return fan with direct building pressure control",
+        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": [
+            "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "heating_output": "AHU heating coil output",
+            "cooling_output": "AHU cooling coil output",
+            "max_ra_p": "Maximum return air damper position",
+            "ra_p_tol": "Return air damper position tolerance",
+            "ra_p": "Return air damper position"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if heating_output > 0",
+            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if cooling_output > 0",
+            "    if abs(ra_p - 0) < ra_p_tol",
+            "        pass",
+            "    else",
+            "        fail",
+            "    end",
+            "else if abs(ra_p - (1 - rea_p) * max_ra_p) < ra_p_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure": {
+        "library_item_id": 38,
+        "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with direct building pressure control",
+        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_index": [
+            "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "oa_p": "Outdoor air damper position",
+            "max_oa_p": "Maximum outdoor air damper position",
+            "oa_p_tol": "Outdoor air damper position tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if abs(oa_p - max_oa_p) < oa_p_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36FreezeProtectionStage1": {
+        "library_item_id": 39,
+        "description_brief": "G36 freeze protection stage 1 requirements",
+        "description_index": [
+            "Section 5.16.12.1. in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "supply_air_temp": "supply air temperature",
+            "outdoor_damper_command": "outdoor air damper",
+            "outdoor_damper_minimum": "outdoor air damper minimum position"
+        },
+        "description_assertions": [
+            "if supply_air_temp < 4.4 (continuously 5 minutes) and outdoor_damper_command > outdoor_damper_minimum:",
+            "  fail",
+            "elif outdoor_damper_command > outdoor_damper_minimum and not (supply_air_temp > 7 (continuously 5 minutes)):",
+            "  fail",
+            "else:",
+            "  pass",
+            "",
+            "if never (supply_air_temp < 4.4 (continuously 5 minutes)):",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36FreezeProtectionStage2": {
+        "library_item_id": 40,
+        "description_brief": "G36 freeze protection stage 2 requirements",
+        "description_index": [
+            "Section 5.16.12.2. in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "supply_air_temp": "supply air temperature",
+            "outdoor_damper_command": "outdoor air damper"
+        },
+        "description_assertions": [
+            "if supply_air_temp < 3.3 (continuously 5 minutes) and outdoor_damper_command > 0 (ever in the following hour):",
+            "  fail",
+            "else:",
+            "  pass",
+            "if never (supply_air_temp < 3.3 (continuously 5 minutes)):",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36FreezeProtectionStage3": {
+        "library_item_id": 41,
+        "description_brief": "G36 freeze protection stage 3 (highest) requirements",
+        "description_index": [
+            "Section 5.16.12.3. in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "freeze_stat": "(optional, set to False if system does not have it) binary freeze-stat",
+            "supply_air_temp": "supply air temperature",
+            "outdoor_damper_command": "outdoor air damper",
+            "supply_fan_status": "supply fan status (speed): [1, 0] (can be replaced by binary or numeric variables)",
+            "return_fan_status": "(optional, set to False if system does not have it) return fan status (speed)",
+            "relief_fan_status": "(optional, set to False if system does not have it) relief fan status (speed)",
+            "cooling_coil_command": "cooling coil command",
+            "heating_coil_command": "heating coil command"
+        },
+        "description_assertions": [
+            "if supply_air_temp < 3.3 (continuously 15 minutes) or",
+            "  supply_air_temp < 1 (continuously 5 minutes) or",
+            "  freeze_stat == True",
+            "  if not (",
+            "    outdoor_damper_command == 0 and",
+            "    supply_fan_status == 'off' and",
+            "    return_fan_status == 'off' and",
+            "    relief_fan_status == 'off' and",
+            "    cooling_coil_command == 100 and",
+            "    heating_coil_command > 0",
+            "  ):",
+            "    fail",
+            "  else:",
+            "    pass",
+            "if never (",
+            "  supply_air_temp < 3.3 (continuously 15 minutes) or",
+            "  supply_air_temp < 1 (continuously 5 minutes) or",
+            "  freeze_stat == True",
+            "):",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36MinOAwEconomizer": {
+        "library_item_id": 42,
+        "description_brief": "G36 minimum outdoor air control when economizer is active",
+        "description_index": [
+            "Section 5.16 in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "outdoor_air_temp": "outdoor air temperature",
+            "economizer_high_limit_sp": "economizer lockout high limit set point",
+            "outdoor_damper_command": "outdoor air damper command",
+            "min_oa_p": "minimum outdoor air damper position set point",
+            "min_oa_sp": "minimum outdoor air flow rate setpoint",
+            "outdoor_air_flow": "outdoor air flow rate",
+            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']"
+        },
+        "description_assertions": [
+            "if not economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':",
+            "  if oudoor_damper_command >= MinOA-P and outdoor_air_flow >= MinOAsp:",
+            "    pass",
+            "  else:",
+            "    fail",
+            "else:",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36MinOAwoEconomizer": {
+        "library_item_id": 43,
+        "description_brief": "G36 minimum outdoor air control when economizer is in lockout",
+        "description_index": [
+            "Section 5.16 in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "outdoor_air_temp": "outdoor air temperature",
+            "economizer_high_limit_sp": "economizer lockout high limit set point",
+            "outdoor_damper_command": "outdoor air damper command",
+            "return_damper_command": "return air damper command",
+            "outdoor_air_flow": "outdoor air flow rate",
+            "min_oa_sp": "minimum outdoor air flow rate setpoint",
+            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']"
+        },
+        "description_assertions": [
+            "if economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':",
+            "  if outdoor_air_flow < MinOAsp (continuously (e.g. fall below the sp for a consecutive 1 hr)):",
+            "    if outdoor_damper_command == 100 and return_damper_command == 0:",
+            "      pass",
+            "    else:",
+            "      fail",
+            "  elif outdoor_air_flow > MinOAsp (continuously):",
+            "    if outdoor_damper_command == 0 and return_damper_command == 100:",
+            "      pass",
+            "    else:",
+            "      fail",
+            "  else:",
+            "    pass (essentially untested yet)",
+            "else:",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36OutputChangeRateLimit": {
+        "library_item_id": 44,
+        "description_brief": "G36 requirement of controller command change rate limit",
+        "description_index": [
+            "Section 5.1.9 in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "command": "control command to be verified with command range being (0-100)",
+            "max_rate_of_change_per_min": "control loop output maximum rate of change, default to 25."
+        },
+        "description_assertions": [
+            "if abs(command(current_t) - command(prev_t)) > max_rage_of_change_per_min and (current_t - prev_t <= 1 minute):",
+            "  fail",
+            "else:",
+            "  pass"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36ReliefDamperStatus": {
+        "library_item_id": 45,
+        "description_brief": "G36 relief dampers shall be enabled when the associated supply fan is proven ON, and disabled otherwise.",
+        "description_index": [
+            "Section 5.16.8.1 in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "relief_damper_command": "relief damper opening (0-100)",
+            "supply_fan_status": "supply fan status (speed) [1, 0] (can be replaced by binary or numeric variables)"
+        },
+        "description_assertions": [
+            "if relief_damper_command > 0 and supply_fan_status == 'on':",
+            "  pass",
+            "elif supply_fan_status == 'off' and relief_damper_command == 0:",
+            "  pass",
+            "else:",
+            "  fail",
+            "if not ['on', 'off'] in supply_fan_status:",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    },
+    "G36SupplyFanStatus": {
+        "library_item_id": 46,
+        "description_brief": "G36 supply fan on/off requirements",
+        "description_index": [
+            "Section 5.16.1.1. in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']",
+            "has_reheat_box_on_perimeter_zones": "binary flag of If there are any VAV-reheat boxes on perimeter zones.",
+            "supply_fan_status": "supply fan status (speed) [1, 0] (can be replaced by binary or numeric variables)"
+        },
+        "description_assertions": [
+            "if has_reheat_box_on_perimeter_zones == True:",
+            "    if sys_mode != 'unoccupied' and supply_fan_status == 'off':",
+            "        fail",
+            "",
+            "else:",
+            "    if sys_mode in ['occupied', 'setup', 'cooldown'] and supply_fan_staus == 'off':",
+            "        fail",
+            "",
+            "if ['occupied', 'unoccupied'] in sys_mode:",
+            "  pass",
+            "else:",
+            "  untested"
+        ],
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass"
+    }
+}

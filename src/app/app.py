@@ -13,19 +13,19 @@ from PyQt6.QtWidgets import (
     QToolBar,
     QMenu,
     QFileDialog,
+    QTextEdit,
 )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTextStream
 from PyQt6.QtGui import QAction
 from import_form import ImportForm
 from meta_form import MetaForm
 from workflow_diagram import WorkflowDiagram
 from rect_connect import CustomItem
 import json
-import time
-from api.workflow import Workflow
+from src.api.workflow import Workflow
 import warnings
-import unittest, sys, datetime, copy
-
+import unittest, sys
+import tempfile
 
 with open("dependencies.json") as file:
     data = json.load(file)
@@ -168,7 +168,13 @@ class GUI(QMainWindow):
         return json_data
 
     def submit_form(self):
-        self.submit_button.setEnabled(False)
+        workflow_path = self.get_workflow()
+        json_data = self.create_json(workflow_path)
+        popup = SubmitPopup()
+        worker = Worker(json_data)
+        worker.update_text.connect(popup.update_text)
+        worker.start()
+        popup.exec()
 
     def get_workflow(self):
         items = [
@@ -225,14 +231,15 @@ class GUI(QMainWindow):
                     visited.add(node)
         return workflow_path
 
-    def validate_form(self, data):
+    def validate_form(self):
         workflow_path = self.get_workflow()
         json_data = self.create_json(workflow_path)
-        current_workflow = "current_workflow.json"
-        test = TestWorkflow(current_workflow)
-        test.test_run_workflow()
-        # if valid:
-        # self.submit_button.setEnabled(True)
+        warnings.simplefilter(action="ignore", category=FutureWarning)
+        warnings.simplefilter(action="ignore", category=ResourceWarning)
+        validate_wf = Workflow(json_data)
+        valid = validate_wf.validate(verbose=True)
+        if valid:
+            self.submit_button.setEnabled(True)
 
 
 class UserSetting(QDialog):
@@ -268,15 +275,60 @@ class UserSetting(QDialog):
 
 
 class TestWorkflow(unittest.TestCase):
-    def __init__(self, workflow):
-        super().__init__()
-        self.workflow = workflow
-
-    def test_run_workflow(self):
+    def test_run_workflow(self, json_data):
         warnings.simplefilter(action="ignore", category=FutureWarning)
         warnings.simplefilter(action="ignore", category=ResourceWarning)
-        workflow = Workflow(workflow="current_workflow.json")
-        workflow.run_workflow(verbose=True)
+        validate_wf = Workflow(json_data)
+        a = validate_wf.validate(verbose=True)
+        print(a)
+        # workflow = Workflow(json_data)
+        # workflow.run_workflow(verbose=True)
+
+
+class Worker(QThread):
+    update_text = pyqtSignal(str)
+
+    def __init__(self, json_data):
+        super(Worker, self).__init__()
+        self.json_data = json_data
+
+    def run(self):
+        sys.stdout = EmittingStream(self.update_text)
+
+        warnings.simplefilter(action="ignore", category=FutureWarning)
+        warnings.simplefilter(action="ignore", category=ResourceWarning)
+        wf = Workflow(self.json_data)
+        wf.run_workflow(verbose=True)
+
+
+class EmittingStream:
+    def __init__(self, signal):
+        self._signal = signal
+
+    def write(self, message):
+        # Emit the signal with the message to update the QTextEdit
+        self._signal.emit(message.strip())
+
+    def flush(self):
+        pass
+
+
+class SubmitPopup(QDialog):
+    def __init__(self):
+        super(SubmitPopup, self).__init__()
+        self.init_ui()
+
+    def init_ui(self):
+        self.setMinimumSize(400, 500)
+        self.setWindowTitle("Results")
+        self.layout = QVBoxLayout()
+        self.text_edit = QTextEdit()
+        self.text_edit.setReadOnly(True)
+        self.layout.addWidget(self.text_edit)
+        self.setLayout(self.layout)
+
+    def update_text(self, message):
+        self.text_edit.append(message)
 
 
 app = QApplication(sys.argv)

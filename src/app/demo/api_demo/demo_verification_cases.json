@@ -1,0 +1,79 @@
+{
+	"cases": [
+		{
+			"no": 1,
+			"run_simulation": false,
+			"simulation_IO": {
+				"idf": "./test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta.idf",
+				"idd": "./resources/Energy+V9_0_1.idd",
+				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+				"output": "./demo/api_demo/demo_dataset.csv",
+				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+			},
+			"expected_result": "pass",
+			"datapoints_source": {
+				"idf_output_variables": {
+					"T_sa_set": {
+						"subject": "VAV_1 Supply Equipment Outlet Node",
+						"variable": "System Node Setpoint Temperature",
+						"frequency": "detailed"
+					}
+				},
+				"parameters": {
+					"T_z_coo": 24.0
+				}
+			},
+			"verification_class": "SupplyAirTempReset"
+		},
+		{
+			"no": 2,
+			"run_simulation": false,
+			"simulation_IO": {
+				"idf": "./test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta.idf",
+				"idd": "./resources/Energy+V9_0_1.idd",
+				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+				"output": "./demo/api_demo/demo_dataset.csv",
+				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+			},
+			"expected_result": "pass",
+			"datapoints_source": {
+				"idf_output_variables": {
+					"T_sa_set": {
+						"subject": "VAV_2 Supply Equipment Outlet Node",
+						"variable": "System Node Setpoint Temperature",
+						"frequency": "detailed"
+					}
+				},
+				"parameters": {
+					"T_z_coo": 24.0
+				}
+			},
+			"verification_class": "SupplyAirTempReset"
+		},
+		{
+			"no": 3,
+			"run_simulation": false,
+			"simulation_IO": {
+				"idf": "./test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta.idf",
+				"idd": "./resources/Energy+V9_0_1.idd",
+				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+				"output": "./demo/api_demo/demo_dataset.csv",
+				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+			},
+			"expected_result": "pass",
+			"datapoints_source": {
+				"idf_output_variables": {
+					"T_sa_set": {
+						"subject": "CAV_KITCHEN SUPPLY EQUIPMENT OUTLET NODE",
+						"variable": "System Node Setpoint Temperature",
+						"frequency": "detailed"
+					}
+				},
+				"parameters": {
+					"T_z_coo": 24.0
+				}
+			},
+			"verification_class": "SupplyAirTempReset"
+		}
+	]
+}

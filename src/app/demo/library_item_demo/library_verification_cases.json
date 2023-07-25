@@ -1,0 +1,270 @@
+{
+    "cases": [
+        {
+            "no": 1,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_Seattle.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "oa_flow": "PSZ-AC:1_OAINLET NODE:System Node Standard Density Volume Flow Rate [m3/s](Each Call)",
+                    "ccoil_out": "PSZ-AC:1:Air System Cooling Coil Total Cooling Energy [J](Each Call)"
+                },
+                "parameters": {
+                    "oa_min_flow": 0.23157
+                }
+            },
+            "verification_class": "IntegratedEconomizerControl"
+        },
+        {
+            "no": 2,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_Seattle.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "oa_flow": "PSZ-AC:2_OAINLET NODE:System Node Standard Density Volume Flow Rate [m3/s](Each Call)",
+                    "ccoil_out": "PSZ-AC:2:Air System Cooling Coil Total Cooling Energy [J](Each Call)"
+                },
+                "parameters": {
+                    "oa_min_flow": 1.892021
+                }
+            },
+            "verification_class": "IntegratedEconomizerControl"
+        },
+        {
+            "no": 3,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_Seattle.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "oa_flow": "PSZ-AC:3_OAINLET NODE:System Node Standard Density Volume Flow Rate [m3/s](Each Call)",
+                    "ccoil_out": "PSZ-AC:3:Air System Cooling Coil Total Cooling Energy [J](Each Call)"
+                },
+                "parameters": {
+                    "oa_min_flow": 0.17811
+                }
+            },
+            "verification_class": "IntegratedEconomizerControl"
+        },
+        {
+            "no": 4,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_Seattle.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "oa_flow": "PSZ-AC:4_OAINLET NODE:System Node Standard Density Volume Flow Rate [m3/s](Each Call)",
+                    "ccoil_out": "PSZ-AC:4:Air System Cooling Coil Total Cooling Energy [J](Each Call)"
+                },
+                "parameters": {
+                    "oa_min_flow": 0.17811
+                }
+            },
+            "verification_class": "IntegratedEconomizerControl"
+        },
+        {
+            "no": 5,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_OfficeLarge_STD2019_Seattle.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "T_sa_set": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
+                },
+                "parameters": {
+                    "T_z_coo": 24.0
+                }
+            },
+            "verification_class": "SupplyAirTempReset"
+        },
+        {
+            "no": 6,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_NewYork_a.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "oa_flow": "PSZ-AC:1_OAInlet Node:System Node Standard Density Volume Flow Rate [m3/s](TimeStep)",
+                    "oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)"
+                },
+                "parameters": {
+                    "oa_min_flow": 0.23157,
+                    "oa_threshold": 25.0
+                }
+            },
+            "verification_class": "EconomizerHighLimitA"
+        },
+        {
+            "no": 7,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_NewYork_b.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "oa_flow": "PSZ-AC:1_OAInlet Node:System Node Standard Density Volume Flow Rate [m3/s](TimeStep)",
+                    "oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
+                    "ret_a_temp": "PSZ-AC:1 Supply Equipment Inlet Node:System Node Temperature [C](TimeStep)"
+                },
+                "parameters": {
+                    "oa_min_flow": 0.23157
+                }
+            },
+            "verification_class": "EconomizerHighLimitB"
+        },
+        {
+            "no": 8,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_NewYork_c.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "oa_flow": "PSZ-AC:1_OAInlet Node:System Node Standard Density Volume Flow Rate [m3/s](TimeStep)",
+                    "oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
+                    "oa_enth": "Environment:Site Outdoor Air Enthalpy [J/kg](TimeStep)"
+                },
+                "parameters": {
+                    "oa_threshold": 25.0,
+                    "oa_min_flow": 0.23157,
+                    "oa_enth_threshold": 2600
+                }
+            },
+            "verification_class": "EconomizerHighLimitC"
+        },
+        {
+            "no": 9,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_NewYork_d.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "oa_flow": "PSZ-AC:1_OAInlet Node:System Node Standard Density Volume Flow Rate [m3/s](TimeStep)",
+                    "oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
+                    "ret_a_enth": "PSZ-AC:1 SUPPLY EQUIPMENT INLET NODE:System Node Enthalpy [J/kg](TimeStep)",
+                    "oa_enth": "Environment:Site Outdoor Air Enthalpy [J/kg](TimeStep)"
+                },
+                "parameters": {
+                    "oa_threshold": 25.0,
+                    "oa_min_flow": 0.23157
+                }
+            },
+            "verification_class": "EconomizerHighLimitD"
+        },
+        {
+            "no": 10,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_RetailStandalone_STD2019_NewYork_zonetempctrl.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "T_z_set_cool": "CORE_RETAIL:Zone Thermostat Cooling Setpoint Temperature [C](Each Call)",
+                    "T_z_set_heat": "CORE_RETAIL:Zone Thermostat Heating Setpoint Temperature [C](Each Call)"
+                }
+            },
+            "verification_class": "ZoneTempControl"
+        },
+        {
+            "no": 11,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_Hospital_STD2019_Atlanta.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "T_oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
+                    "T_hw": "HeatSys1 Supply Outlet Node:System Node Temperature [C](TimeStep)",
+                    "m_hw": "HeatSys1 Supply Outlet Node:System Node Mass Flow Rate [kg/s](TimeStep)"
+                },
+                "parameters": {
+                    "T_oa_max": 10,
+                    "T_oa_min": -6.7,
+                    "T_hw_max_st": 60.0,
+                    "T_hw_min_st": 48.89
+                }
+            },
+            "verification_class": "HWReset"
+        },
+        {
+            "no": 12,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_Hospital_STD2019_Atlanta.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "T_oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
+                    "T_chw": "CoolSys1 Supply Outlet Node:System Node Temperature [C](TimeStep)",
+                    "m_chw": "CoolSys1 Supply Outlet Node:System Node Mass Flow Rate [kg/s](TimeStep)"
+                },
+                "parameters": {
+                    "T_oa_max": 21.11,
+                    "T_oa_min": 12.78,
+                    "T_chw_max_st": 8.89,
+                    "T_chw_min_st": 6.7
+                }
+            },
+            "verification_class": "CHWReset"
+        },
+        {
+            "no": 13,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../resources/ASHRAE901_RetailStandalone_STD2019_Seattle.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv"
+            },
+            "datapoints_source": {
+                "idf_objects": {
+                    "oa_min_flow": {
+                        "filters": {
+                            "idf_object_type": "Controller:OutdoorAir",
+                            "Name": "PSZ-AC:1_OA_Controller"
+                        },
+                        "field": "Minimum_Outdoor_Air_Flow_Rate"
+                    }
+                },
+                "idf_output_variables": {
+                    "oa_flow": {
+                        "subject": "PSZ-AC:1_OAINLET NODE",
+                        "variable": "System Node Standard Density Volume Flow Rate",
+                        "frequency": "detailed"
+                    },
+                    "ccoil_out": {
+                        "subject": "PSZ-AC:1",
+                        "variable": "Air System Cooling Coil Total Cooling Energy",
+                        "frequency": "detailed"
+                    }
+                }
+            },
+            "verification_class": "IntegratedEconomizerControl"
+        },
+        {
+            "no": 14,
+            "run_simulation": false,
+            "simulation_IO": {
+                "output": "ASHRAE901_OfficeLarge_STD2004_Seattle.csv"
+            },
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "T_sa_set": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
+                },
+                "parameters": {
+                    "T_z_coo": 24.0
+                }
+            },
+            "verification_class": "SupplyAirTempReset"
+        }
+    ]
+}

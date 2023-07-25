@@ -17,7 +17,7 @@
             "Type": "MethodCall",
             "MethodCall": "DataProcessing",
             "Parameters": {
-                "data_path": "./demo/api_demo/demo_dataset.csv",
+                "data_path": "./demo_dataset.csv",
                 "data_source": "EnergyPlus"
             },
             "Payloads": {
@@ -60,7 +60,7 @@
             "Type": "MethodCall",
             "MethodCall": "VerificationCase",
             "Parameters": {
-                "json_case_path": "./demo/api_demo/demo_verification_cases.json"
+                "json_case_path": "./demo_verification_cases.json"
             },
             "Payloads": {
                 "verification_case_obj": "$",

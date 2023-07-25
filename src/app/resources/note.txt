@@ -1,0 +1,1 @@
+Put ASHRAE901_RetailStandalone_STD2019_Seattle.idf file here for running certain library test cases.
