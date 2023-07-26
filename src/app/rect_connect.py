@@ -2,6 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 import json
 import math
 import re
+import sys
 
 
 class Path(QtWidgets.QGraphicsPathItem):

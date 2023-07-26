@@ -43,7 +43,7 @@
     }
   },
   "verification_class": "SupplyAirTempReset",
-  "case_id_in_suite": "77d98eb7-2b44-11ee-bfde-508140fcb858",
+  "case_id_in_suite": "a6510466-2bd7-11ee-b91c-508140fcb858",
   "library_item_id": 1,
   "description_brief": "Cooling supply air temperature reset scale (25%)",
   "description_detail": "Multiple zone HVAC systems must include controls that automatically reset the supply air temperature in response to representative building loads, or to outdoor air temperature. The controls shall reset the supply air temperature at least 25% of the difference between the design supply air temperature and the design room air temperature. Controls that adjust the reset based on zone humidity are allowed. Zones that are expected to experience relatively constant loads, such as electronic equipment rooms, shall be designed for the fully reset supply temperature.",

@@ -52,17 +52,31 @@ class GUI(QMainWindow):
 
         self.column_list = QListWidget()
         self.column_list.addItems(["Meta", "Imports", "State"])
+        # self.column_list.setStyleSheet("QListWidget::item { text-align: center; }")
         self.column_list.currentItemChanged.connect(self.display_form)
+        self.column_list.setStyleSheet(
+            "QListWidget::item:selected { background-color: #145369; }"
+        )
+        self.column_list.setCurrentItem(self.column_list.item(0))
+        # self.column_list.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
         self.column_frame = QFrame()
         self.column_frame.setFrameStyle(QFrame.Shape.NoFrame)
-        self.column_frame.setMaximumWidth(100)
+        self.column_frame.setFixedWidth(100)
+        self.column_frame.setFixedHeight(76)
+        self.column_frame.setStyleSheet(
+            "background-color: #f0f0f0; border: 0px solid #f0f0f0;"
+        )
         column_layout = QVBoxLayout()
         column_layout.addWidget(self.column_list)
+        column_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.column_frame.setLayout(column_layout)
+        self.column_frame_container = QVBoxLayout()
+        self.column_frame_container.addWidget(self.column_frame)
+        self.column_frame_container.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         middle_layout = QHBoxLayout()
-        middle_layout.addWidget(self.column_frame)
+        middle_layout.addLayout(self.column_frame_container)
         middle_layout.addWidget(self.meta_form)
         middle_layout.addWidget(self.import_form)
         middle_layout.addWidget(self.states_form)
@@ -238,6 +252,7 @@ class GUI(QMainWindow):
         warnings.simplefilter(action="ignore", category=ResourceWarning)
         validate_wf = Workflow(json_data)
         valid = validate_wf.validate(verbose=True)
+        print(valid)
         if valid:
             self.submit_button.setEnabled(True)
 

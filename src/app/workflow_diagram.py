@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QGraphicsView,
     QGraphicsTextItem,
+    QHBoxLayout,
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QPainter, QWheelEvent, QKeyEvent, QKeySequence
@@ -105,12 +106,22 @@ class WorkflowDiagram(QWidget):
         self.view.clicked.connect(self.item_clicked)
         self.popup = None
 
-        self.add_button = QPushButton("Add")
-        self.add_button.setFixedSize(100, 20)
-        self.add_button.clicked.connect(self.call_popup)
+        buttons = QHBoxLayout()
+
+        self.basic_button = QPushButton("Add Basic")
+        self.basic_button.setFixedSize(100, 20)
+        self.basic_button.clicked.connect(self.call_popup)
+        buttons.addWidget(self.basic_button)
+
+        self.advanced_button = QPushButton("Add Advanced")
+        self.advanced_button.setFixedSize(100, 20)
+        self.advanced_button.clicked.connect(self.call_advanced_popup)
+        buttons.addWidget(self.advanced_button)
+
+        buttons.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         layout.addWidget(self.view)
-        layout.addWidget(self.add_button)
+        layout.addLayout(buttons)
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.setLayout(layout)
 
@@ -176,8 +187,18 @@ class WorkflowDiagram(QWidget):
                 self.popup = rect.popup
             else:
                 self.popup = PopupWindow(payloads)
+
+        if edit and rect:
+            try:
+                self.popup.save_button.clicked.disconnect(self.add_state)
+            except TypeError:
+                self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
-            self.popup = AdvancedPopup(rect, edit)
+            self.popup.save_button.clicked.connect(self.add_state)
+        self.popup.exec()
+
+    def call_advanced_popup(self, rect=None, edit=False):
+        self.popup = AdvancedPopup(rect, edit)
 
         if edit and rect:
             try:
