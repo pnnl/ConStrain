@@ -153,7 +153,7 @@ class ChoicesPopup(QDialog):
             payloads_formatted += [f"{item}" for item in self.payloads]
         self.payload_combo_box.addItems(payloads_formatted)
 
-        object_label = QLabel("Object")
+        self.object_label = QLabel("Object")
         self.object_input = self.payload_combo_box
 
         equals_label = QLabel("Equals")
@@ -181,7 +181,7 @@ class ChoicesPopup(QDialog):
         self.layout.addWidget(self.method_label)
         self.layout.addWidget(self.method_input)
         self.layout.addWidget(self.method_combo_box)
-        self.layout.addWidget(object_label)
+        self.layout.addWidget(self.object_label)
         self.layout.addWidget(self.object_input)
         self.layout.addWidget(equals_label)
         self.layout.addWidget(self.equals_input)
@@ -199,6 +199,8 @@ class ChoicesPopup(QDialog):
 
         if object_type == "Custom":
             self.method_combo_box.hide()
+            self.object_label.hide()
+            self.object_input.hide()
             self.method_label.show()
             self.method_input.show()
 
@@ -230,15 +232,15 @@ class ChoicesPopup(QDialog):
     def populate_input_list(self):
         self.input_list.clear()
 
-        for choice in self.current_input:
-            object, method = self.get_object_method_from_call(choice["Value"])
-            if not object or not method:
-                method = choice["Value"]
-                object = ""
-                widget_line = f"{method} = {choice['Equals']} -> {choice['Next']}"
-            else:
-                widget_line = f"Payloads['{object}'].{method} = {choice['Equals']} -> {choice['Next']}"
-            self.input_list.addItem(widget_line)
+        if self.current_input:
+            for choice in self.current_input:
+                object, method = self.get_object_method_from_call(choice["Value"])
+                if not object or not method:
+                    method = choice["Value"]
+                    widget_line = f"{method} = {choice['Equals']} -> {choice['Next']}"
+                else:
+                    widget_line = f"Payloads['{object}'].{method} = {choice['Equals']} -> {choice['Next']}"
+                self.input_list.addItem(widget_line)
 
     def add_input(self):
         object = self.object_input.currentText()
