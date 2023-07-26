@@ -68,3 +68,5 @@ class AdvancedPopup(QDialog):
             error_popup("Invalid type")
         elif state_type == "Choice" and "Choices" not in state.keys():
             error_popup("Choice type, but no Choices key")
+        else:
+            self.close()

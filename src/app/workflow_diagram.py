@@ -133,7 +133,7 @@ class WorkflowDiagram(QWidget):
         self.create_item(state)
 
     def create_item(self, state):
-        if self.popup and self.popup.form_data["Title"] == state["Title"]:
+        if self.popup and self.popup.get_state()["Title"] == state["Title"]:
             rect_item = CustomItem(state, left=True, popup=self.popup)
         else:
             rect_item = CustomItem(state, left=True)
