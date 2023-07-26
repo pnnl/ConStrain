@@ -209,8 +209,8 @@ class PopupWindow(QDialog):
                             for p in state["Parameters"]
                         }
                     )
-            elif method_call in [api.replace(" ", "") for api in schema.keys()]:
-                object_type = re.sub(r"([a-z])([A-Z])", r"\1 \2", method_call)
+            elif method_call in schema.keys():
+                object_type = method_call
                 method = "Initialize"
                 if "Parameters" in state.keys():
                     parameters.update(
@@ -385,7 +385,7 @@ class PopupWindow(QDialog):
         method = self.method_combo_box.currentText()
         fields = schema.get(object_type, {}).get(method, [])
 
-        if not custom and (not fields or method == "Initialize"):
+        if not custom and not fields:
             object_type = "Verification Case"
             method = "Initialize"
             fields = schema.get(object_type, {}).get(method, [])
@@ -492,7 +492,7 @@ class PopupWindow(QDialog):
                 object = self.payload_combo_box.currentText()
                 self.form_data["MethodCall"] = f"Payloads['{object}'].{method}"
 
-        self.form_data["Parameters"] = []
+        self.form_data["Parameters"] = {}
 
         for i in range(self.form_layout.count()):
             item = self.form_layout.itemAt(i).widget()
@@ -513,7 +513,7 @@ class PopupWindow(QDialog):
                 self.form_data[parameter] = text
             elif not self.current_params:
                 parameter = (parameter.lower()).replace(" ", "_")
-                self.form_data["Parameters"].append({parameter: text})
+                self.form_data["Parameters"][parameter] = text
 
         self.close()
 

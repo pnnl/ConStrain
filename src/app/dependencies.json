@@ -1,5 +1,5 @@
 {
-    "Verification Case": {
+    "VerificationCase": {
         "Initialize": [
             {"label": "Cases", "type": "line_edit"},
             {"label": "JSON Case Path", "type": "line_edit"}
@@ -17,7 +17,7 @@
             {"label": "Var Type", "type": "line_edit"}
         ]
     },
-    "Data Processing": {
+    "DataProcessing": {
         "Initialize": [
             {"label": "Data Path", "type": "line_edit"},
             {"label": "Data Source", "type": "line_edit"},
@@ -72,7 +72,7 @@
             {"label": "Item Names", "type": "line_edit"}
         ]
     },
-    "Verification Library": {
+    "VerificationLibrary": {
         "Initialize": [
             {"label": "Lib Path", "type": "line_edit"}
         ],

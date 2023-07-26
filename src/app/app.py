@@ -90,6 +90,10 @@ class GUI(QMainWindow):
         self.submit_button.setFixedSize(100, 20)
         self.submit_button.clicked.connect(self.submit_form)
 
+        # self.reformat_button = QPushButton('Reformat')
+        # self.reformat_button.setFixedSize(100, 20)
+        # self.reformat_button.clicked.connect(self.validate_form)
+
         buttons = QHBoxLayout()
         buttons.addWidget(self.validate_button)
         buttons.addWidget(self.submit_button)
@@ -252,7 +256,6 @@ class GUI(QMainWindow):
         warnings.simplefilter(action="ignore", category=ResourceWarning)
         validate_wf = Workflow(json_data)
         valid = validate_wf.validate(verbose=True)
-        print(valid)
         if valid:
             self.submit_button.setEnabled(True)
 

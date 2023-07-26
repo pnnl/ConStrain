@@ -212,7 +212,10 @@ class WorkflowDiagram(QWidget):
     def item_clicked(self):
         if self.view.itemClicked:
             rect = self.view.itemClicked
-            self.call_popup(rect, True)
+            if self.setting == "basic":
+                self.call_popup(rect, True)
+            elif self.setting == "advanced":
+                self.call_advanced_popup(rect, True)
 
     def read_import(self, states):
         if isinstance(states, dict):

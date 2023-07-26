@@ -1,5 +1,5 @@
 {
-    "Verification Case": [
+    "VerificationCase": [
         "case_already_in_suite",
         "check_file",
         "check_json_path_type",
@@ -13,7 +13,7 @@
         "validate",
         "validate_verification_case_structure"
     ],
-    "Data Processing": [
+    "DataProcessing": [
         "add_parameter",
         "apply_function",
         "check",
@@ -27,7 +27,7 @@
     "Reporting": [
         "report_multiple_cases"
     ],
-    "Verification Library": [
+    "VerificationLibrary": [
         "get_applicable_library_items_by_datapoints",
         "get_library_item",
         "get_library_items",
