@@ -289,17 +289,6 @@ class UserSetting(QDialog):
         self.gui.show()
 
 
-class TestWorkflow(unittest.TestCase):
-    def test_run_workflow(self, json_data):
-        warnings.simplefilter(action="ignore", category=FutureWarning)
-        warnings.simplefilter(action="ignore", category=ResourceWarning)
-        validate_wf = Workflow(json_data)
-        a = validate_wf.validate(verbose=True)
-        print(a)
-        # workflow = Workflow(json_data)
-        # workflow.run_workflow(verbose=True)
-
-
 class Worker(QThread):
     update_text = pyqtSignal(str)
 
