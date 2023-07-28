@@ -106,19 +106,30 @@ class WorkflowDiagram(QWidget):
         self.view.clicked.connect(self.item_clicked)
         self.popup = None
 
-        buttons = QHBoxLayout()
+        add_buttons = QHBoxLayout()
+        reformat_button_layout = QHBoxLayout()
 
         self.basic_button = QPushButton("Add Basic")
         self.basic_button.setFixedSize(100, 20)
         self.basic_button.clicked.connect(self.call_popup)
-        buttons.addWidget(self.basic_button)
+        add_buttons.addWidget(self.basic_button)
 
         self.advanced_button = QPushButton("Add Advanced")
         self.advanced_button.setFixedSize(100, 20)
         self.advanced_button.clicked.connect(self.call_advanced_popup)
-        buttons.addWidget(self.advanced_button)
+        add_buttons.addWidget(self.advanced_button)
 
-        buttons.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.reformat_button = QPushButton("Reformat")
+        self.reformat_button.setFixedSize(100, 20)
+        self.reformat_button.clicked.connect(self.get_workflow)
+        reformat_button_layout.addWidget(self.reformat_button)
+
+        add_buttons.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        reformat_button_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+
+        buttons = QHBoxLayout()
+        buttons.addLayout(add_buttons)
+        buttons.addLayout(reformat_button_layout)
 
         layout.addWidget(self.view)
         layout.addLayout(buttons)
@@ -176,6 +187,48 @@ class WorkflowDiagram(QWidget):
 
         if old_state != current_state:
             rect.set_state(current_state)
+
+    def get_workflow(self):
+        items = [item for item in self.scene.items() if isinstance(item, CustomItem)]
+        roots = []
+        for i in items:
+            parent = True
+            for j in items:
+                if i in j.children:
+                    parent = False
+                    break
+            if parent:
+                roots.append(i)
+
+                visited = set()
+        paths = []
+
+        def dfs_helper(item, path):
+            path.append(item)
+            visited.add(item)
+
+            if item not in items or not item.children:
+                # item is a leaf node
+                item.setBrush("red")
+                item.state["End"] = "True"
+                paths.append(path[:])
+            else:
+                # item is not a leaf node
+                item.setBrush()
+
+            for child in item.children:
+                if child not in visited:
+                    dfs_helper(child, path)
+
+            path.pop()
+            visited.remove(item)
+
+        for root in roots:
+            root.state["Start"] = "True"
+            self.view.arrange_tree(root, 0, 0, 150)
+            if root not in visited:
+                dfs_helper(root, [])
+            root.setBrush("green")
 
     def call_popup(self, rect=None, edit=False):
         if self.setting == "basic":

@@ -90,13 +90,14 @@ class GUI(QMainWindow):
         self.submit_button.setFixedSize(100, 20)
         self.submit_button.clicked.connect(self.submit_form)
 
-        # self.reformat_button = QPushButton('Reformat')
+        # self.reformat_button = QPushButton("Reformat")
         # self.reformat_button.setFixedSize(100, 20)
-        # self.reformat_button.clicked.connect(self.validate_form)
+        # self.reformat_button.clicked.connect(self.get_workflow)
 
         buttons = QHBoxLayout()
         buttons.addWidget(self.validate_button)
         buttons.addWidget(self.submit_button)
+        # buttons.addWidget(self.reformat_button)
         buttons.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         main_layout = QVBoxLayout()
