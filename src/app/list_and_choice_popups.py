@@ -36,10 +36,9 @@ class ListPopup(QDialog):
 
         self.setWindowTitle("Payloads" if self.payload else "Parameters")
 
-        if self.payload:
-            layout.addWidget(QLabel("Name:"))
-            self.name_line_edit = QLineEdit()
-            layout.addWidget(self.name_line_edit)
+        layout.addWidget(QLabel("Name:"))
+        self.name_line_edit = QLineEdit()
+        layout.addWidget(self.name_line_edit)
 
         layout.addWidget(QLabel("Payload:" if self.payload else "Parameter:"))
         self.line_edit = QLineEdit()

@@ -28,7 +28,7 @@ class PopupWindow(QDialog):
         self.current_choices = None
         self.payloads = payloads
         self.form_data = {}
-        # self.payload_to_payload_type = {}
+        self.error = False
         self.initialize_base_ui()
         self.set_ui() if not load else self.load_ui(rect)
 
@@ -304,20 +304,13 @@ class PopupWindow(QDialog):
             self.method_combo_box.hide()
 
     def choice_form(self):
-        def make_and_add_groupbox(title, type):
-            gb = QGroupBox()
-            gb.setTitle(title)
-            layout = QVBoxLayout()
-            layout.addWidget(type)
-            gb.setLayout(layout)
-            self.form_layout.addWidget(gb)
-            return gb
-
-        make_and_add_groupbox("Name of State", QLineEdit())
+        self.make_and_add_groupbox("Name of State", QLineEdit())
 
         layout = QVBoxLayout()
+
         choice_widget = QGroupBox()
         choice_widget.setTitle("Choices")
+
         edit_button = QPushButton("Edit")
         edit_button.setFixedSize(100, 20)
         edit_button.clicked.connect(self.choice_popup)
@@ -329,7 +322,7 @@ class PopupWindow(QDialog):
         choice_widget.setLayout(layout)
         self.form_layout.addWidget(choice_widget)
 
-        make_and_add_groupbox("Default", QLineEdit())
+        self.make_and_add_groupbox("Default", QLineEdit())
 
     def choice_popup(self):
         choice_popup = ChoicesPopup(self.payloads, self.current_choices)
@@ -409,7 +402,7 @@ class PopupWindow(QDialog):
                     self.make_and_add_groupbox(field["label"], QLineEdit())
                 elif field["type"] == "combo_box":
                     combo_box = QComboBox()
-                    combo_box.addItems(["True", "False"])
+                    combo_box.addItems(["", "True", "False"])
                     self.make_and_add_groupbox(field["label"], combo_box)
 
         payload_widget = QGroupBox()
@@ -427,7 +420,7 @@ class PopupWindow(QDialog):
         payload_widget.setLayout(layout)
         self.form_layout.addWidget(payload_widget)
 
-        self.make_and_add_groupbox("Next", QLineEdit())
+        self.make_and_add_groupbox("Next - Optional", QLineEdit())
 
     def payload_form(self):
         payload_popup = ListPopup(self.current_payloads)
@@ -446,7 +439,7 @@ class PopupWindow(QDialog):
 
         if list_widget == self.parameter_list_widget:
             to_add = self.current_params
-            for input in to_add.keys():
+            for input in to_add:
                 list_widget.addItem(input)
         elif list_widget == self.payload_list_widget:
             to_add = self.current_payloads
@@ -467,6 +460,7 @@ class PopupWindow(QDialog):
 
     def save(self):
         self.form_data = {}
+        self.error = False
 
         type = self.type_combo_box.currentText()
         object_type = self.object_type_combo_box.currentText()
@@ -503,8 +497,18 @@ class PopupWindow(QDialog):
             elif item.findChild(QComboBox):
                 text = item.findChild(QComboBox).currentText()
 
-            if not text:
-                break
+            if not text or text == "":
+                if "Optional" in parameter:
+                    continue
+                else:
+                    if (
+                        parameter != "Payloads"
+                        and parameter != "Object"
+                        and parameter != "Parameters"
+                    ):
+                        self.send_error(f"{parameter} field is empty")
+                        self.error = True
+                        break
 
             if parameter == "Name of State":
                 parameter = "Title"
@@ -515,7 +519,8 @@ class PopupWindow(QDialog):
                 parameter = (parameter.lower()).replace(" ", "_")
                 self.form_data["Parameters"][parameter] = text
 
-        self.close()
+        if not self.error:
+            self.close()
 
     def send_error(self, text):
         error_msg = QMessageBox()

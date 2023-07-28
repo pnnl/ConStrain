@@ -14,6 +14,7 @@ class AdvancedPopup(QDialog):
     def __init__(self, rect=None, edit=False):
         super().__init__()
 
+        self.error = False
         form_layout = QVBoxLayout()
         state_label = QLabel("State:")
 
@@ -58,21 +59,25 @@ class AdvancedPopup(QDialog):
         return state_json
 
     def check_state(self):
+        self.error = False
         state = self.get_state()
 
         if not state:
             self.error_popup("Invalid state format")
+            self.error = True
         else:
             state_type = state.get("Type")
 
             if state_type not in ["Choice", "MethodCall"]:
+                self.error = True
                 self.error_popup("Invalid type")
             elif state_type == "Choice" and "Choices" not in state.keys():
+                self.error = True
                 self.error_popup("Choice type, but no Choices key")
             else:
                 self.close()
 
-    def error_popup(text):
+    def error_popup(self, text):
         error_msg = QMessageBox()
         error_msg.setIcon(QMessageBox.Icon.Critical)
         error_msg.setWindowTitle("Error in State")

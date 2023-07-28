@@ -15,6 +15,35 @@
             {"label": "Var Name", "type": "line_edit"},
             {"label": "Var Value", "type": "line_edit"},
             {"label": "Var Type", "type": "line_edit"}
+        ],
+        "Create Verification Case Suite from Base Case": [
+            {"label": "Base Case", "type": "line_edit"},
+            {"label": "Update Key Value", "type": "line_edit"},
+            {"label": "Keep Base Case - Optional", "type": "combo_box"}
+        ],
+        "Load Verification Cases from JSON": [
+            {"label": "JSON Case Path", "type": "line_edit"}
+        ],
+        "Read Case": [
+            {"label": "File Name", "type": "line_edit"}
+        ],
+        "Same Case": [
+            {"label": "Case A", "type": "line_edit"},
+            {"label": "Case B", "type": "line_edit"},
+            {"label": "Ignored Keys", "type": "line_edit"}
+        ],
+        "Save Case Suite to JSON": [
+            {"label": "JSON PatH", "type": "line_edit"},
+            {"label": "Case IDs - Optional", "type": "line_edit"}
+        ],
+        "Save Verification Cases to JSON": [
+            {"label": "JSON Path", "type": "line_edit"},
+            {"label": "Cases", "type": "line_edit"}
+        ],
+        "Validate": [],
+        "Validate Verification Case Structure": [
+            {"label": "Case", "type": "line_edit"},
+            {"label": "Verbose", "type": "combo_box"}
         ]
     },
     "DataProcessing": {
@@ -26,30 +55,30 @@
         "Add Parameter": [
             {"label": "Name", "type": "line_edit"},
             {"label": "Value", "type": "line_edit"},
-            {"label": "In Place", "type": "combo_box"}
+            {"label": "In Place - Optional", "type": "combo_box"}
         ],
         "Apply Function": [
             {"label": "Variable Names", "type": "line_edit"},
             {"label": "New Variable Name", "type": "line_edit"},
             {"label": "Function to Apply", "type": "line_edit"},
-            {"label": "In Place", "type": "combo_box"}
+            {"label": "In Place - Optional", "type": "combo_box"}
         ],
         "Check": [],
         "Concatenate": [
             {"label": "Datasets", "type": "line_edit"},
             {"label": "Axis", "type": "line_edit"},
-            {"label": "In Place", "type": "combo_box"}
+            {"label": "In Place - Optional", "type": "combo_box"}
         ],
         "Downsample": [
             {"label": "Frequency Type", "type": "line_edit"},
             {"label": "Number of Periods", "type": "line_edit"},
-            {"label": "Sampling Function", "type": "line_edit"},
-            {"label": "In Place", "type": "combo_box"}
+            {"label": "Sampling Function - Optional", "type": "line_edit"},
+            {"label": "In Place - Optional", "type": "combo_box"}
         ],
         "Fill Missing Values": [
             {"label": "Method", "type": "line_edit"},
-            {"label": "Variable Names", "type": "line_edit"},
-            {"label": "In Place", "type": "combo_box"}
+            {"label": "Variable Names - Optional", "type": "line_edit"},
+            {"label": "In Place - Optional", "type": "combo_box"}
         ],
         "Plot": [
             {"label": "Variable Names", "type": "line_edit"},
@@ -58,14 +87,14 @@
         "Slice": [
             {"label": "Start Time", "type": "line_edit"},
             {"label": "End Time", "type": "line_edit"},
-            {"label": "In Place", "type": "combo_box"}
+            {"label": "In Place - Optional", "type": "combo_box"}
         ],
         "Summary": []
     },
     "Reporting": {
         "Initialize": [
             {"label": "Verification JSON", "type": "line_edit"},
-            {"label": "Result MD Name", "type": "line_edit"},
+            {"label": "Result MD Name - Optional", "type": "line_edit"},
             {"label": "Report Format", "type": "line_edit"}
         ],
         "Report Multiple Cases": [
@@ -99,10 +128,10 @@
         "Configure": [
             {"label": "Output Path", "type": "line_edit"},
             {"label": "Lib Items Path", "type": "line_edit"},
-            {"label": "Plot Option", "type": "line_edit"},
-            {"label": "Fig Size", "type": "line_edit"},
-            {"label": "Num Threads", "type": "line_edit"},
-            {"label": "Preprocessed Data", "type": "line_edit"}
+            {"label": "Plot Option - Optional", "type": "line_edit"},
+            {"label": "Fig Size - Optional", "type": "line_edit"},
+            {"label": "Num Threads - Optional", "type": "line_edit"},
+            {"label": "Preprocessed Data - Optional", "type": "line_edit"}
         ],
         "Run": [],
         "Run Single Verification": [
