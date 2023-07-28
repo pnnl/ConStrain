@@ -6,7 +6,10 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QHBoxLayout,
     QListWidget,
+    QMenu,
 )
+from PyQt6.QtGui import QAction
+from PyQt6.QtCore import Qt
 
 
 class ImportForm(QWidget):
@@ -17,6 +20,9 @@ class ImportForm(QWidget):
         self.import_input = QLineEdit()
         add_button = QPushButton("Add")
         self.import_list = QListWidget()
+
+        self.import_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.import_list.customContextMenuRequested.connect(self.show_context_menu)
 
         middle = QHBoxLayout()
         middle.addWidget(self.import_input)
@@ -49,6 +55,24 @@ class ImportForm(QWidget):
                 self.imports.append(i)
                 self.import_list.addItem(i)
         self.update()
+
+    def show_context_menu(self, position):
+        item = self.import_list.itemAt(position)
+        if item is None:
+            return
+
+        menu = QMenu(self)
+        delete_action = QAction("Delete", self)
+
+        delete_action.triggered.connect(lambda: self.delete_input(item))
+
+        menu.addAction(delete_action)
+
+        menu.exec(self.import_list.mapToGlobal(position))
+
+    def delete_input(self, item):
+        self.imports.pop(self.import_list.row(item))
+        self.import_list.takeItem(self.import_list.row(item))
 
     def get_imports(self):
         return self.imports

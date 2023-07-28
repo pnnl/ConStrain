@@ -105,7 +105,6 @@ class ListPopup(QDialog):
         else:
             self.current_input.remove(item.text())
 
-        self.populate_input_list()
         self.input_list.takeItem(self.input_list.row(item))
 
     def get_input(self):
@@ -278,7 +277,6 @@ class ChoicesPopup(QDialog):
 
     def delete_input(self, item):
         self.current_input.pop(self.input_list.row(item))
-        self.populate_input_list()
         self.input_list.takeItem(self.input_list.row(item))
 
     def get_input(self):
