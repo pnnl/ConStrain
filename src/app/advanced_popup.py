@@ -46,27 +46,35 @@ class AdvancedPopup(QDialog):
         try:
             state_json = json.loads(state_text)
         except json.decoder.JSONDecodeError:
-            state_json = {}
-        title = [key for key in state_json.keys()][0]
+            return None
 
-        state_dict = state_json[title]
-        state_dict["Title"] = title
-        return state_dict
+        if state_json:
+            if len(state_json.keys()) > 1:
+                return None
+            else:
+                title = [key for key in state_json.keys()][0]
+                state_json = state_json[title]
+                state_json["Title"] = title
+        return state_json
 
     def check_state(self):
         state = self.get_state()
-        state_type = state["Type"]
 
-        def error_popup(text):
-            error_msg = QMessageBox()
-            error_msg.setIcon(QMessageBox.Icon.Critical)
-            error_msg.setWindowTitle("Error in State")
-            error_msg.setText(text)
-            error_msg.exec()
-
-        if state_type not in ["Choice", "MethodCall"]:
-            error_popup("Invalid type")
-        elif state_type == "Choice" and "Choices" not in state.keys():
-            error_popup("Choice type, but no Choices key")
+        if not state:
+            self.error_popup("Invalid state format")
         else:
-            self.close()
+            state_type = state.get("Type")
+
+            if state_type not in ["Choice", "MethodCall"]:
+                self.error_popup("Invalid type")
+            elif state_type == "Choice" and "Choices" not in state.keys():
+                self.error_popup("Choice type, but no Choices key")
+            else:
+                self.close()
+
+    def error_popup(text):
+        error_msg = QMessageBox()
+        error_msg.setIcon(QMessageBox.Icon.Critical)
+        error_msg.setWindowTitle("Error in State")
+        error_msg.setText(text)
+        error_msg.exec()

@@ -138,7 +138,7 @@ class WorkflowDiagram(QWidget):
 
     def add_state(self):
         state = self.popup.get_state()
-        if "Type" in state.keys() and state["Type"] not in ["Choice", "MethodCall"]:
+        if not state or (state.get("Type", 0) not in ["Choice", "MethodCall"]):
             return
 
         self.create_item(state)
