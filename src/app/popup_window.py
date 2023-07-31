@@ -118,11 +118,21 @@ class PopupWindow(QDialog):
         return result
 
     def set_state(self, to_set):
+        to_set_keys_with_optional = [
+            f"{parameter} - Optional" for parameter in to_set.keys()
+        ]
+        mapping = dict(zip(to_set_keys_with_optional, to_set.keys()))
         for i in range(self.form_layout.count()):
             item = self.form_layout.itemAt(i).widget()
             parameter = item.title()
 
             if parameter in to_set.keys():
+                if item.findChild(QLineEdit):
+                    item.findChild(QLineEdit).setText(to_set[parameter])
+                elif item.findChild(QComboBox):
+                    item.findChild(QComboBox).setCurrentText(to_set[parameter])
+            elif parameter in mapping.keys():
+                parameter = mapping[parameter]
                 if item.findChild(QLineEdit):
                     item.findChild(QLineEdit).setText(to_set[parameter])
                 elif item.findChild(QComboBox):
@@ -170,7 +180,6 @@ class PopupWindow(QDialog):
         layout.addLayout(self.form_layout)
         layout.addLayout(self.buttons_layout)
         self.set_state(parameters)
-
         for choice in self.current_choices:
             object, method = self.get_object_method_from_call(choice["Value"])
             if not object or not method:
@@ -512,6 +521,9 @@ class PopupWindow(QDialog):
 
             if parameter == "Name of State":
                 parameter = "Title"
+
+            if "Optional" in parameter:
+                parameter = parameter.split(" - Optional")[0]
 
             if parameter in capitalized_keys:
                 self.form_data[parameter] = text

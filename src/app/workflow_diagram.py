@@ -53,13 +53,16 @@ class Zoom(QGraphicsView):
     def mousePressEvent(self, event):
         super().mousePressEvent(event)
         if event.button() == Qt.MouseButton.LeftButton:
+            print("ayo")
             self.dragStartPosition = event.pos()
             item = self.itemAt(event.pos())
+            print(item)
             if item:
                 if isinstance(item, QGraphicsTextItem):
                     item = item.parentItem()
                 elif isinstance(item, ControlPoint):
                     return
+
                 if isinstance(item, CustomItem):
                     self.itemClicked = item
 
@@ -147,7 +150,11 @@ class WorkflowDiagram(QWidget):
         self.create_item(state)
 
     def create_item(self, state):
-        if self.popup and self.popup.get_state()["Title"] == state["Title"]:
+        if (
+            self.popup
+            and self.popup.get_state()
+            and self.popup.get_state()["Title"] == state["Title"]
+        ):
             rect_item = CustomItem(state, left=True, popup=self.popup)
         else:
             rect_item = CustomItem(state, left=True)
@@ -240,7 +247,7 @@ class WorkflowDiagram(QWidget):
         if self.setting == "basic":
             payloads = self.scene.getObjectsCreated()
             if rect:
-                if not rect.popup:
+                if not rect.popup or isinstance(rect.popup, AdvancedPopup):
                     rect.popup = PopupWindow(payloads, rect=rect, load=True)
                 rect.popup.edit_mode(payloads, rect, load=True)
                 self.popup = rect.popup

@@ -112,10 +112,10 @@ class Path(QtWidgets.QGraphicsPathItem):
         if triangle_source is not None:
             painter.drawPolyline(triangle_source)
 
-    def shape(self):
-        shape = super().shape()
-        shape.addRect(shape.boundingRect().adjusted(-5, -5, 5, 5))
-        return shape
+    # def shape(self):
+    # shape = super().shape()
+    # shape.addRect(shape.boundingRect().adjusted(-5, -5, 5, 5))
+    # return shape
 
     def contextMenuEvent(self, event):
         menu = QtWidgets.QMenu()
@@ -355,7 +355,6 @@ class CustomItem(QtWidgets.QGraphicsItem):
         return objects
 
     def get_state_string(self):
-        print(self.state)
         copy_of_state = dict(self.state)
         title = copy_of_state.pop("Title")
         state_string = json.dumps({title: copy_of_state}, indent=4)
