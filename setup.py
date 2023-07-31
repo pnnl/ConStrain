@@ -25,5 +25,6 @@ setup(
         "fuzzywuzzy",
         "tqdm",
         "scikit-learn",
+        "PyQt6",
     ],
 )
