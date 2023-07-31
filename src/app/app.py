@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QTextEdit,
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTextStream
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QAction
 from import_form import ImportForm
 from meta_form import MetaForm
@@ -24,13 +24,10 @@ from rect_connect import CustomItem
 import json
 from src.api.workflow import Workflow
 import warnings
-import unittest, sys
-import tempfile
+import sys
 
 with open("dependencies.json") as file:
     data = json.load(file)
-
-form = {}
 
 
 class GUI(QMainWindow):
