@@ -249,7 +249,7 @@ class WorkflowDiagram(QWidget):
             if rect:
                 if not rect.popup or isinstance(rect.popup, AdvancedPopup):
                     rect.popup = PopupWindow(payloads, rect=rect, load=True)
-                rect.popup.edit_mode(payloads, rect, load=True)
+                rect.popup.edit_mode(payloads)
                 self.popup = rect.popup
             else:
                 self.popup = PopupWindow(payloads)
