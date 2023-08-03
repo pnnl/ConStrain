@@ -467,8 +467,9 @@ class PopupWindow(QDialog):
         return gb
 
     def update_custom_form(self):
-        layout = QVBoxLayout()
+        """Sets UI for when Custom object type is chosen"""
 
+        layout = QVBoxLayout()
         self.make_and_add_groupbox("MethodCall", QLineEdit())
 
         parameter_widget = QGroupBox()
@@ -486,19 +487,24 @@ class PopupWindow(QDialog):
         self.form_layout.addWidget(parameter_widget)
 
     def update_form(self, custom=False):
+        """Sets UI based on which method is chosen
+
+        Args:
+            custom (bool): whether or not this is a custom object type
+        """
+
+        # need to first clear all data, if any, that was previously written in this popup
         self.clear_form()
         self.current_payloads = {}
         self.current_params = []
 
         object_type = self.object_type_combo_box.currentText()
         method = self.method_combo_box.currentText()
+
+        # get fields needed for this method
         fields = schema.get(object_type, {}).get(method, [])
 
-        if not custom and not fields:
-            object_type = "Verification Case"
-            method = "Initialize"
-            fields = schema.get(object_type, {}).get(method, [])
-
+        # set possible objects to be chosen
         self.payload_combo_box = QComboBox()
         if self.payloads:
             payloads_formatted = [f"{item}" for item in self.payloads]
@@ -507,12 +513,14 @@ class PopupWindow(QDialog):
 
         self.make_and_add_groupbox("Name of State", QLineEdit())
 
+        # show object combo box only if popup is not an MethodCall initialization
         if custom or method != "Initialize":
             self.make_and_add_groupbox("Object", self.payload_combo_box)
 
         if custom:
             self.update_custom_form()
         else:
+            # create groupboxes for each necessary field for the method
             for field in fields:
                 if field["type"] == "line_edit":
                     self.make_and_add_groupbox(field["label"], QLineEdit())
@@ -539,20 +547,38 @@ class PopupWindow(QDialog):
         self.make_and_add_groupbox("Next - Optional", QLineEdit())
 
     def payload_form(self):
+        """Creates a ListPopup object. Called when payload Edit button is clicked"""
+
+        # pass in current_payloads in order to fill list widget in popup
         payload_popup = ListPopup(self.current_payloads)
+
+        # set self.current_payloads and update list widget when popup is OK'ed
         if payload_popup.exec() == QDialog.DialogCode.Accepted:
             self.current_payloads = payload_popup.get_input()
             self.update_list(self.payload_list_widget)
 
     def parameter_form(self):
+        """Creates a ListPopup object. Called when parameter Edit button is clicked"""
+
+        # pass in current_params in order to fill list widget in popup
         popup = ListPopup(self.current_params, payload=False)
+
+        # set self.current_params and update list widget when popup is OK'ed
         if popup.exec() == QDialog.DialogCode.Accepted:
             self.current_params = popup.get_input()
             self.update_list(self.parameter_list_widget)
 
     def update_list(self, list_widget):
+        """Updates list widget with current values
+
+        Args:
+            list_widget (PyQt6.QtWidgets.QListWidget): list widget to update
+        """
+
+        # needed since values may be deleted in ListPopup or ChoicesPopup
         list_widget.clear()
 
+        # search for what list widget it is and then update based on current values
         if list_widget == self.parameter_list_widget:
             to_add = self.current_params
             for input in to_add:
@@ -569,18 +595,26 @@ class PopupWindow(QDialog):
                 )
 
     def clear_form(self):
+        """Clears main form"""
         while self.form_layout.count() > 0:
             item = self.form_layout.takeAt(0)
             widget = item.widget()
             widget.deleteLater()
 
     def save(self):
+        """On click of save button, generates a dict containing the state"""
+
+        # state
         self.form_data = {}
+
+        # need to reset error
         self.error = False
 
         type = self.type_combo_box.currentText()
         object_type = self.object_type_combo_box.currentText()
         method = self.method_combo_box.currentText()
+
+        # non-fields
         capitalized_keys = [
             "Type",
             "MethodCall",
@@ -598,6 +632,7 @@ class PopupWindow(QDialog):
             if method == "Initialize":
                 self.form_data["MethodCall"] = object_type
             else:
+                # get method format needed for API call
                 method = (method.lower()).replace(" ", "_")
                 object = self.payload_combo_box.currentText()
                 self.form_data["MethodCall"] = f"Payloads['{object}'].{method}"
@@ -613,6 +648,7 @@ class PopupWindow(QDialog):
             elif item.findChild(QComboBox):
                 text = item.findChild(QComboBox).currentText()
 
+            # report error if necessary parameter is not filled
             if not text or text == "":
                 if "Optional" in parameter:
                     continue
@@ -626,9 +662,11 @@ class PopupWindow(QDialog):
                         self.error = True
                         break
 
+            # need 'Title' instead of 'Name of State' as key in final form
             if parameter == "Name of State":
                 parameter = "Title"
 
+            # retrieve only the field title
             if "Optional" in parameter:
                 parameter = parameter.split(" - Optional")[0]
 
@@ -638,10 +676,16 @@ class PopupWindow(QDialog):
                 parameter = (parameter.lower()).replace(" ", "_")
                 self.form_data["Parameters"][parameter] = text
 
+        # keep open if error
         if not self.error:
             self.close()
 
     def send_error(self, text):
+        """Displays an error message with given text
+
+        Args:
+            text (str): text to be displayed
+        """
         error_msg = QMessageBox()
         error_msg.setIcon(QMessageBox.Icon.Critical)
         error_msg.setWindowTitle("Error in State")
@@ -649,6 +693,11 @@ class PopupWindow(QDialog):
         error_msg.exec()
 
     def get_state(self):
+        """Returns compiled state of the popup
+
+        Returns:
+            dict: compiled state of the popup
+        """
         if self.current_payloads and len(self.current_payloads) > 0:
             self.form_data["Payloads"] = self.current_payloads
 
