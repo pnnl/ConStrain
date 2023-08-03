@@ -13,26 +13,49 @@ import json
 import re
 from list_and_choice_popups import ListPopup, ChoicesPopup
 
+# mapping from object to its methods and its methods to its parameters for display in popup
 with open("dependencies.json") as f:
     schema = json.load(f)
 
+# mapping from object to its methods using the true method names
 with open("api_to_method.json") as f:
     api_to_method = json.load(f)
 
 
 class PopupWindow(QDialog):
-    def __init__(self, payloads={}, rect=None, load=False):
+    def __init__(self, payloads=[], rect=None, load=False):
+        print(payloads)
+        """Form to be displayed for user to edit or add a basic state
+
+        Args:
+            payloads (list): list of already-made objects to choose from when making a state 
+            rect (CustomItem): CustomItem associated with this popup
+            load (bool): True if this popup is being created because of an import, false otherwise
+        """
         super().__init__()
+
+        # objects that this popup has created
         self.current_payloads = None
+
+        # parameters that this popup has created (only used in Custom MethodCall type)
         self.current_params = None
+
+        # choices that this popup has created (only used in Choice type)
         self.current_choices = None
+
         self.payloads = payloads
+
+        # dictionary that stores the state contained in this popup
         self.form_data = {}
+
+        # stores whether or not the popup has an error
         self.error = False
+
         self.initialize_base_ui()
         self.set_ui() if not load else self.load_ui(rect)
 
     def initialize_base_ui(self):
+        """Initializes UI that is used when both loading the popup and creating the popup"""
         self.type_combo_box = QComboBox()
         self.object_type_combo_box = QComboBox()
         self.method_combo_box = QComboBox()
@@ -58,6 +81,7 @@ class PopupWindow(QDialog):
         self.buttons_layout.addWidget(self.cancel_button)
 
     def set_ui(self):
+        """Loads UI for when user is manually adding information instead of importing"""
         self.setWindowTitle("Add State")
 
         layout = QVBoxLayout()
@@ -65,17 +89,18 @@ class PopupWindow(QDialog):
 
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
 
+        # object types to choose from
         object_types = list(schema.keys())
         object_types.insert(0, "")
         object_types.append("Custom")
 
         self.object_type_combo_box.addItems(object_types)
-        self.method_combo_box.addItems(schema[object_types[1]])
 
         layout.addWidget(self.type_combo_box)
         layout.addWidget(self.object_type_combo_box)
         layout.addWidget(self.method_combo_box)
 
+        # hide until necessary
         self.object_type_combo_box.hide()
         self.method_combo_box.hide()
 
@@ -89,6 +114,16 @@ class PopupWindow(QDialog):
         )
 
     def get_object_method_from_call(self, call):
+        """Given a MethodCall to be used in the API, this function returns the object and method from
+        this MethodCall
+
+        Args:
+            call (str): MethodCall
+
+        Returns:
+            str: the object that the MethodCall uses, None if not found
+            str: the method that the MethodCall uses, None if not found
+        """
         object_pattern = r"Payloads\['(.*?)'\]"
         method_pattern = r"Payloads\['\w+'\]\.(\w+)"
 
@@ -101,11 +136,27 @@ class PopupWindow(QDialog):
         return object, method
 
     def get_api_from_method(self, method):
+        """Given a method, returns its object type
+
+        Args:
+            method (str): a method in API format, i.e. 'get_library_items'
+
+        Returns:
+            str: an object type in API format, i.e. 'VerificationLibrary'
+        """
         return next(
             (api for api, methods in api_to_method.items() if method in methods), None
         )
 
     def format_method(self, method):
+        """Translates method in API format to popup format
+
+        Args:
+            method (str): a method in API format, i.e. 'get_library_items'
+
+        Returns:
+            str: a method in popup format, i.e. 'Get Library Items'
+        """
         lowercase_words = ["of", "in"]
         result = " ".join(word.capitalize() for word in method.split("_"))
 
@@ -118,34 +169,48 @@ class PopupWindow(QDialog):
         return result
 
     def set_state(self, to_set):
+        """On import, fills form with text based on state that is passed to it
+
+        Args:
+            to_set (dict): state that is to be input into popup
+        """
+
+        # make list of keys with optional added to each parameter
         to_set_keys_with_optional = [
             f"{parameter} - Optional" for parameter in to_set.keys()
         ]
+
+        # map list of keys with optional added to each parameter to its counterpart with optional added
         mapping = dict(zip(to_set_keys_with_optional, to_set.keys()))
+
+        # for group boxes in self.form_layout, set text depending on title
         for i in range(self.form_layout.count()):
             item = self.form_layout.itemAt(i).widget()
             parameter = item.title()
 
-            if parameter in to_set.keys():
-                if item.findChild(QLineEdit):
-                    item.findChild(QLineEdit).setText(to_set[parameter])
-                elif item.findChild(QComboBox):
-                    item.findChild(QComboBox).setCurrentText(to_set[parameter])
-            elif parameter in mapping.keys():
+            if parameter in mapping.keys():
                 parameter = mapping[parameter]
-                if item.findChild(QLineEdit):
-                    item.findChild(QLineEdit).setText(to_set[parameter])
-                elif item.findChild(QComboBox):
-                    item.findChild(QComboBox).setCurrentText(to_set[parameter])
+            elif parameter not in to_set.keys():
+                continue
+
+            if item.findChild(QLineEdit):
+                item.findChild(QLineEdit).setText(to_set[parameter])
+            elif item.findChild(QComboBox):
+                item.findChild(QComboBox).setCurrentText(to_set[parameter])
 
     def load_ui(self, rect):
-        self.setWindowTitle("Add State")
+        """Loads UI based on state of rect. Called when edit rect after import
+
+        Args:
+            rect (CustomItem): rect associated with self
+        """
 
         layout = QVBoxLayout()
         self.setLayout(layout)
 
         state = rect.state
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
+        self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
 
         type = state["Type"]
         if type == "MethodCall":
@@ -156,15 +221,20 @@ class PopupWindow(QDialog):
             return
 
     def load_choice_ui(self, state, layout):
-        layout = layout
-        state = state
+        """Adds Choice UI to layout from self.load_ui given state and layout
+
+        Args:
+            state (dict): state of the CustomItem associated with self
+            layout (PyQt6.QtWidgets.QVBoxLayout): base layout for this popup
+        """
 
         object_types = list(schema.keys())
         object_types.insert(0, "")
         object_types.append("Custom")
+
         title = state["Title"]
 
-        self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
+        # parameters to add in first layer of popup
         parameters = {}
 
         if "Choices" in state.keys():
@@ -177,9 +247,14 @@ class PopupWindow(QDialog):
 
         layout.addWidget(self.type_combo_box)
         self.type_combo_box.setCurrentText("Choice")
+
         layout.addLayout(self.form_layout)
         layout.addLayout(self.buttons_layout)
+
+        # add parameter values to first layer of popup
         self.set_state(parameters)
+
+        # fill choice list widget with imported choices
         for choice in self.current_choices:
             object, method = self.get_object_method_from_call(choice["Value"])
             if not object or not method:
@@ -193,6 +268,13 @@ class PopupWindow(QDialog):
             self.choice_list_widget.addItem(widget_line)
 
     def load_method_ui(self, state, layout):
+        """Adds MethodCall UI to layout from self.load_ui given state and layout. Requires state['Type'] == 'MethodCall'
+
+        Args:
+            state (dict): state of the CustomItem associated with self
+            layout (PyQt6.QtWidgets.QVBoxLayout): base layout for this popup
+        """
+
         object_types = list(schema.keys())
         object_types.insert(0, "")
         object_types.append("Custom")
@@ -201,63 +283,76 @@ class PopupWindow(QDialog):
         title = state["Title"]
         self.type_combo_box.setCurrentText(type)
 
+        # parameters to add in first layer of popup
         parameters = {}
+
+        # payloads that this state creates
         current_payloads = {}
 
-        if type == "MethodCall":
-            method_call = state["MethodCall"]
-            if "Payloads" in method_call:
-                object, method = self.get_object_method_from_call(method_call)
-                parameters["Object"] = object
-                object_type = self.get_api_from_method(method)
-                method = self.format_method(method)
-                if "Parameters" in state.keys():
-                    parameters.update(
-                        {
-                            self.format_method(p): str(state["Parameters"][p])
-                            for p in state["Parameters"]
-                        }
-                    )
-            elif method_call in schema.keys():
-                object_type = method_call
-                method = "Initialize"
-                if "Parameters" in state.keys():
-                    parameters.update(
-                        {
-                            self.format_method(p): str(state["Parameters"][p])
-                            for p in state["Parameters"]
-                        }
-                    )
-            else:
-                object_type = "Custom"
-                parameters["MethodCall"] = method_call
-                custom_parameters = state.get("Parameters", {})
+        method_call = state["MethodCall"]
+        if "Payloads" in method_call:
+            # non-initialization or possibly custom method
+            object, method = self.get_object_method_from_call(method_call)
+            parameters["Object"] = object
+            object_type = self.get_api_from_method(method)
+            method = self.format_method(method)
+            if "Parameters" in state.keys():
+                parameters.update(
+                    {
+                        self.format_method(p): str(state["Parameters"][p])
+                        for p in state["Parameters"]
+                    }
+                )
+        elif method_call in schema.keys():
+            # initialization method
+            object_type = method_call
+            method = "Initialize"
+            if "Parameters" in state.keys():
+                parameters.update(
+                    {
+                        self.format_method(p): str(state["Parameters"][p])
+                        for p in state["Parameters"]
+                    }
+                )
+        else:
+            # certainly custom
+            object_type = "Custom"
+            parameters["MethodCall"] = method_call
+            custom_parameters = state.get("Parameters", {})
 
-            if "Payloads" in state:
-                current_payloads = {
-                    p: str(state["Payloads"][p]) for p in state["Payloads"]
-                }
+        # set current_payloads
+        if "Payloads" in state:
+            current_payloads = {p: str(state["Payloads"][p]) for p in state["Payloads"]}
 
-            next_state = state.get("Next", "")
+        # get "Next" from state, empty if there is none
+        next_state = state.get("Next", "")
 
         self.object_type_combo_box.addItems(object_types)
 
+        # select object type
         if object_type != "Custom":
             self.object_type_combo_box.setCurrentText(object_type)
         else:
+            # method combo box unnecessary
             self.method_combo_box.hide()
+
             self.object_type_combo_box.setCurrentText(object_type)
             self.method_combo_box.currentIndexChanged.connect(
                 lambda: self.update_form(True)
             )
+
+            # add params to list widget
             self.current_params = custom_parameters
             for item in custom_parameters:
                 self.parameter_list_widget.addItem(item)
 
         self.method_combo_box.addItem("")
+
+        # add methods if object is valid and not custom
         if object_type in schema:
             self.method_combo_box.addItems(schema[object_type])
 
+        # set layout
         layout.addWidget(self.type_combo_box)
         layout.addWidget(self.object_type_combo_box)
         layout.addWidget(self.method_combo_box)
@@ -268,51 +363,48 @@ class PopupWindow(QDialog):
         self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
         self.object_type_combo_box.currentIndexChanged.connect(self.on_state_selected)
 
+        # set method combo box
         if object_type != "Custom":
             self.method_combo_box.currentIndexChanged.connect(
                 lambda: self.update_form(False)
             )
             self.method_combo_box.setCurrentText(method)
 
+        # set base layer params
         parameters["Name of State"] = title
         parameters["Next"] = next_state
         self.set_state(parameters)
+
+        # set payloads
         self.current_payloads = current_payloads
         for item in current_payloads.keys():
             self.payload_list_widget.addItem(f"{item}: {current_payloads[item]}")
 
-    def edit_mode(self, payloads, rect, load=False):
+    def edit_mode(self, payloads):
+        """Called when CustomItem is clicked. Sets window title and updates payloads
+
+        Args:
+            payloads (list): list of payload names across all states
+        """
         self.setWindowTitle("Edit State")
         self.payloads = payloads
 
-        if not load and self.payloads:
-            payload_objects_created_in_popup = rect.get_objects_created()
-            current = self.payload_combo_box.currentText()
-            self.payload_combo_box.clear()
-            payloads_formatted = [
-                f"{item}"
-                for item in self.payloads
-                if item not in payload_objects_created_in_popup
-            ]
-            payloads_formatted.insert(0, "")
-            self.payload_combo_box.addItems(payloads_formatted)
-            self.payload_combo_box.setCurrentText(current)
-
     def on_type_selected(self):
+        """Sets UI based on which state type is selected"""
         type = self.type_combo_box.currentText()
         self.clear_form()
+
         if type == "MethodCall":
             self.object_type_combo_box.show()
-            self.method_combo_box.hide()
         elif type == "Choice":
             self.choice_form()
             self.object_type_combo_box.hide()
-            self.method_combo_box.hide()
         else:
             self.object_type_combo_box.hide()
-            self.method_combo_box.hide()
+        self.method_combo_box.hide()
 
     def choice_form(self):
+        """Sets UI for Choice type. Called when Choice is selected as object type"""
         self.make_and_add_groupbox("Name of State", QLineEdit())
 
         layout = QVBoxLayout()
@@ -334,12 +426,18 @@ class PopupWindow(QDialog):
         self.make_and_add_groupbox("Default", QLineEdit())
 
     def choice_popup(self):
+        """Creates a ChoicesPopup object. Called when Edit button is clicked in Choice UI"""
+
+        # initialize popup
         choice_popup = ChoicesPopup(self.payloads, self.current_choices)
+
+        # set self.current_choices and update list widget when popup is OK'ed
         if choice_popup.exec() == QDialog.DialogCode.Accepted:
             self.current_choices = choice_popup.get_input()
             self.update_list(self.choice_list_widget)
 
     def on_state_selected(self):
+        """Sets UI based on which object type is selected"""
         object_type = self.object_type_combo_box.currentText()
         self.method_combo_box.clear()
 
@@ -351,6 +449,15 @@ class PopupWindow(QDialog):
             self.method_combo_box.show()
 
     def make_and_add_groupbox(self, title, widget):
+        """Creates and adds QGroupBox to layout with given title and widget
+
+        Args:
+            title (str): title to be displayed
+            widget (PyQt6.QtWidgets.*): widget to be displayed
+
+        Returns:
+            PyQt6.QtWidgets.QGroupBox: groupbox created
+        """
         gb = QGroupBox()
         gb.setTitle(title)
         layout = QVBoxLayout()

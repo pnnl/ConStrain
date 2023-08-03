@@ -187,8 +187,8 @@ class ChoicesPopup(QDialog):
         self.method_label.hide()
 
         # Line for method if Custom object, hide until Custom is chosen
-        self.method_input.hide()
         self.method_input = QLineEdit()
+        self.method_input.hide()
 
         # hide this until non-Custom object is chosen
         self.method_combo_box = QComboBox()
