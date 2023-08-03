@@ -1,20 +1,34 @@
+"""
+This file contains the classes Path, ControlPoint, CustomItem, and Scene. These classes form the visual aspect of the States tab in the GUI.
+CustomItem contains the state, Path links 2 ControlPoints with an arrowed line, ControlPoints are on the edges of CustomItems, and Scene contains
+all of this.
+"""
+
 from PyQt6 import QtCore, QtGui, QtWidgets
 import json
 import math
 import re
-import sys
 
 
 class Path(QtWidgets.QGraphicsPathItem):
     def __init__(self, start, p2, end=None):
+        """Initializes a Path from start to p2
+
+        Args:
+            start (ControlPoint): where the path starts
+            p2 (PyQt6.QtCore.QPointF): where the path currently is
+            end (ControlPoint): where the path ends
+        """
         super(Path, self).__init__()
 
         self.start = start
         self.end = end
 
+        # set arrow shape
         self._arrow_height = 5
         self._arrow_width = 4
 
+        # create QPainterPath from start's position to p2 and set this as the path
         self._path = QtGui.QPainterPath()
         self._path.moveTo(start.scenePos())
         self._path.lineTo(p2)
@@ -22,21 +36,46 @@ class Path(QtWidgets.QGraphicsPathItem):
         self.setPath(self._path)
 
     def controlPoints(self):
+        """Returns control points that this path connects
+
+        Returns:
+            ControlPoint: start control point
+            ControlPoint: end control point
+        """
         return self.start, self.end
 
     def setP2(self, p2):
+        """Sets path to given point
+
+        Args:
+            p2 (PyQt6.QtCore.QPointF): where the path needs to be
+        """
         self._path.lineTo(p2)
         self.setPath(self._path)
 
     def setStart(self, start):
+        """Sets start
+
+        Args:
+            start (ControlPoint): new start
+        """
         self._start = start
         self.updatePath()
 
     def setEnd(self, end):
+        """Sets end
+
+        Args:
+            end (ControlPoint): new end
+        """
         self.end = end
         self.updatePath(end)
 
     def updatePath(self, source):
+        """Updates path from start to end
+
+        source (ControlPoint): where the path starts
+        """
         if source == self.start:
             self._path = QtGui.QPainterPath(source.scenePos())
             self._path.lineTo(self.end.scenePos())
@@ -46,10 +85,18 @@ class Path(QtWidgets.QGraphicsPathItem):
 
         self.setPath(self._path)
 
-    def arrowCalc(
-        self, start_point=None, end_point=None
-    ):  # calculates the point where the arrow should be drawn
+    def arrowCalc(self, start_point=None, end_point=None):
+        """Calculates the point where the arrow should be drawn
+
+        Args:
+            start_point (ControlPoint): start control point
+            end_point (ControlPoint): end control point
+
+        Returns:
+            PyQt6.QtGui.QPolygonF: arrow, None if invalid
+        """
         try:
+            # set start and end
             startPoint, endPoint = start_point, end_point
 
             if start_point is None:
@@ -58,15 +105,19 @@ class Path(QtWidgets.QGraphicsPathItem):
             if endPoint is None:
                 endPoint = self.end
 
+            # find distance between start and end
             dx, dy = startPoint.x() - endPoint.x(), startPoint.y() - endPoint.y()
 
             leng = math.sqrt(dx**2 + dy**2)
-            normX, normY = dx / leng, dy / leng  # normalize
+
+            # normalize
+            normX, normY = dx / leng, dy / leng
 
             # perpendicular vector
             perpX = -normY
             perpY = normX
 
+            # define position of arrows
             leftX = (
                 endPoint.x() + self._arrow_height * normX + self._arrow_width * perpX
             )
@@ -86,18 +137,22 @@ class Path(QtWidgets.QGraphicsPathItem):
 
             return QtGui.QPolygonF([point2, endPoint, point3])
 
+        # leng == 0 or something else
         except (ZeroDivisionError, Exception):
             return None
 
     def directPath(self):
+        """Returns a direct path from start ControlPoint to end ControlPoint"""
         path = QtGui.QPainterPath(self.start.scenePos())
         path.lineTo(self.end.scenePos())
         return path
 
     def paint(self, painter: QtGui.QPainter, option, widget=None) -> None:
+        """Paints path"""
         painter.pen().setWidth(2)
         painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
 
+        # define direct path and arrow if end is defined
         if self.end:
             path = self.directPath()
             triangle_source = self.arrowCalc(
@@ -109,19 +164,22 @@ class Path(QtWidgets.QGraphicsPathItem):
         painter.drawPath(path)
         self.setPath(path)
 
+        # draw arrow
         if triangle_source is not None:
             painter.drawPolyline(triangle_source)
 
-    # def shape(self):
-    # shape = super().shape()
-    # shape.addRect(shape.boundingRect().adjusted(-5, -5, 5, 5))
-    # return shape
-
     def contextMenuEvent(self, event):
+        print(type(event))
+        """Context menu for deletion on path
+
+        Args:
+            event (PyQt6.QtWidgets.QGraphicsSceneContextMenuEvent): right click event
+        """
         menu = QtWidgets.QMenu()
         delete_action = menu.addAction("Delete")
         action = menu.exec(event.screenPos())
 
+        # removeLine from start ControlPoint and end ControlPoint
         if action == delete_action:
             self.start.removeLine(self)
             self.end.removeLine(self)
@@ -129,8 +187,15 @@ class Path(QtWidgets.QGraphicsPathItem):
 
 class ControlPoint(QtWidgets.QGraphicsEllipseItem):
     def __init__(self, parent):
+        """QGraphicsEllipseItem to act as point on edge of CustomItem and endpoint of Path
+
+        Args:
+            parent (CustomItem): CustomItem that ControlPoint belongs to
+        """
         super().__init__(-5, -5, 10, 10, parent)
         self.parent = parent
+
+        # list of Path objects that include this control point
         self.paths = []
 
         self.setAcceptHoverEvents(True)
@@ -139,20 +204,45 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
         )
 
         self.setOpacity(0.3)
+
+        # whether or not this ControlPoint has been clicked
+        # TODO Find out if I need this
         self.clicked = False
 
     def addLine(self, pathItem):
+        """Adds path to self if the path is viable
+
+        Args:
+            pathItem (Path): Path to connect to self
+
+        Returns:
+            bool: True if path is viable, False otherwise
+        """
+
+        # determine whether path is viable
         viable = self.newLineErrorCheck(pathItem)
+
         if viable:
             self.paths.append(pathItem)
             return True
         return False
 
     def newLineErrorCheck(self, pathItem):
+        """Checks pathItem to determine whether it is a viable path
+
+        Args:
+            pathItem (Path): path in question
+
+        Returns:
+            bool: True if pathItem is viable, False otherwise
+        """
+
+        # return False if path already exists
         for existing in self.paths:
             if existing.controlPoints() == pathItem.controlPoints():
                 return False
 
+        # define error message
         def send_error(text):
             error_msg = QtWidgets.QMessageBox()
             error_msg.setIcon(QtWidgets.QMessageBox.Icon.Critical)
@@ -160,14 +250,18 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
             error_msg.setText(text)
             error_msg.exec()
 
+        # only consider sending error message if self is the start of the path
         if pathItem.start == self:
+            # determine if parent will have too many children states
             rect_children_amt = len(self.parent.children)
             if rect_children_amt >= 1:
                 if self.parent.state["Type"] != "Choice":
+                    # MethodCall type CustomItem can only connect to 1 CustomItem
                     error_msg = "This type cannot connect to more than 1 state"
                     send_error(error_msg)
                     return False
                 elif self.parent.state["Type"] == "Choice":
+                    # Choice type CustomItem can connect to more than 1 CustomItem, but need to see how many are defined in the state
                     choices_amt = len(self.parent.state["Choices"])
                     if "Default" in self.parent.state.keys():
                         choices_amt += 1
@@ -176,28 +270,43 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
                         error_msg = f"This type cannot connect to more than {choices_amt} states"
                         send_error(error_msg)
                         return False
+            # add new child node to parent.children since path is viable
             self.parent.children.append(pathItem.end.parent)
         return True
 
     def removeLine(self, pathItem):
+        """Given pathItem to remove, removes pathItem from scene and self.paths
+
+        Args:
+            pathItem (Path): pathItem to remove
+
+        Returns:
+            bool: True if pathItem was removed from ControlPoint, False otherwise
+        """
         for existing in self.paths:
+            # find matching path in existing
             if existing.controlPoints() == pathItem.controlPoints():
                 self.scene().removeItem(existing)
                 self.paths.remove(existing)
+
+                # remove child node from parent CustomItem since they are no longer connected
                 if pathItem.start == self:
                     self.parent.children.remove(pathItem.end.parent)
                 return True
         return False
 
     def itemChange(self, change, value):
+        """Updates path on item change for path in paths"""
         for path in self.paths:
             path.updatePath(self)
         return super().itemChange(change, value)
 
     def hoverEnterEvent(self, event):
+        """Change opacity when hovered over"""
         self.setOpacity(1.0)
 
     def hoverLeaveEvent(self, event):
+        """Change opacity when not hovered over"""
         self.setOpacity(0.3)
 
 

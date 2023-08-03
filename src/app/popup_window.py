@@ -1,3 +1,7 @@
+"""
+Contained is the class for PopupWindow, the popup displayed when 'Add Basic' is chosen in the states tab.
+"""
+
 from PyQt6.QtWidgets import (
     QLineEdit,
     QVBoxLayout,
