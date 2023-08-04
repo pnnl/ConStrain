@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QTextEdit,
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QEventLoop
 from PyQt6.QtGui import QAction
 from import_form import ImportForm
 from meta_form import MetaForm
@@ -209,10 +209,11 @@ class GUI(QMainWindow):
 
         popup = SubmitPopup()
 
-        worker = Worker(json_data)
-        worker.update_text.connect(popup.update_text)
+        # make worker a class attribute to not block the GUI
+        self.worker = Worker(json_data)
+        self.worker.update_text.connect(popup.update_text)
 
-        worker.start()
+        self.worker.start()
         popup.exec()
 
     def get_workflow(self):
@@ -371,6 +372,7 @@ class EmittingStream:
 
     def write(self, message):
         # emits the signal with the message to update the QTextEdit
+        # QMetaObject.invokeMethod(self._signal, "emit", Q_ARG(str, message.strip()))
         self._signal.emit(message.strip())
 
     def flush(self):
