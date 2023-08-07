@@ -311,11 +311,21 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
 
 
 class CustomItem(QtWidgets.QGraphicsItem):
+    # edge
     pen = QtGui.QPen(QtGui.QColor(98, 99, 102, 255))
+
+    # ControlPoint outline
     controlBrush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
 
-    def __init__(self, state, left=False, right=False, popup=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, state, popup=None):
+        """Shape on Scene to represents a state in the workflow
+
+        Args:
+            state (dict): state that self represents
+            popup (PopupWindow or AdvancedPopup): popup associated with self
+        """
+        super().__init__()
+        # fill
         self.brush = QtGui.QBrush(QtGui.QColor(214, 127, 46))
         self.state = state
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
@@ -324,18 +334,22 @@ class CustomItem(QtWidgets.QGraphicsItem):
         self.titleItem = QtWidgets.QGraphicsTextItem(parent=self)
 
         self.popup = popup
-        if self.popup is None:
-            self.loadPopup()
 
+        # child states (list of CustomItems)
         self.children = []
+
+        # ControlPoints on self
         self.controls = []
         self.initialize_ui()
 
     def initialize_ui(self):
+        """Initialize how self looks"""
+
         if "Title" not in self.state.keys():
             self.state["Title"] = ""
         title = self.state["Title"]
 
+        # display title on self
         self.titleItem.setHtml(f"<center>{title}</center>")
 
         max_width = 100
@@ -345,14 +359,16 @@ class CustomItem(QtWidgets.QGraphicsItem):
         text_width = self.titleRect.width()
         text_height = self.titleRect.height()
 
-        diamond_width = text_width * 1.2
-        diamond_height = text_height * 1.2
+        # make width and height of shape a bit larger than text
+        w = text_width * 1.2
+        h = text_height * 1.2
 
-        self.rect.setRect(0, 0, diamond_width, diamond_height)
+        self.rect.setRect(0, 0, w, h)
 
         self.titleRect.moveCenter(self.rect.center())
         self.titleItem.setPos(self.titleRect.topLeft())
 
+        # where to place control points
         control_placements = [
             (self.rect.width() / 2, self.rect.height()),
             (self.rect.width(), self.rect.height() / 2),
@@ -360,9 +376,11 @@ class CustomItem(QtWidgets.QGraphicsItem):
             (0, self.rect.height() / 2),
         ]
 
+        # initialize control points
         if not self.controls:
             self.controls = [ControlPoint(self) for i in range(len(control_placements))]
 
+        # draw control points
         for i, control in enumerate(self.controls):
             control.setPen(self.pen)
             control.setBrush(self.controlBrush)
@@ -370,15 +388,18 @@ class CustomItem(QtWidgets.QGraphicsItem):
             control.setY(control_placements[i][1])
 
     def boundingRect(self):
+        """Make bounding rect a little larger so that it is easier to click"""
         adjust = self.pen.width() / 2
         return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
 
     def paint(self, painter, option, widget=None):
+        """Paints self on scene"""
         painter.save()
         painter.setPen(self.pen)
         painter.setBrush(self.brush)
 
         if self.state["Type"] == "Choice":
+            # make shape a diamond if state is a choice type
             diamond_points = [
                 QtCore.QPointF(self.rect.center().x(), self.rect.top()),
                 QtCore.QPointF(self.rect.right(), self.rect.center().y()),
@@ -387,13 +408,17 @@ class CustomItem(QtWidgets.QGraphicsItem):
             ]
             painter.drawPolygon(QtGui.QPolygonF(diamond_points))
         else:
+            # else, make it a rounded rectangle
             painter.drawRoundedRect(self.rect, 4, 4)
         painter.restore()
 
-    def loadPopup(self):
-        return None
-
     def setBrush(self, color="orange"):
+        """Sets color of fill on self
+
+        Args:
+            color (str): color to be changed to; ideally should
+            be "red", "green", or "orange"
+        """
         if color == "red":
             color = QtGui.QColor(214, 54, 64)
         elif color == "green":
@@ -404,20 +429,26 @@ class CustomItem(QtWidgets.QGraphicsItem):
         self.update()
 
     def contextMenuEvent(self, event):
+        """Context menu to allow deletion of self in scene"""
         menu = QtWidgets.QMenu()
         delete_action = menu.addAction("Delete")
 
         action = menu.exec(event.screenPos())
 
         if action == delete_action:
+            # find payloads that self.state has created
             objects_created = self.get_objects_created()
+
+            # find what objects are currently being used by other states
             all_objects_in_use = self.scene().getObjectsinUse()
 
+            # make sure that payloads from self.state are not being used by another state
             for created_object in objects_created:
                 if created_object in all_objects_in_use:
                     self.sendError("Object created in use")
                     return
 
+            # remove lines
             for c in self.controls:
                 for p in c.paths:
                     p1 = p.start
@@ -429,6 +460,11 @@ class CustomItem(QtWidgets.QGraphicsItem):
             self.scene().removeItem(self)
 
     def sendError(self, text):
+        """Displays an error message given text
+
+        Args:
+            text (str): error message to display
+        """
         error_msg = QtWidgets.QMessageBox()
         error_msg.setIcon(QtWidgets.QMessageBox.Icon.Critical)
         error_msg.setWindowTitle("Error in State")
@@ -436,14 +472,23 @@ class CustomItem(QtWidgets.QGraphicsItem):
         error_msg.exec()
 
     def get_objects_created(self):
+        """Returns objects that self.state has created
+
+        Returns:
+            list: list of object names (strs)
+        """
         if self.state["Type"] == "MethodCall":
             if "Payloads" in self.state:
                 payloads = self.state["Payloads"]
                 return [object_name for object_name in payloads]
         return []
 
-    # get objects that are used in a state
     def get_objects_used(self):
+        """Returns objects that are used from self.state
+
+        Returns:
+            list: list of object names that self.state uses
+        """
         objects = []
         pattern = r"Payloads\['(.*?)'\]"
         if self.state["Type"] == "MethodCall":
@@ -464,16 +509,34 @@ class CustomItem(QtWidgets.QGraphicsItem):
         return objects
 
     def get_state_string(self):
+        """Returns state in API format
+
+        Returns:
+            dict: self.state in API format
+        """
         copy_of_state = dict(self.state)
+
+        # make state['Title'] a key for rest of state
         title = copy_of_state.pop("Title")
         state_string = json.dumps({title: copy_of_state}, indent=4)
         return state_string
 
     def set_state(self, new_state):
+        """Given an updated state, updates self
+
+        Args:
+            new_state (dict): new state
+        """
+
         self.state = new_state
         self.initialize_ui()
 
     def get_nexts(self):
+        """Returns children names of self
+
+        Returns:
+            list: list of children names
+        """
         next = []
         if self.state["Type"] == "MethodCall":
             if "Next" in self.state.keys():
@@ -496,9 +559,17 @@ class CustomItem(QtWidgets.QGraphicsItem):
 
 
 class Scene(QtWidgets.QGraphicsScene):
+    """Scene to display workflow diagram"""
+
     startItem = newConnection = None
 
     def controlPointAt(self, pos):
+        """Returns ControlPoint at given position
+
+        Args:
+            pos (PyQt6.QtCore.QPointF): position
+        """
+
         mask = QtGui.QPainterPath()
         mask.setFillRule(QtCore.Qt.FillRule.WindingFill)
         for item in self.items(pos):
@@ -511,9 +582,12 @@ class Scene(QtWidgets.QGraphicsScene):
                 mask.addPath(item.shape().translated(item.scenePos()))
 
     def mousePressEvent(self, event):
+        """Tries drawing a path on mouse press, otherwise default action"""
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
+            # check if mouse press at ControlPoint object
             item = self.controlPointAt(event.scenePos())
             if item:
+                # start a path
                 self.startItem = item
                 self.newConnection = Path(item, event.scenePos())
                 self.addItem(self.newConnection)
@@ -521,6 +595,7 @@ class Scene(QtWidgets.QGraphicsScene):
         super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
+        """Tries tracing path from starting ControlPoint to next ControlPoint, otherwise default action"""
         if self.newConnection:
             item = self.controlPointAt(event.scenePos())
             if item and item != self.startItem:
@@ -532,6 +607,7 @@ class Scene(QtWidgets.QGraphicsScene):
         super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
+        """Tries connecting start ControlPoint to end ControlPoint, otherwise default action"""
         if self.newConnection:
             item = self.controlPointAt(event.scenePos())
             if item and item != self.startItem:
@@ -539,8 +615,7 @@ class Scene(QtWidgets.QGraphicsScene):
                 if self.startItem.addLine(self.newConnection):
                     item.addLine(self.newConnection)
                 else:
-                    # delete the connection if it exists; remove the following
-                    # line if this feature is not required
+                    # delete the connection if it exists; remove the following line if this feature is not required
                     self.startItem.removeLine(self.newConnection)
                     self.removeItem(self.newConnection)
             else:
@@ -549,6 +624,11 @@ class Scene(QtWidgets.QGraphicsScene):
         super().mouseReleaseEvent(event)
 
     def getObjectsinUse(self):
+        """Returns objects that are used in this scene
+
+        Returns:
+            list: list of object names that are used in this scene
+        """
         rect_items = [item for item in self.items() if isinstance(item, CustomItem)]
         objects_in_use = []
         for rect_item in rect_items:
@@ -558,6 +638,11 @@ class Scene(QtWidgets.QGraphicsScene):
         return objects_in_use
 
     def getObjectsCreated(self):
+        """Returns objects that are created in this scene
+
+        Returns:
+            list: list of object names that are created in this scene
+        """
         rect_items = [item for item in self.items() if isinstance(item, CustomItem)]
         objects_in_use = []
         for rect_item in rect_items:

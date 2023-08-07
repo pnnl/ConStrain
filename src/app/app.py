@@ -209,7 +209,7 @@ class GUI(QMainWindow):
 
         popup = SubmitPopup()
 
-        # make worker a class attribute to not block the GUI
+        # make worker a GUI attribute to not block the rest of the application
         self.worker = Worker(json_data)
         self.worker.update_text.connect(popup.update_text)
 
