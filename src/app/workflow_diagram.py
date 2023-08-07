@@ -13,14 +13,15 @@ from advanced_popup import AdvancedPopup
 from rect_connect import Scene, CustomItem, ControlPoint, Path
 import json
 
-with open("dependencies.json") as file:
-    data = json.load(file)
-
 
 class Zoom(QGraphicsView):
     clicked = pyqtSignal()
 
     def __init__(self, scene):
+        """QGraphicsView that includes zoom function
+
+        scene (Scene): scene to be contained by self
+        """
         super().__init__(scene)
         self.scene = scene
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -30,17 +31,24 @@ class Zoom(QGraphicsView):
             QGraphicsView.OptimizationFlag.DontAdjustForAntialiasing
         )
 
+        # factor for how much to zoom
         self.zoom = 1.1
         self.zoom_in = QKeySequence.StandardKey.ZoomIn
         self.zoom_out = QKeySequence.StandardKey.ZoomOut
+
+        # last CustomItem that was clicked
         self.itemClicked = None
+
+        # on mouse click + drag, where the drag started
         self.dragStartPosition = None
 
     def wheelEvent(self, event: QWheelEvent):
+        """Zooms in or out on view"""
         factor = self.zoom ** (event.angleDelta().y() / 240.0)
         self.scale(factor, factor)
 
     def keyPressEvent(self, event: QKeyEvent):
+        """Zooms in or out on view with trackpad event"""
         if event.matches(self.zoom_in):
             self.scale(self.zoom, self.zoom)
             event.accept()
@@ -51,12 +59,11 @@ class Zoom(QGraphicsView):
             super().keyPressEvent(event)
 
     def mousePressEvent(self, event):
+        """Performs default action then stores clicked item if item is associated with CustomItem"""
         super().mousePressEvent(event)
         if event.button() == Qt.MouseButton.LeftButton:
-            print("ayo")
             self.dragStartPosition = event.pos()
             item = self.itemAt(event.pos())
-            print(item)
             if item:
                 if isinstance(item, QGraphicsTextItem):
                     item = item.parentItem()
@@ -67,7 +74,10 @@ class Zoom(QGraphicsView):
                     self.itemClicked = item
 
     def mouseReleaseEvent(self, event):
+        """Performs default action and triggers self.clicked if user action was a click"""
         super().mouseReleaseEvent(event)
+
+        # check if left mouse button release and if item was not dragged
         if (
             event.button() == Qt.MouseButton.LeftButton
             and event.pos() == self.dragStartPosition
@@ -83,6 +93,14 @@ class Zoom(QGraphicsView):
                     self.itemClicked = item
 
     def arrange_tree(self, parent_item, x, y, step):
+        """Arranges workflow diagram to form a tree
+
+        Args:
+            parent_item (CustomItem): node with children items
+            x (float): x value of CustomItem
+            y (float): y value of CustomItem
+            step (int): spacing factor
+        """
         if not parent_item:
             return
 
@@ -100,6 +118,10 @@ class Zoom(QGraphicsView):
 
 class WorkflowDiagram(QWidget):
     def __init__(self, setting):
+        """Widget to contain view
+
+        setting (str): either "basic" or "advanced". Determines if clicking on a CustomItem should bring up a basic form or an advanced form
+        """
         super().__init__()
 
         self.setting = setting
@@ -107,8 +129,11 @@ class WorkflowDiagram(QWidget):
         self.scene = Scene()
         self.view = Zoom(self.scene)
         self.view.clicked.connect(self.item_clicked)
+
+        # last popup accessed
         self.popup = None
 
+        # buttons
         add_buttons = QHBoxLayout()
         reformat_button_layout = QHBoxLayout()
 
@@ -140,6 +165,7 @@ class WorkflowDiagram(QWidget):
         self.setLayout(layout)
 
     def add_state(self):
+        """Creates CustomItem based on state described in self.popup if there was no error"""
         if self.popup.error:
             return
 
@@ -150,23 +176,39 @@ class WorkflowDiagram(QWidget):
         self.create_item(state)
 
     def create_item(self, state):
+        """Creates and displays a CustomItem which represents the given state
+
+        Args:
+            state (dict): state to be made into a CustomItem
+        """
+
+        # test whether state was made with popup, or if it was imported. Adds self.popup to CustomItem if not imported
         if (
             self.popup
             and self.popup.get_state()
             and self.popup.get_state()["Title"] == state["Title"]
         ):
-            rect_item = CustomItem(state, left=True, popup=self.popup)
+            rect_item = CustomItem(state, popup=self.popup)
         else:
-            rect_item = CustomItem(state, left=True)
+            rect_item = CustomItem(state)
 
         def connect_rects(parent, child):
+            """Connects a parent CustomItem to a child CustomItem
+
+            Args:
+                parent (CustomItem): parent CustomItem
+                child (CustomItem): child CustomItem
+            """
             child_control = child.controls[2]
             parent_control = parent.controls[0]
             path = Path(parent_control, child_control.scenePos(), child_control)
             if parent_control.addLine(path) and child_control.addLine(path):
                 self.scene.addItem(path)
 
+        # find CustomItems in scene
         rects = [item for item in self.scene.items() if isinstance(item, CustomItem)]
+
+        # if parent and child exist in the scene, connect them with a Path
         if "Next" in state.keys():
             matching_rects = [
                 rect for rect in rects if rect.state["Title"] == state["Next"]
@@ -184,6 +226,13 @@ class WorkflowDiagram(QWidget):
         self.update()
 
     def edit_state(self, rect):
+        """Gives previously made CustomItem a new state
+
+        Args:
+            rect (CustomItem): CustomItem to be edited
+        """
+
+        # do not continue if there was an error in self.popup
         if self.popup.error:
             return
 
@@ -192,6 +241,7 @@ class WorkflowDiagram(QWidget):
         if current_state["Type"] not in ["Choice", "MethodCall"]:
             return
 
+        # give CustomItem new state
         old_state = rect.get_state_string()
         old_state = json.loads(old_state)
         title = next(iter(old_state.keys()))
@@ -202,6 +252,7 @@ class WorkflowDiagram(QWidget):
             rect.set_state(current_state)
 
     def get_workflow(self):
+        """Computes structure of the workflow using Depth First Search and paints CustomItems depending on place in graph"""
         items = [item for item in self.scene.items() if isinstance(item, CustomItem)]
         roots = []
         for i in items:
@@ -244,10 +295,17 @@ class WorkflowDiagram(QWidget):
             root.setBrush("green")
 
     def call_popup(self, rect=None, edit=False):
+        """Calls popup on click of CustomItem, or if 'Add Basic' button is pressed
+
+        Args:
+            rect (CustomItem): CustomItem associated with the popup needed
+            edit (bool): False if creating new CustomItem, True otherwise
+        """
         if self.setting == "basic":
             payloads = self.scene.getObjectsCreated()
             if rect:
                 if not rect.popup or isinstance(rect.popup, AdvancedPopup):
+                    # make a new popup
                     rect.popup = PopupWindow(payloads, rect=rect, load=True)
                 rect.popup.edit_mode(payloads)
                 self.popup = rect.popup
@@ -264,6 +322,8 @@ class WorkflowDiagram(QWidget):
         self.popup.exec()
 
     def call_advanced_popup(self, rect=None, edit=False):
+        """Calls popup on click of CustomItem, or if 'Add Advanced' button is pressed"""
+        # create new popup
         self.popup = AdvancedPopup(rect, edit)
 
         if edit and rect:
@@ -276,6 +336,7 @@ class WorkflowDiagram(QWidget):
         self.popup.exec()
 
     def item_clicked(self):
+        """When a CustomItem is clicked, calls self.call_popup in order to display popup associated with the CustomItem clicked"""
         if self.view.itemClicked:
             rect = self.view.itemClicked
             if self.setting == "basic":
@@ -284,6 +345,10 @@ class WorkflowDiagram(QWidget):
                 self.call_advanced_popup(rect, True)
 
     def read_import(self, states):
+        """Adds imported states to workflow diagram
+
+        states (dict): states to import
+        """
         if isinstance(states, dict):
             for state_name in states.keys():
                 # turn state into a dictionary containing state_name key
