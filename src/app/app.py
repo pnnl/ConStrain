@@ -13,14 +13,14 @@ from PyQt6.QtWidgets import (
     QToolBar,
     QMenu,
     QFileDialog,
-    QTextEdit,
 )
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QEventLoop
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 from import_form import ImportForm
 from meta_form import MetaForm
 from workflow_diagram import WorkflowDiagram
 from rect_connect import CustomItem
+from submit import Worker, SubmitPopup
 import json
 from src.api.workflow import Workflow
 import warnings
@@ -28,21 +28,18 @@ import sys
 
 
 class GUI(QMainWindow):
-    def __init__(self, setting):
-        """QMainWindow to contain MetaForm, ImportForm, and Workflow Diagram.
+    def __init__(self):
+        """QMainWindow to contain MetaForm, ImportForm, and Workflow Diagram."""
 
-        Args:
-            setting: (optional but should be sys.argv)
-        """
         super().__init__()
-        self.initialize_ui(setting)
+        self.initialize_ui()
 
-    def initialize_ui(self, setting):
+    def initialize_ui(self):
         self.setWindowTitle("ConStrain")
 
         self.meta_form = MetaForm()
         self.import_form = ImportForm()
-        self.states_form = WorkflowDiagram(setting)
+        self.states_form = WorkflowDiagram("basic")
 
         # list containing meta, imports, and state for display on LHS
         self.column_list = QListWidget()
@@ -118,7 +115,24 @@ class GUI(QMainWindow):
         export_action.triggered.connect(self.exportFile)
         file_menu.addAction(export_action)
 
+        settings_menu = QMenu("Settings", self)
+
+        basic_action = QAction("Basic Popup", self)
+        basic_action.triggered.connect(self.basicPopupSetting)
+        settings_menu.addAction(basic_action)
+
+        advanced_action = QAction("Advanced Popup", self)
+        advanced_action.triggered.connect(self.advancedPopupSetting)
+        settings_menu.addAction(advanced_action)
+
         toolbar.addAction(file_menu.menuAction())
+        toolbar.addAction(settings_menu.menuAction())
+
+    def basicPopupSetting(self):
+        self.states_form.setting = "basic"
+
+    def advancedPopupSetting(self):
+        self.states_form.setting = "advanced"
 
     def exportFile(self):
         """Exports current state as a .json to local storage"""
@@ -299,108 +313,9 @@ class GUI(QMainWindow):
             self.submit_button.setEnabled(True)
 
 
-class UserSetting(QDialog):
-    def __init__(self):
-        """QDialog to ask whether user wants Basic or Advanced settings in creating the workflow. Users
-        are still able to add basic or advanced popups, but this diagram changes what is displayed on edit.
-        Some rethinking about it may be necessary. Runs the GUI based on the setting chosen
-        """
-        super().__init__()
-        self.setWindowTitle("ConStrain")
-        query = QLabel("Advanced or basic user settings?")
-
-        # buttons
-        self.advanced_button = QPushButton("Advanced")
-        self.advanced_button.clicked.connect(self.showAdvanced)
-        self.basic_button = QPushButton("Basic")
-        self.basic_button.clicked.connect(self.showBasic)
-
-        # add buttons and query to layout
-        form_layout = QVBoxLayout()
-        button_layout = QHBoxLayout()
-
-        button_layout.addWidget(self.advanced_button)
-        button_layout.addWidget(self.basic_button)
-
-        form_layout.addWidget(query)
-        form_layout.addLayout(button_layout)
-
-        self.setLayout(form_layout)
-
-    def showBasic(self):
-        """Displays basic GUI on selection"""
-        self.close()
-        self.gui = GUI("basic")
-        self.gui.show()
-
-    def showAdvanced(self):
-        """Displays advanced GUI on selection"""
-        self.close()
-        self.gui = GUI("advanced")
-        self.gui.show()
-
-
-class Worker(QThread):
-    update_text = pyqtSignal(str)
-
-    def __init__(self, json_data):
-        """Given the finalized workflow, creates a thread that runs the workflow in the Workflow API
-
-        Args:
-            json_data (dict): The finalized, json formatted dict of information from each tab
-        """
-        super(Worker, self).__init__()
-        self.json_data = json_data
-
-    def run(self):
-        """Runs the thread"""
-
-        # captures sys.stdout in an EmittingStream object to display in a popup
-        sys.stdout = EmittingStream(self.update_text)
-
-        warnings.simplefilter(action="ignore", category=FutureWarning)
-        warnings.simplefilter(action="ignore", category=ResourceWarning)
-
-        # creates and runs the workflow based on the workflow provided
-        wf = Workflow(self.json_data)
-        wf.run_workflow(verbose=True)
-
-
-class EmittingStream:
-    def __init__(self, signal):
-        self._signal = signal
-
-    def write(self, message):
-        # emits the signal with the message to update the QTextEdit
-        # QMetaObject.invokeMethod(self._signal, "emit", Q_ARG(str, message.strip()))
-        self._signal.emit(message.strip())
-
-    def flush(self):
-        pass
-
-
-class SubmitPopup(QDialog):
-    def __init__(self):
-        """Creates a read-only popup containing the verbose run through Workflow"""
-        super(SubmitPopup, self).__init__()
-        self.init_ui()
-
-    def init_ui(self):
-        self.setMinimumSize(400, 500)
-        self.setWindowTitle("Results")
-        self.layout = QVBoxLayout()
-        self.text_edit = QTextEdit()
-        self.text_edit.setReadOnly(True)
-        self.layout.addWidget(self.text_edit)
-        self.setLayout(self.layout)
-
-    def update_text(self, message):
-        self.text_edit.append(message)
-
-
 app = QApplication(sys.argv)
 
-window = UserSetting()
+window = GUI()
 window.show()
 
 sys.exit(app.exec())
