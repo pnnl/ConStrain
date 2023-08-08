@@ -8,14 +8,12 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QListWidget,
     QFrame,
-    QDialog,
-    QLabel,
     QToolBar,
     QMenu,
     QFileDialog,
 )
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QAction
+from PyQt6.QtCore import Qt, QPoint, QRectF
+from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor
 from import_form import ImportForm
 from meta_form import MetaForm
 from workflow_diagram import WorkflowDiagram
@@ -79,16 +77,16 @@ class GUI(QMainWindow):
         validate_button.setFixedSize(100, 20)
         validate_button.clicked.connect(self.validate_form)
 
-        submit_button = QPushButton("Submit")
-        submit_button.setToolTip("Submit workflow")
-        submit_button.setEnabled(False)
-        submit_button.setFixedSize(100, 20)
-        submit_button.clicked.connect(self.submit_form)
+        self.submit_button = QPushButton("Submit")
+        self.submit_button.setToolTip("Submit workflow")
+        # self.submit_button.setEnabled(False)
+        self.submit_button.setFixedSize(100, 20)
+        self.submit_button.clicked.connect(self.submit_form)
 
         # group validate and submit buttons
         buttons = QHBoxLayout()
-        buttons.addWidget(validate_button)
-        buttons.addWidget(submit_button)
+        # buttons.addWidget(validate_button)
+        buttons.addWidget(self.submit_button)
         buttons.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         # set layout for entire window
@@ -113,9 +111,16 @@ class GUI(QMainWindow):
         import_action.triggered.connect(self.importFile)
         file_menu.addAction(import_action)
 
-        export_action = QAction("Export", self)
-        export_action.triggered.connect(self.exportFile)
-        file_menu.addAction(export_action)
+        export_menu = QMenu("Export", self)
+        file_menu.addMenu(export_menu)
+
+        json_export_action = QAction("JSON", self)
+        json_export_action.triggered.connect(self.exportFile)
+        export_menu.addAction(json_export_action)
+
+        png_export_action = QAction("PNG", self)
+        png_export_action.triggered.connect(self.exportAsPng)
+        export_menu.addAction(png_export_action)
 
         settings_menu = QMenu("Settings", self)
         popup_settings_menu = QMenu("Popup Settings", self)
@@ -152,6 +157,20 @@ class GUI(QMainWindow):
                     json.dump(self.create_json(workflow), f, indent=4)
             except Exception:
                 print("error")
+
+    def exportAsPng(self):
+        """Exports current state as a .png to local storage"""
+        fp, _ = QFileDialog.getSaveFileName(self, "Save Image", "", "PNG Files (*.png)")
+
+        if fp:
+            scene = self.states_form.scene
+            scene.sceneRect().size()
+            pixmap = QPixmap(scene.sceneRect().size().toSize())
+            pixmap.fill(QColor(255, 255, 255))
+            painter = QPainter(pixmap)
+            scene.render(painter, QRectF(pixmap.rect()), scene.sceneRect())
+            painter.end()
+            pixmap.save(fp, "PNG")
 
     def importFile(self):
         """Imports a .json file to use a state and loads file into the GUI"""
@@ -235,7 +254,7 @@ class GUI(QMainWindow):
         self.worker.start()
         popup.exec()
 
-    def get_workflow(self):
+    def get_workflow(self, reformat=True):
         """Organizes the states into a single list, colors states based on placing, returns organized workflow
 
         Returns:
@@ -285,8 +304,9 @@ class GUI(QMainWindow):
             visited.remove(item)
 
         for root in roots:
-            root.state["Start"] = "True"
-            self.states_form.view.arrange_tree(root, 0, 0, 150)
+            if reformat:
+                root.state["Start"] = "True"
+                self.states_form.view.arrange_tree(root, 0, 0, 150)
             if root not in visited:
                 dfs_helper(root, [])
             root.setBrush("green")
@@ -306,7 +326,7 @@ class GUI(QMainWindow):
         """Workflow for validating the state. Triggered on the click of the Validate button. Enables the submit
         button if the workflow is validated.
         """
-        workflow_path = self.get_workflow()
+        workflow_path = self.get_workflow(reformat=False)
         json_data = self.create_json(workflow_path)
 
         warnings.simplefilter(action="ignore", category=FutureWarning)
@@ -315,6 +335,7 @@ class GUI(QMainWindow):
         validate_wf = Workflow(json_data)
         valid = validate_wf.validate(verbose=True)
         if valid:
+            self.valid_workflow = json_data
             self.submit_button.setEnabled(True)
 
 
