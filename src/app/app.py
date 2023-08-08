@@ -74,19 +74,21 @@ class GUI(QMainWindow):
         middle_layout.addWidget(self.states_form)
 
         # validate and submit buttons
-        self.validate_button = QPushButton("Validate")
-        self.validate_button.setFixedSize(100, 20)
-        self.validate_button.clicked.connect(self.validate_form)
+        validate_button = QPushButton("Validate")
+        validate_button.setToolTip("Validate workflow")
+        validate_button.setFixedSize(100, 20)
+        validate_button.clicked.connect(self.validate_form)
 
-        self.submit_button = QPushButton("Submit")
-        self.submit_button.setEnabled(False)
-        self.submit_button.setFixedSize(100, 20)
-        self.submit_button.clicked.connect(self.submit_form)
+        submit_button = QPushButton("Submit")
+        submit_button.setToolTip("Submit workflow")
+        submit_button.setEnabled(False)
+        submit_button.setFixedSize(100, 20)
+        submit_button.clicked.connect(self.submit_form)
 
         # group validate and submit buttons
         buttons = QHBoxLayout()
-        buttons.addWidget(self.validate_button)
-        buttons.addWidget(self.submit_button)
+        buttons.addWidget(validate_button)
+        buttons.addWidget(submit_button)
         buttons.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         # set layout for entire window
@@ -116,14 +118,17 @@ class GUI(QMainWindow):
         file_menu.addAction(export_action)
 
         settings_menu = QMenu("Settings", self)
+        popup_settings_menu = QMenu("Popup Settings", self)
 
         basic_action = QAction("Basic Popup", self)
         basic_action.triggered.connect(self.basicPopupSetting)
-        settings_menu.addAction(basic_action)
+        popup_settings_menu.addAction(basic_action)
 
         advanced_action = QAction("Advanced Popup", self)
         advanced_action.triggered.connect(self.advancedPopupSetting)
-        settings_menu.addAction(advanced_action)
+        popup_settings_menu.addAction(advanced_action)
+
+        settings_menu.addMenu(popup_settings_menu)
 
         toolbar.addAction(file_menu.menuAction())
         toolbar.addAction(settings_menu.menuAction())
