@@ -12,7 +12,10 @@ from PyQt6.QtWidgets import (
     QDialog,
     QGroupBox,
     QMessageBox,
+    QSizePolicy,
+    QLayout,
 )
+from PyQt6.QtGui import QPixmap
 import json
 import re
 from list_and_choice_popups import ListPopup, ChoicesPopup
@@ -28,11 +31,10 @@ with open("api_to_method.json") as f:
 
 class PopupWindow(QDialog):
     def __init__(self, payloads=[], rect=None, load=False):
-        print(payloads)
         """Form to be displayed for user to edit or add a basic state
 
         Args:
-            payloads (list): list of already-made objects to choose from when making a state 
+            payloads (list): list of already-made objects to choose from when making a state
             rect (CustomItem): CustomItem associated with this popup
             load (bool): True if this popup is being created because of an import, false otherwise
         """
@@ -89,6 +91,7 @@ class PopupWindow(QDialog):
         self.setWindowTitle("Add State")
 
         layout = QVBoxLayout()
+        layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
         self.setLayout(layout)
 
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
@@ -210,6 +213,7 @@ class PopupWindow(QDialog):
         """
 
         layout = QVBoxLayout()
+        layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
         self.setLayout(layout)
 
         state = rect.state
@@ -447,6 +451,12 @@ class PopupWindow(QDialog):
 
         if object_type == "Custom":
             self.update_form(custom=True)
+        elif object_type == "":
+            type = self.type_combo_box.currentText()
+            self.clear_form()
+            self.type_combo_box.setCurrentText(type)
+            self.object_type_combo_box.setCurrentText("")
+            self.method_combo_box.hide()
         else:
             methods = schema[object_type].keys()
             self.method_combo_box.addItems(methods)
@@ -465,6 +475,12 @@ class PopupWindow(QDialog):
         gb = QGroupBox()
         gb.setTitle(title)
         layout = QVBoxLayout()
+
+        # tt_label = QLabel()
+        # pixmap = QPixmap("tt.png")
+        # tt_label.setPixmap(pixmap)
+
+        # layout.addWidget(tt_label)
         layout.addWidget(widget)
         gb.setLayout(layout)
         self.form_layout.addWidget(gb)
