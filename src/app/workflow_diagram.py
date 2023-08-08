@@ -42,6 +42,8 @@ class Zoom(QGraphicsView):
         # on mouse click + drag, where the drag started
         self.dragStartPosition = None
 
+        self.max_x = 0
+
     def wheelEvent(self, event: QWheelEvent):
         """Zooms in or out on view"""
         factor = self.zoom ** (event.angleDelta().y() / 240.0)
@@ -226,6 +228,17 @@ class WorkflowDiagram(QWidget):
                     connect_rects(rect, rect_item)
 
         self.scene.addItem(rect_item)
+
+        if rects:
+            stepsize = 20
+            rect_with_max_y = None
+            max_y = 0
+            for rect in rects:
+                if rect.y() >= max_y:
+                    max_y = rect.y()
+                    rect_with_max_y = rect
+            size = rect_with_max_y.boundingRect().height()
+            rect_item.setPos(0, max_y + size + stepsize)
         self.update()
 
     def edit_state(self, rect):
