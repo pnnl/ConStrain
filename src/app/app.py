@@ -242,7 +242,7 @@ class GUI(QMainWindow):
         """Workflow for submitting the state. Triggered on the click of the Submit button. Displays a popup which
         shows the progress of running the state.
         """
-        states = self.get_workflow()
+        states = self.get_workflow(reformat=False)
         json_data = self.create_json(states)
 
         popup = SubmitPopup()
