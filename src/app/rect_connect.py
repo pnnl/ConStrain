@@ -169,7 +169,6 @@ class Path(QtWidgets.QGraphicsPathItem):
             painter.drawPolyline(triangle_source)
 
     def contextMenuEvent(self, event):
-        print(type(event))
         """Context menu for deletion on path
 
         Args:
@@ -311,9 +310,6 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
 
 
 class CustomItem(QtWidgets.QGraphicsItem):
-    # edge
-    pen = QtGui.QPen(QtGui.QColor(98, 99, 102, 255))
-
     # ControlPoint outline
     controlBrush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
 
@@ -326,6 +322,7 @@ class CustomItem(QtWidgets.QGraphicsItem):
         """
         super().__init__()
         # fill
+        self.pen = QtGui.QPen(QtGui.QColor(98, 99, 102, 255))
         self.brush = QtGui.QBrush(QtGui.QColor(214, 127, 46))
         self.state = state
         self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
@@ -395,6 +392,12 @@ class CustomItem(QtWidgets.QGraphicsItem):
     def paint(self, painter, option, widget=None):
         """Paints self on scene"""
         painter.save()
+
+        if self.isSelected():
+            self.pen.setWidth(2)
+        else:
+            self.pen.setWidth(1)
+
         painter.setPen(self.pen)
         painter.setBrush(self.brush)
 
@@ -658,10 +661,8 @@ class Scene(QtWidgets.QGraphicsScene):
             list: list of state names that have been created
         """
         rect_items = [item for item in self.items() if isinstance(item, CustomItem)]
-        print(rect_items)
         state_names = []
         for rect_item in rect_items:
             rect_name = rect_item.state["Title"]
             state_names.append(rect_name)
-        print(state_names)
         return state_names

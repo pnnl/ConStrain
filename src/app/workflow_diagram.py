@@ -1,13 +1,22 @@
 from PyQt6.QtWidgets import (
+    QHBoxLayout,
     QVBoxLayout,
     QWidget,
     QPushButton,
     QGraphicsView,
     QGraphicsTextItem,
-    QHBoxLayout,
+    QGraphicsRectItem,
 )
-from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QPainter, QWheelEvent, QKeyEvent, QKeySequence
+from PyQt6.QtCore import Qt, pyqtSignal, QRectF
+from PyQt6.QtGui import (
+    QPainter,
+    QWheelEvent,
+    QKeyEvent,
+    QKeySequence,
+    QColor,
+    QPen,
+    QBrush,
+)
 from popup_window import PopupWindow
 from advanced_popup import AdvancedPopup
 from rect_connect import Scene, CustomItem, ControlPoint, Path
@@ -42,6 +51,9 @@ class Zoom(QGraphicsView):
         # on mouse click + drag, where the drag started
         self.dragStartPosition = None
 
+        # area of selection
+        self.selection_rect = None
+
         self.max_x = 0
 
     def wheelEvent(self, event: QWheelEvent):
@@ -60,20 +72,43 @@ class Zoom(QGraphicsView):
         else:
             super().keyPressEvent(event)
 
+    def mouseDoubleClickEvent(self, event):
+        super().mouseDoubleClickEvent(event)
+        item = self.itemAt(event.pos())
+        if item:
+            if isinstance(item, QGraphicsTextItem):
+                item = item.parentItem()
+            elif isinstance(item, ControlPoint):
+                return
+
+            if isinstance(item, CustomItem):
+                self.itemClicked = item
+
     def mousePressEvent(self, event):
         """Performs default action then stores clicked item if item is associated with CustomItem"""
         super().mousePressEvent(event)
         if event.button() == Qt.MouseButton.LeftButton:
-            self.dragStartPosition = event.pos()
-            item = self.itemAt(event.pos())
-            if item:
-                if isinstance(item, QGraphicsTextItem):
-                    item = item.parentItem()
-                elif isinstance(item, ControlPoint):
-                    return
+            self.itemClicked = None
+            self.dragStartPosition = self.mapToScene(event.pos())
+            if not self.itemAt(event.pos()):
+                self.selection_rect = QGraphicsRectItem()
+                pen = QPen(QColor(0, 0, 255))
 
-                if isinstance(item, CustomItem):
-                    self.itemClicked = item
+                pen.setWidth(1)
+                self.selection_rect.setPen(pen)
+                brush = QBrush(QColor(0, 0, 230))
+                color = QColor(0, 0, 255)
+                color.setAlphaF(0.2)
+                brush = QBrush(color)
+                self.selection_rect.setBrush(brush)
+                self.scene.addItem(self.selection_rect)
+
+    def mouseMoveEvent(self, event):
+        if self.dragStartPosition and self.selection_rect:
+            current_pos = self.mapToScene(event.pos())
+            rect = QRectF(self.dragStartPosition, current_pos).normalized()
+            self.selection_rect.setRect(rect)
+        super().mouseMoveEvent(event)
 
     def mouseReleaseEvent(self, event):
         """Performs default action and triggers self.clicked if user action was a click"""
@@ -82,8 +117,14 @@ class Zoom(QGraphicsView):
         # check if left mouse button release and if item was not dragged
         if (
             event.button() == Qt.MouseButton.LeftButton
-            and event.pos() == self.dragStartPosition
+            and self.mapToScene(event.pos()) == self.dragStartPosition
         ):
+            if self.selection_rect:
+                self.scene.removeItem(self.selection_rect)
+                self.selection_rect = None
+                self.dragStartPosition = None
+                self.scene.update()
+
             item = self.itemAt(event.pos())
             if item:
                 if isinstance(item, QGraphicsTextItem):
@@ -93,6 +134,23 @@ class Zoom(QGraphicsView):
                 if isinstance(item, CustomItem):
                     self.clicked.emit()
                     self.itemClicked = item
+        elif self.selection_rect:
+            selected_items = []
+            rect = self.selection_rect.rect()
+
+            for item in self.scene.items():
+                if isinstance(item, CustomItem) and rect.intersects(
+                    item.mapRectToScene(item.rect)
+                ):
+                    print(item.state["Title"])
+                    selected_items.append(item)
+                    item.setSelected(True)
+
+            self.scene.removeItem(self.selection_rect)
+            self.selection_rect = None
+            self.dragStartPosition = None
+
+            self.scene.update()
 
     def arrange_tree(self, parent_item, x, y, step):
         """Arranges workflow diagram to form a tree
@@ -141,19 +199,19 @@ class WorkflowDiagram(QWidget):
 
         basic_button = QPushButton("Add Basic")
         basic_button.setToolTip("Create a state using the basic popup")
-        basic_button.setFixedSize(100, 20)
+        basic_button.setFixedSize(100, 23)
         basic_button.clicked.connect(self.call_popup)
         add_buttons.addWidget(basic_button)
 
         advanced_button = QPushButton("Add Advanced")
         advanced_button.setToolTip("Create a state using the advanced popup")
-        advanced_button.setFixedSize(100, 20)
+        advanced_button.setFixedSize(100, 23)
         advanced_button.clicked.connect(self.call_advanced_popup)
         add_buttons.addWidget(advanced_button)
 
         reformat_button = QPushButton("Rearrange")
         reformat_button.setToolTip("Rearrange diagram to a tree layout")
-        reformat_button.setFixedSize(100, 20)
+        reformat_button.setFixedSize(100, 23)
         reformat_button.clicked.connect(self.get_workflow)
         reformat_button_layout.addWidget(reformat_button)
 

@@ -74,13 +74,13 @@ class GUI(QMainWindow):
         # validate and submit buttons
         validate_button = QPushButton("Validate")
         validate_button.setToolTip("Validate workflow")
-        validate_button.setFixedSize(100, 20)
+        validate_button.setFixedSize(100, 23)
         validate_button.clicked.connect(self.validate_form)
 
         self.submit_button = QPushButton("Submit")
         self.submit_button.setToolTip("Submit workflow")
         # self.submit_button.setEnabled(False)
-        self.submit_button.setFixedSize(100, 20)
+        self.submit_button.setFixedSize(100, 23)
         self.submit_button.clicked.connect(self.submit_form)
 
         # group validate and submit buttons
