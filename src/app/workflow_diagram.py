@@ -322,11 +322,18 @@ class WorkflowDiagram(QWidget):
             if rect:
                 if not rect.popup or isinstance(rect.popup, AdvancedPopup):
                     # make a new popup
-                    rect.popup = PopupWindow(payloads, rect=rect, load=True)
+                    rect.popup = PopupWindow(
+                        payloads,
+                        state_names=self.scene.getStateNames(),
+                        rect=rect,
+                        load=True,
+                    )
                 rect.popup.edit_mode(payloads)
                 self.popup = rect.popup
             else:
-                self.popup = PopupWindow(payloads)
+                self.popup = PopupWindow(
+                    payloads, state_names=self.scene.getStateNames()
+                )
 
         if edit and rect:
             try:

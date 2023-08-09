@@ -30,11 +30,12 @@ with open("api_to_method.json") as f:
 
 
 class PopupWindow(QDialog):
-    def __init__(self, payloads=[], rect=None, load=False):
+    def __init__(self, payloads=[], state_names=[], rect=None, load=False):
         """Form to be displayed for user to edit or add a basic state
 
         Args:
             payloads (list): list of already-made objects to choose from when making a state
+            state_names (list): list of already_made state names because state name in this popup must be unique
             rect (CustomItem): CustomItem associated with this popup
             load (bool): True if this popup is being created because of an import, false otherwise
         """
@@ -50,6 +51,8 @@ class PopupWindow(QDialog):
         self.current_choices = None
 
         self.payloads = payloads
+
+        self.state_names = state_names
 
         # dictionary that stores the state contained in this popup
         self.form_data = {}
@@ -679,11 +682,13 @@ class PopupWindow(QDialog):
                         and parameter != "Parameters"
                     ):
                         self.send_error(f"{parameter} field is empty")
-                        self.error = True
                         break
 
             # need 'Title' instead of 'Name of State' as key in final form
             if parameter == "Name of State":
+                if text in self.state_names:
+                    self.send_error(f"{text} already exists")
+                    break
                 parameter = "Title"
 
             # retrieve only the field title
@@ -706,6 +711,7 @@ class PopupWindow(QDialog):
         Args:
             text (str): text to be displayed
         """
+        self.error = True
         error_msg = QMessageBox()
         error_msg.setIcon(QMessageBox.Icon.Critical)
         error_msg.setWindowTitle("Error in State")

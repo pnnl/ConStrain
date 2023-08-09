@@ -650,3 +650,18 @@ class Scene(QtWidgets.QGraphicsScene):
             for rect_item_object in rect_item_objects:
                 objects_in_use.append(rect_item_object)
         return objects_in_use
+
+    def getStateNames(self):
+        """Returns state names that are created in this scene
+
+        Returns:
+            list: list of state names that have been created
+        """
+        rect_items = [item for item in self.items() if isinstance(item, CustomItem)]
+        print(rect_items)
+        state_names = []
+        for rect_item in rect_items:
+            rect_name = rect_item.state["Title"]
+            state_names.append(rect_name)
+        print(state_names)
+        return state_names
