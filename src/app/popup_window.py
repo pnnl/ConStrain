@@ -343,6 +343,7 @@ class PopupWindow(QDialog):
         # select object type
         if object_type != "Custom":
             self.object_type_combo_box.setCurrentText(object_type)
+            self.method_combo_box.show()
         else:
             # method combo box unnecessary
             self.method_combo_box.hide()
