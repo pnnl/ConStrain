@@ -686,7 +686,10 @@ class PopupWindow(QDialog):
 
             # need 'Title' instead of 'Name of State' as key in final form
             if parameter == "Name of State":
-                if text in self.state_names:
+                matching_names = [name for name in self.state_names if name == text]
+                if (matching_names and not self.rect) or (
+                    len(matching_names) == 2 and self.rect
+                ):
                     self.send_error(f"{text} already exists")
                     break
                 parameter = "Title"
