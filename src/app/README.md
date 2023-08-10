@@ -7,7 +7,6 @@ This tool builds workflows following the ConStrain API schema. The GUI provides 
 - validation and submission of workflows
 
 
-
 ## Getting Started
 Perform the following steps to run the GUI:
 
@@ -17,9 +16,6 @@ Perform the following steps to run the GUI:
 4. `python app.py` 
 
 ## How to Use
-
-#### First Dialog:
-When starting this GUI, a popup asks whether you want Basic or Advanced settings. The basic settings will let you to see the basic form when clicking on a state to edit it, while the advanced settings will let you see an advanced form.
 
 #### Basic Form:
 The basic form is meant to guide the user in the creation of a state. It is triggered by navigating to the 'State' tab and pressing the 'Add Basic' button, and also triggered by clicking a state in the Workflow Diagram while using Basic Settings. The following are the steps when creating a state from the basic popup:
@@ -74,14 +70,33 @@ A state can be deleted by right clicking on a state and selecting delete.
 ##### Deleting Paths:
 A path can be deleted by right clicking on a path and selecting delete. Since paths quite small, it may be helpful to zoom-in in order to do this.
 
-##### Reformatting Diagram:
-To format your diagram into a tree-like shape, press the 'Reformat' button in the far right.
+##### Rearranging Diagram:
+To format your diagram into a tree-like shape, press the 'Rearrange' button on the bottom right.
 
 #### Workflow Validation:
 Validating your workflow is necessary to be able to submit your workflow. To validate, press the 'Validate' button on the bottom of the main window. If the validation was successful, the 'Submit' button will turn active.
 
 #### Workflow Submission:
 To submit your workflow, press the 'Submit' button on the bottom of the main window. Note that the 'Submit' button is activated only after the workflow has been validated using the 'Validate' button. On submission of your workflow, a popup will be displayed showing the results.
+
+#### File (Export and Import):
+##### Workflow Export:
+This GUI currently offers two types of export, as a .json and as a .png. These options are located on the toolbar under 'File' and 'Export'.
+
+##### Workflow Import:
+To immport a workflow, navigate to 'File' and 'Import' and select a .json file.
+
+#### Settings:
+##### Popup Settings:
+You can change whether a basic or advanced popup will be displayed on edit of a state by choosing a value in 'Settings' and 'Popup Settings'.
+
+#### Additional Functionalities:
+##### Multiple State Selection:
+There are two ways to select multiple states. The first is holding CTRL and selecting. The second is clicking outside of a state and dragging to create a rectangle that evelops states. This allows multiple states to be moved at once.
+
+##### Argument Description Tooltip:
+Hovering over method arguments in a basic popup will display a tooltip that describes the argument.
+
 
 ## Files
 The application contains 9 Python source files:
