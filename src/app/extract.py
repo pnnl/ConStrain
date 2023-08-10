@@ -1,6 +1,7 @@
 import ast
 import inspect
 import re
+import json
 
 
 def extract_method_info(node):
@@ -22,8 +23,11 @@ def extract_class_info(node):
     class_info = {"class": node.name, "methods": []}
 
     for item in node.body:
-        if isinstance(item, ast.FunctionDef) and not item.name.startswith("_"):
+        if isinstance(item, ast.FunctionDef) and (
+            not item.name.startswith("_") or item.name == "__init__"
+        ):
             method_info = extract_method_info(item)
+            # print(method_info)
             if method_info:
                 class_info["methods"].append(method_info)
 
@@ -40,10 +44,27 @@ def parse_python_file(file_path):
     for item in tree.body:
         if isinstance(item, ast.ClassDef):
             class_info = extract_class_info(item)
+            print(class_info)
             if class_info:
                 classes.append(class_info)
 
     return classes
+
+
+def format_method_name(method_name: str):
+    if method_name == "__init__":
+        return "Initialize"
+
+    method_name = method_name.replace("_", " ")
+    method_name = method_name.title()
+    method_name = method_name.replace("Json", "JSON")
+    method_name = method_name.replace("Ids", "IDs")
+
+    uncap = ["To", "By", "From"]
+    for w in uncap:
+        method_name = method_name.replace(w, w.lower())
+
+    return method_name
 
 
 def parse_python_file(file_path):
@@ -62,17 +83,39 @@ def parse_python_file(file_path):
     return classes
 
 
-if __name__ == "__main__":
-    python_file_path = (
-        "C:\\Users\\slan572\\includes_gui\\ConStrain\\src\\api\\data_processing.py"
-    )
+def place_args(arg_descriptions):
+    pattern = r"^(.*?)\((.*?)\): (.*?)$"
+    arg_descriptions = arg_descriptions.split("\n    ")
+    for arg in arg_descriptions:
+        match = re.search(pattern, arg, re.MULTILINE)
+        if match:
+            name = match.group(1).strip()
+            types = match.group(2).strip()
+            des = match.group(3).strip()
 
+            if "optional" in types:
+                name += " - Optional"
+                types = types.split(", optional")[0]
+
+            if types == "bool":
+                types = "combo_box"
+            else:
+                types = "line_edit"
+
+            all_dict[class_name][method_name].append(
+                {"label": format_method_name(name), "type": types, "description": des}
+            )
+        else:
+            continue
+
+
+if __name__ == "__main__":
     python_file_paths = [
-        "C:\\Users\\slan572\\includes_gui\\ConStrain\\src\\api\\data_processing.py",
-        "C:\\Users\\slan572\\includes_gui\\ConStrain\\src\\api\\reporting.py",
-        "C:\\Users\\slan572\\includes_gui\\ConStrain\\src\\api\\verification_case.py",
-        "C:\\Users\\slan572\\includes_gui\\ConStrain\\src\\api\\verification_library.py",
-        "C:\\Users\\slan572\\includes_gui\\ConStrain\\src\\api\\verification.py",
+        "C:\\Users\\slan572\\scrapes\\ConStrain\\src\\api\\data_processing.py",
+        "C:\\Users\\slan572\\scrapes\\ConStrain\\src\\api\\reporting.py",
+        "C:\\Users\\slan572\\scrapes\\ConStrain\\src\\api\\verification_case.py",
+        "C:\\Users\\slan572\\scrapes\\ConStrain\\src\\api\\verification_library.py",
+        "C:\\Users\\slan572\\scrapes\\ConStrain\\src\\api\\verification.py",
     ]
 
     all_dict = {}
@@ -85,11 +128,9 @@ if __name__ == "__main__":
 
             for method in class_info["methods"]:
                 method_name = method["name"]
-                if "verification_case.py" in p:
-                    print(method_name)
+                method_name = format_method_name(method_name)
+
                 all_dict[class_name][method_name] = []
-                # print(method["name"])
-                # print(method["description"].split("\n\nArgs:\n    "))
                 try:
                     description, arg_descriptions = method["description"].split(
                         "\n\nArgs:\n    "
@@ -99,7 +140,7 @@ if __name__ == "__main__":
                         (
                             arg_descriptions,
                             return_descriptions,
-                        ) = arg_descriptions.split("\n\n")
+                        ) = arg_descriptions.split("\n\n", 1)
                     except ValueError:
                         return_descriptions = ""
                 except ValueError:
@@ -109,31 +150,20 @@ if __name__ == "__main__":
                         )
                         arg_descriptions = ""
                     except ValueError:
-                        break
-
-                if "verification_case.py" in p:
-                    print(arg_descriptions)
+                        description, return_descriptions, arg_descriptions = (
+                            method["description"],
+                            "",
+                            "",
+                        )
 
                 if arg_descriptions:
-                    pattern = r"^(.*?)\((.*?)\): (.*?)$"
-                    arg_descriptions = arg_descriptions.split("\n    ")
-                    for arg in arg_descriptions:
-                        match = re.search(pattern, arg, re.MULTILINE)
-                        if match:
-                            name = match.group(1).strip()
-                            types = match.group(2).strip()
-                            des = match.group(3).strip()
+                    place_args(arg_descriptions)
 
-                            # print(method_name)
-                            all_dict[class_name][method_name].append(
-                                {"label": name, "type": types, "description": des}
-                            )
-                        else:
-                            all_dict[class_name].pop(method_name)
-                            break
-                if return_descriptions:
-                    return_descriptions = return_descriptions.split("\n    ")
-                    # print(return_descriptions, "\n")
-                # print(method_descriptions.split("\n    "))
-            # print(method_descriptions, return_descriptions)
-    # print(all_dict)
+    with open("schema.json", "w") as json_file:
+        json.dump(all_dict, json_file, indent=4)
+
+    i = 0
+    for c in all_dict.keys():
+        for m in all_dict[c].keys():
+            print(f"{i}: {m}")
+            i += 1

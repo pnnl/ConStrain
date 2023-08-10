@@ -15,7 +15,7 @@ import re
 import json
 
 # mapping from object to its methods and its methods to its parameters for display in popup
-with open("dependencies.json") as f:
+with open("schema.json") as f:
     schema = json.load(f)
 
 # mapping from object to its methods using the true method names

@@ -21,7 +21,7 @@ import re
 from list_and_choice_popups import ListPopup, ChoicesPopup
 
 # mapping from object to its methods and its methods to its parameters for display in popup
-with open("dependencies.json") as f:
+with open("schema.json") as f:
     schema = json.load(f)
 
 # mapping from object to its methods using the true method names
@@ -466,7 +466,7 @@ class PopupWindow(QDialog):
             self.method_combo_box.addItems(methods)
             self.method_combo_box.show()
 
-    def make_and_add_groupbox(self, title, widget):
+    def make_and_add_groupbox(self, title, widget, description=None):
         """Creates and adds QGroupBox to layout with given title and widget
 
         Args:
@@ -485,6 +485,9 @@ class PopupWindow(QDialog):
         # tt_label.setPixmap(pixmap)
 
         # layout.addWidget(tt_label)
+        if description:
+            gb.setToolTip(description)
+
         layout.addWidget(widget)
         gb.setLayout(layout)
         self.form_layout.addWidget(gb)
@@ -547,11 +550,16 @@ class PopupWindow(QDialog):
             # create groupboxes for each necessary field for the method
             for field in fields:
                 if field["type"] == "line_edit":
-                    self.make_and_add_groupbox(field["label"], QLineEdit())
+                    self.make_and_add_groupbox(
+                        field["label"], QLineEdit(), field["description"]
+                    )
                 elif field["type"] == "combo_box":
                     combo_box = QComboBox()
                     combo_box.addItems(["", "True", "False"])
-                    self.make_and_add_groupbox(field["label"], combo_box)
+                    combo_box.setCurrentText("False")
+                    self.make_and_add_groupbox(
+                        field["label"], combo_box, field["description"]
+                    )
 
         payload_widget = QGroupBox()
         payload_widget.setTitle("Payloads")

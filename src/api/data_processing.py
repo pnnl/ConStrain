@@ -26,9 +26,9 @@ class DataProcessing:
         """Instantiate a data processing object to load datasets and manipulate data before feeding it to the verification process.
 
         Args:
-            data (str): Path to the data (CSV format) to be loaded for processing.
-            data_source (str): Data source name. Use `EnergyPlus` or `Other`.
-            timestamp_column_name (str): Name of the column header that contains the time series timestamps.
+            data (str, optional): Path to the data (CSV format) to be loaded for processing.
+            data_source (str, optional): Data source name. Use `EnergyPlus` or `Other`.
+            timestamp_column_name (str, optional): Name of the column header that contains the time series timestamps.
         """
 
         self.data = None

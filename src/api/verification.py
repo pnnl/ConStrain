@@ -19,6 +19,11 @@ from libcases import *
 
 class Verification:
     def __init__(self, verifications: VerificationCase = None):
+        """Instantiate a Verification object.
+
+        Args:
+            verficiations (VerificationCase, optional): a VerificationCase
+        """
         self.cases = None
         self.output_path = None
         self.lib_items_path = None
@@ -142,7 +147,7 @@ class Verification:
         """Run a single verification and generate a json file containing markdown report string and other results info.
 
         Args:
-            case (dict): Verification case dictionary.
+            case (Dict): Verification case dictionary.
         """
         # Input validation
         if case is None:

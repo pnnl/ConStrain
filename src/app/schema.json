@@ -1,0 +1,397 @@
+{
+    "DataProcessing": {
+        "Initialize": [
+            {
+                "label": "Data - Optional",
+                "type": "line_edit",
+                "description": "Path to the data (CSV format) to be loaded for processing."
+            },
+            {
+                "label": "Data Source - Optional",
+                "type": "line_edit",
+                "description": "Data source name. Use `EnergyPlus` or `Other`."
+            },
+            {
+                "label": "Timestamp Column Name - Optional",
+                "type": "line_edit",
+                "description": "Name of the column header that contains the time series timestamps."
+            }
+        ],
+        "Slice": [
+            {
+                "label": "Start Time",
+                "type": "line_edit",
+                "description": "Python datetime object used as the slice start date of the data."
+            },
+            {
+                "label": "End Time",
+                "type": "line_edit",
+                "description": "Python datetime object used as the slice end date of the data."
+            },
+            {
+                "label": "Inplace - Optional",
+                "type": "combo_box",
+                "description": "Modify the dataset directly. Defaults to False."
+            }
+        ],
+        "Add Parameter": [
+            {
+                "label": "Name",
+                "type": "line_edit",
+                "description": "Name of the parameter"
+            },
+            {
+                "label": "Value",
+                "type": "line_edit",
+                "description": "Value of the parameter."
+            },
+            {
+                "label": "Inplace - Optional",
+                "type": "combo_box",
+                "description": "Modify the dataset directly. Defaults to False."
+            }
+        ],
+        "Apply Function": [
+            {
+                "label": "Variable Names",
+                "type": "line_edit",
+                "description": "List of variables used as input to the function. All elements in variable_names need to be in self.data.columns"
+            },
+            {
+                "label": "New Variable Name",
+                "type": "line_edit",
+                "description": "Name of the new variable containing the result of the function for each time stamp."
+            },
+            {
+                "label": "Function to Apply",
+                "type": "line_edit",
+                "description": "Name of the function to apply. Choices are: `sum`, `min`, `max`or `average` (or 'mean')."
+            },
+            {
+                "label": "Inplace - Optional",
+                "type": "combo_box",
+                "description": "Modify the dataset directly. Defaults to False."
+            }
+        ],
+        "Summary": [],
+        "Concatenate": [
+            {
+                "label": "Datasets",
+                "type": "line_edit",
+                "description": "List of datasets (pd.DataFrame) to concatenate with `data`."
+            },
+            {
+                "label": "Axis",
+                "type": "line_edit",
+                "description": "1 or 0. 1 performs a vertical concatenation and 0 performs a horizontal concatenation."
+            },
+            {
+                "label": "Inplace - Optional",
+                "type": "combo_box",
+                "description": "Modify the dataset directly. Defaults to False."
+            }
+        ],
+        "Check": [],
+        "Fill Missing Values": [
+            {
+                "label": "Method",
+                "type": "line_edit",
+                "description": "Method to use to fill the missing values: 'linear' (treat values as equally spaced) or 'pad' (use existing values)."
+            },
+            {
+                "label": "Variable Names - Optional",
+                "type": "line_edit",
+                "description": "List of variable names that need missing values to be filled. By default, fill all missing data in self.data"
+            },
+            {
+                "label": "Inplace - Optional",
+                "type": "combo_box",
+                "description": "Modify the dataset directly. Defaults to False."
+            }
+        ],
+        "Plot": [
+            {
+                "label": "Variable Names",
+                "type": "line_edit",
+                "description": "List of variables to plot. The variables must be in the data."
+            },
+            {
+                "label": "Kind",
+                "type": "line_edit",
+                "description": "Type of chart to plot, either'timeseries', or 'scatter'."
+            }
+        ],
+        "Downsample": [
+            {
+                "label": "Frequency Type",
+                "type": "line_edit",
+                "description": "Downsampling frequency. Either 'day', 'hour', 'minute', or 'second'."
+            },
+            {
+                "label": "Number Of Periods",
+                "type": "line_edit",
+                "description": "Number of frequency used for downsampling. For instance, use 1 and a frequency_type of 'hour' to downsample the data to every hour."
+            },
+            {
+                "label": "Sampling Function - Optional",
+                "type": "line_edit",
+                "description": "Function to apply during downsampling, either 'mean' or 'sum' or a dictionary of key value pairs where the keys correspond to all the variables in data and value are either 'mean' or sum'. By default, using mean to downsample."
+            },
+            {
+                "label": "Inplace - Optional",
+                "type": "combo_box",
+                "description": "Modify the dataset directly. Defaults to False."
+            }
+        ]
+    },
+    "Reporting": {
+        "Initialize": [],
+        "Report Multiple Cases": [
+            {
+                "label": "Item Names",
+                "type": "line_edit",
+                "description": "List of unique verification item names. If the `item_names` argument is empty, all the verification results in the `verification_json` argument are reported."
+            }
+        ]
+    },
+    "VerificationCase": {
+        "Initialize": [
+            {
+                "label": "Cases - Optional",
+                "type": "line_edit",
+                "description": "A list of Dict. dictionary that includes verification case(s)."
+            },
+            {
+                "label": "JSON Case Path - Optional",
+                "type": "line_edit",
+                "description": "Path to the verification case file. If the path ends with `*.json`, then the items in the JSON file are loaded. If the path points to a directory, then verification cases JSON files are loaded."
+            }
+        ],
+        "Load Verification Cases from JSON": [
+            {
+                "label": "JSON Case Path",
+                "type": "line_edit",
+                "description": "path to the json file containing fully defined verification cases."
+            }
+        ],
+        "Save Case Suite to JSON": [
+            {
+                "label": "JSON Path",
+                "type": "line_edit",
+                "description": "Path to the json file to save the cases."
+            },
+            {
+                "label": "Case IDs - Optional",
+                "type": "line_edit",
+                "description": "Unique ids of verification cases to save. By default, save all cases in `self.case_suite`. Default to an empty list."
+            }
+        ],
+        "Create Verification Case Suite from Base Case": [
+            {
+                "label": "Base Case",
+                "type": "line_edit",
+                "description": "base verification input information."
+            },
+            {
+                "label": "Update Key Value",
+                "type": "line_edit",
+                "description": "the same format as the `base_case` arg, but the updating fields consist of a list of values to be populated with."
+            },
+            {
+                "label": "Keep Base Case - Optional",
+                "type": "combo_box",
+                "description": "whether to keep the base case in returned list of verification cases. Default to False."
+            }
+        ],
+        "Validate Verification Case Structure": [
+            {
+                "label": "Case",
+                "type": "line_edit",
+                "description": "case information that will be validated."
+            },
+            {
+                "label": "Verbose",
+                "type": "combo_box",
+                "description": "whether to output verbose information. Default to False."
+            }
+        ],
+        "Validate": [],
+        "Save Verification Cases to JSON": [
+            {
+                "label": "JSON Path",
+                "type": "line_edit",
+                "description": "json file path to save the cases."
+            },
+            {
+                "label": "Cases",
+                "type": "line_edit",
+                "description": "List of complete verification cases Dictionary to save."
+            }
+        ],
+        "Read Case": [
+            {
+                "label": "File Name",
+                "type": "line_edit",
+                "description": "file name to read from"
+            }
+        ],
+        "Same Case": [
+            {
+                "label": "Case A",
+                "type": "line_edit",
+                "description": "First case in check"
+            },
+            {
+                "label": "Case B",
+                "type": "line_edit",
+                "description": "Second case in check"
+            },
+            {
+                "label": "Ignored Keys - Optional",
+                "type": "line_edit",
+                "description": "keys to ignore, defaults to [\"case_id_in_suite\"]"
+            }
+        ],
+        "Case Already In Suite": [
+            {
+                "label": "Case",
+                "type": "line_edit",
+                "description": "case in question"
+            },
+            {
+                "label": "Ignored Keys - Optional",
+                "type": "line_edit",
+                "description": "keys to ignore, defaults to [\"case_id_in_suite\"]"
+            }
+        ],
+        "Check JSON Path Type": [
+            {
+                "label": "JSON Path",
+                "type": "line_edit",
+                "description": "path to check"
+            }
+        ],
+        "Check Type": [
+            {
+                "label": "Var Name",
+                "type": "line_edit",
+                "description": "name of variable"
+            },
+            {
+                "label": "Var Value",
+                "type": "line_edit",
+                "description": "value of variable"
+            },
+            {
+                "label": "Var Type",
+                "type": "line_edit",
+                "description": "type of variable"
+            }
+        ],
+        "Check File": [
+            {
+                "label": "File Path Name",
+                "type": "line_edit",
+                "description": "name of file path"
+            },
+            {
+                "label": "File Path",
+                "type": "line_edit",
+                "description": "file path"
+            }
+        ]
+    },
+    "VerificationLibrary": {
+        "Initialize": [
+            {
+                "label": "Lib Path - Optional",
+                "type": "line_edit",
+                "description": "path to the verification library file or folder. If the path ends with `*.json`, then library items defined in the json file are loaded. If the path points to a directory, then library items in all jsons in this directory and its subdirectories are loaded. Library item need to have unique name defined in the json files and python files. Defaults to None."
+            }
+        ],
+        "Get Library Item": [
+            {
+                "label": "Item Name",
+                "type": "line_edit",
+                "description": "Verification item name to get."
+            }
+        ],
+        "Validate Library": [
+            {
+                "label": "Items",
+                "type": "line_edit",
+                "description": "Library items to validate. `items` must be filled with valid verification item(s). If not, an error occurs. Defaults to empty list."
+            }
+        ],
+        "Get Library Items": [
+            {
+                "label": "Items",
+                "type": "line_edit",
+                "description": "Library items to get. By default, get all library items loaded at instantiation. Defaults to empty list."
+            }
+        ],
+        "Get Applicable Library Items by Datapoints": [
+            {
+                "label": "Datapoints",
+                "type": "line_edit",
+                "description": "Datapoints names."
+            }
+        ],
+        "Get Required Datapoints by Library Items": [
+            {
+                "label": "Items",
+                "type": "line_edit",
+                "description": "Library items to summarize datapoints from. By default, summarize all library items loaded at instantiation. Defaults to empty list."
+            }
+        ]
+    },
+    "Verification": {
+        "Initialize": [
+            {
+                "label": "Verficiations - Optional",
+                "type": "line_edit",
+                "description": "a VerificationCase"
+            }
+        ],
+        "Configure": [
+            {
+                "label": "Output Path",
+                "type": "line_edit",
+                "description": "Verification results output path."
+            },
+            {
+                "label": "Lib Items Path",
+                "type": "line_edit",
+                "description": "Verification library path (include name of the file with extension)."
+            },
+            {
+                "label": "Plot Option - Optional",
+                "type": "line_edit",
+                "description": "Type of plots to include. It should either be all-compact, all-expand, day-compact, or day-expand. It can also be None, which will plot all types. Default to None."
+            },
+            {
+                "label": "Fig Size - Optional",
+                "type": "line_edit",
+                "description": "Tuple of integers (length, height) describing the size of the figure to plot. Defaults to (6.4, 4.8)."
+            },
+            {
+                "label": "Num Threads - Optional",
+                "type": "line_edit",
+                "description": "Number of threads to run verifications in parallel. Defaults to 1."
+            },
+            {
+                "label": "Preprocessed Data - Optional",
+                "type": "line_edit",
+                "description": "Pre-processed data stored in the data frame. Default to None."
+            }
+        ],
+        "Run Single Verification": [
+            {
+                "label": "Case",
+                "type": "line_edit",
+                "description": "Verification case dictionary."
+            }
+        ],
+        "Run": []
+    }
+}

@@ -16,8 +16,8 @@ class VerificationCase:
         """Instantiate a verification case class object and load verification case(s) in `self.case_suite` as a Dict. keys are automatically generated unique id of cases, values are the fully defined verification case Dict. If any argument is invalid, the object instantion will report an error message.
 
         Args:
-            cases: (optional) A list of Dict. dictionary that includes verification case(s).
-            json_case_path: (optional) str. path to the verification case file. If the path ends with `*.json`, then the items in the JSON file are loaded. If the path points to a directory, then verification cases JSON files are loaded.
+            cases (List, optional): A list of Dict. dictionary that includes verification case(s).
+            json_case_path (str, optional): Path to the verification case file. If the path ends with `*.json`, then the items in the JSON file are loaded. If the path points to a directory, then verification cases JSON files are loaded.
         """
         self.case_suite = {}
 
@@ -56,10 +56,10 @@ class VerificationCase:
         """Add verification cases from specified json file into self.case_suite. Cases that have already been loaded are ignored.
 
         Args:
-            json_case_path: str, path to the json file containing fully defined verification cases.
+            json_case_path (str): path to the json file containing fully defined verification cases.
 
         Returns:
-          List, unique ids of verification cases loaded in self.case_suite
+            List: unique ids of verification cases loaded in self.case_suite
         """
 
         # check `json_case_path` type
@@ -80,8 +80,8 @@ class VerificationCase:
         """Save verification cases to a dedicated file. If the `case_ids` argument is empty, all the cases in `self.case_suite` is saved. If `case_ids` includes specific cases' hash, only the hashes in the list are saved.
 
         Args:
-            json_path: str. path to the json file to save the cases.
-            case_ids: (optional) List. Unique ids of verification cases to save. By default, save all cases in `self.case_suite`. Default to an empty list.
+            json_path (str): Path to the json file to save the cases.
+            case_ids (List, optional): Unique ids of verification cases to save. By default, save all cases in `self.case_suite`. Default to an empty list.
         """
 
         if case_ids is None:
@@ -118,12 +118,12 @@ class VerificationCase:
         """Create slightly different multiple verification cases by changing keys and values as specified in `update_key_value`. if `keep_base_case` is set to True, the `base_case` is added to the first element in the returned list.
 
         Args:
-            base_case: Dict. base verification input information.
-            update_key_value: Dict. the same format as the `base_case` arg, but the updating fields consist of a list of values to be populated with.
-            keep_base_case: (optional) bool. whether to keep the base case in returned list of verification cases. Default to False.
+            base_case (Dict): base verification input information.
+            update_key_value (Dict): the same format as the `base_case` arg, but the updating fields consist of a list of values to be populated with.
+            keep_base_case (bool, optional): whether to keep the base case in returned list of verification cases. Default to False.
 
         Returns:
-          List,  A list of Dict, each dict is a generated case from the base case.
+            List: A list of dicts, each dict is a generated case from the base case.
         """
 
         # return all the updating value lists' length
@@ -221,11 +221,11 @@ class VerificationCase:
         """Validate verification case structure (e.g., check whether `run_simulation`, `simulation_IO`, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str.
 
         Args:
-            case: dict. case information that will be validated.
-            verbose: bool. whether to output verbose information. Default to False.
+            case (Dict): case information that will be validated.
+            verbose (bool): whether to output verbose information. Default to False.
 
         Returns:
-            Bool, indicating whether the case structure is valid or not.
+            bool: indicating whether the case structure is valid or not.
         """
 
         def _validate_case_structure_helper(schema, instance, verbose) -> Union[bool]:
@@ -320,8 +320,8 @@ class VerificationCase:
         """Save verification cases to a dedicated file. The cases list consists of verification case dicts.
 
         Args:
-            json_path: str. json file path to save the cases.
-            cases: List. List of complete verification cases Dictionary to save.
+            json_path (str): json file path to save the cases.
+            cases (List): List of complete verification cases Dictionary to save.
         """
         # check `json_path` type
         if not isinstance(json_path, str):
@@ -350,6 +350,14 @@ class VerificationCase:
             json.dump(case_suite_in_template_format, fw, indent=4)
 
     def read_case(self, file_name: str) -> List:
+        """Reads cases from file
+
+        Args:
+            file_name (str): file name to read from
+
+        Returns:
+            List: cases
+        """
         # load the cases from file_path
         with open(file_name, "r") as f:
             loaded_cases = json.load(f)
@@ -367,6 +375,16 @@ class VerificationCase:
 
     @staticmethod
     def same_case(case_a: {}, case_b: {}, ignored_keys=["case_id_in_suite"]) -> bool:
+        """Returns whether two cases have the same items, ignoring a given list of keys
+
+        Args:
+            case_a (Dict): First case in check
+            case_b (Dict): Second case in check
+            ignored_keys (List, optional): keys to ignore, defaults to ["case_id_in_suite"]
+
+        Returns:
+            bool: True if cases are the same, False otherwise
+        """
         case_a_new = {k: v for k, v in case_a.items() if k not in ignored_keys}
         case_b_new = {k: v for k, v in case_b.items() if k not in ignored_keys}
         return case_a_new == case_b_new
@@ -374,6 +392,15 @@ class VerificationCase:
     def case_already_in_suite(
         self, case: {}, ignored_keys=["case_id_in_suite"]
     ) -> bool:
+        """Returns whether or not case is already in case suite, ignoring a given list of keys
+
+        Args:
+            case (Dict): case in question
+            ignored_keys (List, optional): keys to ignore, defaults to ["case_id_in_suite"]
+
+        Returns:
+            bool: True if case is in suite, False otherwise
+        """
         for k, v in self.case_suite.items():
             if self.same_case(case, v, ignored_keys=ignored_keys):
                 return True
@@ -381,12 +408,30 @@ class VerificationCase:
 
     @staticmethod
     def check_json_path_type(json_path: str) -> bool:
+        """Checks whether path is a json file
+
+        Args:
+            json_path (str): path to check
+
+        Returns:
+            bool: True if path is a .json, False otherwise
+        """
         return True if json_path[-5:] == ".json" else False
 
     @staticmethod
     def check_type(
         var_name: str, var_value: Union[str, list, dict], var_type: type
     ) -> bool:
+        """Returns whether value is of a given type
+
+        Args:
+            var_name (str): name of variable
+            var_value (str, List, Dict): value of variable
+            var_type (type): type of variable
+
+        Returns:
+            bool: True if value is of given type, False otherwise
+        """
         if var_value is None:
             # no error msg if None
             return False
@@ -400,6 +445,15 @@ class VerificationCase:
 
     @staticmethod
     def check_file(file_path_name: str, file_path: str) -> bool:
+        """Checks whether file exists
+
+        Args:
+            file_path_name (str): name of file path
+            file_path (str): file path
+
+        Returns:
+            bool: True if file path exists, False otherwise
+        """
         if os.path.isfile(file_path):
             return True
         else:
