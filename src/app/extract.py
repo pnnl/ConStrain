@@ -1,10 +1,17 @@
 import ast
-import inspect
 import re
 import json
 
 
 def extract_method_info(node):
+    """Retrieves method info from node
+
+    Args:
+        node (ast.FunctionDef): method to use
+
+    Returns:
+        dict: dictionary containing keys "name" and "description"
+    """
     if not isinstance(node, ast.FunctionDef):
         return None
 
@@ -17,6 +24,14 @@ def extract_method_info(node):
 
 
 def extract_class_info(node):
+    """Retrieves class info from node
+
+    Args:
+        node (ast.ClassDef): class to use
+
+    Returns:
+        list: list of method info dictionaries from a class
+    """
     if not isinstance(node, ast.ClassDef):
         return None
 
@@ -35,6 +50,14 @@ def extract_class_info(node):
 
 
 def parse_python_file(file_path):
+    """Given a file path, reads contents to find each class in file
+
+    Args:
+        file_path (str): file path to read
+
+    Returns:
+        list: list of class info lists
+    """
     with open(file_path, "r") as file:
         content = file.read()
 
@@ -52,6 +75,14 @@ def parse_python_file(file_path):
 
 
 def format_method_name(method_name: str):
+    """Formats an API-formatted method name into a method name to be displayed in the GUI
+
+    Args:
+        method_name (str): method name to format
+
+    Returns:
+        str: formatted method name
+    """
     if method_name == "__init__":
         return "Initialize"
 
@@ -67,23 +98,12 @@ def format_method_name(method_name: str):
     return method_name
 
 
-def parse_python_file(file_path):
-    with open(file_path, "r") as file:
-        content = file.read()
-
-    tree = ast.parse(content)
-    classes = []
-
-    for item in tree.body:
-        if isinstance(item, ast.ClassDef):
-            class_info = extract_class_info(item)
-            if class_info:
-                classes.append(class_info)
-
-    return classes
-
-
 def place_args(arg_descriptions):
+    """Places the argument names, their types, and their descriptions inside a dictionary
+
+    Args:
+        arg_descriptions (list): arg_descriptions for a method inside of a class
+    """
     pattern = r"^(.*?)\((.*?)\): (.*?)$"
     arg_descriptions = arg_descriptions.split("\n    ")
     for arg in arg_descriptions:
@@ -109,6 +129,7 @@ def place_args(arg_descriptions):
             continue
 
 
+# Parses, extracts, puts extractions into dictionary, converts to .json
 if __name__ == "__main__":
     python_file_paths = [
         "C:\\Users\\slan572\\scrapes\\ConStrain\\src\\api\\data_processing.py",
@@ -161,9 +182,3 @@ if __name__ == "__main__":
 
     with open("schema.json", "w") as json_file:
         json.dump(all_dict, json_file, indent=4)
-
-    i = 0
-    for c in all_dict.keys():
-        for m in all_dict[c].keys():
-            print(f"{i}: {m}")
-            i += 1
