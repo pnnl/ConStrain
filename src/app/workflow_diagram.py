@@ -238,6 +238,45 @@ class WorkflowDiagram(QWidget):
 
         self.create_item(state)
 
+    def connect_rects(self, parent, child):
+        """Connects a parent CustomItem to a child CustomItem
+
+        Args:
+            parent (CustomItem): parent CustomItem
+            child (CustomItem): child CustomItem
+        """
+        child_control = child.controls[2]
+        parent_control = parent.controls[0]
+        path = Path(parent_control, child_control.scenePos(), child_control)
+        if parent_control.addLine(path) and child_control.addLine(path):
+            self.scene.addItem(path)
+
+    def find_nexts(self, rect_item, rects):
+        state = rect_item.state
+
+        for next_str in ["Next", "Default"]:
+            if next_str in state.keys() and state.get(next_str):
+                matching_rects = [
+                    rect for rect in rects if rect.state["Title"] == state[next_str]
+                ]
+                if len(matching_rects) == 1:
+                    child_rect = matching_rects[0]
+                    self.connect_rects(rect_item, child_rect)
+
+        if state["Type"] == "Choice":
+            for choice in state.get("Choices", []):
+                next = choice.get("Next")
+                matching_rects = [rect for rect in rects if rect.state["Title"] == next]
+                if len(matching_rects) == 1:
+                    child_rect = matching_rects[0]
+                    self.connect_rects(rect_item, child_rect)
+
+        for rect in rects:
+            nexts = rect.get_nexts()
+            for next in nexts:
+                if next == state["Title"]:
+                    self.connect_rects(rect, rect_item)
+
     def create_item(self, state):
         """Creates and displays a CustomItem which represents the given state
 
@@ -255,35 +294,11 @@ class WorkflowDiagram(QWidget):
         else:
             rect_item = CustomItem(state)
 
-        def connect_rects(parent, child):
-            """Connects a parent CustomItem to a child CustomItem
-
-            Args:
-                parent (CustomItem): parent CustomItem
-                child (CustomItem): child CustomItem
-            """
-            child_control = child.controls[2]
-            parent_control = parent.controls[0]
-            path = Path(parent_control, child_control.scenePos(), child_control)
-            if parent_control.addLine(path) and child_control.addLine(path):
-                self.scene.addItem(path)
-
         # find CustomItems in scene
-        rects = [item for item in self.scene.items() if isinstance(item, CustomItem)]
+        rects = self.scene.getCustomItems()
 
         # if parent and child exist in the scene, connect them with a Path
-        if "Next" in state.keys():
-            matching_rects = [
-                rect for rect in rects if rect.state["Title"] == state["Next"]
-            ]
-            if len(matching_rects) == 1:
-                child_rect = matching_rects[0]
-                connect_rects(rect_item, child_rect)
-        for rect in rects:
-            nexts = rect.get_nexts()
-            for next in nexts:
-                if next == state["Title"]:
-                    connect_rects(rect, rect_item)
+        self.find_nexts(rect_item, rects)
 
         self.scene.addItem(rect_item)
 
@@ -327,7 +342,7 @@ class WorkflowDiagram(QWidget):
 
     def get_workflow(self):
         """Computes structure of the workflow using Depth First Search and paints CustomItems depending on place in graph"""
-        items = [item for item in self.scene.items() if isinstance(item, CustomItem)]
+        items = self.scene.getCustomItems()
         roots = []
         for i in items:
             parent = True

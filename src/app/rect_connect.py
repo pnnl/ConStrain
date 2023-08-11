@@ -632,7 +632,7 @@ class Scene(QtWidgets.QGraphicsScene):
         Returns:
             list: list of object names that are used in this scene
         """
-        rect_items = [item for item in self.items() if isinstance(item, CustomItem)]
+        rect_items = self.getCustomItems()
         objects_in_use = []
         for rect_item in rect_items:
             rect_item_objects = rect_item.get_objects_used()
@@ -646,7 +646,7 @@ class Scene(QtWidgets.QGraphicsScene):
         Returns:
             list: list of object names that are created in this scene
         """
-        rect_items = [item for item in self.items() if isinstance(item, CustomItem)]
+        rect_items = self.getCustomItems()
         objects_in_use = []
         for rect_item in rect_items:
             rect_item_objects = rect_item.get_objects_created()
@@ -660,9 +660,17 @@ class Scene(QtWidgets.QGraphicsScene):
         Returns:
             list: list of state names that have been created
         """
-        rect_items = [item for item in self.items() if isinstance(item, CustomItem)]
+        rect_items = self.getCustomItems()
         state_names = []
         for rect_item in rect_items:
             rect_name = rect_item.state["Title"]
             state_names.append(rect_name)
         return state_names
+
+    def getCustomItems(self):
+        """Return all custom items in scene
+
+        Returns:
+            list: list of CusotmItems in this scene
+        """
+        return [item for item in self.items() if isinstance(item, CustomItem)]
