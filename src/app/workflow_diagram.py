@@ -251,7 +251,13 @@ class WorkflowDiagram(QWidget):
         if parent_control.addLine(path) and child_control.addLine(path):
             self.scene.addItem(path)
 
-    def find_nexts(self, rect_item, rects):
+    def connect_nexts(self, rect_item, rects):
+        """Finds and connects all rects that directly connect to certain rect
+
+        Args:
+            rect_item (CustomItem): rect_item that is being added to scene
+            rects (List): list of all CustomItems in scene
+        """
         state = rect_item.state
 
         for next_str in ["Next", "Default"]:
@@ -298,7 +304,7 @@ class WorkflowDiagram(QWidget):
         rects = self.scene.getCustomItems()
 
         # if parent and child exist in the scene, connect them with a Path
-        self.find_nexts(rect_item, rects)
+        self.connect_nexts(rect_item, rects)
 
         self.scene.addItem(rect_item)
 
