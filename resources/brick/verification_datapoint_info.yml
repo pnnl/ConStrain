@@ -1,40 +1,60 @@
-# 
+# yml file for datapoint mapping
 
 ZoneTempControl:
   default:
-    T_z_set_cool:
-      - ''  
-      - cooling_setpoint
-    T_z_set_heat:
-      - ''  
-      - heating_setpoint
+    cooling_setpoint:
+      point: T_set_cool
+      subject: hvac_zone
+      variable: cooling_setpoint
+    heating_setpoint:
+      point: T_set_heat
+      subject: hvac_zone
+      variable: heating_setpoint
+  EnergyPlus:
+    cooling_setpoint:
+      point: T_set_cool
+      subject: hvac_zone
+      variable: Zone Thermostat Cooling  Setpoint Temperature
+    heating_setpoint:
+      point: T_set_heat
+      subject: hvac_zone
+      variable: Zone Thermostat Heating Setpoint Temperature
 
-  EnergyPlus_var_name:
-    T_z_set_cool:
-      - hvac_zone
-      - cooling_setpoint
-    T_z_set_heat:
-      - hvac_zone  
-      - Zone Thermostat Heating Setpoint Temperature
 
 ZoneHeatSetpointMinimum:
   default:
-    T_heat_set:
-      - ''  
-      - heating_setpoint
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone  
+      variable: heating_setpoint
+  EnergyPlus:
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone
+      variable: Zone Thermostat Heating Setpoint Temperature
 
-  EnergyPlus_var_name:
-    T_heat_set:
-      - hvac_zone
-      - Zone Thermostat Heating Setpoint Temperature
 
 ZoneHeatingResetDepth:
   default:
-    T_heat_set:
-      - ''
-      - heating_setpoint
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone
+      variable: heating_setpoint
+  EnergyPlus:
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone
+      variable: Zone Thermostat Heating Setpoint Temperature
 
-  EnergyPlus_var_name:
-    T_heat_set:
-      - hvac_zone
-      - Zone Thermostat Heating Setpoint Temperature
+
+SupplyAirTempReset: 
+  default:
+    ahu_fan_supply_air_temperature_sensor:
+      point: T_sa_set
+      subject: Null
+      variable: ahu_fan_supply_air_temperature_sensor
+  EnergyPlus:
+    ahu_fan_supply_air_temperature_sensor:
+      point: T_sa_set
+      subject: Null
+      variable: System Node Setpoint Temperature
