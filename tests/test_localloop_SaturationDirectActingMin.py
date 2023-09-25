@@ -55,7 +55,9 @@ class TestLocalLoopSaturationDirectActingMin(unittest.TestCase):
             ]
         )
 
-        verification_obj = run_test_verification_with_data("LocalLoopSaturationDirectActingMin", df)
+        verification_obj = run_test_verification_with_data(
+            "LocalLoopSaturationDirectActingMin", df
+        )
 
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -111,7 +113,9 @@ class TestLocalLoopSaturationDirectActingMin(unittest.TestCase):
             ]
         )
 
-        verification_obj = run_test_verification_with_data("LocalLoopSaturationDirectActingMin", df)
+        verification_obj = run_test_verification_with_data(
+            "LocalLoopSaturationDirectActingMin", df
+        )
 
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -119,6 +123,7 @@ class TestLocalLoopSaturationDirectActingMin(unittest.TestCase):
 
         self.assertTrue(results.equals(expected_results))
         self.assertFalse(binaryflag)
+
 
 if __name__ == "__main__":
     unittest.main()

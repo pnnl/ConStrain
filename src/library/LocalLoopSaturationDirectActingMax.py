@@ -12,7 +12,7 @@ class LocalLoopSaturationDirectActingMax(RuleCheckBase):
             return False
 
     def err_flag(self, t):
-        if t["feedback_sensor"] - t["set_point"] > 0:
+        if t["feedback_sensor"] > t["set_point"]:
             return True
         else:
             return False
