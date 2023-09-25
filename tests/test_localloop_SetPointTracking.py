@@ -59,29 +59,31 @@ class TestLocalLoopSetPointTracking(unittest.TestCase):
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            False,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-        ])
+        expected_results = pd.Series(
+            [
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                False,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+            ]
+        )
 
         verification_obj = run_test_verification_with_data(
             "LocalLoopSetPointTracking", df
@@ -122,18 +124,20 @@ class TestLocalLoopSetPointTracking(unittest.TestCase):
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            False,
-        ])
+        expected_results = pd.Series(
+            [
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                False,
+            ]
+        )
 
         verification_obj = run_test_verification_with_data(
             "LocalLoopSetPointTracking", df
@@ -196,29 +200,31 @@ class TestLocalLoopSetPointTracking(unittest.TestCase):
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            False,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-            True,
-        ])
+        expected_results = pd.Series(
+            [
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                False,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+                True,
+            ]
+        )
 
         verification_obj = run_test_verification_with_data(
             "LocalLoopSetPointTracking", df
