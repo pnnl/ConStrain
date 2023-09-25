@@ -1,3 +1,23 @@
+"""
+## Local Loop Performance Verification - Direct Acting Loop Actuator Maximum Saturation
+
+### Description
+
+This verification checks that a direct acting control loop would saturate its actuator to maximum when the error is consistently above the set point.
+
+### Verification logic
+
+If the sensed data values are consistently above its set point, and after a default of 1 hour, the control command is still not saturated to maximum, then the verification fails; Otherwise, it passes.
+
+### Data requirements
+
+- feedback_sensor: feedback sensor reading of the subject to be controlled towards a set point
+- set_point: set point value
+- cmd : control command
+- cmd_max: control command range maximum value
+
+"""
+
 import pandas as pd
 from checklib import RuleCheckBase
 

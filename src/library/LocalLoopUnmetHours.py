@@ -1,3 +1,23 @@
+"""
+## Local Loop Performance Verification - Set Point Unmet Hours
+
+### Description
+
+This verification checks the set point tracking ability of local control loops.
+
+### Verification logic
+
+Instead of checking the number of samples among the whole data set for which the set points are not met, this verification checks the total accumulated time that the set points are not met within a threshold of 5% of abs(set_point) (if the set point is 0, then the threshold is default to be 0.01).
+
+If the accumulated time of unmet set point is beyond 5% of the whole duration the data covers, then this verification fails; otherwise, it passes.
+
+### Data requirements
+
+- feedback_sensor: feedback sensor reading of the subject to be controlled towards a set point
+- set_point: set point value
+
+"""
+
 import pandas as pd
 from checklib import RuleCheckBase
 
