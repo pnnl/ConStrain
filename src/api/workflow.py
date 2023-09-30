@@ -11,6 +11,7 @@ from typing import Union
 sys.path.append("./src")
 sys.path.append("..")
 from api import (
+    BrickCompliance,
     VerificationLibrary,
     DataProcessing,
     VerificationCase,

@@ -16,6 +16,7 @@ setup(
     author_email="PNNL@pnnl.gov",
     packages=find_packages(),
     install_requires=[
+        "brickschema",
         "numpy",
         "matplotlib",
         "pandas",
@@ -25,5 +26,7 @@ setup(
         "fuzzywuzzy",
         "tqdm",
         "scikit-learn",
+        "pydash",
+        "PyYAML",
     ],
 )
