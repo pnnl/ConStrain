@@ -1,0 +1,357 @@
+# yml file for datapoint mapping
+
+ZoneTempControl:
+  default:
+    cooling_setpoint:
+      point: T_set_cool
+      subject: hvac_zone
+      variable: cooling_setpoint
+    heating_setpoint:
+      point: T_set_heat
+      subject: hvac_zone
+      variable: heating_setpoint
+  EnergyPlus:
+    cooling_setpoint:
+      point: T_set_cool
+      subject: hvac_zone
+      variable: Zone Thermostat Cooling Setpoint Temperature
+    heating_setpoint:
+      point: T_set_heat
+      subject: hvac_zone
+      variable: Zone Thermostat Heating Setpoint Temperature
+
+ZoneHeatSetpointMinimum:
+  default:
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone  
+      variable: heating_setpoint
+  EnergyPlus:
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone
+      variable: Zone Thermostat Heating Setpoint Temperature
+
+ZoneHeatingResetDepth:
+  default:
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone
+      variable: heating_setpoint
+  EnergyPlus:
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone
+      variable: Zone Thermostat Heating Setpoint Temperature
+
+ZoneCoolingSetpointMaximum:
+  default:
+    cooling_setpoint:
+      point: T_cool_set
+      subject: hvac_zone
+      variable: cooling_setpoint
+  EnergyPlus:
+    cooling_setpoint:
+      point: T_cool_set
+      subject: hvac_zone
+      variable: Zone Thermostat Cooling Setpoint Temperature
+
+ZoneCoolingResetDepth:
+  default:
+    cooling_setpoint:
+      point: T_cool_set
+      subject: hvac_zone
+      variable: cooling_setpoint
+  EnergyPlus:
+    cooling_setpoint:
+      point: T_cool_set
+      subject: hvac_zone
+      variable: Zone Thermostat Cooling Setpoint Temperature
+
+NightCycleOperation:
+  default:
+    zone_air_temperature_sensor:
+      point: T_zone
+      subject: hvac_zone
+      variable: zone_air_temperature_sensor 
+    HVAC_operation_sch:
+      point: HVAC_operation_sch
+      subject: Null
+      variable: ahu_fan_on_off_status
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone
+      variable: heating_setpoint
+    cooling_setpoint:
+      point: T_cool_set
+      subject: hvac_zone
+      variable: cooling_setpoint  
+    ahu_fan_electrical_meeter:
+      point: Fan_elec_rate
+      subject: Null
+      variable: ahu_fan_electrical_meeter
+  EnergyPlus:
+    zone_air_temperature_sensor:
+      point: T_zone
+      subject: hvac_zone
+      variable: Zone Air Temperature
+    HVAC_operation_sch:
+      point: HVAC_operation_sch
+      subject: ahu
+      variable: Schedule Value
+    heating_setpoint:
+      point: T_heat_set
+      subject: hvac_zone
+      variable: Zone Thermostat Heating Setpoint Temperature
+    cooling_setpoint:
+      point: T_cool_set
+      subject: hvac_zone
+      variable: Zone Thermostat Cooling Setpoint Temperature
+    ahu_fan_electrical_meeter:
+      point: Fan_elec_rate
+      subject: ahu_fan
+      variable: Fan Electric Power
+
+AutomaticOADamperControl:
+  default:
+    zone_occupancy_sensor:
+      point: o
+      subjet: null
+      variable: zone_occupancy_sensor
+    vav_air_flow_sensor:
+      point: m_oa
+      subjet: null
+      variable: vav_air_flow_sensor
+    eco_onoff:
+      point: eco_onoff
+      subjet: null
+      variable: economizer_on_off_status
+  EnergyPlus:
+    zone_occupancy_sensor:
+      point: o
+      subjet: zone_occupancy_sensor
+      variable: Schedule Value
+    vav_air_flow_sensor:
+      point: m_oa
+      subjet: Null
+      variable: Zone Air Terminal Outdoor Air Volume Flow Rate
+    eco_onoff:
+      point: eco_onoff
+      subjet: Null
+      variable: Air System Outdoor Air Economizer Status
+
+AutomaticShutdown:
+  default:
+    ahu_fan_on_off_status:
+      point: hvac_set
+      subject: Null
+      variable: ahu_fan_on_off_status
+  EnergyPlus:
+    ahu_fan_on_off_status:
+      point: hvac_set
+      subject: ahu_fan_on_off_status
+      variable: Schedule Value
+
+VAVStaticPressureSensorLocation:
+  default:
+    static_pressure_setpoint:
+      point: p_fan_set
+      subject: Null
+      variable: static_pressure_setpoint
+  # E+ was intentionally omitted b/c E+ can't handle this verification item
+
+SupplyAirTempReset: 
+  default:
+    ahu_discharge_air_temperature_setpoint:
+      point: T_sa_set
+      subject: Null
+      variable: ahu_discharge_air_temperature_setpoint
+  EnergyPlus:
+    ahu_discharge_air_temperature_setpoint:
+      point: T_sa_set
+      subject: Null
+      variable: System Node Setpoint Temperature
+
+EconomizerHighLimitA:
+  default:
+    outside_air_temperature_sensor:
+      point: oa_db
+      subject: Null
+      variable: outside_air_temperature_sensor
+    outside_air_flow_sensor:
+      point: oa_flow
+      subject: Null
+      variable: outside_air_flow_sensor
+  EnergyPlus:
+    outside_air_temperature_sensor:
+      point: oa_db
+      subject: Environment
+      variable: Site Outdoor Air Drybulb Temperature
+    outside_air_flow_sensor:
+      point: oa_flow
+      subject: Null
+      variable: System Node Standard Density Volume Flow Rate
+
+#EconomizerHighLimitB and EconomizerHighLimitD to be added
+
+EconomizerHighLimitC:
+  default:
+    outside_air_temperature_sensor:
+      point: oa_db
+      subject: Null
+      variable: outside_air_temperature_sensor
+    outside_air_flow_sensor:
+      point: oa_flow
+      subject: Null
+      variable: outside_air_flow_sensor
+    outside_air_enthalpy_sensor:
+      point: oa_enth
+      subject: Null
+      variable: outside_air_enthalpy_sensor
+  EnergyPlus:
+    outside_air_temperature_sensor:
+      point: oa_db
+      subject: Environment
+      variable: Site Outdoor Air Drybulb Temperature
+    outside_air_flow_sensor:
+      point: oa_flow
+      subject: Null
+      variable: System Node Standard Density Volume Flow Rate
+    outside_air_enthalpy_sensor:
+      point: oa_enth
+      subject: Environment
+      variable: Site Outdoor Air Enthalpy
+
+IntegratedEconomizerControl:
+  default:
+    outside_air_flow_sensor:
+      point: oa_flow
+      subject: Null
+      variable: outside_air_flow_sensor
+    cooling_coil_thermal_power_meter:
+      point: cooling_coil_thermal_power_meter
+      subject: null
+      variable: cooling_coil_thermal_power_meter
+  EnergyPlus:
+    outside_air_flow_sensor:
+      point: oa_flow
+      subject: Null
+      variable: System Node Standard Density Volume Flow Rate
+    cooling_coil_thermal_power_meter:
+      point: cooling_coil_thermal_power_meter
+      subject: cooling_coil_thermal_power_meter
+      variable: Air System Cooling Coil Total Cooling Energy
+
+HWReset:
+  default:
+    outside_air_temperature_sensor:
+      point: T_oa_db
+      subject: Null
+      variable: outside_air_temperature_sensor
+    boiler_hot_water_flow_sensor:
+      point: m_hw
+      subject: Null
+      variable: boiler_hot_water_flow_sensor
+    boiler_hot_water_return_temperature_sensor:
+      point: T_hw
+      subject: Null
+      variable: boiler_hot_water_return_temperature_sensor
+  EnergyPlus:
+    outside_air_temperature_sensor:
+      point: T_oa_db
+      subject: Null
+      variable: Site Outdoor Air Drybulb Temperature
+    boiler_hot_water_flow_sensor:
+      point: m_hw
+      subject: Null
+      variable: System Node Mass Flow Rate
+    boiler_hot_water_return_temperature_sensor:
+      point: T_hw
+      subject: Null
+      variable: System Node Setpoint Temperature
+
+CHWReset:
+  default:
+    outside_air_temperature_sensor:
+      point: T_oa_db
+      subject: Null
+      variable: outside_air_temperature_sensor
+    chiller_chilled_water_flow_sensor:
+      point: m_hw
+      subject: Null
+      variable: chiller_chilled_water_flow_sensor
+    chiller_chilled_water_return_temperature_sensor:
+      point: T_hw
+      subject: Null
+      variable: boiler_hot_water_return_temperature_sensor
+  EnergyPlus:
+    outside_air_temperature_sensor:
+      point: T_oa_db
+      subject: Null
+      variable: Site Outdoor Air Drybulb Temperature
+    chiller_chilled_water_flow_sensor:
+      point: m_hw
+      subject: Null
+      variable: System Node Mass Flow Rate
+    chiller_chilled_water_return_temperature_sensor:
+      point: T_hw
+      subject: Null
+      variable: System Node Setpoint Temperature
+
+WLHPLoopHeatRejectionControl:
+  default:
+    chilled_water_pump:
+      point: m_pump
+      subject: Null
+      variable: chilled_water_pump
+    cooling_tower_return_condenser_water_temperature_sensor:
+      point: T_min_cooling_loop
+      subject: Null
+      variable: cooling_tower_return_condenser_water_temperature_sensor
+    boiler_hot_water_return_temperature_sensor:
+      point: T_max_heating_loop
+      subject: Null
+      variable: boiler_hot_water_return_temperature_sensor
+  EnergyPlus:
+    chilled_water_pump:
+      point: m_pump
+      subject: Null
+      variable: Pump Mass Flow Rate
+    cooling_tower_return_condenser_water_temperature_sensor:
+      point: T_min_cooling_loop
+      subject: Null
+      variable: System Node Temperature
+    boiler_hot_water_return_temperature_sensor:
+      point: T_max_heating_loop
+      subject: Null
+      variable: System Node Temperature
+
+DemandControlVentilation:
+  default:
+    outside_air_flow_sensor:
+      point: oa_flow
+      subject: Null
+      variable: outside_air_flow_sensor
+    ahu_fan_on_off_status:
+      point: hvac_set
+      subject: Null
+      variable: ahu_fan_on_off_status
+    economizer_on_off_status:
+      point: s_eco
+      subjet: null
+      variable: economizer_on_off_status
+  EnergyPlus:
+    outside_air_flow_sensor:
+      point: oa_flow
+      subject: Null
+      variable: System Node Standard Density Volume Flow Rate
+    ahu_fan_on_off_status:
+      point: hvac_set
+      subject: ahu_fan_on_off_status
+      variable: Schedule Value
+    economizer_on_off_status:
+      point: s_eco
+      subjet: Null
+      variable: Air System Outdoor Air Economizer Status
+
+  # GuestRoomControlTemp and GuestRoomControlVent will be added after logic is updated

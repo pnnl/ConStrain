@@ -23,7 +23,7 @@ class SupplyAirTempReset(RuleCheckBase):
         print(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
-        sns.distplot(self.df["T_sa_set"])
+        sns.histplot(self.df["T_sa_set"])
         plt.title("All samples distribution of T_sa_set")
         plt.savefig(f"{self.results_folder}/All_samples_distribution_of_T_sa_set.png")
 
