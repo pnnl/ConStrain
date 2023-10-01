@@ -7,10 +7,12 @@ from .guest_room_control_vent import *
 from .heat_pump_supplemental_heat_lockout import *
 from .heat_rejection_fan_var_flow_control import *
 from .heat_rejection_fan_var_flow_controls_cells import *
+from .hot_water_reset import *
 from .vav_static_pressure_sensor_location import *
 from .ventilation_fan_controls import *
 from .wlhp_loop_heat_rejection_controls import *
 from .supply_air_temp_reset import *
+from .zone_temp_control import *
 from .G36SimultaneousHeatingCooling import *
 from .G36ReturnAirDamperPositionForReliefDamperOrFan import *
 from .G36ReturnAirDamperPositionForReturnFanAirflowTracking import *
@@ -46,12 +48,14 @@ __all__ = [
     "HeatPumpSupplementalHeatLockout",
     "HeatRejectionFanVariableFlowControl",
     "HeatRejectionFanVariableFlowControlsCells",
+    "HWReset",
     # "optimum_start", # missing
     # "swh_restroom_outlet_maximum_temperature_controls", # missing
     "VAVStaticPressureSensorLocation",
     "VentilationFanControl",
     "WLHPLoopHeatRejectionControl",
     "SupplyAirTempReset",
+    "ZoneTempControl",
     "G36SimultaneousHeatingCooling",
     "G36ReturnAirDamperPositionForReliefDamperOrFan",
     "G36ReturnAirDamperPositionForReturnFanAirflowTracking",
