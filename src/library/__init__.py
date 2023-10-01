@@ -30,6 +30,12 @@ from .G36ReliefDamperStatus import *
 from .G36FreezeProtectionStage1 import *
 from .G36FreezeProtectionStage2 import *
 from .G36FreezeProtectionStage3 import *
+from .LocalLoopSetPointTracking import *
+from .LocalLoopUnmetHours import *
+from .LocalLoopSaturationDirectActingMax import *
+from .LocalLoopSaturationDirectActingMin import *
+from .LocalLoopSaturationReverseActingMax import *
+from .LocalLoopSaturationReverseActingMin import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -67,4 +73,11 @@ __all__ = [
     "G36FreezeProtectionStage1",
     "G36FreezeProtectionStage2",
     "G36FreezeProtectionStage3",
+    "LocalLoopSetPointTracking",
+    "LocalLoopUnmetHours",
+    "LocalLoopSaturationDirectActingMax",
+    "LocalLoopSaturationDirectActingMin",
+    "LocalLoopSaturationReverseActingMax",
+    "LocalLoopSaturationReverseActingMin",
+    # "LocalLoopHuntingActivation",
 ]
