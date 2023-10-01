@@ -13,7 +13,7 @@ If the sensed data values are consistently above its set point, and after a defa
 
 - feedback_sensor: feedback sensor reading of the subject to be controlled towards a set point
 - set_point: set point value
-- cmd : control command
+- cmd: control command
 - cmd_min: control command range minimum value
 
 """
