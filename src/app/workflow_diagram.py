@@ -396,31 +396,33 @@ class WorkflowDiagram(QWidget):
             rect (CustomItem): CustomItem associated with the popup needed
             edit (bool): False if creating new CustomItem, True otherwise
         """
-        if self.setting == "basic":
-            payloads = self.scene.getObjectsCreated()
-            if rect:
-                if not rect.popup or isinstance(rect.popup, AdvancedPopup):
-                    # make a new popup
-                    rect.popup = PopupWindow(
-                        payloads,
-                        state_names=self.scene.getStateNames(),
-                        rect=rect,
-                        load=True,
-                    )
-                rect.popup.edit_mode(payloads)
-                self.popup = rect.popup
-            else:
-                self.popup = PopupWindow(
-                    payloads, state_names=self.scene.getStateNames()
+
+        payloads = self.scene.getObjectsCreated()
+
+        # Make a new popup or load popup
+        if rect:
+            if not rect.popup or isinstance(rect.popup, AdvancedPopup):
+                # make a new popup since rect does not have a popup or it has an AdvancedPopup
+                rect.popup = PopupWindow(
+                    payloads,
+                    state_names=self.scene.getStateNames(),
+                    rect=rect,
+                    load=True,
                 )
 
-        if edit and rect:
+            # Since rect already exists, we want to edit it
+            rect.popup.edit_mode(payloads)
+            self.popup = rect.popup
+
             try:
                 self.popup.save_button.clicked.disconnect(self.add_state)
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
+            # We are adding a new state, need a brand new popup
+            self.popup = PopupWindow(payloads, state_names=self.scene.getStateNames())
             self.popup.save_button.clicked.connect(self.add_state)
+
         self.popup.exec()
 
     def call_advanced_popup(self, rect=None, edit=False):

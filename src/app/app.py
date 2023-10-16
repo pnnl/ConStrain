@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
     QMenu,
     QFileDialog,
 )
+
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor
 from import_form import ImportForm

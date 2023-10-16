@@ -161,8 +161,8 @@ class ChoicesPopup(QDialog):
         """
         super().__init__()
 
-        self.payloads = payloads
-        self.current_input = choices
+        self.payloads = payloads if payloads else []
+        self.current_input = choices if choices else []
 
         self.set_ui()
 
