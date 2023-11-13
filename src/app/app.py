@@ -1,4 +1,7 @@
 import sys
+import warnings
+import json
+
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -14,15 +17,15 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor
+
 from import_form import ImportForm
 from meta_form import MetaForm
 from workflow_diagram import WorkflowDiagram
 from rect_connect import CustomItem
 from submit import Worker, SubmitPopup
-import json
+
+sys.path.append("../..")
 from src.api.workflow import Workflow
-import warnings
-import sys
 
 
 class GUI(QMainWindow):

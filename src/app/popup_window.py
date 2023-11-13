@@ -2,6 +2,10 @@
 Contained is the class for PopupWindow, the popup displayed when 'Add Basic' is chosen in the states tab.
 """
 
+import json
+import re
+import os
+
 from PyQt6.QtWidgets import (
     QLineEdit,
     QVBoxLayout,
@@ -16,16 +20,19 @@ from PyQt6.QtWidgets import (
     QLayout,
 )
 from PyQt6.QtGui import QPixmap
-import json
-import re
+
 from list_and_choice_popups import ListPopup, ChoicesPopup
 
+script_directory = os.path.dirname(os.path.abspath(__file__))
+dependencies_path = os.path.join(script_directory, "dependencies.json")
+api_to_method_path = os.path.join(script_directory, "api_to_method.json")
+
 # mapping from object to its methods and its methods to its parameters for display in popup
-with open("dependencies.json") as f:
+with open(dependencies_path) as f:
     schema = json.load(f)
 
 # mapping from object to its methods using the true method names
-with open("api_to_method.json") as f:
+with open(api_to_method_path) as f:
     api_to_method = json.load(f)
 
 

@@ -1,3 +1,5 @@
+import json
+
 from PyQt6.QtWidgets import (
     QLabel,
     QVBoxLayout,
@@ -7,7 +9,6 @@ from PyQt6.QtWidgets import (
     QMessageBox,
 )
 from PyQt6.QtGui import QFontMetricsF
-import json
 
 
 class AdvancedPopup(QDialog):

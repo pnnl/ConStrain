@@ -1,13 +1,15 @@
 import sys
+import warnings
+
 from PyQt6.QtWidgets import (
     QVBoxLayout,
     QDialog,
     QTextEdit,
 )
 from PyQt6.QtCore import QThread, pyqtSignal
+
+sys.path.append('../..')
 from src.api.workflow import Workflow
-import warnings
-import sys
 
 
 class Worker(QThread):
