@@ -24,6 +24,7 @@ setup(
     author_email="yan.chen@pnnl.gov",
     packages=find_packages(),
     install_requires=[
+        "brickschema",
         "numpy",
         "matplotlib",
         "pandas",
@@ -34,5 +35,7 @@ setup(
         "tqdm",
         "scikit-learn",
         "uuid",
+        "pydash",
+        "PyYAML",
     ],
 )

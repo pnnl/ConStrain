@@ -13,7 +13,7 @@ If the sensed data values are consistently above its set point, and after a defa
 
 - feedback_sensor: feedback sensor reading of the subject to be controlled towards a set point
 - set_point: set point value
-- cmd : control command
+- cmd: control command
 - cmd_max: control command range maximum value
 
 """
@@ -42,7 +42,6 @@ class LocalLoopSaturationDirectActingMax(RuleCheckBase):
         self.err = self.df.apply(lambda t: self.err_flag(t), axis=1)
         self.result = pd.Series(index=self.df.index)
         err_start_time = None
-        first_flag = True
         err_time = 0
         for cur_time, cur in self.df.iterrows():
             if self.err.loc[cur_time]:

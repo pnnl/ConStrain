@@ -11,6 +11,7 @@ from typing import Union
 sys.path.append("./constrain")
 sys.path.append("..")
 from constrain.api import (
+    BrickCompliance,
     VerificationLibrary,
     DataProcessing,
     VerificationCase,
