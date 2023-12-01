@@ -9,7 +9,7 @@ import json
 import logging
 import sys
 import os
-from typing import List, Union
+from typing import List
 
 sys.path.append("..")
 
