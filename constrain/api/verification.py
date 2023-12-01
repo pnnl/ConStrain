@@ -12,9 +12,9 @@ from typing import Dict, List, Tuple, Union
 sys.path.append("..")
 
 from .verification_case import *
-from run_verification_case import *
-from workflowsteps import *
-from libcases import *
+from constrain.run_verification_case import *
+from constrain.workflowsteps import *
+from constrain.libcases import *
 
 
 class Verification:

@@ -11,8 +11,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 sys.path.append("..")
-from epreader import *
-from datetimeep import *
+from constrain.epreader import *
+from constrain.datetimeep import *
 from typing import Union
 
 

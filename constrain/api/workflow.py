@@ -10,7 +10,7 @@ from typing import Union
 
 sys.path.append("./constrain")
 sys.path.append("..")
-from api import (
+from constrain.api import (
     VerificationLibrary,
     DataProcessing,
     VerificationCase,
