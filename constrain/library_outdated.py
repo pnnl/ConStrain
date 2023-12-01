@@ -13,6 +13,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from scipy.stats import pearsonr
 
+
 class IntegratedEconomizerControl(CheckLibBase):
     points = ["oa_min_flow", "oa_flow", "ccoil_out"]
 
