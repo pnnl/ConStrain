@@ -1,7 +1,7 @@
 import unittest, sys
 import datetime
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 

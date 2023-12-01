@@ -1,10 +1,9 @@
-import unittest, sys
-
-sys.path.append("./src")
-from lib_unit_test_runner import *
-from library import *
+import unittest
 import numpy as np
 import pandas as pd
+
+from constrain.lib_unit_test_runner import *
+from constrain.library import *
 from scipy.stats import pearsonr
 
 

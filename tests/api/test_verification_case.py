@@ -2,7 +2,7 @@ import json
 import os, sys, unittest, copy
 
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 
 from api import VerificationCase
 

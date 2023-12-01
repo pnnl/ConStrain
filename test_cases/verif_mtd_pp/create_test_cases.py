@@ -1,19 +1,15 @@
 # Import auxiliary packages
 import matplotlib.pyplot as plt
-import json, six, glob, os, sys
+import json, glob
 
-sys.path.insert(0, "../../src")
-
-# Import ANIMATE
-from workflowsteps import *
-from library import *
-from libcases import *
-from datetimeep import DateTimeEP
+# Import ConStrain
+import constrain
+from constrain.workflowsteps import *
+from constrain.library import *
+from constrain.libcases import *
 from eppy.modeleditor import IDF
 
-# IDF.setiddname("C:/EnergyPlusV9-0-1/Energy+.idd")
 IDF.setiddname("../../resources/Energy+V9_0_1.idd")
-
 
 def chwreset(idf, idf_f, id, cases):
     # Get SP node name

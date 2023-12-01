@@ -1,8 +1,7 @@
 from unittest import TestCase
 
 import pandas as pd
-import src
-from src.datetimeep import DateTimeEP
+from constrain.datetimeep import DateTimeEP
 
 
 class TestDateTimeEP(TestCase):
