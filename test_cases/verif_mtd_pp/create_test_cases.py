@@ -11,6 +11,7 @@ from eppy.modeleditor import IDF
 
 IDF.setiddname("../../resources/Energy+V9_0_1.idd")
 
+
 def chwreset(idf, idf_f, id, cases):
     # Get SP node name
     plantloops = idf.idfobjects["PlantLoop".upper()]
