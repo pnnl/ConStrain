@@ -5,6 +5,9 @@ description = "ConStrain is a data-driven knowledge-integrated framework that au
 authors = ["Lei, Xuechen <xuechen.lei@pnnl.gov>", "Chen, Yan <yan.chen@pnnl.gov>", "Lerond, Jeremy <jeremy.lerond@pnnl.gov>", "Jung, Yun Joon <yunjoon.jung@pnnl.gov>"]
 readme = "README.md"
 
+[tool.poetry.scripts]
+constrain = "constrain.cli:cli"
+
 [tool.poetry.dependencies]
 python = "^3.10"
 matplotlib = "^3.8.2"
@@ -20,6 +23,8 @@ pytest = "^7.4.3"
 brickschema = "^0.7.1"
 pydash = "^7.0.6"
 pyyaml = "^6.0.1"
+pyqt6 = "^6.6.1"
+click = "^8.1.7"
 
 
 [build-system]
