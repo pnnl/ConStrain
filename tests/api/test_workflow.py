@@ -2,7 +2,7 @@ import warnings
 
 import unittest, sys, datetime, copy
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 
 from api import Workflow
 

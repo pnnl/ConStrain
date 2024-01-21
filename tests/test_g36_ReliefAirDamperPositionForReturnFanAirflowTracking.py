@@ -1,6 +1,6 @@
 import unittest, sys
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 from lib_unit_test_runner import *
 
 import pandas as pd

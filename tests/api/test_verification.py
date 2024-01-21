@@ -1,6 +1,6 @@
 import unittest, sys, os
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 from api import VerificationCase
 from api import Verification
 from api import DataProcessing

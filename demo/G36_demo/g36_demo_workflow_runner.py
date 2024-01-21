@@ -1,10 +1,8 @@
 import warnings
+import sys
+import constrain
 
-import unittest, sys, datetime, copy
-
-sys.path.append("./src")
-
-from api import Workflow
+from constrain.api import Workflow
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 warnings.simplefilter(action="ignore", category=ResourceWarning)

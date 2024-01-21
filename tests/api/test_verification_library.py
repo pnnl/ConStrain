@@ -1,6 +1,6 @@
 import unittest, sys, logging, json
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 from api import VerificationLibrary
 
 lib_path = "./schema/library.json"
