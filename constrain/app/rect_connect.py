@@ -9,6 +9,7 @@ import re
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
+from . import utils
 
 class Path(QtWidgets.QGraphicsPathItem):
     def __init__(self, start, p2, end=None):
@@ -241,14 +242,6 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
             if existing.controlPoints() == pathItem.controlPoints():
                 return False
 
-        # define error message
-        def send_error(text):
-            error_msg = QtWidgets.QMessageBox()
-            error_msg.setIcon(QtWidgets.QMessageBox.Icon.Critical)
-            error_msg.setWindowTitle("Error in Path")
-            error_msg.setText(text)
-            error_msg.exec()
-
         # only consider sending error message if self is the start of the path
         if pathItem.start == self:
             # determine if parent will have too many children states
@@ -256,8 +249,7 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
             if rect_children_amt >= 1:
                 if self.parent.state["Type"] != "Choice":
                     # MethodCall type CustomItem can only connect to 1 CustomItem
-                    error_msg = "This type cannot connect to more than 1 state"
-                    send_error(error_msg)
+                    utils.send_error("Error in Path", "This type cannot connect to more than 1 state")
                     return False
                 elif self.parent.state["Type"] == "Choice":
                     # Choice type CustomItem can connect to more than 1 CustomItem, but need to see how many are defined in the state
@@ -267,7 +259,7 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
 
                     if rect_children_amt >= choices_amt:
                         error_msg = f"This type cannot connect to more than {choices_amt} states"
-                        send_error(error_msg)
+                        utils.send_error("Error in Path", error_msg)
                         return False
             # add new child node to parent.children since path is viable
             self.parent.children.append(pathItem.end.parent)
