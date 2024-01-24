@@ -152,9 +152,11 @@ class GUI(QMainWindow):
 
         scene = self.states_form.scene
         if not scene.items():
-            utils.send_error("Export Error", "Workflow is empty. Add a workflow to export")
+            utils.send_error(
+                "Export Error", "Workflow is empty. Add a workflow to export"
+            )
             return
-            
+
         fp, _ = QFileDialog.getSaveFileName(
             self, "Save JSON File", "", "JSON Files (*.json);;All Files (*)"
         )
@@ -172,9 +174,11 @@ class GUI(QMainWindow):
 
         scene = self.states_form.scene
         if not scene.items():
-            utils.send_error("Export Error", "Workflow is empty. Add a workflow to export")
+            utils.send_error(
+                "Export Error", "Workflow is empty. Add a workflow to export"
+            )
             return
-            
+
         fp, _ = QFileDialog.getSaveFileName(self, "Save Image", "", "PNG Files (*.png)")
 
         if fp:

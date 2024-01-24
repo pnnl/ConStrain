@@ -11,6 +11,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 
 from . import utils
 
+
 class Path(QtWidgets.QGraphicsPathItem):
     def __init__(self, start, p2, end=None):
         """Initializes a Path from start to p2
@@ -249,7 +250,9 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
             if rect_children_amt >= 1:
                 if self.parent.state["Type"] != "Choice":
                     # MethodCall type CustomItem can only connect to 1 CustomItem
-                    utils.send_error("Error in Path", "This type cannot connect to more than 1 state")
+                    utils.send_error(
+                        "Error in Path", "This type cannot connect to more than 1 state"
+                    )
                     return False
                 elif self.parent.state["Type"] == "Choice":
                     # Choice type CustomItem can connect to more than 1 CustomItem, but need to see how many are defined in the state
