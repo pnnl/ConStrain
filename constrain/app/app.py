@@ -23,6 +23,7 @@ from .meta_form import MetaForm
 from .workflow_diagram import WorkflowDiagram
 from .rect_connect import CustomItem
 from .submit import Worker, SubmitPopup
+from . import utils
 
 from constrain.api.workflow import Workflow
 
@@ -148,6 +149,14 @@ class GUI(QMainWindow):
 
     def exportFile(self):
         """Exports current state as a .json to local storage"""
+
+        scene = self.states_form.scene
+        if not scene.items():
+            utils.send_error(
+                "Export Error", "Workflow is empty. Add a workflow to export"
+            )
+            return
+
         fp, _ = QFileDialog.getSaveFileName(
             self, "Save JSON File", "", "JSON Files (*.json);;All Files (*)"
         )
@@ -162,11 +171,17 @@ class GUI(QMainWindow):
 
     def exportAsPng(self):
         """Exports current state as a .png to local storage"""
+
+        scene = self.states_form.scene
+        if not scene.items():
+            utils.send_error(
+                "Export Error", "Workflow is empty. Add a workflow to export"
+            )
+            return
+
         fp, _ = QFileDialog.getSaveFileName(self, "Save Image", "", "PNG Files (*.png)")
 
         if fp:
-            scene = self.states_form.scene
-            scene.sceneRect().size()
             pixmap = QPixmap(scene.sceneRect().size().toSize())
             pixmap.fill(QColor(255, 255, 255))
             painter = QPainter(pixmap)
