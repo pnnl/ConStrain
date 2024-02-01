@@ -14,16 +14,17 @@ from PyQt6.QtWidgets import (
     QToolBar,
     QMenu,
     QFileDialog,
+    QMessageBox,
 )
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor
 
-from .import_form import ImportForm
-from .meta_form import MetaForm
-from .workflow_diagram import WorkflowDiagram
-from .rect_connect import CustomItem
-from .submit import Worker, SubmitPopup
-from . import utils
+from constrain.app.import_form import ImportForm
+from constrain.app.meta_form import MetaForm
+from constrain.app.workflow_diagram import WorkflowDiagram
+from constrain.app.rect_connect import CustomItem
+from constrain.app.submit import Worker, SubmitPopup
+from constrain.app import utils
 
 from constrain.api.workflow import Workflow
 
@@ -191,11 +192,27 @@ class GUI(QMainWindow):
 
     def importFile(self):
         """Imports a .json file to use a state and loads file into the GUI"""
+
+        # Check if any of the forms contain data before resetting GUI state
+        need_to_reset = False
+        if self.contains_data():
+            if not (
+                # set need_to_reset to client's response in the 'Are you sure' popup
+                need_to_reset := utils.send_are_you_sure(
+                    "This will delete all data in your current workflow."
+                )
+                == QMessageBox.StandardButton.Yes
+            ):
+                return
+
         file_dialog = QFileDialog()
         file_dialog.setWindowTitle("Select a JSON File")
         file_dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
         file_dialog.setNameFilter("JSON files (*.json)")
         if file_dialog.exec() == QFileDialog.DialogCode.Accepted:
+            # clear forms if state already exists in the GUI
+            if need_to_reset:
+                self.clear()
             file_path = file_dialog.selectedFiles()[0]
             with open(file_path, "r") as f:
                 workflow = json.load(f)
@@ -354,6 +371,19 @@ class GUI(QMainWindow):
         if valid:
             self.valid_workflow = json_data
             self.submit_button.setEnabled(True)
+
+    def contains_data(self):
+        """Check if any forms contain data"""
+        return any(
+            form.contains_data()
+            for form in [self.states_form, self.meta_form, self.import_form]
+        )
+
+    def clear(self):
+        """Clear all forms"""
+        self.meta_form.clear()
+        self.import_form.clear()
+        self.states_form.clear()
 
 
 app = QApplication(sys.argv)

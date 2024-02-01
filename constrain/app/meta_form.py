@@ -97,3 +97,24 @@ class MetaForm(QWidget):
 
     def get_workflow_name(self):
         return self.name_input.text()
+
+    def contains_data(self):
+        """Check if meta form contains any data"""
+        return all(
+            [
+                self.name_input.text(),
+                self.author_input.text(),
+                self.date_input.text(),
+                self.version_input.text(),
+                self.description_input.toPlainText(),
+            ]
+        )
+
+    def clear(self):
+        """Clear meta form"""
+        self.name_input.clear()
+        self.author_input.clear()
+        self.date_input.clear()
+        self.version_input.clear()
+        self.description_input.clear()
+        self.update()
