@@ -375,23 +375,20 @@ class WorkflowDiagram(QWidget):
             rect (CustomItem): CustomItem associated with the popup needed
             edit (bool): False if creating new CustomItem, True otherwise
         """
-        if self.setting == "basic":
-            payloads = self.scene.getObjectsCreated()
-            if rect:
-                if not rect.popup or isinstance(rect.popup, AdvancedPopup):
-                    # make a new popup
-                    rect.popup = PopupWindow(
-                        payloads,
-                        state_names=self.scene.getStateNames(),
-                        rect=rect,
-                        load=True,
-                    )
-                rect.popup.edit_mode(payloads)
-                self.popup = rect.popup
-            else:
-                self.popup = PopupWindow(
-                    payloads, state_names=self.scene.getStateNames()
+        payloads = self.scene.getObjectsCreated()
+        if rect:
+            if not rect.popup or isinstance(rect.popup, AdvancedPopup):
+                # make a new popup
+                rect.popup = PopupWindow(
+                    payloads,
+                    state_names=self.scene.getStateNames(),
+                    rect=rect,
+                    load=True,
                 )
+            rect.popup.edit_mode(payloads)
+            self.popup = rect.popup
+        else:
+            self.popup = PopupWindow(payloads, state_names=self.scene.getStateNames())
 
         if edit and rect:
             try:
