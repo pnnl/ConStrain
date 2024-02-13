@@ -18,12 +18,12 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor
 
-from .import_form import ImportForm
-from .meta_form import MetaForm
-from .workflow_diagram import WorkflowDiagram
-from .rect_connect import CustomItem
-from .submit import Worker, SubmitPopup
-from . import utils
+from constrain.app.import_form import ImportForm
+from constrain.app.meta_form import MetaForm
+from constrain.app.workflow_diagram import WorkflowDiagram
+from constrain.app.rect_connect import CustomItem
+from constrain.app.submit import Worker, SubmitPopup
+from constrain.app import utils
 
 from constrain.api.workflow import Workflow
 
@@ -156,6 +156,12 @@ class GUI(QMainWindow):
                 "Export Error", "Workflow is empty. Add a workflow to export"
             )
             return
+        
+        workflow = self.get_workflow()
+
+        if not self.validate_workflow_json(workflow):
+            utils.send_error("Invalid Workflow", "Error in workflow")
+            return
 
         fp, _ = QFileDialog.getSaveFileName(
             self, "Save JSON File", "", "JSON Files (*.json);;All Files (*)"
@@ -163,11 +169,10 @@ class GUI(QMainWindow):
 
         if fp:
             try:
-                workflow = self.get_workflow()
                 with open(fp, "w", encoding="utf-8") as f:
                     json.dump(self.create_json(workflow), f, indent=4)
             except Exception:
-                print("error")
+                utils.send_error("Invalid Workflow", "Error saving workflow")
 
     def exportAsPng(self):
         """Exports current state as a .png to local storage"""
@@ -199,17 +204,21 @@ class GUI(QMainWindow):
             file_path = file_dialog.selectedFiles()[0]
             with open(file_path, "r") as f:
                 workflow = json.load(f)
-                if isinstance(workflow, dict):
-                    # have each tab fill in the data
-                    self.meta_form.read_import(
-                        workflow.get("workflow_name"), workflow.get("meta")
-                    )
-                    self.import_form.read_import(workflow.get("imports"))
-                    self.states_form.read_import(workflow.get("states"))
-                    self.get_workflow()
-                else:
-                    # error if selected file cannot be converted to a dict
-                    print("error")
+
+                if not self.validate_workflow_json(workflow):
+                    utils.send_error("Invalid Workflow", "Error in imported workflow")
+                    return
+
+                self.meta_form.read_import(
+                    workflow.get("workflow_name"), workflow.get("meta")
+                )
+                self.import_form.read_import(workflow.get("imports"))
+                self.states_form.read_import(workflow.get("states"))
+                self.get_workflow()
+
+    def validate_workflow_json(self, json_data):
+        workflow = Workflow(json_data)
+        return workflow.validate()
 
     def display_form(self, current_item):
         """Displays tab that is selected

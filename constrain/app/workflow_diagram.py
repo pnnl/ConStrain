@@ -17,9 +17,9 @@ from PyQt6.QtGui import (
     QPen,
     QBrush,
 )
-from .popup_window import PopupWindow
-from .advanced_popup import AdvancedPopup
-from .rect_connect import Scene, CustomItem, ControlPoint, Path
+from constrain.app.popup_window import PopupWindow
+from constrain.app.advanced_popup import AdvancedPopup
+from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
 import json
 
 
