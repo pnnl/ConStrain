@@ -156,7 +156,7 @@ class GUI(QMainWindow):
                 "Export Error", "Workflow is empty. Add a workflow to export"
             )
             return
-        
+
         workflow = self.get_workflow()
 
         if not self.validate_workflow_json(workflow):
