@@ -17,9 +17,9 @@ from PyQt6.QtGui import (
     QPen,
     QBrush,
 )
-from .popup_window import PopupWindow
-from .advanced_popup import AdvancedPopup
-from .rect_connect import Scene, CustomItem, ControlPoint, Path
+from constrain.app.popup_window import PopupWindow
+from constrain.app.advanced_popup import AdvancedPopup
+from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
 import json
 
 
@@ -433,3 +433,13 @@ class WorkflowDiagram(QWidget):
                 new_state = states[state_name]
                 new_state["Title"] = state_name
                 self.create_item(new_state)
+
+    def contains_data(self):
+        """Check if workflow diagram contains any data"""
+        return bool(self.scene.items())
+
+    def clear(self):
+        """Clear all state"""
+        self.scene.clear()
+        self.view.resetTransform()
+        self.update()
