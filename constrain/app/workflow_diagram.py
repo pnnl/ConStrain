@@ -17,9 +17,9 @@ from PyQt6.QtGui import (
     QPen,
     QBrush,
 )
-from .popup_window import PopupWindow
-from .advanced_popup import AdvancedPopup
-from .rect_connect import Scene, CustomItem, ControlPoint, Path
+from constrain.app.popup_window import PopupWindow
+from constrain.app.advanced_popup import AdvancedPopup
+from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
 import json
 
 
@@ -375,23 +375,20 @@ class WorkflowDiagram(QWidget):
             rect (CustomItem): CustomItem associated with the popup needed
             edit (bool): False if creating new CustomItem, True otherwise
         """
-        if self.setting == "basic":
-            payloads = self.scene.getObjectsCreated()
-            if rect:
-                if not rect.popup or isinstance(rect.popup, AdvancedPopup):
-                    # make a new popup
-                    rect.popup = PopupWindow(
-                        payloads,
-                        state_names=self.scene.getStateNames(),
-                        rect=rect,
-                        load=True,
-                    )
-                rect.popup.edit_mode(payloads)
-                self.popup = rect.popup
-            else:
-                self.popup = PopupWindow(
-                    payloads, state_names=self.scene.getStateNames()
+        payloads = self.scene.getObjectsCreated()
+        if rect:
+            if not rect.popup or isinstance(rect.popup, AdvancedPopup):
+                # make a new popup
+                rect.popup = PopupWindow(
+                    payloads,
+                    state_names=self.scene.getStateNames(),
+                    rect=rect,
+                    load=True,
                 )
+            rect.popup.edit_mode(payloads)
+            self.popup = rect.popup
+        else:
+            self.popup = PopupWindow(payloads, state_names=self.scene.getStateNames())
 
         if edit and rect:
             try:
@@ -436,3 +433,13 @@ class WorkflowDiagram(QWidget):
                 new_state = states[state_name]
                 new_state["Title"] = state_name
                 self.create_item(new_state)
+
+    def contains_data(self):
+        """Check if workflow diagram contains any data"""
+        return bool(self.scene.items())
+
+    def clear(self):
+        """Clear all state"""
+        self.scene.clear()
+        self.view.resetTransform()
+        self.update()
