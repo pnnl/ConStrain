@@ -128,13 +128,14 @@ class GUI(QMainWindow):
         settings_menu = QMenu("Settings", self)
         popup_settings_menu = QMenu("Popup Settings", self)
 
-        basic_action = QAction("Basic Popup", self)
-        basic_action.triggered.connect(self.basicPopupSetting)
-        popup_settings_menu.addAction(basic_action)
+        self.basic_action = QAction("Basic Popup", self, checkable=True)
+        self.basic_action.triggered.connect(self.basicPopupSetting)
+        popup_settings_menu.addAction(self.basic_action)
+        self.basic_action.setChecked(True)
 
-        advanced_action = QAction("Advanced Popup", self)
-        advanced_action.triggered.connect(self.advancedPopupSetting)
-        popup_settings_menu.addAction(advanced_action)
+        self.advanced_action = QAction("Advanced Popup", self, checkable=True)
+        self.advanced_action.triggered.connect(self.advancedPopupSetting)
+        popup_settings_menu.addAction(self.advanced_action)
 
         settings_menu.addMenu(popup_settings_menu)
 
@@ -143,9 +144,13 @@ class GUI(QMainWindow):
 
     def basicPopupSetting(self):
         self.states_form.setting = "basic"
+        if self.advanced_action.isChecked():
+            self.advanced_action.setChecked(False)
 
     def advancedPopupSetting(self):
         self.states_form.setting = "advanced"
+        if self.basic_action.isChecked():
+            self.basic_action.setChecked(False)
 
     def exportFile(self):
         """Exports current state as a .json to local storage"""
