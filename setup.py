@@ -37,5 +37,6 @@ setup(
         "uuid",
         "pydash",
         "PyYAML",
+        "pre-commit",
     ],
 )
