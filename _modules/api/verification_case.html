@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>api.verification_case &mdash; ConStrain 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B87333" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ConStrain
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Code%20Documentation.html">Code Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B87333" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ConStrain</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">api.verification_case</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for api.verification_case</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">verification_case.py</span>
+<span class="sd">====================================</span>
+<span class="sd">Verification Case API</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">uuid</span><span class="o">,</span> <span class="nn">copy</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="VerificationCase">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase">[docs]</a>
+<span class="k">class</span> <span class="nc">VerificationCase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cases</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">json_case_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiate a verification case class object and load verification case(s) in `self.case_suite` as a Dict. keys are automatically generated unique id of cases, values are the fully defined verification case Dict. If any argument is invalid, the object instantion will report an error message.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            cases: (optional) A list of Dict. dictionary that includes verification case(s).</span>
+<span class="sd">            json_case_path: (optional) str. path to the verification case file. If the path ends with `*.json`, then the items in the JSON file are loaded. If the path points to a directory, then verification cases JSON files are loaded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_suite</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_type</span><span class="p">(</span><span class="s2">&quot;cases&quot;</span><span class="p">,</span> <span class="n">cases</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">:</span>
+                <span class="n">unique_hash</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span>
+                <span class="k">case</span><span class="p">[</span><span class="s2">&quot;case_id_in_suite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_hash</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">case_suite</span><span class="p">[</span><span class="n">unique_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">case</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_type</span><span class="p">(</span><span class="s2">&quot;json_case_path&quot;</span><span class="p">,</span> <span class="n">json_case_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># check if json or directory path is provided</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_json_path_type</span><span class="p">(</span><span class="n">json_case_path</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_verification_cases_from_json</span><span class="p">(</span><span class="n">json_case_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># when directory path is provided</span>
+                <span class="c1"># check if the directory exists</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">json_case_path</span><span class="p">):</span>
+                    <span class="c1"># find all the JSON files in json_case_path directory</span>
+                    <span class="n">json_file_names</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">json_case_path</span><span class="p">,</span> <span class="s2">&quot;*.json&quot;</span><span class="p">))</span>
+
+                    <span class="c1"># check if no of json_file_names isn&#39;t 0</span>
+                    <span class="k">if</span> <span class="n">json_file_names</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">json_file_names</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">read_case</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="s2">&quot;There is no JSON files in the given `json_case_path` directory.&quot;</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;The provided directory doesn&#39;t exist. Please make sure to provide a correct `json_case_path`.&quot;</span>
+                    <span class="p">)</span>
+
+<div class="viewcode-block" id="VerificationCase.load_verification_cases_from_json">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.load_verification_cases_from_json">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_verification_cases_from_json</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">json_case_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add verification cases from specified json file into self.case_suite. Cases that have already been loaded are ignored.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            json_case_path: str, path to the json file containing fully defined verification cases.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          List, unique ids of verification cases loaded in self.case_suite</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># check `json_case_path` type</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_type</span><span class="p">(</span><span class="s2">&quot;json_case_path&quot;</span><span class="p">,</span> <span class="n">json_case_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># check if `json_case_path` exists</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_file</span><span class="p">(</span><span class="s2">&quot;json_case_path&quot;</span><span class="p">,</span> <span class="n">json_case_path</span><span class="p">):</span>
+                <span class="n">newly_added_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_case</span><span class="p">(</span><span class="n">json_case_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">newly_added_hash</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.save_case_suite_to_json">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.save_case_suite_to_json">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_case_suite_to_json</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">json_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">case_ids</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save verification cases to a dedicated file. If the `case_ids` argument is empty, all the cases in `self.case_suite` is saved. If `case_ids` includes specific cases&#39; hash, only the hashes in the list are saved.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            json_path: str. path to the json file to save the cases.</span>
+<span class="sd">            case_ids: (optional) List. Unique ids of verification cases to save. By default, save all cases in `self.case_suite`. Default to an empty list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">case_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">case_ids</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># check `json_path` type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_type</span><span class="p">(</span><span class="s2">&quot;json_path&quot;</span><span class="p">,</span> <span class="n">json_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># check `case_ids` type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_type</span><span class="p">(</span><span class="s2">&quot;case_ids&quot;</span><span class="p">,</span> <span class="n">case_ids</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># save case(s) based on `case_ids` arg</span>
+        <span class="n">cases</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">case_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">case_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">case_suite</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">case_id</span> <span class="ow">in</span> <span class="n">case_ids</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">case_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_suite</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">cases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">case_suite</span><span class="p">[</span><span class="n">case_id</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;case_id </span><span class="si">{</span><span class="n">case_id</span><span class="si">}</span><span class="s2"> is not in self.case_suite!&quot;</span><span class="p">)</span>
+
+        <span class="c1"># use the `save_verification_cases_to_json` method to save</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_verification_cases_to_json</span><span class="p">(</span><span class="n">json_path</span><span class="p">,</span> <span class="n">cases</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.create_verification_case_suite_from_base_case">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.create_verification_case_suite_from_base_case">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_verification_case_suite_from_base_case</span><span class="p">(</span>
+        <span class="n">base_case</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">update_key_value</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">keep_base_case</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create slightly different multiple verification cases by changing keys and values as specified in `update_key_value`. if `keep_base_case` is set to True, the `base_case` is added to the first element in the returned list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            base_case: Dict. base verification input information.</span>
+<span class="sd">            update_key_value: Dict. the same format as the `base_case` arg, but the updating fields consist of a list of values to be populated with.</span>
+<span class="sd">            keep_base_case: (optional) bool. whether to keep the base case in returned list of verification cases. Default to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          List,  A list of Dict, each dict is a generated case from the base case.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># return all the updating value lists&#39; length</span>
+        <span class="k">def</span> <span class="nf">_count_modifying_value_helper</span><span class="p">(</span><span class="n">update_key_value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+            <span class="n">len_modifying_values</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">update_key_value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">len_modifying_values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">_count_modifying_value_helper</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">len_modifying_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">len_modifying_values</span>
+
+        <span class="c1"># update key/value based on `update_key_value` to `base_case`</span>
+        <span class="k">def</span> <span class="nf">_update_key_helper</span><span class="p">(</span>
+            <span class="n">update_key_value</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">casees</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">prev_level_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">update_key_value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">prev_level_key</span> <span class="o">=</span> <span class="n">key</span>
+                    <span class="n">casees</span><span class="p">,</span> <span class="n">prev_level_key</span> <span class="o">=</span> <span class="n">_update_key_helper</span><span class="p">(</span>
+                        <span class="n">value</span><span class="p">,</span> <span class="n">casees</span><span class="p">,</span> <span class="n">prev_level_key</span>
+                    <span class="p">)</span>
+
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">case</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">casees</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span>
+                            <span class="s2">&quot;no&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;run_simulation&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;expected_result&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;datapoints_source&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;verification_class&quot;</span><span class="p">,</span>
+                        <span class="p">]:</span>
+                            <span class="k">case</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;idf&quot;</span><span class="p">,</span> <span class="s2">&quot;idd&quot;</span><span class="p">,</span> <span class="s2">&quot;weather&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="s2">&quot;ep_path&quot;</span><span class="p">]:</span>
+                            <span class="k">case</span><span class="p">[</span><span class="s2">&quot;simulation_IO&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+                        <span class="k">elif</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;variable&quot;</span><span class="p">,</span> <span class="s2">&quot;frequency&quot;</span><span class="p">]:</span>
+                            <span class="k">case</span><span class="p">[</span><span class="s2">&quot;datapoints_source&quot;</span><span class="p">][</span><span class="s2">&quot;idf_output_variables&quot;</span><span class="p">][</span>
+                                <span class="n">prev_level_key</span>
+                            <span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+                        <span class="k">elif</span> <span class="n">prev_level_key</span> <span class="o">==</span> <span class="s2">&quot;parameters&quot;</span><span class="p">:</span>
+                            <span class="k">case</span><span class="p">[</span><span class="s2">&quot;datapoints_source&quot;</span><span class="p">][</span><span class="s2">&quot;parameters&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">casees</span><span class="p">,</span> <span class="n">prev_level_key</span>
+
+        <span class="c1"># check `base_case` type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_case</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The `base_case` argument type must be Dict, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">base_case</span><span class="p">)</span><span class="si">}</span><span class="s2"> type is provided.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># check `update_key_value` type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">update_key_value</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The `update_key_value` argument type must be Dict, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">update_key_value</span><span class="p">)</span><span class="si">}</span><span class="s2"> type is provided.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># check `keep_base_case` type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">keep_base_case</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The `keep_base_case` argument must be bool, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">keep_base_case</span><span class="p">)</span><span class="si">}</span><span class="s2"> type is provided.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># check if all the lists of modifying values have the same length.</span>
+        <span class="n">len_of_each_modifying_list</span> <span class="o">=</span> <span class="n">_count_modifying_value_helper</span><span class="p">(</span><span class="n">update_key_value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">len_of_each_modifying_list</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The length of modifying values in lists must be the same.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># deep-copy the base_case</span>
+        <span class="n">generated_base_cases_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">len_of_each_modifying_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">generated_base_cases_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">base_case</span><span class="p">))</span>
+
+        <span class="c1"># update the values based on `update_key_value` arg</span>
+        <span class="n">updated_base_cases_list</span> <span class="o">=</span> <span class="n">_update_key_helper</span><span class="p">(</span>
+            <span class="n">update_key_value</span><span class="p">,</span> <span class="n">generated_base_cases_list</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># add base_case if `keep_base_case` set to True</span>
+        <span class="k">if</span> <span class="n">keep_base_case</span><span class="p">:</span>
+            <span class="n">updated_base_cases_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">base_case</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">updated_base_cases_list</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.validate_verification_case_structure">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.validate_verification_case_structure">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_verification_case_structure</span><span class="p">(</span>
+        <span class="n">case</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate verification case structure (e.g., check whether `run_simulation`, `simulation_IO`, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            case: dict. case information that will be validated.</span>
+<span class="sd">            verbose: bool. whether to output verbose information. Default to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Bool, indicating whether the case structure is valid or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">_validate_case_structure_helper</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">schema_key</span><span class="p">,</span> <span class="n">schema_value</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># accommodate data points alike scenarios (random string key with required value structure)</span>
+                <span class="k">if</span> <span class="n">schema_key</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">schema_key</span><span class="p">]</span>
+
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                    <span class="c1"># check key match</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">instance</span><span class="p">:</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; in </span><span class="si">{</span><span class="n">instance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+
+                    <span class="n">case_value</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schema_value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="c1"># recursively check nested value</span>
+                        <span class="n">is_cases_valid</span> <span class="o">=</span> <span class="n">_validate_case_structure_helper</span><span class="p">(</span>
+                            <span class="n">schema_value</span><span class="p">,</span> <span class="n">case_value</span><span class="p">,</span> <span class="n">verbose</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cases_valid</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># check leaf value match</span>
+                        <span class="c1"># if require float, it can be int</span>
+                        <span class="k">if</span> <span class="n">schema_value</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+                            <span class="n">eligible_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">eligible_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">schema_value</span><span class="p">]</span>
+
+                        <span class="n">type_match_list</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="nb">isinstance</span><span class="p">(</span><span class="n">case_value</span><span class="p">,</span> <span class="n">sv</span><span class="p">)</span> <span class="k">for</span> <span class="n">sv</span> <span class="ow">in</span> <span class="n">eligible_types</span>
+                        <span class="p">]</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">type_match_list</span><span class="p">):</span>
+                            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;The type of &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; key must be </span><span class="si">{</span><span class="n">schema_value</span><span class="si">}</span><span class="s2">, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">case_value</span><span class="p">)</span><span class="si">}</span><span class="s2"> is provided.&quot;</span>
+                            <span class="p">)</span>
+                            <span class="k">return</span> <span class="kc">False</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">&quot;The type of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> has the correct type </span><span class="si">{</span><span class="n">schema_value</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># check case type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">Dict</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The case argument type must be dict, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">case</span><span class="p">)</span><span class="si">}</span><span class="s2"> is provided.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># check verbose type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">verbose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The verbose argument type must be bool, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span><span class="si">}</span><span class="s2"> is provided.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">case_schema</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;no&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="s2">&quot;run_simulation&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="s2">&quot;simulation_IO&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>  <span class="c1"># all other are optional when data is already there.</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;expected_result&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="s2">&quot;datapoints_source&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="c1"># &quot;idf_output_variables&quot;: {</span>
+                <span class="c1">#     &quot;*&quot;: {&quot;subject&quot;: str, &quot;variable&quot;: str, &quot;frequency&quot;: str}</span>
+                <span class="c1"># },</span>
+                <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;verification_class&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">_validate_case_structure_helper</span><span class="p">(</span><span class="n">case_schema</span><span class="p">,</span> <span class="n">case</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.validate">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.validate">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate all verification cases in self.case_suite with validation logic in VerificationCase.validate_verification_case_structure()&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_suite</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_verification_case_structure</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.save_verification_cases_to_json">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.save_verification_cases_to_json">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">save_verification_cases_to_json</span><span class="p">(</span>
+        <span class="n">json_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">cases</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save verification cases to a dedicated file. The cases list consists of verification case dicts.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            json_path: str. json file path to save the cases.</span>
+<span class="sd">            cases: List. List of complete verification cases Dictionary to save.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># check `json_path` type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The `json_path` argument type must be str, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span><span class="si">}</span><span class="s2"> is provided.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># check `cases` type</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cases</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The `cases` argument type must be list, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">cases</span><span class="p">)</span><span class="si">}</span><span class="s2"> is provided.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># check if `json_path` extension is .json</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">json_path</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.json&quot;</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The `json_path` argument must end with &#39;.json&#39; extension.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># organize the cases in the correct format</span>
+        <span class="n">case_suite_in_template_format</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cases&quot;</span><span class="p">:</span> <span class="n">cases</span><span class="p">}</span>
+
+        <span class="c1"># save the case suite</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fw</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">case_suite_in_template_format</span><span class="p">,</span> <span class="n">fw</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.read_case">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.read_case">[docs]</a>
+    <span class="k">def</span> <span class="nf">read_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+        <span class="c1"># load the cases from file_path</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">loaded_cases</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">newly_added_hash</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">loaded_case</span> <span class="ow">in</span> <span class="n">loaded_cases</span><span class="p">[</span><span class="s2">&quot;cases&quot;</span><span class="p">]:</span>
+            <span class="c1"># check if there is any duplicated case. If so, don&#39;t add the case to `self.case_suite`</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_already_in_suite</span><span class="p">(</span><span class="n">case</span><span class="o">=</span><span class="n">loaded_case</span><span class="p">):</span>
+                <span class="n">unique_hash</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span>
+                <span class="n">loaded_case</span><span class="p">[</span><span class="s2">&quot;case_id_in_suite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_hash</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">case_suite</span><span class="p">[</span><span class="n">unique_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">loaded_case</span>
+                <span class="n">newly_added_hash</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unique_hash</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">newly_added_hash</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.same_case">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.same_case">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">same_case</span><span class="p">(</span><span class="n">case_a</span><span class="p">:</span> <span class="p">{},</span> <span class="n">case_b</span><span class="p">:</span> <span class="p">{},</span> <span class="n">ignored_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;case_id_in_suite&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">case_a_new</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">case_a</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignored_keys</span><span class="p">}</span>
+        <span class="n">case_b_new</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">case_b</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignored_keys</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">case_a_new</span> <span class="o">==</span> <span class="n">case_b_new</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.case_already_in_suite">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.case_already_in_suite">[docs]</a>
+    <span class="k">def</span> <span class="nf">case_already_in_suite</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">case</span><span class="p">:</span> <span class="p">{},</span> <span class="n">ignored_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;case_id_in_suite&quot;</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_suite</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">same_case</span><span class="p">(</span><span class="n">case</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">ignored_keys</span><span class="o">=</span><span class="n">ignored_keys</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.check_json_path_type">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.check_json_path_type">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_json_path_type</span><span class="p">(</span><span class="n">json_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">json_path</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span> <span class="o">==</span> <span class="s2">&quot;.json&quot;</span> <span class="k">else</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.check_type">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.check_type">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_type</span><span class="p">(</span>
+        <span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">var_value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="n">var_type</span><span class="p">:</span> <span class="nb">type</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">var_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># no error msg if None</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var_value</span><span class="p">,</span> <span class="n">var_type</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The `</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s2">` argument&#39;s type must be </span><span class="si">{</span><span class="n">var_type</span><span class="si">}</span><span class="s2">, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">var_value</span><span class="p">)</span><span class="si">}</span><span class="s2"> is provided.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="VerificationCase.check_file">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.verification_case.VerificationCase.check_file">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_file</span><span class="p">(</span><span class="n">file_path_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;`</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&#39; doesn&#39;t exist. Please make sure that the &#39;</span><span class="si">{</span><span class="n">file_path_name</span><span class="si">}</span><span class="s2">&#39; argument is correct.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pacific Northwest National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

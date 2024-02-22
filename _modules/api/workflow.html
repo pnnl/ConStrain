@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>api.workflow &mdash; ConStrain 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B87333" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ConStrain
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Code%20Documentation.html">Code Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B87333" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ConStrain</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">api.workflow</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for api.workflow</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">workflow.py</span>
+<span class="sd">====================================</span>
+<span class="sd">Workflow API</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;./constrain&quot;</span><span class="p">)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">constrain.api</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BrickCompliance</span><span class="p">,</span>
+    <span class="n">VerificationLibrary</span><span class="p">,</span>
+    <span class="n">DataProcessing</span><span class="p">,</span>
+    <span class="n">VerificationCase</span><span class="p">,</span>
+    <span class="n">Verification</span><span class="p">,</span>
+    <span class="n">Reporting</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># helper</span>
+<div class="viewcode-block" id="timenow">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.timenow">[docs]</a>
+<span class="k">def</span> <span class="nf">timenow</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="strnow">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.strnow">[docs]</a>
+<span class="k">def</span> <span class="nf">strnow</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">timenow</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="WorkflowEngine">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.WorkflowEngine">[docs]</a>
+<span class="k">class</span> <span class="nc">WorkflowEngine</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow</span><span class="p">,</span> <span class="n">run_workflow_now</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_state_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_state_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workflow_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running_sequence</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># checking workflow validity is handed over to the API method.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">workflow</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_workflow_json</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">workflow</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workflow_dict</span> <span class="o">=</span> <span class="n">workflow</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_states</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">run_workflow_now</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_workflow</span><span class="p">()</span>
+
+<div class="viewcode-block" id="WorkflowEngine.validate">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.WorkflowEngine.validate">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;function to be implemented to check for high level validity of the workflow definition&quot;&quot;&quot;</span>
+        <span class="n">workflow_schema</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;workflow_name&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="s2">&quot;meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">},</span>
+            <span class="s2">&quot;imports&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+            <span class="s2">&quot;states&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;*&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">},</span>
+        <span class="p">}</span>
+
+        <span class="k">def</span> <span class="nf">_validate_workflow</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="c1"># TODO: JXL this is duplicate from VerificationCase.validate_verification_case_structure._validate_case_structure_helper. Refactor needed.</span>
+            <span class="k">for</span> <span class="n">schema_key</span><span class="p">,</span> <span class="n">schema_value</span> <span class="ow">in</span> <span class="n">schema</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># accommodate data points alike scenarios (random string key with required value structure)</span>
+                <span class="k">if</span> <span class="n">schema_key</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">schema_key</span><span class="p">]</span>
+
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                    <span class="c1"># check key match</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">instance</span><span class="p">:</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; in </span><span class="si">{</span><span class="n">instance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">False</span>
+
+                    <span class="n">case_value</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schema_value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="c1"># recursively check nested value</span>
+                        <span class="n">is_cases_valid</span> <span class="o">=</span> <span class="n">_validate_workflow</span><span class="p">(</span>
+                            <span class="n">schema_value</span><span class="p">,</span> <span class="n">case_value</span><span class="p">,</span> <span class="n">verbose</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_cases_valid</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># check leaf value match</span>
+                        <span class="c1"># if require float, it can be int</span>
+                        <span class="k">if</span> <span class="n">schema_value</span> <span class="o">==</span> <span class="nb">float</span><span class="p">:</span>
+                            <span class="n">eligible_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">eligible_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">schema_value</span><span class="p">]</span>
+
+                        <span class="n">type_match_list</span> <span class="o">=</span> <span class="p">[</span>
+                            <span class="nb">isinstance</span><span class="p">(</span><span class="n">case_value</span><span class="p">,</span> <span class="n">sv</span><span class="p">)</span> <span class="k">for</span> <span class="n">sv</span> <span class="ow">in</span> <span class="n">eligible_types</span>
+                        <span class="p">]</span>
+
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">type_match_list</span><span class="p">):</span>
+                            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;The type of &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; key must be </span><span class="si">{</span><span class="n">schema_value</span><span class="si">}</span><span class="s2">, but </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">case_value</span><span class="p">)</span><span class="si">}</span><span class="s2"> is provided.&quot;</span>
+                            <span class="p">)</span>
+                            <span class="k">return</span> <span class="kc">False</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">&quot;The type of </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> has the correct type </span><span class="si">{</span><span class="n">schema_value</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">_validate_workflow</span><span class="p">(</span><span class="n">workflow_schema</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_dict</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WorkflowEngine.import_package">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.WorkflowEngine.import_package">[docs]</a>
+    <span class="k">def</span> <span class="nf">import_package</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Import third party packages based on the &quot;imports&quot; element values of the workflow json.</span>
+<span class="sd">        E.g.: {</span>
+<span class="sd">        ...</span>
+<span class="sd">        &quot;imports&quot;: [</span>
+<span class="sd">            &quot;numpy as np&quot;,</span>
+<span class="sd">            &quot;pandas as pd&quot;,</span>
+<span class="sd">            &quot;datetime&quot;</span>
+<span class="sd">        ],</span>
+<span class="sd">        ...</span>
+<span class="sd">        }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">import_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;imports&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_dict</span><span class="p">:</span>
+            <span class="n">import_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_dict</span><span class="p">[</span><span class="s2">&quot;imports&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">import_list</span><span class="p">:</span>
+            <span class="n">cp</span> <span class="o">=</span> <span class="n">line</span>
+            <span class="k">if</span> <span class="s2">&quot; as &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">cp</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; as &quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">exec</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;import </span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">globals</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="WorkflowEngine.load_workflow_json">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.WorkflowEngine.load_workflow_json">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_workflow_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load workflow from a json workflow definition.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            workflow_path (str): path to the workflow json file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">workflow_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">workflow_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WorkflowEngine.load_states">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.WorkflowEngine.load_states">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;load states from the workflow definition with some sanity checks.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">state_name</span><span class="p">,</span> <span class="n">state_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_dict</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># there should be no duplicate names</span>
+            <span class="k">if</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;State name [</span><span class="si">{</span><span class="n">state_name</span><span class="si">}</span><span class="s2">] is not unique in the loaded workflow. This is NOT allowed.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">state_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">state_dict</span>
+            <span class="k">if</span> <span class="s2">&quot;Start&quot;</span> <span class="ow">in</span> <span class="n">state_dict</span> <span class="ow">and</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Start&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">start_state_name</span> <span class="o">=</span> <span class="n">state_name</span>
+
+            <span class="k">if</span> <span class="s2">&quot;End&quot;</span> <span class="ow">in</span> <span class="n">state_dict</span> <span class="ow">and</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;End&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">end_state_name</span> <span class="o">=</span> <span class="n">state_name</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Choice&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;Next&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">state_dict</span><span class="p">):</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Non-Choice state [</span><span class="si">{</span><span class="n">state_name</span><span class="si">}</span><span class="s2"> is not an End state and it has no Next state. This is NOT allowed.&quot;</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WorkflowEngine.run_state">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.WorkflowEngine.run_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run a specific states by state_name. This is not a external facing method and is only supposed to be called by run_workflow.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            state_name (str): name of the state to execute.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[None, str]: name of the next state to run or None if there is no next state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">state_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">state_name</span><span class="p">]</span>
+        <span class="n">state_type</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span>
+        <span class="n">next_state</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">state_type</span> <span class="o">==</span> <span class="s2">&quot;MethodCall&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span> <span class="o">=</span> <span class="n">MethodCall</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span><span class="o">.</span><span class="n">get_payloads</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s2">&quot;Next&quot;</span> <span class="ow">in</span> <span class="n">state_dict</span><span class="p">:</span>
+                <span class="n">next_state</span> <span class="o">=</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Next&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">state_type</span> <span class="o">==</span> <span class="s2">&quot;Choice&quot;</span><span class="p">:</span>
+            <span class="n">next_state</span> <span class="o">=</span> <span class="n">Choice</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span><span class="p">)</span><span class="o">.</span><span class="n">check_choices</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">state_name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end_state_name</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">next_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">next_state</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="WorkflowEngine.run_workflow">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.WorkflowEngine.run_workflow">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_states</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Workflow runner with a maximum steps allowed setting.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            max_states (int, optional): Maximum number of states to run allowed. Defaults to 1000.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">timenow</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Start running workflow at </span><span class="si">{</span><span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Importing packages specified in workflow -- [</span><span class="si">{</span><span class="n">strnow</span><span class="p">()</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">import_package</span><span class="p">()</span>
+        <span class="n">current_state_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_state_name</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Start running workflow with start state [</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start_state_name</span><span class="si">}</span><span class="s2">] with maximum allowable number of states being [</span><span class="si">{</span><span class="n">max_states</span><span class="si">}</span><span class="s2">] -- [</span><span class="si">{</span><span class="n">strnow</span><span class="p">()</span><span class="si">}</span><span class="s2">]&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">state_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">touch_limit</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">while</span> <span class="n">current_state_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">state_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Running state </span><span class="si">{</span><span class="n">state_count</span><span class="si">}</span><span class="s2">: [</span><span class="si">{</span><span class="n">current_state_name</span><span class="si">}</span><span class="s2">] ...&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot; &quot;</span>
+                <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">running_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_state_name</span><span class="p">)</span>
+            <span class="n">current_state_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_state</span><span class="p">(</span><span class="n">current_state_name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done. -- [</span><span class="si">{</span><span class="n">strnow</span><span class="p">()</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">state_count</span> <span class="o">&gt;</span> <span class="n">max_states</span><span class="p">:</span>
+                <span class="n">e_msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s2">&quot;Reaching maximum allowable number of states. Workflow terminated.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">e_msg</span><span class="p">)</span>
+                <span class="n">touch_limit</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;Reaching maximum allowable number of states. Workflow terminated.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">timenow</span><span class="p">()</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Workflow done at </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">, a total of </span><span class="si">{</span><span class="n">state_count</span><span class="si">}</span><span class="s2"> states were executed in </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="WorkflowEngine.summarize_workflow_run">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.WorkflowEngine.summarize_workflow_run">[docs]</a>
+    <span class="k">def</span> <span class="nf">summarize_workflow_run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Summarize the states running sequence after a workflow is executed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: a summary dictionary with two keys: `total_states_executed` and `state_running_sequence`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;A total of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">running_sequence</span><span class="p">)</span><span class="si">}</span><span class="s2"> states were executed with the following sequence:&quot;</span>
+        <span class="p">)</span>
+        <span class="n">step_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_sequence</span><span class="p">:</span>
+            <span class="n">step_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;State </span><span class="si">{</span><span class="n">step_count</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;total_states_executed&quot;</span><span class="p">:</span> <span class="n">step_count</span><span class="p">,</span>
+            <span class="s2">&quot;state_running_sequence&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">running_sequence</span><span class="p">,</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Workflow">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Workflow">[docs]</a>
+<span class="k">class</span> <span class="nc">Workflow</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiate a Workflow class object and load specified workflow as a `dict` in `self.workflow`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            workflow (Union[str, dict], optional): str path to the workflow definition json file or dict of the actual workflow definition. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workflow_engine</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">workflow</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Workflow is not provided at time of initialization. self.workflow_engine is set to None. Workflow can be added later by calling self.load_workflow(workflow)&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_workflow</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Workflow.load_workflow">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Workflow.load_workflow">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">workflow</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load workflow definition from a json file or dict to `self.workflow`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            workflow (Union[str, dict]): str path to the workflow definition json file or dict of the actual workflow definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_engine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;self.workflow_engine is not None, load_workflow will overwrite it with a new workflow.&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workflow_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_workflow_engine</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Workflow.create_workflow_engine">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Workflow.create_workflow_engine">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_workflow_engine</span><span class="p">(</span>
+        <span class="n">workflow</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">WorkflowEngine</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiate a WorkflowEngine object with specified workflow definition.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            workflow (Union[str, dict]): str path to the workflow definition json file or dict of the actual workflow definition. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[None, WorkflowEngine]: Instantiated WorkflowEngine object if provided workflow is valid; None otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">workflow</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">workflow</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">workflow</span><span class="p">,</span> <span class="nb">dict</span>
+        <span class="p">):</span>
+            <span class="n">workflow_engine</span> <span class="o">=</span> <span class="n">WorkflowEngine</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;workflow needs to be either a str path to the workflow json file or a dict of the workflow definition.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">workflow_engine</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">workflow_engine</span></div>
+
+
+<div class="viewcode-block" id="Workflow.list_existing_workflows">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Workflow.list_existing_workflows">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">list_existing_workflows</span><span class="p">(</span><span class="n">workflow_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List existing workflows (defined as json files) under a specific directory path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            workflow_dir (str, optional): path to the directory containing workflow definitions (including sub directories). By default, point to the path of the example folder. @JXL TODO example folder to be specified</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[dict, None]: `dict` with keys being workflow names and values being a `Dict` with the following keys:</span>
+<span class="sd">                - `workflow_json_path`: path to the file of the workflow</span>
+<span class="sd">                - `workflow`: `Dict` of the workflow, loaded from the workflow json definition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">workflow_dir</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">workflow_dir</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">workflow_dir</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;/&quot;</span><span class="p">:</span>
+                <span class="n">workflow_dir</span> <span class="o">=</span> <span class="n">workflow_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+            <span class="n">found_files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">workflow_dir</span><span class="si">}</span><span class="s2">**/*.json&quot;</span><span class="p">,</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;workflow_dir needs to point to a valid path containing potential workflow json files.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">num_found_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">found_files</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_found_files</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There is no json file in </span><span class="si">{</span><span class="n">workflow_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">workflows</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">json_file_path</span> <span class="ow">in</span> <span class="n">found_files</span><span class="p">:</span>
+            <span class="n">temp_wfe</span> <span class="o">=</span> <span class="n">WorkflowEngine</span><span class="p">(</span><span class="n">json_file_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">temp_wfe</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
+                <span class="n">workflows</span><span class="p">[</span><span class="n">temp_wfe</span><span class="o">.</span><span class="n">workflow_dict</span><span class="p">[</span><span class="s2">&quot;workflow_name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;workflow_json_path&quot;</span><span class="p">:</span> <span class="n">json_file_path</span><span class="p">,</span>
+                    <span class="s2">&quot;workflow&quot;</span><span class="p">:</span> <span class="n">temp_wfe</span><span class="o">.</span><span class="n">workflow_dict</span><span class="p">,</span>
+                <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Workflow.validate_workflow_definition">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Workflow.validate_workflow_definition">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">validate_workflow_definition</span><span class="p">(</span><span class="n">workflow</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate a workflow definition.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            workflow (Union[str, dict]): If str, this is assumed to be the path to the workflow definition json file; If dict, this is assumed to be loaded from the workflow json definition.</span>
+<span class="sd">            verbose (bool, optional): Verbose output for validate. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: `dict` with the following keys:</span>
+<span class="sd">                - `workflow_validity`: bool flag of the validity of the workflow definition</span>
+<span class="sd">                - `detail`: detailed info about the validity check.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">temp_workflow_engine</span> <span class="o">=</span> <span class="n">Workflow</span><span class="o">.</span><span class="n">create_workflow_engine</span><span class="p">(</span><span class="n">workflow</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">temp_workflow_engine</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Workflow.validate">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Workflow.validate">[docs]</a>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate `self.workflow`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            verbose (bool, optional): Verbose output for validate. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: `dict` with the following keys:</span>
+<span class="sd">                - `workflow_validity`: bool flag of the validity of the workflow definition</span>
+<span class="sd">                - `detail`: detailed info about the validity check.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_engine</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Workflow.save">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Workflow.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the workflow as a json file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            json_path (str, optional): path to the file to be saved. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">workflow_engine</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;self.workflow_engine is None, there is nothing to save.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">workflow_engine</span><span class="o">.</span><span class="n">save_workflow</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;json_path needs to be str&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Workflow.run_workflow">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Workflow.run_workflow">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the workflow defined in self.workflow</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            verbose (bool, optional): bool. Wether to output detailed information. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: Whether the run is successful or not.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">workflow_engine</span><span class="o">.</span><span class="n">run_workflow</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MethodCall">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.MethodCall">[docs]</a>
+<span class="k">class</span> <span class="nc">MethodCall</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The MethodCall State class. This class also covers the `Embedded MethodCall` state type.</span>
+<span class="sd">    A typical use case of execute a MethodCall state would be: `self.payloads = MethodCall(state_dict, self.payloads).run().get_payloads()`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">,</span> <span class="n">payloads</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span> <span class="o">=</span> <span class="n">payloads</span>  <span class="c1"># self.payloads takes in the input payloads, add key-value pairs contents based on state_dict[&#39;Payloads&#39;], and will be available by self.get_payloads()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span> <span class="o">=</span> <span class="n">state_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dollar</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the return of the current method call will be stored in this variable.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_parameters</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MethodCall.build_parameters">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.MethodCall.build_parameters">[docs]</a>
+    <span class="k">def</span> <span class="nf">build_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Parameters&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Parameters&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_param_value</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Parameters&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># some python built-in methods only accept positional arguments</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">build_param_value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Parameters&quot;</span><span class="p">]</span>
+            <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MethodCall.build_param_value">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.MethodCall.build_param_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">build_param_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="c1"># if parameter value is a dict, then it needs to be an embedded method call style</span>
+            <span class="n">new_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedded_call</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">new_v</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">v</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># special string treatment</span>
+            <span class="n">Payloads</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span>
+            <span class="p">)</span>  <span class="c1"># to be used by &quot;...Payloads[&#39;xxx&#39;]... in parameter value&quot; TODO:JXL to be tested.</span>
+            <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Payloads&quot;</span><span class="p">:</span>
+                <span class="c1"># only in this case we eval</span>
+                <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">v</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;+x &quot;</span><span class="p">:</span>  <span class="c1"># unique prefix for evaluate the rest of the string</span>
+                <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># in all other string param value, we consider it is a string. This is for clarity and security. More complicated parameter should use embedded methodcall</span>
+                <span class="k">return</span> <span class="n">v</span></div>
+
+
+<div class="viewcode-block" id="MethodCall.run">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.MethodCall.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Payloads</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span>
+        <span class="p">)</span>  <span class="c1"># to be used by &quot;...Payloads[&#39;xxx&#39;]... in self.state_dict[&quot;MethodCall&quot;]&quot;</span>
+        <span class="n">method_call</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;MethodCall&quot;</span><span class="p">])</span>
+        <span class="c1"># TODO JXL: handle non-method calls, maybe just (self.dollar = method_call)? Need tests</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dollar</span> <span class="o">=</span> <span class="n">method_call</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dollar</span> <span class="o">=</span> <span class="n">method_call</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="MethodCall.get_method_return">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.MethodCall.get_method_return">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_method_return</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dollar</span></div>
+
+
+<div class="viewcode-block" id="MethodCall.get_payloads">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.MethodCall.get_payloads">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_payloads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Payloads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span>
+        <span class="k">if</span> <span class="s2">&quot;Payloads&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Payloads&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="c1"># only eval if v is string</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;self.dollar&quot;</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span></div>
+
+
+<div class="viewcode-block" id="MethodCall.embedded_call">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.MethodCall.embedded_call">[docs]</a>
+    <span class="k">def</span> <span class="nf">embedded_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">embedded_case_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">embedded_case_dict</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Embedded MethodCall&quot;</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;If parameter value is a dict, it needs to be of type &#39;Embedded MethodCall&#39;. Problematic state definition: </span><span class="si">{</span><span class="n">embedded_case_dict</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">MethodCall</span><span class="p">(</span><span class="n">embedded_case_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span><span class="o">.</span><span class="n">get_method_return</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Choice">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Choice">[docs]</a>
+<span class="k">class</span> <span class="nc">Choice</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The Choice state that check conditions to decide next step.</span>
+<span class="sd">    A typical use case of execute a Choice state would be: `next_state = Choice(state_dict, self.payloads).check_choices()`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_dict</span><span class="p">,</span> <span class="n">payloads</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span> <span class="o">=</span> <span class="n">payloads</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span> <span class="o">=</span> <span class="n">state_dict</span>
+
+<div class="viewcode-block" id="Choice.check_choices">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Choice.check_choices">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_choices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Choices&quot;</span><span class="p">]:</span>
+            <span class="n">choice_return</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_choice</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">choice_return</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">choice_return</span>
+            <span class="c1"># if current choice does not give a next step, then check the next one</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># no valid next step has been identified. check if there is a default state, if not, log error</span>
+        <span class="k">if</span> <span class="s2">&quot;Default&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">&quot;Default&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Among all choices, no valid next step identified. Abort!&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Choice.check_choice">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Choice.check_choice">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choice</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">choice</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;choice has to be a dict&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s2">&quot;Value&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">:</span>
+            <span class="c1"># when &#39;Value&#39; is not in choice, a logical expression key is expected</span>
+            <span class="c1"># check only one logic expression in the key</span>
+            <span class="n">eligible_logic</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ALL&quot;</span><span class="p">,</span> <span class="s2">&quot;ANY&quot;</span><span class="p">,</span> <span class="s2">&quot;NONE&quot;</span><span class="p">]</span>
+            <span class="n">keycheck_flag</span> <span class="o">=</span> <span class="p">[(</span><span class="n">ek</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">)</span> <span class="k">for</span> <span class="n">ek</span> <span class="ow">in</span> <span class="n">eligible_logic</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">keycheck_flag</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s2">&quot;For logical expression choices state, there needs to be exactly one key of either &#39;ALL&#39;, or &#39;ANY&#39;, or &#39;NONE&#39;.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="s2">&quot;ALL&quot;</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">:</span>
+                <span class="n">flag_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_choice_value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;AND&quot;</span><span class="p">]]</span>
+                <span class="n">choice_value</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">flag_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;NONE&quot;</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">:</span>
+                <span class="n">flag_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_choice_value</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;NONE&quot;</span><span class="p">]]</span>
+                <span class="n">choice_value</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">flag_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;ANY&quot;</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">:</span>
+                <span class="n">choice_value</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">for</span> <span class="n">subchoice</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;ANY&quot;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_choice_value</span><span class="p">(</span><span class="n">subchoice</span><span class="p">):</span>
+                        <span class="n">choice_value</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># &#39;leaf&#39; choice implementation</span>
+            <span class="n">choice_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_choice_value</span><span class="p">(</span><span class="n">choice</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">choice_value</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;Next&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Choice.get_choice_value">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.Choice.get_choice_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_choice_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choice</span><span class="p">):</span>
+        <span class="n">Payloads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payloads</span>  <span class="c1"># to be used by &quot;...Payloads[&#39;xxx&#39;]... in choice dict&quot;</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">]</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;Equals&quot;</span><span class="p">]</span>
+
+        <span class="c1"># only eval when it is a string</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">left</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">choice</span><span class="p">[</span><span class="s2">&quot;Value&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">choice</span><span class="p">[</span><span class="s2">&quot;Equals&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">left</span> <span class="o">==</span> <span class="n">right</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../Code%20Documentation.html#api.workflow.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">WorkflowEngine</span><span class="p">(</span><span class="s2">&quot;./tests/api/data/testworkflow.json&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pacific Northwest National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Documentation &mdash; ConStrain 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Documentation for ConStrain" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B87333" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ConStrain
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Code Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data-processing-py">data_processing.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api.data_processing.DataProcessing"><code class="docutils literal notranslate"><span class="pre">DataProcessing</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.add_parameter"><code class="docutils literal notranslate"><span class="pre">DataProcessing.add_parameter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.apply_function"><code class="docutils literal notranslate"><span class="pre">DataProcessing.apply_function()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.check"><code class="docutils literal notranslate"><span class="pre">DataProcessing.check()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.concatenate"><code class="docutils literal notranslate"><span class="pre">DataProcessing.concatenate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.downsample"><code class="docutils literal notranslate"><span class="pre">DataProcessing.downsample()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.fill_missing_values"><code class="docutils literal notranslate"><span class="pre">DataProcessing.fill_missing_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.plot"><code class="docutils literal notranslate"><span class="pre">DataProcessing.plot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.slice"><code class="docutils literal notranslate"><span class="pre">DataProcessing.slice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.data_processing.DataProcessing.summary"><code class="docutils literal notranslate"><span class="pre">DataProcessing.summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#reporting-py">reporting.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api.reporting.Reporting"><code class="docutils literal notranslate"><span class="pre">Reporting</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.reporting.Reporting.report_multiple_cases"><code class="docutils literal notranslate"><span class="pre">Reporting.report_multiple_cases()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verification-case-py">verification_case.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api.verification_case.VerificationCase"><code class="docutils literal notranslate"><span class="pre">VerificationCase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.case_already_in_suite"><code class="docutils literal notranslate"><span class="pre">VerificationCase.case_already_in_suite()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.check_file"><code class="docutils literal notranslate"><span class="pre">VerificationCase.check_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.check_json_path_type"><code class="docutils literal notranslate"><span class="pre">VerificationCase.check_json_path_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.check_type"><code class="docutils literal notranslate"><span class="pre">VerificationCase.check_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.create_verification_case_suite_from_base_case"><code class="docutils literal notranslate"><span class="pre">VerificationCase.create_verification_case_suite_from_base_case()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.load_verification_cases_from_json"><code class="docutils literal notranslate"><span class="pre">VerificationCase.load_verification_cases_from_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.read_case"><code class="docutils literal notranslate"><span class="pre">VerificationCase.read_case()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.same_case"><code class="docutils literal notranslate"><span class="pre">VerificationCase.same_case()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.save_case_suite_to_json"><code class="docutils literal notranslate"><span class="pre">VerificationCase.save_case_suite_to_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.save_verification_cases_to_json"><code class="docutils literal notranslate"><span class="pre">VerificationCase.save_verification_cases_to_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.validate"><code class="docutils literal notranslate"><span class="pre">VerificationCase.validate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_case.VerificationCase.validate_verification_case_structure"><code class="docutils literal notranslate"><span class="pre">VerificationCase.validate_verification_case_structure()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verification-library-py">verification_library.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api.verification_library.VerificationLibrary"><code class="docutils literal notranslate"><span class="pre">VerificationLibrary</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_library.VerificationLibrary.get_applicable_library_items_by_datapoints"><code class="docutils literal notranslate"><span class="pre">VerificationLibrary.get_applicable_library_items_by_datapoints()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_library.VerificationLibrary.get_library_item"><code class="docutils literal notranslate"><span class="pre">VerificationLibrary.get_library_item()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_library.VerificationLibrary.get_library_items"><code class="docutils literal notranslate"><span class="pre">VerificationLibrary.get_library_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_library.VerificationLibrary.get_required_datapoints_by_library_items"><code class="docutils literal notranslate"><span class="pre">VerificationLibrary.get_required_datapoints_by_library_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification_library.VerificationLibrary.validate_library"><code class="docutils literal notranslate"><span class="pre">VerificationLibrary.validate_library()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verification-py">verification.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api.verification.Verification"><code class="docutils literal notranslate"><span class="pre">Verification</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification.Verification.configure"><code class="docutils literal notranslate"><span class="pre">Verification.configure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification.Verification.run"><code class="docutils literal notranslate"><span class="pre">Verification.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.verification.Verification.run_single_verification"><code class="docutils literal notranslate"><span class="pre">Verification.run_single_verification()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#workflow-py">workflow.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api.workflow.Choice"><code class="docutils literal notranslate"><span class="pre">Choice</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Choice.check_choice"><code class="docutils literal notranslate"><span class="pre">Choice.check_choice()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Choice.check_choices"><code class="docutils literal notranslate"><span class="pre">Choice.check_choices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Choice.get_choice_value"><code class="docutils literal notranslate"><span class="pre">Choice.get_choice_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#api.workflow.MethodCall"><code class="docutils literal notranslate"><span class="pre">MethodCall</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.MethodCall.build_param_value"><code class="docutils literal notranslate"><span class="pre">MethodCall.build_param_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.MethodCall.build_parameters"><code class="docutils literal notranslate"><span class="pre">MethodCall.build_parameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.MethodCall.embedded_call"><code class="docutils literal notranslate"><span class="pre">MethodCall.embedded_call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.MethodCall.get_method_return"><code class="docutils literal notranslate"><span class="pre">MethodCall.get_method_return()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.MethodCall.get_payloads"><code class="docutils literal notranslate"><span class="pre">MethodCall.get_payloads()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.MethodCall.run"><code class="docutils literal notranslate"><span class="pre">MethodCall.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#api.workflow.Workflow"><code class="docutils literal notranslate"><span class="pre">Workflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Workflow.create_workflow_engine"><code class="docutils literal notranslate"><span class="pre">Workflow.create_workflow_engine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Workflow.list_existing_workflows"><code class="docutils literal notranslate"><span class="pre">Workflow.list_existing_workflows()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Workflow.load_workflow"><code class="docutils literal notranslate"><span class="pre">Workflow.load_workflow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Workflow.run_workflow"><code class="docutils literal notranslate"><span class="pre">Workflow.run_workflow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Workflow.save"><code class="docutils literal notranslate"><span class="pre">Workflow.save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Workflow.validate"><code class="docutils literal notranslate"><span class="pre">Workflow.validate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.Workflow.validate_workflow_definition"><code class="docutils literal notranslate"><span class="pre">Workflow.validate_workflow_definition()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#api.workflow.WorkflowEngine"><code class="docutils literal notranslate"><span class="pre">WorkflowEngine</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.WorkflowEngine.import_package"><code class="docutils literal notranslate"><span class="pre">WorkflowEngine.import_package()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.WorkflowEngine.load_states"><code class="docutils literal notranslate"><span class="pre">WorkflowEngine.load_states()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.WorkflowEngine.load_workflow_json"><code class="docutils literal notranslate"><span class="pre">WorkflowEngine.load_workflow_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.WorkflowEngine.run_state"><code class="docutils literal notranslate"><span class="pre">WorkflowEngine.run_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.WorkflowEngine.run_workflow"><code class="docutils literal notranslate"><span class="pre">WorkflowEngine.run_workflow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.WorkflowEngine.summarize_workflow_run"><code class="docutils literal notranslate"><span class="pre">WorkflowEngine.summarize_workflow_run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api.workflow.WorkflowEngine.validate"><code class="docutils literal notranslate"><span class="pre">WorkflowEngine.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#api.workflow.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api.workflow.strnow"><code class="docutils literal notranslate"><span class="pre">strnow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api.workflow.timenow"><code class="docutils literal notranslate"><span class="pre">timenow()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B87333" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ConStrain</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Code Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Code Documentation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-api.data_processing">
+<span id="code-documentation"></span><h1>Code Documentation<a class="headerlink" href="#module-api.data_processing" title="Link to this heading"></a></h1>
+<section id="data-processing-py">
+<h2>data_processing.py<a class="headerlink" href="#data-processing-py" title="Link to this heading"></a></h2>
+<p>Data Processing API</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.data_processing.</span></span><span class="sig-name descname"><span class="pre">DataProcessing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp_column_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.add_parameter">
+<span class="sig-name descname"><span class="pre">add_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.add_parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.add_parameter" title="Link to this definition"></a></dt>
+<dd><p>Add a parameter to <cite>data</cite>. The parameter will be added as a constant value for all index of <cite>data</cite>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>name (str): Name of the parameter
+value (float): Value of the parameter.
+inplace (bool, optional): Modify the dataset directly. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: Modified dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.apply_function">
+<span class="sig-name descname"><span class="pre">apply_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_variable_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function_to_apply</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.apply_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.apply_function" title="Link to this definition"></a></dt>
+<dd><p>Apply an aggregation function to a list of variables from the dataset.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>variable_names (str): List of variables used as input to the function. All elements in variable_names need to be in self.data.columns
+new_variable_name (str): Name of the new variable containing the result of the function for each time stamp.
+function_to_apply (str): Name of the function to apply. Choices are: <cite>sum</cite>, <cite>min</cite>, <cite>max`or `average</cite> (or ‘mean’).
+inplace (bool, optional): Modify the dataset directly. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: Modified dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.check" title="Link to this definition"></a></dt>
+<dd><p>Perform a sanity check on the data.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Dict: Dictionary showing the number of missing values for each variable as well as the outliers.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.concatenate">
+<span class="sig-name descname"><span class="pre">concatenate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datasets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.concatenate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.concatenate" title="Link to this definition"></a></dt>
+<dd><p>Concatenate datasets.
+Duplicated columns (for horizontal concatenation) or rows (for vertical concatenation) are kept.
+Column names (for vertical concatenation) or indexes (for horizontal concatenation) need to match exactly.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>datasets (list): List of datasets (pd.DataFrame) to concatenate with <cite>data</cite>.
+axis (int): 1 or 0. 1 performs a vertical concatenation and 0 performs a horizontal concatenation.
+inplace (bool, optional): Modify the dataset directly. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: Modified dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.downsample">
+<span class="sig-name descname"><span class="pre">downsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frequency_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_periods</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.downsample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.downsample" title="Link to this definition"></a></dt>
+<dd><p>Downsample data</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>frequency_type (str): Downsampling frequency. Either ‘day’, ‘hour’, ‘minute’, or ‘second’.
+number_of_periods (int): Number of frequency used for downsampling. For instance, use 1 and a frequency_type of ‘hour’ to downsample the data to every hour.
+sampling_function (Union[dict, str], optional): Function to apply during downsampling, either ‘mean’ or ‘sum’ or a dictionary of key value pairs where the keys correspond to all the variables in data and value are either ‘mean’ or sum’. By default, using mean to downsample.
+inplace (bool, optional): Modify the dataset directly. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: Modified dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.fill_missing_values">
+<span class="sig-name descname"><span class="pre">fill_missing_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.fill_missing_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.fill_missing_values" title="Link to this definition"></a></dt>
+<dd><p>Fill missing values (NaN) in <cite>data</cite>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>method (str): Method to use to fill the missing values: ‘linear’ (treat values as equally spaced) or ‘pad’ (use existing values).
+variable_names (list, optional): List of variable names that need missing values to be filled. By default, fill all missing data in self.data
+inplace (bool, optional): Modify the dataset directly. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: Modified dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Axes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.plot" title="Link to this definition"></a></dt>
+<dd><p>Create plots of timesteries data, or scatter plot between two variables</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>variable_names (list): List of variables to plot. The variables must be in the data.
+kind (str): Type of chart to plot, either’timeseries’, or ‘scatter’.
+- If ‘timeseries’ is used, all variable names provided in <cite>variable_names</cite> will be plotted against the index timestamp from <cite>data</cite>
+- If ‘scatter’ is used, the first variable provided in the list will be used as the x-axis, the other will be on the y-axis</p>
+</dd>
+<dt>Returns:</dt><dd><p>matplotlib.axes.Axes: Matplotlib axes object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.slice">
+<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.slice" title="Link to this definition"></a></dt>
+<dd><p>Discard any data before <cite>start_time</cite> and after <cite>end_time</cite>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>start_time (datetime): Python datetime object used as the slice start date of the data.
+end_time (datetime): Python datetime object used as the slice end date of the data.
+inplace (bool, optional): Modify the dataset directly. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: Modified dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.data_processing.DataProcessing.summary">
+<span class="sig-name descname"><span class="pre">summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/api/data_processing.html#DataProcessing.summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.data_processing.DataProcessing.summary" title="Link to this definition"></a></dt>
+<dd><p>Provide a summary of the dataset.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Dict: Dictionary containing the following information: 1) Number of data points, 2) Resolution, 3) For each variables: minimum, maximum, mean, standard deviation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="reporting-py">
+<span id="module-api.reporting"></span><h2>reporting.py<a class="headerlink" href="#reporting-py" title="Link to this heading"></a></h2>
+<p>Reporting API</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.reporting.Reporting">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.reporting.</span></span><span class="sig-name descname"><span class="pre">Reporting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verification_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_md_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'markdown'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/reporting.html#Reporting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.reporting.Reporting" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.reporting.Reporting.report_multiple_cases">
+<span class="sig-name descname"><span class="pre">report_multiple_cases</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/reporting.html#Reporting.report_multiple_cases"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.reporting.Reporting.report_multiple_cases" title="Link to this definition"></a></dt>
+<dd><p>Report/summarize multiple verification results.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>item_names (List): List of unique verification item names. If the <cite>item_names</cite> argument is empty, all the verification results in the <cite>verification_json</cite> argument are reported.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="verification-case-py">
+<span id="module-api.verification_case"></span><h2>verification_case.py<a class="headerlink" href="#verification-case-py" title="Link to this heading"></a></h2>
+<p>Verification Case API</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.verification_case.</span></span><span class="sig-name descname"><span class="pre">VerificationCase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">json_case_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.case_already_in_suite">
+<span class="sig-name descname"><span class="pre">case_already_in_suite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">case</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignored_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['case_id_in_suite']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.case_already_in_suite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.case_already_in_suite" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.check_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.check_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.check_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.check_json_path_type">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_json_path_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.check_json_path_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.check_json_path_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.check_type">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.12)"><span class="pre">type</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.check_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.check_type" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.create_verification_case_suite_from_base_case">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_verification_case_suite_from_base_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_case</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_key_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_base_case</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.create_verification_case_suite_from_base_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.create_verification_case_suite_from_base_case" title="Link to this definition"></a></dt>
+<dd><p>Create slightly different multiple verification cases by changing keys and values as specified in <cite>update_key_value</cite>. if <cite>keep_base_case</cite> is set to True, the <cite>base_case</cite> is added to the first element in the returned list.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>base_case: Dict. base verification input information.
+update_key_value: Dict. the same format as the <cite>base_case</cite> arg, but the updating fields consist of a list of values to be populated with.
+keep_base_case: (optional) bool. whether to keep the base case in returned list of verification cases. Default to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List,  A list of Dict, each dict is a generated case from the base case.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.load_verification_cases_from_json">
+<span class="sig-name descname"><span class="pre">load_verification_cases_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_case_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.load_verification_cases_from_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.load_verification_cases_from_json" title="Link to this definition"></a></dt>
+<dd><p>Add verification cases from specified json file into self.case_suite. Cases that have already been loaded are ignored.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_case_path: str, path to the json file containing fully defined verification cases.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List, unique ids of verification cases loaded in self.case_suite</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.read_case">
+<span class="sig-name descname"><span class="pre">read_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.read_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.read_case" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.same_case">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">same_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">case_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">case_b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignored_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['case_id_in_suite']</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.same_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.same_case" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.save_case_suite_to_json">
+<span class="sig-name descname"><span class="pre">save_case_suite_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">case_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.save_case_suite_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.save_case_suite_to_json" title="Link to this definition"></a></dt>
+<dd><p>Save verification cases to a dedicated file. If the <cite>case_ids</cite> argument is empty, all the cases in <cite>self.case_suite</cite> is saved. If <cite>case_ids</cite> includes specific cases’ hash, only the hashes in the list are saved.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_path: str. path to the json file to save the cases.
+case_ids: (optional) List. Unique ids of verification cases to save. By default, save all cases in <cite>self.case_suite</cite>. Default to an empty list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.save_verification_cases_to_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_verification_cases_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><span class="pre">list</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.save_verification_cases_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.save_verification_cases_to_json" title="Link to this definition"></a></dt>
+<dd><p>Save verification cases to a dedicated file. The cases list consists of verification case dicts.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_path: str. json file path to save the cases.
+cases: List. List of complete verification cases Dictionary to save.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate all verification cases in self.case_suite with validation logic in VerificationCase.validate_verification_case_structure()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_case.VerificationCase.validate_verification_case_structure">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_verification_case_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">case</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/api/verification_case.html#VerificationCase.validate_verification_case_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_case.VerificationCase.validate_verification_case_structure" title="Link to this definition"></a></dt>
+<dd><p>Validate verification case structure (e.g., check whether <cite>run_simulation</cite>, <cite>simulation_IO</cite>, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>case: dict. case information that will be validated.
+verbose: bool. whether to output verbose information. Default to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Bool, indicating whether the case structure is valid or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="verification-library-py">
+<span id="module-api.verification_library"></span><h2>verification_library.py<a class="headerlink" href="#verification-library-py" title="Link to this heading"></a></h2>
+<p>Verification Library API</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.verification_library.VerificationLibrary">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.verification_library.</span></span><span class="sig-name descname"><span class="pre">VerificationLibrary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lib_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/verification_library.html#VerificationLibrary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_library.VerificationLibrary" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_library.VerificationLibrary.get_applicable_library_items_by_datapoints">
+<span class="sig-name descname"><span class="pre">get_applicable_library_items_by_datapoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datapoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/api/verification_library.html#VerificationLibrary.get_applicable_library_items_by_datapoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_library.VerificationLibrary.get_applicable_library_items_by_datapoints" title="Link to this definition"></a></dt>
+<dd><p>Based on provided datapoints lists, identify potentially applicable library items from all loaded items. Use this function with caution as it 1) requires aligned data points naming across all library items; 2) does not check the topological relationships between datapoints.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>datapoints: list of str datapoints names.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Dict with keys being the library item names and values being the required datapoints for the corresponding keys.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_library.VerificationLibrary.get_library_item">
+<span class="sig-name descname"><span class="pre">get_library_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/api/verification_library.html#VerificationLibrary.get_library_item"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_library.VerificationLibrary.get_library_item" title="Link to this definition"></a></dt>
+<dd><p>Get the json definition and meta information of a specific library item.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>item_name (str): Verification item name to get.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Dict: Library item information with four specific keys:</dt><dd><ul class="simple">
+<li><p><cite>library_item_name</cite>: unique str name of the library item.</p></li>
+<li><p><cite>library_json</cite>: library item json definition in the library json file.</p></li>
+<li><p><cite>library_json_path</cite>: path of the library json file that contains this library item.</p></li>
+<li><p><cite>library_python_path</cite>: path of the python file that contains the python implementation of this library item.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_library.VerificationLibrary.get_library_items">
+<span class="sig-name descname"><span class="pre">get_library_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification_library.html#VerificationLibrary.get_library_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_library.VerificationLibrary.get_library_items" title="Link to this definition"></a></dt>
+<dd><p>Get the json definition and meta information of a list of specific library items.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>items:  list of str, default []. Library items to get. By default, get all library items loaded at instantiation.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>list of <cite>Dict</cite> with four specific keys:</dt><dd><ul class="simple">
+<li><p><cite>library_item_name</cite>: unique str name of the library item.</p></li>
+<li><p><cite>library_json</cite>: library item json definition in the library json file.</p></li>
+<li><p><cite>library_json_path</cite>: path of the library json file that contains this library item.</p></li>
+<li><p><cite>library_python_path</cite>: path of the python file that contains the python implementation of this library item.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_library.VerificationLibrary.get_required_datapoints_by_library_items">
+<span class="sig-name descname"><span class="pre">get_required_datapoints_by_library_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datapoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification_library.html#VerificationLibrary.get_required_datapoints_by_library_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_library.VerificationLibrary.get_required_datapoints_by_library_items" title="Link to this definition"></a></dt>
+<dd><p>Summarize datapoints that need to be used to support specified library items. Use this function with caution as it 1) requires aligned data points naming across all library items; 2) does not check the topological relationships between datapoints.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>items: list of str, default []. Library items to summarize datapoints from. By default, summarize all library items loaded at instantiation.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Dict with keys being the datapoint name and values being a sub Dict with the following keys:</dt><dd><ul class="simple">
+<li><p>number_of_items_using_this_datapoint: int, number of library items that use this datapoint.</p></li>
+<li><p>library_items_list: List, of library item names that use this datapoint.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification_library.VerificationLibrary.validate_library">
+<span class="sig-name descname"><span class="pre">validate_library</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="_modules/api/verification_library.html#VerificationLibrary.validate_library"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification_library.VerificationLibrary.validate_library" title="Link to this definition"></a></dt>
+<dd><p>Check the validity of library items definition. This validity check includes checking the completeness of json specification (against library json schema) and Python verification class definition (against library class interface) and the match between the json and python implementation.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>items: list of str, default []. Library items to validate. <cite>items</cite> must be filled with valid verification item(s). If not, an error occurs.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Dict that contains validity information of library items.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="verification-py">
+<span id="module-api.verification"></span><h2>verification.py<a class="headerlink" href="#verification-py" title="Link to this heading"></a></h2>
+<p>Verification API</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.verification.Verification">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.verification.</span></span><span class="sig-name descname"><span class="pre">Verification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verifications</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#api.verification_case.VerificationCase" title="api.verification_case.VerificationCase"><span class="pre">VerificationCase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/verification.html#Verification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification.Verification" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification.Verification.configure">
+<span class="sig-name descname"><span class="pre">configure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lib_items_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_option</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><span class="pre">tuple</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(6.4,</span> <span class="pre">4.8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_threads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessed_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification.html#Verification.configure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification.Verification.configure" title="Link to this definition"></a></dt>
+<dd><p>Configure verification environment.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>output_path (str): Verification results output path.
+lib_items_path (str): Verification library path (include name of the file with extension).
+plot_option (str, optional): Type of plots to include. It should either be all-compact, all-expand, day-compact, or day-expand. It can also be None, which will plot all types. Default to None.
+fig_size (tuple, optional): Tuple of integers (length, height) describing the size of the figure to plot. Defaults to (6.4, 4.8).
+num_threads (int, optional): Number of threads to run verifications in parallel. Defaults to 1.
+preprocessed_data (pd.DataFrame, optional): Pre-processed data stored in the data frame. Default to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification.Verification.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification.html#Verification.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification.Verification.run" title="Link to this definition"></a></dt>
+<dd><p>Run all verification cases and generate json files containing results of all cases</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.verification.Verification.run_single_verification">
+<span class="sig-name descname"><span class="pre">run_single_verification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">case</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/verification.html#Verification.run_single_verification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.verification.Verification.run_single_verification" title="Link to this definition"></a></dt>
+<dd><p>Run a single verification and generate a json file containing markdown report string and other results info.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>case (dict): Verification case dictionary.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="workflow-py">
+<span id="module-api.workflow"></span><h2>workflow.py<a class="headerlink" href="#workflow-py" title="Link to this heading"></a></h2>
+<p>Workflow API</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.workflow.Choice">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.workflow.</span></span><span class="sig-name descname"><span class="pre">Choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payloads</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#Choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Choice" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>The Choice state that check conditions to decide next step.
+A typical use case of execute a Choice state would be: <cite>next_state = Choice(state_dict, self.payloads).check_choices()</cite></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Choice.check_choice">
+<span class="sig-name descname"><span class="pre">check_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choice</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#Choice.check_choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Choice.check_choice" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Choice.check_choices">
+<span class="sig-name descname"><span class="pre">check_choices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#Choice.check_choices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Choice.check_choices" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Choice.get_choice_value">
+<span class="sig-name descname"><span class="pre">get_choice_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choice</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#Choice.get_choice_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Choice.get_choice_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.workflow.MethodCall">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.workflow.</span></span><span class="sig-name descname"><span class="pre">MethodCall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payloads</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#MethodCall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.MethodCall" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>The MethodCall State class. This class also covers the <cite>Embedded MethodCall</cite> state type.
+A typical use case of execute a MethodCall state would be: <cite>self.payloads = MethodCall(state_dict, self.payloads).run().get_payloads()</cite></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.MethodCall.build_param_value">
+<span class="sig-name descname"><span class="pre">build_param_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#MethodCall.build_param_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.MethodCall.build_param_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.MethodCall.build_parameters">
+<span class="sig-name descname"><span class="pre">build_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#MethodCall.build_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.MethodCall.build_parameters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.MethodCall.embedded_call">
+<span class="sig-name descname"><span class="pre">embedded_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedded_case_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#MethodCall.embedded_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.MethodCall.embedded_call" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.MethodCall.get_method_return">
+<span class="sig-name descname"><span class="pre">get_method_return</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#MethodCall.get_method_return"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.MethodCall.get_method_return" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.MethodCall.get_payloads">
+<span class="sig-name descname"><span class="pre">get_payloads</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#MethodCall.get_payloads"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.MethodCall.get_payloads" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.MethodCall.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#MethodCall.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.MethodCall.run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.workflow.Workflow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.workflow.</span></span><span class="sig-name descname"><span class="pre">Workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#Workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Workflow" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Workflow.create_workflow_engine">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_workflow_engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#api.workflow.WorkflowEngine" title="api.workflow.WorkflowEngine"><span class="pre">WorkflowEngine</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#Workflow.create_workflow_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Workflow.create_workflow_engine" title="Link to this definition"></a></dt>
+<dd><p>Instantiate a WorkflowEngine object with specified workflow definition.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>workflow (Union[str, dict]): str path to the workflow definition json file or dict of the actual workflow definition. Defaults to None.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Union[None, WorkflowEngine]: Instantiated WorkflowEngine object if provided workflow is valid; None otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Workflow.list_existing_workflows">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_existing_workflows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#Workflow.list_existing_workflows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Workflow.list_existing_workflows" title="Link to this definition"></a></dt>
+<dd><p>List existing workflows (defined as json files) under a specific directory path.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>workflow_dir (str, optional): path to the directory containing workflow definitions (including sub directories). By default, point to the path of the example folder. &#64;JXL TODO example folder to be specified</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>Union[dict, None]: <cite>dict</cite> with keys being workflow names and values being a <cite>Dict</cite> with the following keys:</dt><dd><ul class="simple">
+<li><p><cite>workflow_json_path</cite>: path to the file of the workflow</p></li>
+<li><p><cite>workflow</cite>: <cite>Dict</cite> of the workflow, loaded from the workflow json definition</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Workflow.load_workflow">
+<span class="sig-name descname"><span class="pre">load_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#Workflow.load_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Workflow.load_workflow" title="Link to this definition"></a></dt>
+<dd><p>Load workflow definition from a json file or dict to <cite>self.workflow</cite>.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>workflow (Union[str, dict]): str path to the workflow definition json file or dict of the actual workflow definition.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Workflow.run_workflow">
+<span class="sig-name descname"><span class="pre">run_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#Workflow.run_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Workflow.run_workflow" title="Link to this definition"></a></dt>
+<dd><p>Execute the workflow defined in self.workflow</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>verbose (bool, optional): bool. Wether to output detailed information. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool: Whether the run is successful or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Workflow.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#Workflow.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Workflow.save" title="Link to this definition"></a></dt>
+<dd><p>Save the workflow as a json file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>json_path (str, optional): path to the file to be saved. Defaults to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Workflow.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#Workflow.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Workflow.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate <cite>self.workflow</cite></p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>verbose (bool, optional): Verbose output for validate. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>dict: <cite>dict</cite> with the following keys:</dt><dd><ul class="simple">
+<li><p><cite>workflow_validity</cite>: bool flag of the validity of the workflow definition</p></li>
+<li><p><cite>detail</cite>: detailed info about the validity check.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.Workflow.validate_workflow_definition">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_workflow_definition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#Workflow.validate_workflow_definition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.Workflow.validate_workflow_definition" title="Link to this definition"></a></dt>
+<dd><p>Validate a workflow definition.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>workflow (Union[str, dict]): If str, this is assumed to be the path to the workflow definition json file; If dict, this is assumed to be loaded from the workflow json definition.
+verbose (bool, optional): Verbose output for validate. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>dict: <cite>dict</cite> with the following keys:</dt><dd><ul class="simple">
+<li><p><cite>workflow_validity</cite>: bool flag of the validity of the workflow definition</p></li>
+<li><p><cite>detail</cite>: detailed info about the validity check.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="api.workflow.WorkflowEngine">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">api.workflow.</span></span><span class="sig-name descname"><span class="pre">WorkflowEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_workflow_now</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#WorkflowEngine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.WorkflowEngine" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.WorkflowEngine.import_package">
+<span class="sig-name descname"><span class="pre">import_package</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#WorkflowEngine.import_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.WorkflowEngine.import_package" title="Link to this definition"></a></dt>
+<dd><p>Import third party packages based on the “imports” element values of the workflow json.
+E.g.: {
+…
+“imports”: [</p>
+<blockquote>
+<div><p>“numpy as np”,
+“pandas as pd”,
+“datetime”</p>
+</div></blockquote>
+<section id="id1">
+<h2>],<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>}</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.WorkflowEngine.load_states">
+<span class="sig-name descname"><span class="pre">load_states</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#WorkflowEngine.load_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.WorkflowEngine.load_states" title="Link to this definition"></a></dt>
+<dd><p>load states from the workflow definition with some sanity checks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.WorkflowEngine.load_workflow_json">
+<span class="sig-name descname"><span class="pre">load_workflow_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workflow_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#WorkflowEngine.load_workflow_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.WorkflowEngine.load_workflow_json" title="Link to this definition"></a></dt>
+<dd><p>Load workflow from a json workflow definition.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>workflow_path (str): path to the workflow json file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.WorkflowEngine.run_state">
+<span class="sig-name descname"><span class="pre">run_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#WorkflowEngine.run_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.WorkflowEngine.run_state" title="Link to this definition"></a></dt>
+<dd><p>Run a specific states by state_name. This is not a external facing method and is only supposed to be called by run_workflow.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>state_name (str): name of the state to execute.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Union[None, str]: name of the next state to run or None if there is no next state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.WorkflowEngine.run_workflow">
+<span class="sig-name descname"><span class="pre">run_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><span class="pre">None</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#WorkflowEngine.run_workflow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.WorkflowEngine.run_workflow" title="Link to this definition"></a></dt>
+<dd><p>Workflow runner with a maximum steps allowed setting.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>max_states (int, optional): Maximum number of states to run allowed. Defaults to 1000.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.WorkflowEngine.summarize_workflow_run">
+<span class="sig-name descname"><span class="pre">summarize_workflow_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#WorkflowEngine.summarize_workflow_run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.WorkflowEngine.summarize_workflow_run" title="Link to this definition"></a></dt>
+<dd><p>Summarize the states running sequence after a workflow is executed.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>dict: a summary dictionary with two keys: <cite>total_states_executed</cite> and <cite>state_running_sequence</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.workflow.WorkflowEngine.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/api/workflow.html#WorkflowEngine.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.WorkflowEngine.validate" title="Link to this definition"></a></dt>
+<dd><p>function to be implemented to check for high level validity of the workflow definition</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.workflow.main">
+<span class="sig-prename descclassname"><span class="pre">api.workflow.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.main" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.workflow.strnow">
+<span class="sig-prename descclassname"><span class="pre">api.workflow.</span></span><span class="sig-name descname"><span class="pre">strnow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#strnow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.strnow" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="api.workflow.timenow">
+<span class="sig-prename descclassname"><span class="pre">api.workflow.</span></span><span class="sig-name descname"><span class="pre">timenow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/workflow.html#timenow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.workflow.timenow" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Documentation for ConStrain" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pacific Northwest National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
