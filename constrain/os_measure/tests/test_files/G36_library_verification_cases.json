@@ -1,0 +1,88 @@
+{
+    "cases": [
+        {
+            "no": 1,
+            "run_simulation": false,
+            "simulation_IO": {
+				"idf": "modelica_dataset_set",
+				"idd": "./resources/Energy+V9_0_1.idd",
+				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "dev_settings": {
+                    "heating_output": "heating_output",
+                    "cooling_output": "cooling_output",
+                    "ra_p": "ra_p",
+                    "max_ra_p": "max_ra_p",
+                    "oa_p": "oa_p",
+                    "max_oa_p": "max_oa_p"
+                },
+                "parameters": {
+                    "ra_p_tol": 0.01,
+                    "oa_p_tol": 0.01
+                }
+            },
+            "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"
+        },
+        {
+            "no": 2,
+            "run_simulation": false,
+            "simulation_IO": {
+				"idf": "modelica_dataset_set",
+				"idd": "./resources/Energy+V9_0_1.idd",
+				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "dev_settings": {
+                    "heating_output": "heating_output",
+                    "cooling_output": "cooling_output",
+                    "ra_p": "ra_p",
+                    "max_ra_p": "max_ra_p",
+                    "oa_p": "oa_p",
+                    "min_oa_p": "min_oa_p",
+                    "max_oa_p": "max_oa_p",
+                    "economizer_high_limit_reached": "economizer_high_limit_reached"
+                },
+                "parameters": {
+                    "ra_p_tol": 0.01,
+                    "oa_p_tol": 0.01
+                }
+            },
+            "verification_class": "G36OutdoorAirDamperPositionForReliefDamperOrFan"
+        },
+        {
+            "no": 3,
+            "run_simulation": false,
+            "simulation_IO": {
+				"idf": "modelica_dataset_set",
+				"idd": "./resources/Energy+V9_0_1.idd",
+				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "dev_settings": {
+                    "operation_mode": "operation_mode",
+                    "oa_t": "oa_t",
+                    "t_max": "t_max",
+                    "sa_t_sp_ac": "sa_t_sp_ac",
+                    "oa_t_min": "oa_t_min",
+                    "oa_t_max": "oa_t_max",
+                    "min_clg_sa_t_sp": "min_clg_sa_t_sp",
+                    "max_clg_sa_t_sp": "max_clg_sa_t_sp"
+                },
+                "parameters": {
+                    "sa_sp_tol": 0.1
+                }
+            },
+            "verification_class": "G36SupplyAirTemperatureSetpoint"
+        }
+    ]
+}
