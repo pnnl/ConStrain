@@ -194,7 +194,6 @@ class Zoom(QGraphicsView):
                 if isinstance(item, CustomItem) and rect.intersects(
                     item.mapRectToScene(item.rect)
                 ):
-                    print(item.state["Title"])
                     selected_items.append(item)
                     item.setSelected(True)
 
