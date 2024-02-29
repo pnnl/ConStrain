@@ -130,7 +130,7 @@ class TestBrickCompliance(unittest.TestCase):
         # validate the instance against the brick schema
         brick_comp_obj = BrickCompliance(
             brick_schema_path="./resources/brick/Brick.ttl",
-            brick_instance_path="./resources/brick/test.ttl",
+            brick_instance_path="./resources/brick/brick_instance.ttl",
         )
         is_valid, results_msg = brick_comp_obj.validate_brick_instance()
 
