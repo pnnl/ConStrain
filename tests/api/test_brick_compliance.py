@@ -132,14 +132,12 @@ class TestBrickCompliance(unittest.TestCase):
             brick_schema_path="./resources/brick/Brick.ttl",
             brick_instance_path="./resources/brick/test.ttl",
         )
-        is_valid, results_graph, results_msg = brick_comp_obj.validate_brick_instance()
-        print(f"\n{results_graph}")
-        print(f"\n\n{results_msg}")
-        # TODO: brick instance isn't valid. Need to look into it
-        # self.assertEqual(
-        #     is_valid,
-        #     True,
-        # )
+        is_valid, results_msg = brick_comp_obj.validate_brick_instance()
+
+        self.assertEqual(
+            is_valid,
+            True,
+        )
 
     def test_get_applicable_verification_lib_items(self):
         brick_comp_obj = BrickCompliance(
