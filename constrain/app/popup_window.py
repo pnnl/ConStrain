@@ -21,7 +21,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QPixmap
 
-from .list_and_choice_popups import ListPopup, ChoicesPopup
+from constrain.app.list_and_choice_popups import ListPopup, ChoicesPopup
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
 dependencies_path = os.path.join(script_directory, "dependencies.json")
