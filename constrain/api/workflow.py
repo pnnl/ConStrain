@@ -47,6 +47,10 @@ class WorkflowEngine:
 
         self.load_states()
 
+        # change dir: change the working path to the "working_dir" value in workflow_dict
+        # Need test
+        print("Change the working path to ",self.workflow_dict['working_dir'])
+        os.chdir(self.workflow_dict['working_dir'])
         if run_workflow_now:
             self.run_workflow()
 
