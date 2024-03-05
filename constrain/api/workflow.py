@@ -47,6 +47,17 @@ class WorkflowEngine:
 
         self.load_states()
 
+        # change dir: change the working path to the "working_dir" value in workflow_dict
+        # Need test
+        
+
+        if (isinstance(self.workflow_dict['working_dir'], str) and os.path.exists(self.workflow_dict['working_dir'])) :
+            print("Change the working path to ",self.workflow_dict['working_dir'])
+            os.chdir(self.workflow_dict['working_dir'])
+        else:
+            logging.error(
+                "working directory is not valid or the specified workign directory does not exist.")
+
         if run_workflow_now:
             self.run_workflow()
 
