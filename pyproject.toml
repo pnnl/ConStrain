@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ConStrain"
-version = "0.3.1"
+version = "0.3.2"
 description = "ConStrain is a data-driven knowledge-integrated framework that automatically verifies that building system controls function as intended."
 authors = ["Lei, Xuechen <xuechen.lei@pnnl.gov>", "Chen, Yan <yan.chen@pnnl.gov>", "Lerond, Jeremy <jeremy.lerond@pnnl.gov>", "Jung, Yun Joon <yunjoon.jung@pnnl.gov>"]
 readme = "README.md"

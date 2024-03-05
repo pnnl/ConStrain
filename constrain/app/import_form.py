@@ -105,3 +105,14 @@ class ImportForm(QWidget):
             list: a list of the current imports
         """
         return self.imports
+
+    def contains_data(self):
+        """Check if import form contains any data"""
+        return bool(self.imports)
+
+    def clear(self):
+        """Clear import form"""
+        self.import_list.clear()
+        self.imports.clear()
+        self.import_input.clear()
+        self.update()
