@@ -1,5 +1,6 @@
 {
   "workflow_name": "G36 Demo workflow",
+  "working_dir": "/mnt/c/Users/slan572/repos/Constrain/",
   "meta": {
     "author": "ConStrain Team",
     "date": "06/29/2023",

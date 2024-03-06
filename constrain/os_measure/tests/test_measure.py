@@ -1,11 +1,8 @@
 import pytest
 import openstudio
 import pathlib
-import sys
 from ..measure import GenerateConStrainReport
 import logging
-
-LOGGER = logging.getLogger(__name__)
 
 
 class TestGenerateConStrainReport:
@@ -15,16 +12,7 @@ class TestGenerateConStrainReport:
         """
         # create an instance of the measure
         measure = GenerateConStrainReport()
-
-        # make an empty model
-        model = openstudio.model.Model()
-
-        # get arguments and test that they are expecting a failure
-        # because the model doesn't have a chiller
-        # Create dummy chiller object
-
-        # get arguments and test that they are what we are expecting
-        arguments = measure.arguments(model)
+        arguments = measure.arguments()
         assert arguments.size() == 1
         assert arguments[0].name() == "workflow_path"
 
@@ -40,17 +28,14 @@ class TestGenerateConStrainReport:
         runner = openstudio.measure.OSRunner(osw)
 
         model = openstudio.model.exampleModel()
-        sql_path = openstudio.path("eplusout.db")
-        sql_file = openstudio.SqlFile("eplusout.db")
-        model.setSqlFile(sql_file)
-        print(model.sqlFile().get().path())
-        # Create dummy chiller object
 
-        arguments = measure.arguments(model)
+        arguments = measure.arguments()
         argument_map = openstudio.measure.convertOSArgumentVectorToMap(arguments)
 
         args_dict = {}
-        args_dict["workflow_path"] = "test_files/G36_demo_workflow.json"
+        args_dict["workflow_path"] = (
+            "/mnt/c/Users/slan572/repos/Constrain/constrain/os_measure/tests/test_files/G36_demo_workflow.json"
+        )
 
         for arg in arguments:
             temp_arg_var = arg.clone()
@@ -61,7 +46,7 @@ class TestGenerateConStrainReport:
                 argument_map[arg.name()] = temp_arg_var
 
         # Run measure
-        measure.run(model, runner, argument_map)
+        measure.run(runner, argument_map)
         result = runner.result()
         assert result.value().valueName() == "Success"
 
