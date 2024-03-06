@@ -1,7 +1,7 @@
 import sys
 import unittest
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 from api import BrickCompliance
 
 
@@ -133,11 +133,11 @@ class TestBrickCompliance(unittest.TestCase):
             brick_instance_path="./resources/brick/brick_instance.ttl",
         )
         is_valid, results_msg = brick_comp_obj.validate_brick_instance()
-        # TODO: brick instance isn't valid. Need to look into it
-        # self.assertEqual(
-        #     is_valid,
-        #     True,
-        # )
+
+        self.assertEqual(
+            is_valid,
+            True,
+        )
 
     def test_get_applicable_verification_lib_items(self):
         brick_comp_obj = BrickCompliance(
