@@ -3,6 +3,9 @@ from constrain.api.workflow import Workflow
 import typing
 import csv
 import os
+import sys
+from contextlib import redirect_stdout
+from io import StringIO
 
 
 class GenerateConStrainReport(openstudio.measure.ReportingMeasure):
@@ -54,8 +57,15 @@ class GenerateConStrainReport(openstudio.measure.ReportingMeasure):
         workflow_path = runner.getStringArgumentValue("workflow_path", user_arguments)
 
         runner.registerInitialCondition("Init")
+
         workflow = Workflow(workflow_path)
-        workflow.run_workflow(verbose=True)
+        stdout_capture = StringIO()
+
+        with redirect_stdout(stdout_capture):
+            workflow.run_workflow(verbose=True)
+        stdout_content = stdout_capture.getvalue()
+
+        runner.registerInfo(stdout_content)
 
         runner.registerFinalCondition("Done.")
         return True

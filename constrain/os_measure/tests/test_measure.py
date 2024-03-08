@@ -27,8 +27,6 @@ class TestGenerateConStrainReport:
         osw = openstudio.openstudioutilitiesfiletypes.WorkflowJSON()
         runner = openstudio.measure.OSRunner(osw)
 
-        model = openstudio.model.exampleModel()
-
         arguments = measure.arguments()
         argument_map = openstudio.measure.convertOSArgumentVectorToMap(arguments)
 
@@ -49,12 +47,6 @@ class TestGenerateConStrainReport:
         measure.run(runner, argument_map)
         result = runner.result()
         assert result.value().valueName() == "Success"
-
-        # Save model
-        output_file_path = str(
-            pathlib.Path(__file__).parent.absolute() / "output" / "test_output.osm"
-        )
-        model.save(output_file_path, True)
 
 
 if __name__ == "__main__":
