@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (
     QGraphicsView,
     QGraphicsTextItem,
     QGraphicsRectItem,
+    QMenu,
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QRectF
 from PyQt6.QtGui import (
@@ -16,11 +17,14 @@ from PyQt6.QtGui import (
     QColor,
     QPen,
     QBrush,
+    QAction,
 )
 from constrain.app.popup_window import PopupWindow
 from constrain.app.advanced_popup import AdvancedPopup
 from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
+from constrain.app.utils import send_error
 import json
+from collections import Counter
 
 
 class Zoom(QGraphicsView):
@@ -71,6 +75,54 @@ class Zoom(QGraphicsView):
             event.accept()
         else:
             super().keyPressEvent(event)
+
+    def contextMenuEvent(self, event):
+        menu = QMenu(self)
+
+        # Check if there's an item under the mouse cursor
+        selected_states = [
+            item
+            for item in self.scene.items()
+            if item.isSelected() and isinstance(item, CustomItem)
+        ]
+        if selected_states:
+            delete_action = QAction("Delete", self)
+            delete_action.triggered.connect(lambda: self.delete_items(selected_states))
+            menu.addAction(delete_action)
+        else:
+            item = self.itemAt(event.pos())
+
+            if isinstance(item, CustomItem):
+                delete_action = QAction("Delete", self)
+                delete_action.triggered.connect(item.delete)
+                menu.addAction(delete_action)
+
+        menu.exec(event.globalPos())
+
+    def delete_items(self, item_list):
+        all_objects_in_use = Counter(self.scene.getObjectsinUse())
+        objects_used_in_items = Counter(
+            [
+                item_object
+                for item in item_list
+                for item_object in item.get_objects_used()
+            ]
+        )
+        objects_not_used_in_items = set(all_objects_in_use - objects_used_in_items)
+        objects_created_in_items = set()
+        for item in item_list:
+            objects_created_in_items |= set(item.get_objects_created())
+
+        intersection = objects_created_in_items & objects_not_used_in_items
+        if intersection:
+            error_msg = f"{", ".join(intersection)} being used by other state"
+            if len(intersection) > 1:
+                error_msg += "s"
+            send_error("Error deleting state", error_msg)
+            return
+
+        for item in item_list:
+            item.delete()
 
     def mouseDoubleClickEvent(self, event):
         super().mouseDoubleClickEvent(event)
@@ -142,7 +194,6 @@ class Zoom(QGraphicsView):
                 if isinstance(item, CustomItem) and rect.intersects(
                     item.mapRectToScene(item.rect)
                 ):
-                    print(item.state["Title"])
                     selected_items.append(item)
                     item.setSelected(True)
 
