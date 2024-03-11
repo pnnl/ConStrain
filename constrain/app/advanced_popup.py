@@ -9,6 +9,7 @@ from PyQt6.QtWidgets import (
     QMessageBox,
 )
 from PyQt6.QtGui import QFontMetricsF
+from constrain.app import utils
 
 
 class AdvancedPopup(QDialog):
@@ -97,20 +98,24 @@ class AdvancedPopup(QDialog):
             if state_type not in ["Choice", "MethodCall"]:
                 self.error = True
                 self.error_popup("Invalid type")
-            elif state_type == "Choice" and "Choices" not in state.keys():
-                self.error = True
-                self.error_popup("Choice type, but no Choices key")
+            elif state_type == "Choice":
+                if "Choices" not in state:
+                    self.error = True
+                    utils.send_error(
+                        "Error in State", "Choice type, but no Choices key"
+                    )
+                elif any(key in state for key in ("Start", "End")):
+                    self.error = True
+                    utils.send_error(
+                        "Error in State", "Start/End keys not allowed in a Choice type"
+                    )
+                else:
+                    self.close()
             else:
+                if all(key in state for key in ("Start", "End")):
+                    self.error = True
+                    utils.send_error(
+                        "Error in State",
+                        "Cannot have both Start and End keys in a state",
+                    )
                 self.close()
-
-    def error_popup(self, text):
-        """Executes an error popup with a given message.
-
-        Args:
-            text (str): The message to be displayed
-        """
-        error_msg = QMessageBox()
-        error_msg.setIcon(QMessageBox.Icon.Critical)
-        error_msg.setWindowTitle("Error in State")
-        error_msg.setText(text)
-        error_msg.exec()

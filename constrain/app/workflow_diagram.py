@@ -17,9 +17,10 @@ from PyQt6.QtGui import (
     QPen,
     QBrush,
 )
-from constrain.app.popup_window import PopupWindow
+from constrain.app.basic_popup import BasicPopup
 from constrain.app.advanced_popup import AdvancedPopup
 from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
+from constrain.app import utils
 import json
 
 
@@ -193,6 +194,8 @@ class WorkflowDiagram(QWidget):
         # last popup accessed
         self.popup = None
 
+        self.root = None
+
         # buttons
         add_buttons = QHBoxLayout()
         reformat_button_layout = QHBoxLayout()
@@ -200,7 +203,7 @@ class WorkflowDiagram(QWidget):
         basic_button = QPushButton("Add Basic")
         basic_button.setToolTip("Create a state using the basic popup")
         basic_button.setFixedSize(100, 23)
-        basic_button.clicked.connect(self.call_popup)
+        basic_button.clicked.connect(self.call_basic_popup)
         add_buttons.addWidget(basic_button)
 
         advanced_button = QPushButton("Add Advanced")
@@ -328,6 +331,7 @@ class WorkflowDiagram(QWidget):
     def get_workflow(self):
         """Computes structure of the workflow using Depth First Search and paints CustomItems depending on place in graph"""
         items = [item for item in self.scene.items() if isinstance(item, CustomItem)]
+
         roots = []
         for i in items:
             parent = True
@@ -338,7 +342,15 @@ class WorkflowDiagram(QWidget):
             if parent:
                 roots.append(i)
 
-                visited = set()
+        if len(roots) == 0:
+            return
+        elif len(roots) > 1:
+            utils.send_error("Error in Workflow", "More than 1 root node")
+            return
+        else:
+            root = roots[0]
+
+        visited = set()
         paths = []
 
         def dfs_helper(item, path):
@@ -361,15 +373,15 @@ class WorkflowDiagram(QWidget):
             path.pop()
             visited.remove(item)
 
-        for root in roots:
-            root.state["Start"] = "True"
-            self.view.arrange_tree(root, 0, 0, 150)
-            if root not in visited:
-                dfs_helper(root, [])
-            root.setBrush("green")
+        root.state["Start"] = "True"
+        self.view.arrange_tree(root, 0, 0, 150)
+        if root not in visited:
+            dfs_helper(root, [])
+        root.setBrush("green")
+        self.root = root
 
-    def call_popup(self, rect=None, edit=False):
-        """Calls popup on click of CustomItem, or if 'Add Basic' button is pressed
+    def call_basic_popup(self, rect=None, edit=False):
+        """Calls basic popup on click of CustomItem, or if 'Add Basic' button is pressed
 
         Args:
             rect (CustomItem): CustomItem associated with the popup needed
@@ -379,7 +391,7 @@ class WorkflowDiagram(QWidget):
         if rect:
             if not rect.popup or isinstance(rect.popup, AdvancedPopup):
                 # make a new popup
-                rect.popup = PopupWindow(
+                rect.popup = BasicPopup(
                     payloads,
                     state_names=self.scene.getStateNames(),
                     rect=rect,
@@ -388,7 +400,7 @@ class WorkflowDiagram(QWidget):
             rect.popup.edit_mode(payloads)
             self.popup = rect.popup
         else:
-            self.popup = PopupWindow(payloads, state_names=self.scene.getStateNames())
+            self.popup = BasicPopup(payloads, state_names=self.scene.getStateNames())
 
         if edit and rect:
             try:
@@ -414,11 +426,11 @@ class WorkflowDiagram(QWidget):
         self.popup.exec()
 
     def item_clicked(self):
-        """When a CustomItem is clicked, calls self.call_popup in order to display popup associated with the CustomItem clicked"""
+        """When a CustomItem is clicked, calls self.call_basic_popup in order to display popup associated with the CustomItem clicked"""
         if self.view.itemClicked:
             rect = self.view.itemClicked
             if self.setting == "basic":
-                self.call_popup(rect, True)
+                self.call_basic_popup(rect, True)
             elif self.setting == "advanced":
                 self.call_advanced_popup(rect, True)
 
