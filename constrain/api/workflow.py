@@ -5,7 +5,7 @@ Workflow API
 """
 
 import glob
-import sys, logging, json, os, datetime
+import sys, logging, json, os, datetime,platform
 from typing import Union
 
 sys.path.append("./constrain")
@@ -49,14 +49,35 @@ class WorkflowEngine:
 
         # change dir: change the working path to the "working_dir" value in workflow_dict
         # Need test
+        # To-Do-list
+        # 1. what if no working dir value is provided?
+        # 2. Not a valid string: not a valid linux string or windows string
+        # 3. WD does not exist. 
+        # 4. Run correctly. 
         
+        # First, detect if the working 
+        if (not isinstance(self.workflow_dict['working_dir'], str)):
+            logging.error("working directory specified is not a valid string.")
+        else:
+            # then detect if the working dir provided is in Linux format or Windows Format. 
+            if ('/' in self.workflow_dict['working_dir']) and ('\\' not in self.workflow_dict['working_dir']):
+                # in Linux Format
+                if platform.system() == "Windows": # convert it to the working platform if it is windows
+                    print("Convert the working path specified to Windows format")
+                    self.workflow_dict['working_dir'] = self.workflow_dict['working_dir'].replace("/","\\")
+            elif ('/' not in self.workflow_dict['working_dir']) and ('\\' in self.workflow_dict['working_dir']):
+                # in windows format
+                if platform.system() == "Linux": # convert it to the working platform if it is Linux
+                    print("Convert the working path specified to Linux format")
+                    self.workflow_dict['working_dir'] = self.workflow_dict['working_dir'].replace("\\","/")
 
-        if (isinstance(self.workflow_dict['working_dir'], str) and os.path.exists(self.workflow_dict['working_dir'])) :
+        # change the working directory if it exists
+        if (os.path.exists(self.workflow_dict['working_dir'])) :
             print("Change the working path to ",self.workflow_dict['working_dir'])
             os.chdir(self.workflow_dict['working_dir'])
         else:
-            logging.error(
-                "working directory is not valid or the specified workign directory does not exist.")
+            logging.error("working directory specified does not exist.")
+
 
         if run_workflow_now:
             self.run_workflow()
