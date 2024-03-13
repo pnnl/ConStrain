@@ -37,7 +37,6 @@ class WorkflowEngine:
         self.states = {}
         self.workflow_dict = {}
         self.running_sequence = []
-
         # checking workflow validity is handed over to the API method.
         if isinstance(workflow, str):
             self.load_workflow_json(workflow)
@@ -47,19 +46,15 @@ class WorkflowEngine:
 
         self.load_states()
 
-        # change dir: change the working path to the "working_dir" value in workflow_dict
+        ### change dir: change the working path to the "working_dir" value in workflow_dict
         # Need test
-        # To-Do-list
-        # 1. what if no working dir value is provided?
-        # 2. Not a valid string: not a valid linux string or windows string
-        # 3. WD does not exist. 
-        # 4. Run correctly. 
         
         # First, detect if the working 
+        print("===/n",self.workflow_dict['working_dir'],"===")
         if (not isinstance(self.workflow_dict['working_dir'], str)):
             logging.error("working directory specified is not a valid string.")
         else:
-            # then detect if the working dir provided is in Linux format or Windows Format. 
+            # Then detect if the working dir provided is in Linux format or Windows Format. 
             if ('/' in self.workflow_dict['working_dir']) and ('\\' not in self.workflow_dict['working_dir']):
                 # in Linux Format
                 if platform.system() == "Windows": # convert it to the working platform if it is windows
@@ -337,6 +332,7 @@ class Workflow:
             workflow, dict
         ):
             workflow_engine = WorkflowEngine(workflow)
+            
         else:
             logging.error(
                 "workflow needs to be either a str path to the workflow json file or a dict of the workflow definition."
