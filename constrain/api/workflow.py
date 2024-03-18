@@ -49,8 +49,7 @@ class WorkflowEngine:
         ### change dir: change the working path to the "working_dir" value in workflow_dict
         # Need test
         
-        # First, detect if the working 
-        print("===/n",self.workflow_dict['working_dir'],"===")
+        # First, detect if the working dir is a valid string
         if (not isinstance(self.workflow_dict['working_dir'], str)):
             logging.error("working directory specified is not a valid string.")
         else:
