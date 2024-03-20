@@ -5,15 +5,15 @@ sys.path.append("./constrain")
 
 class TestFlexibleCalling(unittest.TestCase):
     def test_no_dir_provided(self):
-        """This test checks when no working directory is provided, 
+        """This test checks when no working directory is provided,
         if the program will behave correctly"""
-                
+
     def test_invalid_dir_string(self):
-        """This test checks when a invalid dir string is provided, 
+        """This test checks when a invalid dir string is provided,
         if the program will behave correctly"""
 
     def test_dir_not_exist(self):
-        """This test checks when a valid wd is provided but it doesn't exist, 
+        """This test checks when a valid wd is provided but it doesn't exist,
         if the program will behave correctly"""
 
     def test_valid_dir(self):
