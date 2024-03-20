@@ -45,10 +45,10 @@ class WorkflowEngine:
             self.workflow_dict = workflow
 
         self.load_states()
-        
+
         # Change the working path to the working_dir value in workflow_dict.
-        # First, detect if the working dir is a valid string
         if not isinstance(self.workflow_dict["working_dir"], str):
+            # First, detect if the working dir is a valid string
             logging.error("working directory specified is not a valid string.")
         else:
             # Then detect if the working dir provided is in Linux format or Windows Format.
