@@ -8,24 +8,29 @@ sys.path.append("./constrain")
 
 
 class TestFlexibleCalling(unittest.TestCase):
-
     def test_no_dir_provided(self):
         """This test checks when no working directory is provided,
         if the program will behave correctly"""
-        
+
         with self.assertLogs() as logobs:
             json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_NotAString.json"
-            workflow = Workflow(workflow=json_case_path)    
-            self.assertEqual(logobs.output[0],"ERROR:root:working directory specified is not a valid string.")
-                    
+            workflow = Workflow(workflow=json_case_path)
+            self.assertEqual(
+                logobs.output[0],
+                "ERROR:root:working directory specified is not a valid string.",
+            )
+
     def test_dir_not_exist(self):
         """This test checks when a valid wd is provided but it doesn't exist,
         if the program will behave correctly"""
 
         with self.assertLogs() as logobs:
             json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_NotExist.json"
-            workflow = Workflow(workflow=json_case_path)    
-            self.assertEqual(logobs.output[0],"ERROR:root:working directory specified does not exist.")              
+            workflow = Workflow(workflow=json_case_path)
+            self.assertEqual(
+                logobs.output[0],
+                "ERROR:root:working directory specified does not exist.",
+            )
 
     def test_valid_dir(self):
         """This test checks when a working directory is provided and it also points to the correct path,
@@ -33,9 +38,11 @@ class TestFlexibleCalling(unittest.TestCase):
 
         with self.assertLogs() as logobs:
             json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
-            workflow = Workflow(workflow=json_case_path)    
-            self.assertEqual(logobs.output[0],"INFO:root:Change current working path to the specified path.")              
-
+            workflow = Workflow(workflow=json_case_path)
+            self.assertEqual(
+                logobs.output[0],
+                "INFO:root:Change current working path to the specified path.",
+            )
 
     """
     1. Probably another test is needed to check if the program can successfully detect if the WD provided is Linux format or Window format. 
