@@ -49,6 +49,7 @@ class WorkflowEngine:
         # Change the working path to the working_dir value in workflow_dict.
         if not isinstance(self.workflow_dict["working_dir"], str):
             # First, detect if the working dir is a valid string
+            print("working directory specified is not a valid string.")
             logging.error("working directory specified is not a valid string.")
         else:
             # Then detect if the working dir provided is in Linux format or Windows Format.
@@ -75,12 +76,12 @@ class WorkflowEngine:
                         "working_dir"
                     ].replace("\\", "/")
 
-        # change the working directory if it exists
-        if os.path.exists(self.workflow_dict["working_dir"]):
-            print("Change the working path to ", self.workflow_dict["working_dir"])
-            os.chdir(self.workflow_dict["working_dir"])
-        else:
-            logging.error("working directory specified does not exist.")
+            # change the working directory if it exists
+            if os.path.exists(self.workflow_dict["working_dir"]):
+                print("Change the working path to ", self.workflow_dict["working_dir"])
+                os.chdir(self.workflow_dict["working_dir"])
+            else:
+                logging.error("working directory specified does not exist.")
 
         # run workflow now
         if run_workflow_now:
@@ -337,6 +338,7 @@ class Workflow:
         Returns:
             Union[None, WorkflowEngine]: Instantiated WorkflowEngine object if provided workflow is valid; None otherwise.
         """
+
         if (isinstance(workflow, str) and os.path.isfile(workflow)) or isinstance(
             workflow, dict
         ):
