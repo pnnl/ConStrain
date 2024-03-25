@@ -13,7 +13,7 @@ class TestFlexibleCalling(unittest.TestCase):
         if the program will behave correctly"""
         print(os.getcwd())
         with self.assertLogs() as logobs:
-            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_Path.json"
+            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
             # Delete working_dir value in the json file
             with open(json_case_path, "r") as f:
@@ -34,7 +34,7 @@ class TestFlexibleCalling(unittest.TestCase):
         if the program will behave correctly"""
         print(os.getcwd())
         with self.assertLogs() as logobs:
-            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_Path.json"
+            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
             # Change working_dir value in the json file to a invalid string
             with open(json_case_path, "r") as f:
@@ -54,7 +54,7 @@ class TestFlexibleCalling(unittest.TestCase):
         """This test check if the program can detect the working path provided is in Linux format."""
         print(os.getcwd())
         with self.assertLogs() as logobs:
-            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
+            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
 
             # Change working_dir value in the json file to a valid path in Linux format
             with open(json_case_path, "r") as f:
@@ -77,7 +77,7 @@ class TestFlexibleCalling(unittest.TestCase):
         """This test check if the program can detect the working path provided is in WIN format."""
         print(os.getcwd())
         with self.assertLogs() as logobs:
-            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
+            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
 
             # Change working_dir value in the json file to a valid path in Win format
             with open(json_case_path, "r") as f:
@@ -101,7 +101,7 @@ class TestFlexibleCalling(unittest.TestCase):
         if the program will behave correctly"""
         print(os.getcwd())
         with self.assertLogs() as logobs:
-            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_Path.json"
+            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
             # Change working_dir value in the json file to a path that does not exist
             with open(json_case_path, "r") as f:
@@ -122,7 +122,7 @@ class TestFlexibleCalling(unittest.TestCase):
         if the program will behave correctly"""
         print(os.getcwd())
         with self.assertLogs() as logobs:
-            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
+            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
 
             # Change working_dir value in the json file to a valid path
             with open(json_case_path, "r") as f:
