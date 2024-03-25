@@ -11,7 +11,6 @@ class TestFlexibleCalling(unittest.TestCase):
     def test_no_dir_provided(self):
         """This test checks when no working directory is provided,
         if the program will behave correctly"""
-        print(os.getcwd())
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
@@ -32,7 +31,6 @@ class TestFlexibleCalling(unittest.TestCase):
     def test_invalid_str(self):
         """This test checks when working directory is not a valid string,
         if the program will behave correctly"""
-        print(os.getcwd())
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
@@ -52,14 +50,13 @@ class TestFlexibleCalling(unittest.TestCase):
 
     def test_Linux_path(self):
         """This test check if the program can detect the working path provided is in Linux format."""
-        print(os.getcwd())
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
 
             # Change working_dir value in the json file to a valid path in Linux format
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)
-                workflow_dict["working_dir"] = "./result"
+                workflow_dict["working_dir"] = "./tests/api/result"
 
             with open(json_case_path, "w") as f:
                 json.dump(workflow_dict, f)
@@ -75,14 +72,13 @@ class TestFlexibleCalling(unittest.TestCase):
 
     def test_Win_path(self):
         """This test check if the program can detect the working path provided is in WIN format."""
-        print(os.getcwd())
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
 
             # Change working_dir value in the json file to a valid path in Win format
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)
-                workflow_dict["working_dir"] = ".\\result"
+                workflow_dict["working_dir"] = ".\\tests\\api\\result"
 
             with open(json_case_path, "w") as f:
                 json.dump(workflow_dict, f)
@@ -99,7 +95,6 @@ class TestFlexibleCalling(unittest.TestCase):
     def test_dir_not_exist(self):
         """This test checks when a valid wd is provided but it doesn't exist,
         if the program will behave correctly"""
-        print(os.getcwd())
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
@@ -120,14 +115,13 @@ class TestFlexibleCalling(unittest.TestCase):
     def test_valid_dir(self):
         """This test checks when a working directory is provided and it also points to the correct path,
         if the program will behave correctly"""
-        print(os.getcwd())
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
 
             # Change working_dir value in the json file to a valid path
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)
-                workflow_dict["working_dir"] = "./result"
+                workflow_dict["working_dir"] = "./tests/api/result"
 
             with open(json_case_path, "w") as f:
                 json.dump(workflow_dict, f)
@@ -145,7 +139,7 @@ class TestFlexibleCalling(unittest.TestCase):
             # Change working_dir value in the json file to a valid path in Win format
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)
-                workflow_dict["working_dir"] = ".\\result"
+                workflow_dict["working_dir"] = ".\\testsi\\result"
 
             with open(json_case_path, "w") as f:
                 json.dump(workflow_dict, f)
