@@ -11,8 +11,6 @@ class TestFlexibleCalling(unittest.TestCase):
     def test_no_dir_provided(self):
         """This test checks when no working directory is provided,
         if the program will behave correctly"""
-        print("---Debug---",os.getcwd()) # os.getcwd()
-        print("---Debug---",os.listdir("./tests/api/data/verification_case_unit_test"))
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
@@ -33,8 +31,6 @@ class TestFlexibleCalling(unittest.TestCase):
     def test_invalid_str(self):
         """This test checks when working directory is not a valid string,
         if the program will behave correctly"""
-        print(os.getcwd()) # os.getcwd()
-        print("---Debug---",os.listdir("./tests/api/data/verification_case_unit_test"))
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
@@ -55,8 +51,6 @@ class TestFlexibleCalling(unittest.TestCase):
     def test_dir_not_exist(self):
         """This test checks when a valid wd is provided but it doesn't exist,
         if the program will behave correctly"""
-        print(os.getcwd()) # os.getcwd()
-        print("---Debug---",os.listdir("./tests/api/data/verification_case_unit_test"))
         with self.assertLogs() as logobs:
             json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
@@ -77,10 +71,8 @@ class TestFlexibleCalling(unittest.TestCase):
     def test_valid_dir(self):
         """This test checks when a working directory is provided and it also points to the correct path,
         if the program will behave correctly"""
-        print(os.getcwd()) # os.getcwd()
-        print("---Debug---",os.listdir("./tests/api/data/verification_case_unit_test"))
         with self.assertLogs() as logobs:
-            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
+            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
             # Change working_dir value in the json file to a valid path
             with open(json_case_path, "r") as f:
