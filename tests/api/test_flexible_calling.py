@@ -14,7 +14,7 @@ class TestFlexibleCalling(unittest.TestCase):
         print(os.getcwd())
         with self.assertLogs() as logobs:
             json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_Path.json"
-        
+
             # Delete working_dir value in the json file
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)
@@ -55,7 +55,7 @@ class TestFlexibleCalling(unittest.TestCase):
         print(os.getcwd())
         with self.assertLogs() as logobs:
             json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
-            
+
             # Change working_dir value in the json file to a valid path in Linux format
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)
