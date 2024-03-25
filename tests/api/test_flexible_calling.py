@@ -1,4 +1,4 @@
-import unittest, sys, logging
+import unittest, sys, logging, json, os
 from unittest.mock import patch
 
 import constrain
@@ -13,11 +13,87 @@ class TestFlexibleCalling(unittest.TestCase):
         if the program will behave correctly"""
 
         with self.assertLogs() as logobs:
-            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_NotAString.json"
+            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_Path.json"
+
+            # Delete working_dir value in the json file
+            with open(json_case_path, "r") as f:
+                workflow_dict = json.load(f)
+                del workflow_dict["working_dir"]
+
+            with open(json_case_path, "w") as f:
+                json.dump(workflow_dict, f)
+
+            workflow = Workflow(workflow=json_case_path)
+            self.assertEqual(
+                logobs.output[0],
+                "INFO:root:No working_dic is specified",
+            )
+
+    def test_invalid_str(self):
+        """This test checks when working directory is not a valid string,
+        if the program will behave correctly"""
+
+        with self.assertLogs() as logobs:
+            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_Path.json"
+
+            # Change working_dir value in the json file to a invalid string
+            with open(json_case_path, "r") as f:
+                workflow_dict = json.load(f)
+                workflow_dict["working_dir"] = []
+
+            with open(json_case_path, "w") as f:
+                json.dump(workflow_dict, f)
+
             workflow = Workflow(workflow=json_case_path)
             self.assertEqual(
                 logobs.output[0],
                 "ERROR:root:working directory specified is not a valid string.",
+            )
+
+    def test_Linux_path(self):
+        """This test check if the program can detect the working path provided is in Linux format."""
+
+        with self.assertLogs() as logobs:
+            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
+
+            # Change working_dir value in the json file to a valid path in Linux format
+            with open(json_case_path, "r") as f:
+                workflow_dict = json.load(f)
+                workflow_dict["working_dir"] = "./result"
+
+            with open(json_case_path, "w") as f:
+                json.dump(workflow_dict, f)
+
+            workflow = Workflow(workflow=json_case_path)
+            # change current working directory back
+            os.chdir("..")
+
+            self.assertEqual(
+                logobs.output[0],
+                "INFO:root:the working dir provided is in Linux format.",
+            )
+
+    def test_Win_path(self):
+        """This test check if the program can detect the working path provided is in WIN format."""
+
+        with self.assertLogs() as logobs:
+            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
+
+            # Change working_dir value in the json file to a valid path in Win format
+            with open(json_case_path, "r") as f:
+                workflow_dict = json.load(f)
+                workflow_dict["working_dir"] = ".\\result"
+
+            with open(json_case_path, "w") as f:
+                json.dump(workflow_dict, f)
+
+            workflow = Workflow(workflow=json_case_path)
+            # change current working directory back
+            os.chdir("..")
+
+            self.assertEqual(
+                logobs.output[0],
+                "INFO:root:the working dir provided is in Win format.",
             )
 
     def test_dir_not_exist(self):
@@ -25,10 +101,19 @@ class TestFlexibleCalling(unittest.TestCase):
         if the program will behave correctly"""
 
         with self.assertLogs() as logobs:
-            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_NotExist.json"
+            json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_Path.json"
+
+            # Change working_dir value in the json file to a path that does not exist
+            with open(json_case_path, "r") as f:
+                workflow_dict = json.load(f)
+                workflow_dict["working_dir"] = "./not_existing_path/test"
+
+            with open(json_case_path, "w") as f:
+                json.dump(workflow_dict, f)
+
             workflow = Workflow(workflow=json_case_path)
             self.assertEqual(
-                logobs.output[0],
+                logobs.output[1],
                 "ERROR:root:working directory specified does not exist.",
             )
 
@@ -38,9 +123,40 @@ class TestFlexibleCalling(unittest.TestCase):
 
         with self.assertLogs() as logobs:
             json_case_path = "./data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
+
+            # Change working_dir value in the json file to a valid path
+            with open(json_case_path, "r") as f:
+                workflow_dict = json.load(f)
+                workflow_dict["working_dir"] = "./result"
+
+            with open(json_case_path, "w") as f:
+                json.dump(workflow_dict, f)
+
             workflow = Workflow(workflow=json_case_path)
+
+            # change current working directory back
+            os.chdir("..")
+
             self.assertEqual(
-                logobs.output[0],
+                logobs.output[1],
+                "INFO:root:Change current working path to the specified path.",
+            )
+
+            # Change working_dir value in the json file to a valid path in Win format
+            with open(json_case_path, "r") as f:
+                workflow_dict = json.load(f)
+                workflow_dict["working_dir"] = ".\\result"
+
+            with open(json_case_path, "w") as f:
+                json.dump(workflow_dict, f)
+
+            workflow = Workflow(workflow=json_case_path)
+
+            # change current working directory back
+            os.chdir("..")
+
+            self.assertEqual(
+                logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
 

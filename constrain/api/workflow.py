@@ -46,39 +46,44 @@ class WorkflowEngine:
 
         self.load_states()
 
-        # Change the working path to the working_dir value in workflow_dict.
-        if not isinstance(self.workflow_dict["working_dir"], str):
-            # First, detect if the working dir is a valid string
-            logging.error("working directory specified is not a valid string.")
+        # First, check if the workflow_dict has "working_dir"
+        if "working_dir" not in self.workflow_dict:
+            logging.info("No working_dic is specified")
         else:
-            # Then detect if the working dir provided is in Linux format or Windows Format.
-            if ("/" in self.workflow_dict["working_dir"]) and (
-                "\\" not in self.workflow_dict["working_dir"]
-            ):
-                # in Linux Format
-                if (
-                    platform.system() == "Windows"
-                ):  # convert it to the working platform if it is windows
-                    self.workflow_dict["working_dir"] = self.workflow_dict[
-                        "working_dir"
-                    ].replace("/", "\\")
-            elif ("/" not in self.workflow_dict["working_dir"]) and (
-                "\\" in self.workflow_dict["working_dir"]
-            ):
-                # in windows format
-                if (
-                    platform.system() == "Linux"
-                ):  # convert it to the working platform if it is Linux
-                    self.workflow_dict["working_dir"] = self.workflow_dict[
-                        "working_dir"
-                    ].replace("\\", "/")
-
-            # change the working directory if it exists
-            if os.path.exists(self.workflow_dict["working_dir"]):
-                os.chdir(self.workflow_dict["working_dir"])
-                logging.info("Change current working path to the specified path.")
+            # Change the working path to the working_dir value in workflow_dict.
+            if not isinstance(self.workflow_dict["working_dir"], str):
+                # First, detect if the working dir is a valid string
+                logging.error("working directory specified is not a valid string.")
             else:
-                logging.error("working directory specified does not exist.")
+                # Then detect if the working dir provided is in Linux format or Windows Format.
+                if ("/" in self.workflow_dict["working_dir"]) and (
+                    "\\" not in self.workflow_dict["working_dir"]
+                ):
+                    # in Linux Format
+                    if (
+                        platform.system() == "Windows"
+                    ):  # convert it to the working platform if it is windows
+                        self.workflow_dict["working_dir"] = self.workflow_dict[
+                            "working_dir"
+                        ].replace("/", "\\")
+                    logging.info("the working dir provided is in Linux format.")
+                elif ("/" not in self.workflow_dict["working_dir"]) and (
+                    "\\" in self.workflow_dict["working_dir"]
+                ):
+                    # in windows format
+                    if (
+                        platform.system() == "Linux"
+                    ):  # convert it to the working platform if it is Linux
+                        self.workflow_dict["working_dir"] = self.workflow_dict[
+                            "working_dir"
+                        ].replace("\\", "/")
+                    logging.info("the working dir provided is in Win format.")
+                # change the working directory if it exists
+                if os.path.exists(self.workflow_dict["working_dir"]):
+                    os.chdir(self.workflow_dict["working_dir"])
+                    logging.info("Change current working path to the specified path.")
+                else:
+                    logging.error("working directory specified does not exist.")
 
         # run workflow now
         if run_workflow_now:
