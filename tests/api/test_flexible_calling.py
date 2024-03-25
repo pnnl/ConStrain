@@ -92,6 +92,25 @@ class TestFlexibleCalling(unittest.TestCase):
                 "INFO:root:Change current working path to the specified path.",
             )
 
+        with self.assertLogs() as logobs:
+            # Change working_dir value in the json file to a valid path in Win format
+            with open(json_case_path, "r") as f:
+                workflow_dict = json.load(f)
+                workflow_dict["working_dir"] = ".\\tests\\api\\result"
+
+            with open(json_case_path, "w") as f:
+                json.dump(workflow_dict, f)
+
+            workflow = Workflow(workflow=json_case_path)
+
+            # Change current working directory back
+            os.chdir("../../..")
+
+            self.assertEqual(
+                logobs.output[1],
+                "INFO:root:Change current working path to the specified path.",
+            )
+
 
 
     """
