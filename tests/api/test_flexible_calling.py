@@ -12,7 +12,7 @@ class TestFlexibleCalling(unittest.TestCase):
         """This test checks when no working directory is provided,
         if the program will behave correctly"""
         with self.assertLogs() as logobs:
-            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
+            json_case_path = "../tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
             # Delete working_dir value in the json file
             with open(json_case_path, "r") as f:
@@ -32,7 +32,7 @@ class TestFlexibleCalling(unittest.TestCase):
         """This test checks when working directory is not a valid string,
         if the program will behave correctly"""
         with self.assertLogs() as logobs:
-            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
+            json_case_path = "../tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
             # Change working_dir value in the json file to a invalid string
             with open(json_case_path, "r") as f:
@@ -52,7 +52,7 @@ class TestFlexibleCalling(unittest.TestCase):
         """This test checks when a valid wd is provided but it doesn't exist,
         if the program will behave correctly"""
         with self.assertLogs() as logobs:
-            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
+            json_case_path = "../tests/api/data/verification_case_unit_test/verification_case_unit_test_Path.json"
 
             # Change working_dir value in the json file to a path that does not exist
             with open(json_case_path, "r") as f:
@@ -72,12 +72,12 @@ class TestFlexibleCalling(unittest.TestCase):
         """This test checks when a working directory is provided and it also points to the correct path,
         if the program will behave correctly"""
         with self.assertLogs() as logobs:
-            json_case_path = "./tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
+            json_case_path = "../tests/api/data/verification_case_unit_test/verification_case_unit_test_ValidPath.json"
 
             # Change working_dir value in the json file to a valid path
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)
-                workflow_dict["working_dir"] = "./tests/api/result"
+                workflow_dict["working_dir"] = "../tests/api/result"
 
             with open(json_case_path, "w") as f:
                 json.dump(workflow_dict, f)
@@ -85,7 +85,7 @@ class TestFlexibleCalling(unittest.TestCase):
             workflow = Workflow(workflow=json_case_path)
 
             # change current working directory back
-            os.chdir("../../..")
+            os.chdir("../../../constrain")
 
             self.assertEqual(
                 logobs.output[1],
@@ -96,7 +96,7 @@ class TestFlexibleCalling(unittest.TestCase):
             # Change working_dir value in the json file to a valid path in Win format
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)
-                workflow_dict["working_dir"] = ".\\tests\\api\\result"
+                workflow_dict["working_dir"] = "..\\tests\\api\\result"
 
             with open(json_case_path, "w") as f:
                 json.dump(workflow_dict, f)
@@ -104,7 +104,7 @@ class TestFlexibleCalling(unittest.TestCase):
             workflow = Workflow(workflow=json_case_path)
 
             # Change current working directory back
-            os.chdir("../../..")
+            os.chdir("../../../constrain")
 
             self.assertEqual(
                 logobs.output[1],
