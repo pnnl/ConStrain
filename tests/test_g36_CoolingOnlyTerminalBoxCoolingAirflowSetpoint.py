@@ -30,7 +30,11 @@ class TestG36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(unittest.TestCase):
         df = pd.DataFrame(data, columns=points)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint", df
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))
