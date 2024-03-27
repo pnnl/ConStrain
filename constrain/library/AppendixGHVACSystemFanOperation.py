@@ -1,7 +1,5 @@
 from constrain.checklib import RuleCheckBase
 
-import numpy as np
-
 
 class AppendixGHVACSystemFanOperation(RuleCheckBase):
     points = ["o", "fan_runtime_fraction", "m_oa", "tol_o"]
@@ -45,7 +43,3 @@ class AppendixGHVACSystemFanOperation(RuleCheckBase):
             self.result = self.df.apply(
                 lambda d: self.hvac_system_fan_operation(d), axis=1
             )
-
-
-#        else:
-#            self.result = None # untested
