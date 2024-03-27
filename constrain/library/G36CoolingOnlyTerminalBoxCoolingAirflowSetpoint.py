@@ -42,12 +42,15 @@ end
 """
 
 from constrain.checklib import RuleCheckBase
+import numpy as np
 
 
 class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
     points = ["operation_mode", "zone_state", "v_cool_max", "v_min*", "v_spt"]
 
     def setpoint_in_range(self, operation_mode, zone_state, v_cool_max, v_min, v_spt):
+        if zone_state.lower().strip() != "cooling":
+            return np.nan
         match operation_mode.strip().lower():
             case "occupied":
                 cooling_maximum = v_cool_max
@@ -73,7 +76,7 @@ class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
                 t["operation_mode"],
                 t["zone_state"],
                 t["v_cool_max"],
-                t["v_min"],
+                t["v_min*"],
                 t["v_spt"],
             ),
             axis=1,
