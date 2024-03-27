@@ -533,6 +533,132 @@
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
     },
+    "G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint": {
+        "library_item_id": 101,
+        "description_brief": "Cooling only terminal box airflow control when the zone state is cooling following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.5.5.1 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "operation_mode": "System operation mode",
+            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
+            "v_cool_max": "Maximum cooling airflow setpoint",
+            "v_min*": "Occupied zone minimum airflow setpoint",
+            "v_spt": "Active airflow setpoint"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "switch operation_mode",
+            "case 'occupied'",
+            "    cooling_maximum = v_cool_max",
+            "    minimum = v_min*",
+            "case 'cooldown', 'setup'",
+            "    cooling_maximum = v_cool_max",
+            "    minimum = 0",
+            "case 'warmup', 'setback', 'unoccupied'",
+            "    cooling_maximum = 0",
+            "    minimum = 0",
+            "",
+            "if minimum <= v_spt <= cooling_maximum",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint": {
+        "library_item_id": 102,
+        "description_brief": "Cooling only terminal box airflow control when the zone state is deadband following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.5.5.2 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "operation_mode": "System operation mode",
+            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
+            "v_min*": "Occupied zone minimum airflow setpoint",
+            "v_spt": "Active airflow setpoint",
+            "v_spt_tol": "Airflow setpoint tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "switch operation_mode",
+            "case 'occupied'",
+            "    minimum = v_min*",
+            "case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied",
+            "    minimum = 0",
+            "",
+            "if abs(v_spt - minimum) <= v_spt_tol",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint": {
+        "library_item_id": 103,
+        "description_brief": "Cooling only terminal box airflow control when the zone state is heating following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.5.5.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "operation_mode": "System operation mode",
+            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
+            "v_cool_max": "Zone maximum cooling airflow setpoint",
+            "v_heat_max": "Zone maximum heating airflow setpoint",
+            "v_spt": "Active airflow setpoint"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "switch operation_mode",
+            "case 'occupied'",
+            "    heating_maximum = v_heat_max",
+            "    minimum = v_min*",
+            "case 'cooldown', 'setup', 'unoccupied",
+            "    heating_maximum = 0",
+            "    minimum = 0",
+            "case 'warmup', 'setback'",
+            "    heating_maximum = v_cool_max",
+            "    minimum = 0",
+            "",
+            "if minimum <= v_spt <= heating_maximum",
+            "    pass",
+            "else",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36TerminalBoxVAVDamperTracking": {
+        "library_item_id": 104,
+        "description_brief": "Terminal box airflow control with VAV damper following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.5.5.4 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "vav_damper_command": "Terminal box VAV damper command",
+            "v": "Terminal box discharge airflow rate",
+            "v_spt": "Active airflow setpoint",
+            "v_tracking_tol": "Airflow tracking tolerance",
+            "v_spt_tol": "Active airflow setpoint tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if abs(v_spt - v) >= v_tracking_tol (less than 1hr):",
+            "    pass",
+            "elif abs(v_spt - v) < v_tracking_tol:",
+            "    pass",
+            "if v - v_spt >= v_tracking_tol (continously) and vav_damper_command <= 1:",
+            "    pass",
+            "elif v_spt - v >= v_tracking_tol (continuously) and vav_damper_command >= 99:",
+            "    pass",
+            "else:",
+            "    fail",
+            "end"
+        ]
+    },
     "G36SupplyAirTemperatureSetpoint": {
         "library_item_id": 30,
         "description_brief": "Supply air temperature operation following the Guideline 36 recommendations",
