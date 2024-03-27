@@ -37,6 +37,7 @@ from .LocalLoopSaturationDirectActingMin import *
 from .LocalLoopSaturationReverseActingMax import *
 from .LocalLoopSaturationReverseActingMin import *
 from .G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint import *
+from .G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -82,4 +83,5 @@ __all__ = [
     "LocalLoopSaturationReverseActingMin",
     # "LocalLoopHuntingActivation",
     "G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint",
+    "G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint",
 ]

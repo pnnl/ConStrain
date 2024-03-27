@@ -659,6 +659,29 @@
             "end"
         ]
     },
+    "G36ReheatTerminalBoxCooling": {
+        "library_item_id": 104,
+        "description_brief": "Terminal box airflow control with VAV damper following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.5.5.4 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "vav_damper_command": "Terminal box VAV damper command",
+            "v": "Terminal box discharge airflow rate",
+            "v_spt": "Active airflow setpoint",
+            "v_tracking_tol": "Airflow tracking tolerance",
+            "v_spt_tol": "Active airflow setpoint tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": []
+    },
+    "G36ReheatTerminalBoxDeadband": {
+
+    },
+    "G36ReheatTerminalBoxHeating": {
+
+    },
     "G36SupplyAirTemperatureSetpoint": {
         "library_item_id": 30,
         "description_brief": "Supply air temperature operation following the Guideline 36 recommendations",
