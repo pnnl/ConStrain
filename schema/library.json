@@ -586,7 +586,7 @@
             "switch operation_mode",
             "case 'occupied'",
             "    minimum = v_min*",
-            "case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied",
+            "case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'",
             "    minimum = 0",
             "",
             "if abs(v_spt - minimum) <= v_spt_tol",
@@ -607,6 +607,7 @@
             "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
             "v_cool_max": "Zone maximum cooling airflow setpoint",
             "v_heat_max": "Zone maximum heating airflow setpoint",
+            "v_min*": "Occupied zone minimum airflow setpoint",
             "v_spt": "Active airflow setpoint"
         },
         "description_verification_type": "procedure-based",
@@ -616,7 +617,7 @@
             "case 'occupied'",
             "    heating_maximum = v_heat_max",
             "    minimum = v_min*",
-            "case 'cooldown', 'setup', 'unoccupied",
+            "case 'cooldown', 'setup', 'unoccupied'",
             "    heating_maximum = 0",
             "    minimum = 0",
             "case 'warmup', 'setback'",
@@ -660,10 +661,10 @@
         ]
     },
     "G36ReheatTerminalBoxCooling": {
-        "library_item_id": 104,
-        "description_brief": "Terminal box airflow control with VAV damper following the Guideline 36 recommendations",
+        "library_item_id": 105,
+        "description_brief": "Terminal box with reheat when the zone state is cooling following the Guideline 36 recommendations",
         "description_index": [
-            "Section 5.5.5.4 in ASHRAE Guideline 36-2021"
+            "Section 5.6.5.1 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
             "vav_damper_command": "Terminal box VAV damper command",
