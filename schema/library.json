@@ -667,21 +667,92 @@
             "Section 5.6.5.1 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "vav_damper_command": "Terminal box VAV damper command",
-            "v": "Terminal box discharge airflow rate",
+            "operation_mode": "System operation mode",
+            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
+            "v_cool_max": "Maximum cooling airflow setpoint",
+            "v_min*": "Occupied zone minimum airflow setpoint",
             "v_spt": "Active airflow setpoint",
-            "v_tracking_tol": "Airflow tracking tolerance",
-            "v_spt_tol": "Active airflow setpoint tolerance"
+            "heating_coil_command": "Heating coil command",
+            "heating_coil_command_tol": "Heating coil command saturation tolerance",
+            "dat": "Discharge air temperature",
+            "dat_min_spt": "Minimum discharge air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
-        "description_assertions": []
+        "description_assertions": [
+            "if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol",
+            "    fail",
+            "else",
+            "   switch operation_mode",
+            "   case 'occupied'",
+            "       cooling_maximum = v_cool_max",
+            "       minimum = v_min*",
+            "   case 'cooldown', 'setup'",
+            "       cooling_maximum = v_cool_max",
+            "       minimum = 0",
+            "   case 'warmup', 'setback', 'unoccupied'",
+            "       cooling_maximum = 0",
+            "       minimum = 0",
+            "   ",
+            "   if cooling_minimum <= v_spt <= cooling_maximum",
+            "       pass",
+            "   else",
+            "       fail",
+            "end"
+        ]
     },
     "G36ReheatTerminalBoxDeadband": {
-
+        "library_item_id": 106,
+        "description_brief": "Terminal box with reheat when the zone state is deadband following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.6.5.2 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "operation_mode": "System operation mode",
+            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
+            "v_min*": "Occupied zone minimum airflow setpoint",
+            "v_spt": "Active airflow setpoint",
+            "v_spt_tol": "Airflow setpoint tolerance",
+            "heating_coil_command": "Heating coil command",
+            "heating_coil_command_tol": "Heating coil command saturation tolerance",
+            "dat": "Discharge air temperature",
+            "dat_min_spt": "Minimum discharge air temperature setpoint"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol",
+            "    fail",
+            "else",
+            "   switch operation_mode",
+            "   case 'occupied'",
+            "       minimum = v_min*",
+            "   case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'",
+            "       minimum = 0",
+            "   if abs(v_spt - minimum) <= v_spt_tol",
+            "       pass",
+            "   else",
+            "       fail",
+            "end"
+        ]
     },
     "G36ReheatTerminalBoxHeating": {
-
+        "library_item_id": 107,
+        "description_brief": "Terminal box with reheat when the zone state is heating following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.6.5.3 in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "operation_mode": "System operation mode",
+            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
+            "v_cool_max": "Zone maximum cooling airflow setpoint",
+            "v_heat_max": "Zone maximum heating airflow setpoint",
+            "v_min*": "Occupied zone minimum airflow setpoint",
+            "v_spt": "Active airflow setpoint",
+            "heating_loop_output": "Zone heating loop signal (from 0 to 100)",
+            "room_temp": "Room temperature",
+            "space_temp_spt": "Space temperature setpoint"
+        }
     },
     "G36SupplyAirTemperatureSetpoint": {
         "library_item_id": 30,
