@@ -5,6 +5,7 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 import pandas as pd
+import numpy as np
 
 
 class TestExteriorLightingControlDaylightOff(unittest.TestCase):
@@ -26,7 +27,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
             [True, 0.1, 1, 1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([True, True, False])
+        expected_results = pd.Series([np.nan, np.nan, False])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlDaylightOff", df
         )
@@ -53,7 +54,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
             [True, 0.1, 1, 0],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([True, True, True])
+        expected_results = pd.Series([np.nan, np.nan, True])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlDaylightOff", df
         )
@@ -80,7 +81,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
             [False, 1, 1, 0.1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([True, True, False])
+        expected_results = pd.Series([np.nan, np.nan, False])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlDaylightOff", df
         )
@@ -107,7 +108,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
             [False, 1, 1, 0],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([True, True, True])
+        expected_results = pd.Series([np.nan, np.nan, True])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlDaylightOff", df
         )

@@ -1,4 +1,5 @@
 from constrain.checklib import RuleCheckBase
+import numpy as np
 
 
 class ExteriorLightingControlDaylightOff(RuleCheckBase):
@@ -31,7 +32,7 @@ class ExteriorLightingControlDaylightOff(RuleCheckBase):
             else:
                 return False
         else:
-            return True
+            return np.nan
 
     def verify(self):
         self.result = self.df.apply(lambda d: self.daylight_off(d), axis=1)
