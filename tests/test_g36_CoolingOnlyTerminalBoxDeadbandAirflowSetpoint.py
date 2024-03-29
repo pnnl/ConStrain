@@ -9,7 +9,7 @@ import numpy as np
 
 
 class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
-    def test_minoa_economizer_pass_untest_fail(self):
+    def test_g36_cooling_only_terminal_box_deadband_airflow_setpoint(self):
         points = ["operation_mode", "zone_state", "v_min*", "v_spt", "v_spt_tol"]
 
         data = [
