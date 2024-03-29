@@ -1,4 +1,5 @@
 from constrain.checklib import RuleCheckBase
+import numpy as np
 
 
 class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
@@ -22,7 +23,7 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
             else:
                 check = False
         else:
-            check = True  # untested
+            check = np.nan  # untested
 
         if data["o"] >= data["tol_o"]:
             self.last_reported_occupancy = data.name
