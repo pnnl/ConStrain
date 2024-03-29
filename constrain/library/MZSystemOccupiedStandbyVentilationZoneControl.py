@@ -1,4 +1,5 @@
 from constrain.checklib import RuleCheckBase
+import numpy as np
 
 
 class MZSystemOccupiedStandbyVentilationZoneControl(RuleCheckBase):
@@ -24,7 +25,7 @@ class MZSystemOccupiedStandbyVentilationZoneControl(RuleCheckBase):
                 return False
         else:
             self.last_non_standby_mode_requested_m_oa = data["m_oa_requested_by_system"]
-            return True
+            return np.nan
 
     def verify(self):
         self.result = self.df.apply(
