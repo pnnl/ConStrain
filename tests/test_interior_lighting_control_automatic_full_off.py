@@ -5,6 +5,7 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 import pandas as pd
+import numpy as np
 
 
 class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
@@ -49,7 +50,7 @@ class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
             [0.05, 50, 500, 0.1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([True, True, False])
+        expected_results = pd.Series([np.nan, np.nan, False])
         verification_obj = run_test_verification_with_data(
             "InteriorLightingControlAutomaticFullOff", df
         )
@@ -76,7 +77,7 @@ class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
             [0.05, 9, 500, 0.1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([True, True, True])
+        expected_results = pd.Series([np.nan, np.nan, True])
         verification_obj = run_test_verification_with_data(
             "InteriorLightingControlAutomaticFullOff", df
         )

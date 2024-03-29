@@ -1,4 +1,5 @@
 from constrain.checklib import RuleCheckBase
+import numpy as np
 
 
 class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
@@ -28,7 +29,7 @@ class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
             else:
                 check = False
         else:
-            check = True  # untested
+            check = np.nan
 
         # update last identified occupancy flag if applicable
         if data["o"] >= data["tol_o"]:
