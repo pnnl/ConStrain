@@ -83,7 +83,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
             lambda t: self.setpoint_at_minimum_when_dat_high(
                 t["operation_mode"],
                 t["zone_state"],
-                t["v_min"],
+                t["v_min*"],
                 t["ahu_sat_spt"],
                 t["v_spt"],
                 t["v_spt_tol"],
