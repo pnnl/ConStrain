@@ -45,6 +45,7 @@ from .G36ReheatTerminalBoxHeatingCoilLowerBound import *
 from .G36ReheatTerminalBoxCooling import *
 from .G36ReheatTerminalBoxHeating import *
 from .G36ReheatTerminalBoxDeadband import *
+from .G36TerminalBoxCoolingMinimumAirflow import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -98,4 +99,5 @@ __all__ = [
     "G36ReheatTerminalBoxCooling",
     "G36ReheatTerminalBoxHeating",
     "G36ReheatTerminalBoxDeadband",
+    "G36TerminalBoxCoolingMinimumAirflow",
 ]
