@@ -752,7 +752,10 @@
             "v_spt_tol":"Airflow setpoint tolerance",
             "heating_loop_output": "Zone heating loop signal (from 0 to 100)",
             "room_temp": "Room temperature",
-            "space_temp_spt": "Space temperature setpoint"
+            "space_temp_spt": "Space temperature setpoint",
+            "ahu_sat_spt": "AHU supply air temperature setpoint",
+            "dat":"Discharge air temperature",
+            "dat_spt": "Discharge air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",

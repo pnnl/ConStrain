@@ -53,6 +53,7 @@ switch operation_mode
 - room_temp: Room temperature
 - space_temp_spt: Space temperature setpoint
 - ahu_sat_spt: AHU supply air temperature setpoint
+- dat: Discharge air temperature
 - dat_spt: Discharge air temperature setpoint
 
 """
@@ -74,6 +75,7 @@ class G36ReheatTerminalBoxHeating(RuleCheckBase):
         "room_temp",
         "space_temp_spt",
         "ahu_sat_spt",
+        "dat",
         "dat_spt",
     ]
 
@@ -91,6 +93,7 @@ class G36ReheatTerminalBoxHeating(RuleCheckBase):
         room_temp,
         space_temp_spt,
         ahu_sat_spt,
+        dat,
         dat_spt,
     ):
         if zone_state.lower().strip() != "heating":
@@ -143,6 +146,7 @@ class G36ReheatTerminalBoxHeating(RuleCheckBase):
                 t["room_temp"],
                 t["space_temp_spt"],
                 t["ahu_sat_spt"],
+                t["dat"],
                 t["dat_spt"],
             ),
             axis=1,
