@@ -14,8 +14,8 @@ Section 5.6.5.3
 ```
 switch operation_mode
     case 'occupied'
-        heating_maximum = max(v_heat_min, v_min*)
-        heating_minimum = max(v_heat_min, v_min*)
+        heating_maximum = max(v_heat_min, v_min)
+        heating_minimum = max(v_heat_min, v_min)
     case 'cooldown'
         heating_maximum = v_heat_max
         heating_minimum = v_heat_min
@@ -46,7 +46,7 @@ switch operation_mode
 - v_cool_max: Zone maximum cooling airflow setpoint
 - v_heat_max: Zone maximum heating airflow setpoint
 - v_heat_min: "Zone minimum heating airflow setpoint
-- v_min*: Occupied zone minimum airflow setpoint
+- v_min: Occupied zone minimum airflow setpoint
 - v_spt: Active airflow setpoint
 - v_spt_tol: Airflow setpoint tolerance
 - heating_loop_output: Zone heating loop signal (from 0 to 100)
@@ -69,7 +69,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
         "v_cool_max",
         "v_heat_max",
         "v_heat_min",
-        "v_min*",
+        "v_min",
         "v_spt",
         "v_spt_tol",
         "heating_loop_output",
@@ -140,7 +140,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
                 t["v_cool_max"],
                 t["v_heat_max"],
                 t["v_heat_min"],
-                t["v_min*"],
+                t["v_min"],
                 t["v_spt"],
                 t["v_spt_tol"],
                 t["heating_loop_output"],

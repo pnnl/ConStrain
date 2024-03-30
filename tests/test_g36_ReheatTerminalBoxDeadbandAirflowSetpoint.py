@@ -13,7 +13,7 @@ class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
         points = [
             "operation_mode",
             "zone_state",
-            "v_min*",
+            "v_min",
             "v_spt",
             "v_spt_tol",
             "heating_coil_command",

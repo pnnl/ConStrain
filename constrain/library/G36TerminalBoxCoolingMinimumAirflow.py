@@ -14,7 +14,7 @@ if ahu_sat_spt <= room_temp:
 else:
     switch operation_mode
         case 'occupied'
-            minimum = v_min*
+            minimum = v_min
         case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
             minimum = 0
     if v_spt - v_spt_tol > minimum:
@@ -27,7 +27,7 @@ else:
 
 - operation_mode: System operation mode
 - zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
-- v_min*: Occupied zone minimum airflow setpoint
+- v_min: Occupied zone minimum airflow setpoint
 - ahu_sat_spt: AHU supply air temperature setpoint
 - v_spt: Active airflow setpoint
 - v_spt_tol: Airflow setpoint tolerance
@@ -43,7 +43,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
     points = [
         "operation_mode",
         "zone_state",
-        "v_min*",
+        "v_min",
         "ahu_sat_spt",
         "v_spt",
         "v_spt_tol",
@@ -83,7 +83,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
             lambda t: self.setpoint_at_minimum_when_dat_high(
                 t["operation_mode"],
                 t["zone_state"],
-                t["v_min*"],
+                t["v_min"],
                 t["ahu_sat_spt"],
                 t["v_spt"],
                 t["v_spt_tol"],

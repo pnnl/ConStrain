@@ -16,7 +16,7 @@ Verification Item:
 switch operation_mode
 case 'occupied'
     cooling_maximum = v_cool_max
-    minimum = v_min*
+    minimum = v_min
 case 'cooldown', 'setup'
     cooling_maximum = v_cool_max
     minimum = 0
@@ -36,7 +36,7 @@ end
 - operation_mode: System operation mode
 - zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
 - v_cool_max: Maximum cooling airflow setpoint
-- v_min*: Occupied zone minimum airflow setpoint
+- v_min: Occupied zone minimum airflow setpoint
 - v_spt: Active airflow setpoint
 
 """
@@ -46,7 +46,7 @@ import numpy as np
 
 
 class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
-    points = ["operation_mode", "zone_state", "v_cool_max", "v_min*", "v_spt"]
+    points = ["operation_mode", "zone_state", "v_cool_max", "v_min", "v_spt"]
 
     def setpoint_in_range(self, operation_mode, zone_state, v_cool_max, v_min, v_spt):
         if zone_state.lower().strip() != "cooling":
@@ -76,7 +76,7 @@ class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
                 t["operation_mode"],
                 t["zone_state"],
                 t["v_cool_max"],
-                t["v_min*"],
+                t["v_min"],
                 t["v_spt"],
             ),
             axis=1,

@@ -10,13 +10,13 @@ import numpy as np
 
 class TestG36ReheatTerminalBoxCoolingAirflowSetpoint(unittest.TestCase):
     def test_g36_reheat_terminal_box_cooling_airflow_setpoint(self):
-        # points = ["operation_mode", "zone_state", "v_cool_max", "v_min*", "v_spt"]
+        # points = ["operation_mode", "zone_state", "v_cool_max", "v_min", "v_spt"]
 
         points = [
             "operation_mode",
             "zone_state",
             "v_cool_max",
-            "v_min*",
+            "v_min",
             "v_spt",
             "heating_coil_command",
             "heating_coil_command_tol",

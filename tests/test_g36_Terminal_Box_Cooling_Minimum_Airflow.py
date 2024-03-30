@@ -13,7 +13,7 @@ class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
         points = [
             "operation_mode",
             "zone_state",
-            "v_min*",
+            "v_min",
             "ahu_sat_spt",
             "v_spt",
             "v_spt_tol",

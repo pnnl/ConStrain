@@ -14,7 +14,7 @@ if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol
 else
    switch operation_mode
    case 'occupied'
-       minimum = v_min*
+       minimum = v_min
    case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
        minimum = 0
    if abs(v_spt - minimum) <= v_spt_tol
@@ -28,7 +28,7 @@ end
 
 - operation_mode: System operation mode
 - zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
-- v_min*: Occupied zone minimum airflow setpoint
+- v_min: Occupied zone minimum airflow setpoint
 - v_spt: Active airflow setpoint
 - v_spt_tol: Airflow setpoint tolerance
 - heating_coil_command: Heating coil command
@@ -46,7 +46,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
     points = [
         "operation_mode",
         "zone_state",
-        "v_min*",
+        "v_min",
         "v_spt",
         "v_spt_tol",
         "heating_coil_command",
@@ -90,7 +90,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
             lambda t: self.setpoint_at_minimum(
                 t["operation_mode"],
                 t["zone_state"],
-                t["v_min*"],
+                t["v_min"],
                 t["v_spt"],
                 t["v_spt_tol"],
                 t["heating_coil_command"],

@@ -15,7 +15,7 @@ class TestG36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
             "zone_state",
             "v_cool_max",
             "v_heat_max",
-            "v_min*",
+            "v_min",
             "v_spt",
         ]
 

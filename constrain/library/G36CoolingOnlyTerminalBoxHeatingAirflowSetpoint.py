@@ -16,7 +16,7 @@ Verification Item:
 switch operation_mode
 case 'occupied'
     heating_maximum = v_heat_max
-    minimum = v_min*
+    minimum = v_min
 case 'cooldown', 'setup', 'unoccupied'
     heating_maximum = 0
     minimum = 0
@@ -37,7 +37,7 @@ end
 - zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
 - v_cool_max: Zone maximum cooling airflow setpoint
 - v_heat_max: Zone maximum heating airflow setpoint
-- v_min*: Occupied zone minimum airflow setpoint
+- v_min: Occupied zone minimum airflow setpoint
 - v_spt: Active airflow setpoint
 
 """
@@ -52,7 +52,7 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
         "zone_state",
         "v_cool_max",
         "v_heat_max",
-        "v_min*",
+        "v_min",
         "v_spt",
     ]
 
@@ -87,7 +87,7 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
                 t["zone_state"],
                 t["v_cool_max"],
                 t["v_heat_max"],
-                t["v_min*"],
+                t["v_min"],
                 t["v_spt"],
             ),
             axis=1,

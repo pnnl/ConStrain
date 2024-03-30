@@ -15,7 +15,7 @@ else
    switch operation_mode
    case 'occupied'
        cooling_maximum = v_cool_max
-       minimum = v_min*
+       minimum = v_min
    case 'cooldown', 'setup'
        cooling_maximum = v_cool_max
        minimum = 0
@@ -35,7 +35,7 @@ end
 - operation_mode: System operation mode
 - zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
 - v_cool_max: Maximum cooling airflow setpoint
-- v_min*: Occupied zone minimum airflow setpoint
+- v_min: Occupied zone minimum airflow setpoint
 - v_spt: Active airflow setpoint
 - heating_coil_command: Heating coil command
 - heating_coil_command_tol: Heating coil command saturation tolerance
@@ -53,7 +53,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
         "operation_mode",
         "zone_state",
         "v_cool_max",
-        "v_min*",
+        "v_min",
         "v_spt",
         "heating_coil_command",
         "heating_coil_command_tol",
@@ -102,7 +102,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
                 t["operation_mode"],
                 t["zone_state"],
                 t["v_cool_max"],
-                t["v_min*"],
+                t["v_min"],
                 t["v_spt"],
                 t["heating_coil_command"],
                 t["heating_coil_command_tol"],

@@ -15,7 +15,7 @@ Verification Item:
 ```
 switch operation_mode
 case 'occupied'
-    minimum = v_min*
+    minimum = v_min
 case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
     minimum = 0
 
@@ -30,7 +30,7 @@ end
 
 - operation_mode: System operation mode
 - zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
-- v_min*: Occupied zone minimum airflow setpoint
+- v_min: Occupied zone minimum airflow setpoint
 - v_spt: Active airflow setpoint
 - v_spt_tol: Airflow setpoint tolerance
 
@@ -41,7 +41,7 @@ import numpy as np
 
 
 class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
-    points = ["operation_mode", "zone_state", "v_min*", "v_spt", "v_spt_tol"]
+    points = ["operation_mode", "zone_state", "v_min", "v_spt", "v_spt_tol"]
 
     def setpoint_at_minimum(self, operation_mode, zone_state, v_min, v_spt, v_spt_tol):
         if zone_state.lower().strip() != "deadband":
@@ -65,7 +65,7 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
             lambda t: self.setpoint_at_minimum(
                 t["operation_mode"],
                 t["zone_state"],
-                t["v_min*"],
+                t["v_min"],
                 t["v_spt"],
                 t["v_spt_tol"],
             ),
