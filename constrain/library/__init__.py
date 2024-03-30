@@ -39,6 +39,7 @@ from .LocalLoopSaturationReverseActingMin import *
 from .AppendixGHVACSystemFanOperation import *
 from .InteriorLightingControlAutomaticFullOff import *
 from .ExteriorLightingControlDaylightOff import *
+from .ExteriorLightingControlOccupancySensingReduction import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -86,4 +87,5 @@ __all__ = [
     "AppendixGHVACSystemFanOperation",
     "InteriorLightingControlAutomaticFullOff",
     "ExteriorLightingControlDaylightOff",
+    "ExteriorLightingControlOccupancySensingReduction",
 ]
