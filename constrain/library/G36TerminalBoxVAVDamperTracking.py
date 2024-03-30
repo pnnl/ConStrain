@@ -38,7 +38,7 @@ import pandas as pd
 
 
 class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
-    points = ["vav_damper_command", "v", "v_spt", "v_tracking_tol", "v_spt_tol"]
+    points = ["vav_damper_command", "v", "v_spt", "v_tracking_tol"]
 
     def err_flag(self, t):
         if abs(t["v_spt"] - t["v"]) >= t["v_tracking_tol"]:
@@ -76,7 +76,7 @@ class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
                     result_flag = True
                 elif (
                     cur["v_spt"] - cur["v"] >= cur["v_tracking_tol"]
-                    and cur["vav_damper_command"] >= 1
+                    and cur["vav_damper_command"] >= 99
                 ):
                     result_flag = True
                 else:
