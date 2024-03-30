@@ -62,7 +62,7 @@ from constrain.checklib import RuleCheckBase
 import numpy as np
 
 
-class G36ReheatTerminalBoxHeating(RuleCheckBase):
+class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
     points = [
         "operation_mode",
         "zone_state",
@@ -71,7 +71,8 @@ class G36ReheatTerminalBoxHeating(RuleCheckBase):
         "v_heat_min",
         "v_min*",
         "v_spt",
-        "v_spt_tol" "heating_loop_output",
+        "v_spt_tol",
+        "heating_loop_output",
         "room_temp",
         "space_temp_spt",
         "ahu_sat_spt",

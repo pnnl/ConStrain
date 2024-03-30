@@ -43,7 +43,7 @@ from .G36TerminalBoxVAVDamperTracking import *
 from .G36ReheatTerminalBoxHeatingCoilTracking import *
 from .G36ReheatTerminalBoxHeatingCoilLowerBound import *
 from .G36ReheatTerminalBoxCoolingAirflowSetpoint import *
-from .G36ReheatTerminalBoxHeating import *
+from .G36ReheatTerminalBoxHeatingAirflowSetpoint import *
 from .G36ReheatTerminalBoxDeadbandAirflowSetpoint import *
 from .G36TerminalBoxCoolingMinimumAirflow import *
 
@@ -97,7 +97,7 @@ __all__ = [
     "G36ReheatTerminalBoxHeatingCoilTracking",
     "G36ReheatTerminalBoxHeatingCoilLowerBound",
     "G36ReheatTerminalBoxCoolingAirflowSetpoint",
-    "G36ReheatTerminalBoxHeating",
+    "G36ReheatTerminalBoxHeatingAirflowSetpoint",
     "G36ReheatTerminalBoxDeadbandAirflowSetpoint",
     "G36TerminalBoxCoolingMinimumAirflow",
 ]
