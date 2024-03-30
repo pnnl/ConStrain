@@ -305,10 +305,11 @@
             "Section 6.4.3.4.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "no_of_occ": "Number of occupants",
+            "o": "Number of occupants",
             "m_oa": "Air terminal outdoor air volume flow rate",
-            "eco_onoff": "Air System Outdoor Air Economizer Status",
-            "tol": "Tolerance for the num of occupants"
+            "eco_onoff": "Air system outdoor air economizer status",
+            "tol_o": "Tolerance for the number of occupants",
+            "tol_m_oa": "Tolerance for the air terminal air volume flow rate"
         },
         "description_assertions": [
             "if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0, then false else pass"
@@ -1138,6 +1139,21 @@
         },
         "description_assertions": [
             "If the sensed data values are consistently above its set point, and after a default of 1 hour, the control command is still not saturated to minimum, then the verification fails; Otherwise, it passes."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "AppendixGHVACSystemFanOperation": {
+        "library_item_id": 53,
+        "description_brief": "Verify HVAC system fan operation as per ASHRAE 90.1 Appendix G rules",
+        "description_datapoints": {
+            "o": "Number of occupants",
+            "fan_runtime_fraction": "Fan runtime fraction (fraction of time the fan ran for the reported period)",
+            "m_oa": "System outdoor air flow rate",
+            "tol_o": "Tolerance or threshold for the number of occupants below which the system is serving an unoccupied space"
+        },
+        "description_assertions": [
+            "If the system never provides outdoor air the verification is untested. The verification fails if the system fan is not continuously running during an occupied period, it passes if it does. The verification fails if the system is always operating continuously during occupied periods, it passes otherwise."
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
