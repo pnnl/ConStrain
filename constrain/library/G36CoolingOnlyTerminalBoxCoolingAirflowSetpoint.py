@@ -63,7 +63,7 @@ class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
                 cooling_minimum = 0
             case _:
                 print("invalid operation mode value")
-                return False
+                return np.nan
 
         if cooling_minimum <= v_spt <= cooling_maximum:
             return True

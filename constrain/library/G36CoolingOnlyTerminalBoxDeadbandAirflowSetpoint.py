@@ -14,7 +14,6 @@ Verification Item:
 
 ```
 switch operation_mode
-switch operation_mode
 case 'occupied'
     minimum = v_min*
 case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
@@ -54,7 +53,7 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 dbmin = 0
             case _:
                 print("invalid operation mode value")
-                return False
+                return np.nan
 
         if abs(v_spt - dbmin) <= v_spt_tol:
             return True

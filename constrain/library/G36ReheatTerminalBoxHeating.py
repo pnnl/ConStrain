@@ -114,7 +114,7 @@ class G36ReheatTerminalBoxHeating(RuleCheckBase):
                 heating_min = v_cool_max
             case _:
                 print("invalid operation mode value")
-                return False
+                return np.nan
 
         if 0 < heating_loop_output <= 50:
             if (

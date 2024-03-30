@@ -73,7 +73,7 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
                 heating_min = 0
             case _:
                 print("invalid operation mode value")
-                return False
+                return np.nan
 
         if heating_min <= v_spt <= heating_max:
             return True

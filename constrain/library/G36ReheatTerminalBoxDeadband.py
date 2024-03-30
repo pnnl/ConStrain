@@ -2,9 +2,9 @@
 G36 2021
 ### Description
 
-Section 5.6.5.1
+Section 5.6.5.2
 
-- When the Zone State is cooling, the cooling-loop output shall be mapped to the active airflow setpoint from the cooling minimum endpoint to the cooling maximum endpoint. Heating coil is disabled unless the DAT is below the minimum setpoint
+- When the Zone State is deadband, the active airflow setpoint shall be the minimum endpoint. Heating coil is disabled unless the DAT is below the minimum setpoint
 
 ### Verification logic
 
@@ -14,16 +14,10 @@ if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol
 else
    switch operation_mode
    case 'occupied'
-       cooling_maximum = v_cool_max
        minimum = v_min*
-   case 'cooldown', 'setup'
-       cooling_maximum = v_cool_max
+   case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
        minimum = 0
-   case 'warmup', 'setback', 'unoccupied'
-       cooling_maximum = 0
-       minimum = 0
-
-   if cooling_minimum <= v_spt <= cooling_maximum
+   if abs(v_spt - minimum) <= v_spt_tol
        pass
    else
        fail
@@ -34,9 +28,9 @@ end
 
 - operation_mode: System operation mode
 - zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
-- v_cool_max: Maximum cooling airflow setpoint
 - v_min*: Occupied zone minimum airflow setpoint
 - v_spt: Active airflow setpoint
+- v_spt_tol: Airflow setpoint tolerance
 - heating_coil_command: Heating coil command
 - heating_coil_command_tol: Heating coil command saturation tolerance
 - dat: Discharge air temperature
@@ -48,62 +42,57 @@ from constrain.checklib import RuleCheckBase
 import numpy as np
 
 
-class G36ReheatTerminalBoxCooling(RuleCheckBase):
+class G36ReheatTerminalBoxDeadband(RuleCheckBase):
     points = [
         "operation_mode",
         "zone_state",
-        "v_cool_max",
         "v_min*",
         "v_spt",
+        "v_spt_tol",
         "heating_coil_command",
         "heating_coil_command_tol",
         "dat",
         "dat_min_spt",
     ]
 
-    def setpoint_in_range(
+    def setpoint_at_minimum(
         self,
         operation_mode,
         zone_state,
-        v_cool_max,
         v_min,
         v_spt,
+        v_spt_tol,
         heating_coil_command,
         heating_coil_command_tol,
         dat,
         dat_min_spt,
     ):
-        if zone_state.lower().strip() != "cooling":
+        if zone_state.lower().strip() != "deadband":
             return np.nan
         if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol:
             return False
         match operation_mode.strip().lower():
             case "occupied":
-                cooling_maximum = v_cool_max
-                cooling_minimum = v_min
-            case "cooldown" | "setup":
-                cooling_maximum = v_cool_max
-                cooling_minimum = 0
-            case "warmup" | "setback" | "unoccupied":
-                cooling_maximum = 0
-                cooling_minimum = 0
+                dbmin = v_min
+            case "cooldown" | "setup" | "warmup" | "setback" | "unoccupied":
+                dbmin = 0
             case _:
                 print("invalid operation mode value")
                 return np.nan
 
-        if cooling_minimum <= v_spt <= cooling_maximum:
+        if abs(v_spt - dbmin) <= v_spt_tol:
             return True
         else:
             return False
 
     def verify(self):
         self.result = self.df.apply(
-            lambda t: self.setpoint_in_range(
+            lambda t: self.setpoint_at_minimum(
                 t["operation_mode"],
                 t["zone_state"],
-                t["v_cool_max"],
                 t["v_min*"],
                 t["v_spt"],
+                t["v_spt_tol"],
                 t["heating_coil_command"],
                 t["heating_coil_command_tol"],
                 t["dat"],
