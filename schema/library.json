@@ -740,7 +740,7 @@
         "library_item_id": 107,
         "description_brief": "Terminal box with reheat when the zone state is heating following the Guideline 36 recommendations",
         "description_index": [
-            "Section 5.6.5.3 in ASHRAE Guideline 36-2021"
+            "Section 5.6.5.3 (a, b) in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
             "operation_mode": "System operation mode",
@@ -752,8 +752,73 @@
             "heating_loop_output": "Zone heating loop signal (from 0 to 100)",
             "room_temp": "Room temperature",
             "space_temp_spt": "Space temperature setpoint"
-        }
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "switch operation_mode",
+            "    case 'occupied'",
+            "        heating_maximum = max(v_heat_min, v_min*)",
+            "        heating_minimum = max(v_heat_min, v_min*)",
+            "    case 'cooldown'",
+            "        heating_maximum = v_heat_max",
+            "        heating_minimum = v_heat_min",
+            "    case 'setup', 'unoccupied'",
+            "        heating_maximum = 0",
+            "        heating_minimum = 0",
+            "    case 'warmup', 'setback'",
+            "        heating_maximum = v_heat_max",
+            "        heating_minimum = v_cool_max",
+            "",
+            "    if 0 < heating_loop_output <= 50:",
+            "        if abs(v_spt - heating_minimum) <= tolerance and ahu_sat_spt <= dat_spt <= 11 + space_temp_spt:",
+            "            pass",
+            "        else:",
+            "            fail",
+            "    if 50 < heating_loop_output <= 100:",
+            "        if dat > room_temp + 3 and heating_minimum <= v_spt <= heating_maximum:",
+            "            pass",
+            "        else:",
+            "            untested",
+            "    end"
+        ]
     },
+    "G36ReheatTerminalBoxHeatingCoilTracking": {
+        "library_item_id": 108,
+        "description_brief": "Terminal box with reheat heating coil tracking discharge temperature at setpoint following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.6.5.3 c in ASHRAE Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "heating_coil_command": "Heating coil command",
+            "dat": "Discharge air temperature",
+            "dat_spt": "Discharge air temperature setpoint",
+            "dat_tracking_tol": "Temperature tracking tolerance",
+            "dat_spt_tol": "Discharge air temperature setpoint tolerance"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if abs(dat_spt - dat) >= dat_tracking_tol (less than 1hr):",
+            "    pass",
+            "elif abs(dat_spt - dat) < dat_tracking_tol:",
+            "    pass",
+            "if dat - dat_spt >= dat_tracking_tol (continously) and heating_coil_command <= 1:",
+            "    pass",
+            "elif dat_spt - dat >= dat_tracking_tol (continuously) and vav_damper_command >= 99:",
+            "    pass",
+            "else:",
+            "    fail",
+            "end"
+        ]
+    },
+    "G36ReheatTerminalBoxHeatingCoilLowerBound": {
+        "library_item_id": 109,
+        "description_brief": "Terinal box with reheat heating coil needs to keep discharge air temp no lower than 10C when occupied",
+        "description_index":[
+            "Section 5.6.5.4 in Guideline 36-2021"
+        ]
+    }
     "G36SupplyAirTemperatureSetpoint": {
         "library_item_id": 30,
         "description_brief": "Supply air temperature operation following the Guideline 36 recommendations",
