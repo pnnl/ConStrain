@@ -36,6 +36,7 @@ from .LocalLoopSaturationDirectActingMax import *
 from .LocalLoopSaturationDirectActingMin import *
 from .LocalLoopSaturationReverseActingMax import *
 from .LocalLoopSaturationReverseActingMin import *
+from .InteriorLightingControlAutomaticFullOff import *
 from .ExteriorLightingControlDaylightOff import *
 
 __all__ = [
@@ -81,5 +82,6 @@ __all__ = [
     "LocalLoopSaturationReverseActingMax",
     "LocalLoopSaturationReverseActingMin",
     # "LocalLoopHuntingActivation",
+    "InteriorLightingControlAutomaticFullOff",
     "ExteriorLightingControlDaylightOff",
 ]
