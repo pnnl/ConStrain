@@ -815,26 +815,24 @@
     "G36ReheatTerminalBoxHeatingCoilLowerBound": {
         "library_item_id": 109,
         "description_brief": "Terminal box with reheat heating coil needs to keep discharge air temp no lower than 10C when occupied",
-        "description_index":[
+        "description_index": [
             "Section 5.6.5.4 in Guideline 36-2021"
         ],
         "description_datapoints": {
+            "operation_mode": "System operation mode",
             "heating_coil_command": "Heating coil command",
             "dat": "Discharge air temperature"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if abs(dat_spt - dat) >= dat_tracking_tol (less than 1hr):",
-            "    pass",
-            "elif abs(dat_spt - dat) < dat_tracking_tol:",
-            "    pass",
-            "if dat - dat_spt >= dat_tracking_tol (continously) and heating_coil_command <= 1:",
-            "    pass",
-            "elif dat_spt - dat >= dat_tracking_tol (continuously) and vav_damper_command >= 99:",
-            "    pass",
-            "else:",
-            "    fail",
+            "if operation_mode != 'occupied':",
+            "    untested",
+            "if operation_mode == 'occupied':",
+            "    if dat < 10 and heating_coil_command < 99:",
+            "        fail",
+            "    else:",
+            "        pass",
             "end"
         ]
     }
