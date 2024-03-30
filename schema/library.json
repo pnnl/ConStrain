@@ -1143,6 +1143,20 @@
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
     },
+    "MZSystemOccupiedStandbyVentilationZoneControl": {
+        "library_item_id": 53,
+        "description_brief": "Multizone system zone standby model ventilation control",
+        "description_datapoints": {
+            "zone_is_standby_mode": "Flag indicating that the zone targeted by the verification is in occupied standby mode",
+            "m_oa_requested_by_system": "System outdoor air setpoint",
+            "m_oa_zone_requirement": "Outdoor air required by the targeted zone"
+        },
+        "description_assertions": [
+            "If the targted zone is in standby mode and if the difference between the outdoor air setpoint and the last reported outdoor air setpoint when the zone was not in standby mode is greater than the outdoor air required for the zone the verification passes, it otherwise fails."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
     "AppendixGHVACSystemFanOperation": {
         "library_item_id": 53,
         "description_brief": "Verify HVAC system fan operation as per ASHRAE 90.1 Appendix G rules",
