@@ -11,7 +11,7 @@ import numpy as np
 
 class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
 
-    def test_g36_terminal_box_vav_damper_tracking0(self):
+    def test_g36_reheat_terminal_box_heating_coil_tracking0(self):
 
         points = [
             "operation_mode",
@@ -62,7 +62,7 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
 
         self.assertTrue(results.equals(expected_results))
 
-    def test_g36_terminal_box_vav_damper_tracking1(self):
+    def test_g36_reheat_terminal_box_heating_coil_tracking1(self):
         points = [
             "operation_mode",
             "heating_coil_command",

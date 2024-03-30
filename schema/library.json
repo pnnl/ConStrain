@@ -814,7 +814,7 @@
     },
     "G36ReheatTerminalBoxHeatingCoilLowerBound": {
         "library_item_id": 109,
-        "description_brief": "Terinal box with reheat heating coil needs to keep discharge air temp no lower than 10C when occupied",
+        "description_brief": "Terminal box with reheat heating coil needs to keep discharge air temp no lower than 10C when occupied",
         "description_index":[
             "Section 5.6.5.4 in Guideline 36-2021"
         ],
