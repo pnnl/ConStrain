@@ -1157,5 +1157,35 @@
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
+    },
+    "InteriorLightingControlAutomaticFullOff": {
+        "library_item_id": 53,
+        "description_brief": "Interior lighting control automatic full off",
+        "description_datapoints": {
+            "o": "Number of occupants",
+            "total_lighting_power": "Reported total lighting power (not the design total lighting power)",
+            "lighted_floor_area": "Area lit by the device/system considered",
+            "tol_o": "Tolerance or threshold for the number of occupants below which the system is serving an unoccupied space"
+        },
+        "description_assertions": [
+            "The algorithm verifies that the device/system doesn't serves more than 5,000 ft2 and that if it doesn't, if occupants are not present for at least 20 minutes, the lighting power of the device/system should be less or equal to 0.02 W/ft2, otherwise, the verification fails."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ExteriorLightingControlDaylightOff": {
+        "library_item_id": 53,
+        "description_brief": "Exterior lighting control occupancy sensing reduction",
+        "description_datapoints": {
+            "is_sun_up": "Flag that indicates if the sun has risen",
+            "daylight_sensed": "Amount of daylight sensed by a sensor, this should be expressed in the same unit as the setpoint",
+            "daylight_setpoint": "Daylight setpoint, or thresholds, used to determine if the exterior lighting system should be turned off",
+            "total_lighting_power": "Reported total lighting power (not the design total lighting power)"
+        },
+        "description_assertions": [
+            "The algorithm verifies that the exterior lighting is off when the sun has risen, or when there is a sufficient amount of daylight. If the exterior lighting system is not off during these situation, the verification fails, otherwise it passes."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
     }
 }
