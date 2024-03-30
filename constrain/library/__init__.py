@@ -42,6 +42,7 @@ from .G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint import *
 from .G36TerminalBoxVAVDamperTracking import *
 from .G36ReheatTerminalBoxHeatingCoilTracking import *
 from .G36ReheatTerminalBoxHeatingCoilLowerBound import *
+from .G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -92,4 +93,5 @@ __all__ = [
     "G36TerminalBoxVAVDamperTracking",
     "G36ReheatTerminalBoxHeatingCoilTracking",
     "G36ReheatTerminalBoxHeatingCoilLowerBound",
+    "G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint",
 ]
