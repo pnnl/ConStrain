@@ -749,12 +749,12 @@
             "v_heat_min": "Zone minimum heating airflow setpoint",
             "v_min*": "Occupied zone minimum airflow setpoint",
             "v_spt": "Active airflow setpoint",
-            "v_spt_tol":"Airflow setpoint tolerance",
+            "v_spt_tol": "Airflow setpoint tolerance",
             "heating_loop_output": "Zone heating loop signal (from 0 to 100)",
             "room_temp": "Room temperature",
             "space_temp_spt": "Space temperature setpoint",
             "ahu_sat_spt": "AHU supply air temperature setpoint",
-            "dat":"Discharge air temperature",
+            "dat": "Discharge air temperature",
             "dat_spt": "Discharge air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
@@ -819,7 +819,7 @@
     },
     "G36ReheatTerminalBoxHeatingCoilLowerBound": {
         "library_item_id": 109,
-        "description_brief": "Terminal box with reheat heating coil needs to keep discharge air temp no lower than 10C when occupied",
+        "description_brief": "Terminal box with reheat heating coil needs to keep discharge air temp no lower than 10C when occupied following the Guideline 36 recommendations",
         "description_index": [
             "Section 5.6.5.4 in Guideline 36-2021"
         ],
@@ -841,7 +841,39 @@
             "end"
         ]
     },
-    "G36TerminalBoxCoolingMinimumAirflow": {},
+    "G36TerminalBoxCoolingMinimumAirflow": {
+        "library_item_id": 110,
+        "description_brief": "Terminal box in cooling mode needs maintain minimum airflow when supply air temperature is high following the Guideline 36 recommendations",
+        "description_index": [
+            "Section 5.5.5.1.a in Guideline 36-2021",
+            "Section 5.6.5.1.a in Guideline 36-2021"
+        ],
+        "description_datapoints": {
+            "operation_mode": "System operation mode",
+            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
+            "v_min*": "Occupied zone minimum airflow setpoint",
+            "ahu_sat_spt": "AHU supply air temperature setpoint",
+            "v_spt": "Active airflow setpoint",
+            "v_spt_tol": "Airflow setpoint tolerance",
+            "room_temp": "Room temperature"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if ahu_sat_spt <= room_temp:",
+            "    untested",
+            "else:",
+            "    switch operation_mode",
+            "        case 'occupied'",
+            "            minimum = v_min*",
+            "        case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'",
+            "            minimum = 0",
+            "    if v_spt - v_spt_tol > minimum:",
+            "        fail",
+            "    else:",
+            "        pass"
+        ]
+    },
     "G36SupplyAirTemperatureSetpoint": {
         "library_item_id": 30,
         "description_brief": "Supply air temperature operation following the Guideline 36 recommendations",
