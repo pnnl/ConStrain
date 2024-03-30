@@ -789,15 +789,16 @@
             "Section 5.6.5.3 c in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
+            "operation_mode": "System operation mode",
             "heating_coil_command": "Heating coil command",
             "dat": "Discharge air temperature",
             "dat_spt": "Discharge air temperature setpoint",
-            "dat_tracking_tol": "Temperature tracking tolerance",
-            "dat_spt_tol": "Discharge air temperature setpoint tolerance"
+            "dat_tracking_tol": "Temperature tracking tolerance"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
+            "only check the following if operation_mode is heating",
             "if abs(dat_spt - dat) >= dat_tracking_tol (less than 1hr):",
             "    pass",
             "elif abs(dat_spt - dat) < dat_tracking_tol:",
