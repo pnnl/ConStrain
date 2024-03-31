@@ -305,10 +305,11 @@
             "Section 6.4.3.4.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "no_of_occ": "Number of occupants",
+            "o": "Number of occupants",
             "m_oa": "Air terminal outdoor air volume flow rate",
-            "eco_onoff": "Air System Outdoor Air Economizer Status",
-            "tol": "Tolerance for the num of occupants"
+            "eco_onoff": "Air system outdoor air economizer status",
+            "tol_o": "Tolerance for the number of occupants",
+            "tol_m_oa": "Tolerance for the air terminal air volume flow rate"
         },
         "description_assertions": [
             "if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0, then false else pass"
@@ -1138,6 +1139,79 @@
         },
         "description_assertions": [
             "If the sensed data values are consistently above its set point, and after a default of 1 hour, the control command is still not saturated to minimum, then the verification fails; Otherwise, it passes."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "MZSystemOccupiedStandbyVentilationZoneControl": {
+        "library_item_id": 53,
+        "description_brief": "Multizone system zone standby model ventilation control",
+        "description_datapoints": {
+            "zone_is_standby_mode": "Flag indicating that the zone targeted by the verification is in occupied standby mode",
+            "m_oa_requested_by_system": "System outdoor air setpoint",
+            "m_oa_zone_requirement": "Outdoor air required by the targeted zone"
+        },
+        "description_assertions": [
+            "If the targted zone is in standby mode and if the difference between the outdoor air setpoint and the last reported outdoor air setpoint when the zone was not in standby mode is greater than the outdoor air required for the zone the verification passes, it otherwise fails."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "AppendixGHVACSystemFanOperation": {
+        "library_item_id": 53,
+        "description_brief": "Verify HVAC system fan operation as per ASHRAE 90.1 Appendix G rules",
+        "description_datapoints": {
+            "o": "Number of occupants",
+            "fan_runtime_fraction": "Fan runtime fraction (fraction of time the fan ran for the reported period)",
+            "m_oa": "System outdoor air flow rate",
+            "tol_o": "Tolerance or threshold for the number of occupants below which the system is serving an unoccupied space"
+        },
+        "description_assertions": [
+            "If the system never provides outdoor air the verification is untested. The verification fails if the system fan is not continuously running during an occupied period, it passes if it does. The verification fails if the system is always operating continuously during occupied periods, it passes otherwise."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "InteriorLightingControlAutomaticFullOff": {
+        "library_item_id": 53,
+        "description_brief": "Interior lighting control automatic full off",
+        "description_datapoints": {
+            "o": "Number of occupants",
+            "total_lighting_power": "Reported total lighting power (not the design total lighting power)",
+            "lighted_floor_area": "Area lit by the device/system considered",
+            "tol_o": "Tolerance or threshold for the number of occupants below which the system is serving an unoccupied space"
+        },
+        "description_assertions": [
+            "The algorithm verifies that the device/system doesn't serves more than 5,000 ft2 and that if it doesn't, if occupants are not present for at least 20 minutes, the lighting power of the device/system should be less or equal to 0.02 W/ft2, otherwise, the verification fails."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ExteriorLightingControlDaylightOff": {
+        "library_item_id": 53,
+        "description_brief": "Exterior lighting control occupancy sensing reduction",
+        "description_datapoints": {
+            "is_sun_up": "Flag that indicates if the sun has risen",
+            "daylight_sensed": "Amount of daylight sensed by a sensor, this should be expressed in the same unit as the setpoint",
+            "daylight_setpoint": "Daylight setpoint, or thresholds, used to determine if the exterior lighting system should be turned off",
+            "total_lighting_power": "Reported total lighting power (not the design total lighting power)"
+        },
+        "description_assertions": [
+            "The algorithm verifies that the exterior lighting is off when the sun has risen, or when there is a sufficient amount of daylight. If the exterior lighting system is not off during these situation, the verification fails, otherwise it passes."
+        ],
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass"
+    },
+    "ExteriorLightingControlOccupancySensingReduction": {
+        "library_item_id": 53,
+        "description_brief": "Exterior lighting control occupancy sensing reduction",
+        "description_datapoints": {
+            "o": "Number of occupants",
+            "total_lighting_power": "Reported total lighting power (not the design total lighting power)",
+            "tol_o": "Tolerance or threshold for the number of occupants below which the system is serving an unoccupied space"
+        },
+        "description_assertions": [
+            "The algorithm verifies that the exterior lighting is controlled based on occupancy. It fails if the maximum reported total lighting power is greater than 1500 W and if the total mnaximum lighting power is not reduced by half when occupancy has not been detected for 15 mins. Otherwise, it passes."
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
