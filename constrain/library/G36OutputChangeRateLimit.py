@@ -21,6 +21,7 @@ else:
 - max_rate_of_change_per_min: control loop output maximum rate of change, default to 25.
 
 """
+
 import pandas as pd
 from constrain.checklib import RuleCheckBase
 from datetime import datetime

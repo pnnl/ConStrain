@@ -3,6 +3,7 @@ This file contains the classes Path, ControlPoint, CustomItem, and Scene. These 
 CustomItem contains the state, Path links 2 ControlPoints with an arrowed line, ControlPoints are on the edges of CustomItems, and Scene contains
 all of this.
 """
+
 import json
 import math
 import re

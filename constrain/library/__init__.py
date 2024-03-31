@@ -41,6 +41,16 @@ from .AppendixGHVACSystemFanOperation import *
 from .InteriorLightingControlAutomaticFullOff import *
 from .ExteriorLightingControlDaylightOff import *
 from .ExteriorLightingControlOccupancySensingReduction import *
+from .G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint import *
+from .G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint import *
+from .G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint import *
+from .G36TerminalBoxVAVDamperTracking import *
+from .G36ReheatTerminalBoxHeatingCoilTracking import *
+from .G36ReheatTerminalBoxHeatingCoilLowerBound import *
+from .G36ReheatTerminalBoxCoolingAirflowSetpoint import *
+from .G36ReheatTerminalBoxHeatingAirflowSetpoint import *
+from .G36ReheatTerminalBoxDeadbandAirflowSetpoint import *
+from .G36TerminalBoxCoolingMinimumAirflow import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -90,4 +100,14 @@ __all__ = [
     "InteriorLightingControlAutomaticFullOff",
     "ExteriorLightingControlDaylightOff",
     "ExteriorLightingControlOccupancySensingReduction",
+    "G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint",
+    "G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint",
+    "G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint",
+    "G36TerminalBoxVAVDamperTracking",
+    "G36ReheatTerminalBoxHeatingCoilTracking",
+    "G36ReheatTerminalBoxHeatingCoilLowerBound",
+    "G36ReheatTerminalBoxCoolingAirflowSetpoint",
+    "G36ReheatTerminalBoxHeatingAirflowSetpoint",
+    "G36ReheatTerminalBoxDeadbandAirflowSetpoint",
+    "G36TerminalBoxCoolingMinimumAirflow",
 ]

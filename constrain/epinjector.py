@@ -1,6 +1,5 @@
 """Module for injecting objects into idfs"""
 
-
 from io import StringIO
 from constrain.datapoint import IdfOutputPoint
 from typing import List
