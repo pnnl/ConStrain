@@ -115,7 +115,8 @@ class Zoom(QGraphicsView):
 
         intersection = objects_created_in_items & objects_not_used_in_items
         if intersection:
-            error_msg = f"{", ".join(intersection)} being used by other state"
+            error_msg_object = ", ".join(intersection)
+            error_msg = f"{error_msg_object} being used by other state"
             if len(intersection) > 1:
                 error_msg += "s"
             send_error("Error deleting state", error_msg)
@@ -494,3 +495,4 @@ class WorkflowDiagram(QWidget):
         self.scene.clear()
         self.view.resetTransform()
         self.update()
+        self.popup = None
