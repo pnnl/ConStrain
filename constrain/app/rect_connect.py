@@ -10,7 +10,7 @@ import re
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from . import utils
+from constrain.app import utils
 
 
 class Path(QtWidgets.QGraphicsPathItem):
@@ -444,7 +444,7 @@ class CustomItem(QtWidgets.QGraphicsItem):
             # make sure that payloads from self.state are not being used by another state
             for created_object in objects_created:
                 if created_object in all_objects_in_use:
-                    self.sendError("Object created in use")
+                    utils.send_error("Error in State", "Object created in use")
                     return
 
             # remove lines

@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt
+from constrain.app import utils
 
 
 class ImportForm(QWidget):
@@ -63,11 +64,21 @@ class ImportForm(QWidget):
         Args:
             imports (list): A list of python imports
         """
-        if isinstance(imports, list) and all(isinstance(item, str) for item in imports):
-            for i in imports:
-                self.imports.append(i)
-                self.import_list.addItem(i)
+        try:
+            self.verify_import(imports)
+        except AssertionError:
+            utils.send_error("Error in Import", "Invalid imports form")
+            return
+
+        for i in imports:
+            self.imports.append(i)
+            self.import_list.addItem(i)
         self.update()
+
+    def verify_import(self, imports):
+        assert isinstance(imports, list) and all(
+            isinstance(item, str) for item in imports
+        )
 
     def show_context_menu(self, position):
         """Allows user to delete an import on right click of an item on the list
