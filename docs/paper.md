@@ -35,7 +35,7 @@ bibliography: paper.bib
 
 # Summary
 
-The Control Strainer, or `ConStrain`, is a python-based framework that can be used by energy modelers, building engineers, and researchers to conduct consistent and automated verification of building system controls using either timeseries generated from whole-building energy simulations or from actual building automation system trend data. `ConStrain` is made of three distinct parts: a control verification algorithm library, an automated preparation process and verification case generation, and a standardized performance evaluation and reporting process. At its roots, `ConStrain`'s verification library was developed with the verification of control related building energy code requirements in mind but it is built such that its library is expandable and can cover any type of customized control verifications.
+The Control Strainer, or `ConStrain`, is a python-based framework that can be used by energy modelers, building engineers, and researchers to conduct consistent and automated verification of building system controls using either timeseries generated from whole-building energy simulations or from actual building automation system trend data. `ConStrain` is made of three distinct parts: a control verification algorithm library, an automated preparation process and verification case generation, and a standardized performance evaluation and reporting process. At its roots, `ConStrain`'s verification library was developed with the verification of control related building energy code requirements in mind, but it is built such that its library is expandable and can cover any type of customized control verifications.
 
 # Statement of need
 
@@ -47,6 +47,6 @@ However, one of the challenges to realizing those savings is the correct impleme
 
 # Acknowledgements
 
-ConStrain was developed at the Pacific Northwest National Laboratory, and was funded under contract with the U.S. Department of Energy (DOE). It is actively being developed as an open-source project.
+ConStrain was developed at the Pacific Northwest National Laboratory and was funded under contract with the U.S. Department of Energy (DOE). It is actively being developed as an open-source project.
 
 # References
