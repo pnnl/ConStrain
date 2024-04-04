@@ -57,6 +57,7 @@ Endif
 - tol_o: occupancy threshold; below that value the zones are considered unoccupied.
 
 """
+
 from constrain.checklib import RuleCheckBase
 
 

@@ -34,6 +34,7 @@ Endif
 - total_lighting_power: reported total lighting power (not the design total lighting power)
 
 """
+
 from constrain.checklib import RuleCheckBase
 import numpy as np
 
