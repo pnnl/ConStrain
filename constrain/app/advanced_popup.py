@@ -90,14 +90,14 @@ class AdvancedPopup(QDialog):
         state = self.get_state()
 
         if not state:
-            self.error_popup("Invalid state format")
+            utils.send_error("Error in State", "Invalid state format")
             self.error = True
         else:
             state_type = state.get("Type")
 
             if state_type not in ["Choice", "MethodCall"]:
                 self.error = True
-                self.error_popup("Invalid type")
+                utils.send_error("Error in State", "Invalid state type")
             elif state_type == "Choice":
                 if "Choices" not in state:
                     self.error = True
@@ -118,4 +118,9 @@ class AdvancedPopup(QDialog):
                         "Error in State",
                         "Cannot have both Start and End keys in a state",
                     )
-                self.close()
+
+                if state.get("End") and state.get("Next"):
+                    self.error = True
+                    utils.send_error(
+                        "Error in State", "State has 'End' and 'Next' keys"
+                    )

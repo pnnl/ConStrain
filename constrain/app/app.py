@@ -169,7 +169,7 @@ class GUI(QMainWindow):
 
         if fp:
             try:
-                workflow = self.get_workflow()
+                workflow = self.states_form.get_workflow(reformat=False)
                 with open(fp, "w", encoding="utf-8") as f:
                     json.dump(self.create_json(workflow), f, indent=4)
             except Exception:
@@ -228,7 +228,7 @@ class GUI(QMainWindow):
                     )
                     self.import_form.read_import(workflow.get("imports"))
                     self.states_form.read_import(workflow.get("states"))
-                    self.get_workflow()
+                    self.states_form.get_workflow(reformat=True)
                 else:
                     # error if selected file cannot be converted to a dict
                     print("error")
@@ -281,7 +281,7 @@ class GUI(QMainWindow):
         """Workflow for submitting the state. Triggered on the click of the Submit button. Displays a popup which
         shows the progress of running the state.
         """
-        states = self.get_workflow(reformat=False)
+        states = self.states_form.get_workflow(reformat=False)
         json_data = self.create_json(states)
 
         popup = SubmitPopup()
@@ -293,79 +293,11 @@ class GUI(QMainWindow):
         self.worker.start()
         popup.exec()
 
-    def get_workflow(self, reformat=True):
-        """Organizes the states into a single list, colors states based on placing, returns organized workflow
-
-        Returns:
-            list: A compiled version of the state dicts in DFS order
-        """
-
-        # find all CustomItems in the scene
-        items = [
-            item
-            for item in self.states_form.scene.items()
-            if isinstance(item, CustomItem)
-        ]
-
-        # prepare for DFS
-        roots = []
-        for i in items:
-            parent = True
-            for j in items:
-                if i in j.children:
-                    parent = False
-                    break
-            if parent:
-                roots.append(i)
-                visited = set()
-
-        paths = []
-
-        # DFS helper method
-        def dfs_helper(item, path):
-            path.append(item)
-            visited.add(item)
-
-            if item not in items or not item.children:
-                # item is a leaf node
-                item.setBrush("red")
-                item.state["End"] = "True"
-                paths.append(path[:])
-            else:
-                # item is not a leaf node
-                item.setBrush()
-
-            for child in item.children:
-                if child not in visited:
-                    dfs_helper(child, path)
-
-            path.pop()
-            visited.remove(item)
-
-        for root in roots:
-            if reformat:
-                root.state["Start"] = "True"
-                self.states_form.view.arrange_tree(root, 0, 0, 150)
-            if root not in visited:
-                dfs_helper(root, [])
-            root.setBrush("green")
-
-        workflow_path = []
-        visited = set()
-
-        # create final path through workflow
-        for path in paths:
-            for node in path:
-                if node not in visited:
-                    workflow_path.append(node.state)
-                    visited.add(node)
-        return workflow_path
-
     def validate_form(self):
         """Workflow for validating the state. Triggered on the click of the Validate button. Enables the submit
         button if the workflow is validated.
         """
-        workflow_path = self.get_workflow(reformat=False)
+        workflow_path = self.states_form.get_workflow(reformat=False)
         json_data = self.create_json(workflow_path)
 
         warnings.simplefilter(action="ignore", category=FutureWarning)

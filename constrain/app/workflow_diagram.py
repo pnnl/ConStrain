@@ -236,9 +236,6 @@ class WorkflowDiagram(QWidget):
             return
 
         state = self.popup.get_state()
-        if not state or (state.get("Type", 0) not in ["Choice", "MethodCall"]):
-            return
-
         self.create_item(state)
 
     def create_item(self, state):
@@ -249,14 +246,25 @@ class WorkflowDiagram(QWidget):
         """
 
         # test whether state was made with popup, or if it was imported. Adds self.popup to CustomItem if not imported
+        if self.popup and self.popup.get_state():
+            self.popup.get_state()["Title"]
+
+        if self.popup and self.popup.get_state():
+            state["Title"]
+
         if (
             self.popup
             and self.popup.get_state()
             and self.popup.get_state()["Title"] == state["Title"]
         ):
+            popup_used = True
             rect_item = CustomItem(state, popup=self.popup)
         else:
+            popup_used = False
             rect_item = CustomItem(state)
+
+        rect_item.deleted.connect(self.delete_state)
+        rect_item.edited.connect(self.edit_item)
 
         def connect_rects(parent, child):
             """Connects a parent CustomItem to a child CustomItem
@@ -272,7 +280,24 @@ class WorkflowDiagram(QWidget):
                 self.scene.addItem(path)
 
         # find CustomItems in scene
-        rects = [item for item in self.scene.items() if isinstance(item, CustomItem)]
+        rects = self.get_rects_in_scene()
+
+        if state.get("End"):
+            if self.is_new_end_state_valid(rect_item):
+                rect_item.setBrush("red")
+            else:
+                utils.send_error(
+                    "Error in Workflow", "This item cannot be an end state"
+                )
+                return
+        elif state.get("Start"):
+            if self.is_new_start_state_valid(rect_item):
+                rect_item.setBrush("green")
+            else:
+                utils.send_error(
+                    "Error in Workflow", "This item cannot be a start state"
+                )
+                return
 
         # if parent and child exist in the scene, connect them with a Path
         if "Next" in state.keys():
@@ -282,6 +307,7 @@ class WorkflowDiagram(QWidget):
             if len(matching_rects) == 1:
                 child_rect = matching_rects[0]
                 connect_rects(rect_item, child_rect)
+
         for rect in rects:
             nexts = rect.get_nexts()
             for next in nexts:
@@ -300,7 +326,55 @@ class WorkflowDiagram(QWidget):
                     rect_with_max_y = rect
             size = rect_with_max_y.boundingRect().height()
             rect_item.setPos(0, max_y + size + stepsize)
+
+        if popup_used:
+            self.popup.close()
+
         self.update()
+
+    def delete_state(self, obj):
+        objects_created = obj.get_objects_created()
+        all_objects_in_use = self.scene.getObjectsinUse()
+        for created_object in objects_created:
+            if created_object in all_objects_in_use:
+                utils.send_error("Error in State", "Object created in use")
+                return
+
+        # remove lines
+        for c in obj.controls:
+            for p in c.paths:
+                p1 = p.start
+                p2 = p.end
+                if p1 in obj.controls:
+                    p2.removeLine(p)
+                else:
+                    p1.removeLine(p)
+
+        self.scene.removeItem(obj)
+
+    def is_new_start_state_valid(self, rect):
+        rects = self.get_rects_in_scene()
+        start_or_end_state_rects = [
+            rect
+            for rect in rects
+            if rect.state.get("Start") and rect.state["Start"] == "True"
+        ]
+
+        rect_has_no_parents = not any(
+            rect in possible_parents.children for possible_parents in rects
+        )
+        return len(start_or_end_state_rects) == 0 and rect_has_no_parents
+
+    def get_rect_parents(self, rect):
+        return [
+            parent for parent in self.get_rects_in_scene() if rect in parent.children
+        ]
+
+    def is_new_end_state_valid(self, rect):
+        return len(rect.children) == 0
+
+    def get_rects_in_scene(self):
+        return [item for item in self.scene.items() if isinstance(item, CustomItem)]
 
     def edit_state(self, rect):
         """Gives previously made CustomItem a new state
@@ -328,9 +402,31 @@ class WorkflowDiagram(QWidget):
         if old_state != current_state:
             rect.set_state(current_state)
 
-    def get_workflow(self):
+        if current_state.get("End"):
+            if self.is_new_end_state_valid(rect):
+                rect.setBrush("red")
+            else:
+                utils.send_error(
+                    "Error in Workflow", "This item cannot be an end state"
+                )
+                return
+        elif current_state.get("Start"):
+            if self.is_new_start_state_valid(rect):
+                rect.setBrush("green")
+            else:
+                utils.send_error(
+                    "Error in Workflow", "This item cannot be a start state"
+                )
+                return
+
+        self.popup.close()
+
+    def get_workflow(self, reformat=True):
         """Computes structure of the workflow using Depth First Search and paints CustomItems depending on place in graph"""
-        items = [item for item in self.scene.items() if isinstance(item, CustomItem)]
+        if not reformat:
+            reformat = True
+
+        items = self.get_rects_in_scene()
 
         roots = []
         for i in items:
@@ -350,35 +446,47 @@ class WorkflowDiagram(QWidget):
         else:
             root = roots[0]
 
-        visited = set()
+        visited1 = set()
         paths = []
 
         def dfs_helper(item, path):
             path.append(item)
-            visited.add(item)
+            visited1.add(item)
 
             if item not in items or not item.children:
                 # item is a leaf node
                 item.setBrush("red")
                 item.state["End"] = "True"
+                item.state.pop("Next", None)
                 paths.append(path[:])
             else:
                 # item is not a leaf node
                 item.setBrush()
 
             for child in item.children:
-                if child not in visited:
+                if child not in visited1:
                     dfs_helper(child, path)
 
             path.pop()
-            visited.remove(item)
+            visited1.remove(item)
 
-        root.state["Start"] = "True"
-        self.view.arrange_tree(root, 0, 0, 150)
-        if root not in visited:
+        if reformat:
+            self.view.arrange_tree(root, 0, 0, 150)
+        if root not in visited1:
             dfs_helper(root, [])
-        root.setBrush("green")
+
         self.root = root
+        root.state["Start"] = "True"
+        root.setBrush("green")
+
+        visited2 = set()
+        workflow_path = []
+        for path in paths:
+            for node in path:
+                if node not in visited2:
+                    workflow_path.append(node.state)
+                    visited2.add(node)
+        return workflow_path
 
     def call_basic_popup(self, rect=None, edit=False):
         """Calls basic popup on click of CustomItem, or if 'Add Basic' button is pressed
@@ -429,10 +537,13 @@ class WorkflowDiagram(QWidget):
         """When a CustomItem is clicked, calls self.call_basic_popup in order to display popup associated with the CustomItem clicked"""
         if self.view.itemClicked:
             rect = self.view.itemClicked
-            if self.setting == "basic":
-                self.call_basic_popup(rect, True)
-            elif self.setting == "advanced":
-                self.call_advanced_popup(rect, True)
+            self.edit_item(rect)
+
+    def edit_item(self, rect):
+        if self.setting == "basic":
+            self.call_basic_popup(rect, True)
+        elif self.setting == "advanced":
+            self.call_advanced_popup(rect, True)
 
     def read_import(self, states):
         """Adds imported states to workflow diagram
@@ -453,5 +564,7 @@ class WorkflowDiagram(QWidget):
     def clear(self):
         """Clear all state"""
         self.scene.clear()
+        self.popup = None
+        self.root = None
         self.view.resetTransform()
         self.update()

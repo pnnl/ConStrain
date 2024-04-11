@@ -305,8 +305,10 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
         self.setOpacity(0.3)
 
 
-class CustomItem(QtWidgets.QGraphicsItem):
+class CustomItem(QtWidgets.QGraphicsObject):
     # ControlPoint outline
+    deleted = QtCore.pyqtSignal(QtWidgets.QGraphicsObject)
+    edited = QtCore.pyqtSignal(QtWidgets.QGraphicsObject)
     controlBrush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
 
     def __init__(self, state, popup=None):
@@ -430,45 +432,15 @@ class CustomItem(QtWidgets.QGraphicsItem):
     def contextMenuEvent(self, event):
         """Context menu to allow deletion of self in scene"""
         menu = QtWidgets.QMenu()
+        edit_action = menu.addAction("Edit")
         delete_action = menu.addAction("Delete")
 
         action = menu.exec(event.screenPos())
 
         if action == delete_action:
-            # find payloads that self.state has created
-            objects_created = self.get_objects_created()
-
-            # find what objects are currently being used by other states
-            all_objects_in_use = self.scene().getObjectsinUse()
-
-            # make sure that payloads from self.state are not being used by another state
-            for created_object in objects_created:
-                if created_object in all_objects_in_use:
-                    utils.send_error("Error in State", "Object created in use")
-                    return
-
-            # remove lines
-            for c in self.controls:
-                for p in c.paths:
-                    p1 = p.start
-                    p2 = p.end
-                    if p1 in self.controls:
-                        p2.removeLine(p)
-                    else:
-                        p1.removeLine(p)
-            self.scene().removeItem(self)
-
-    def sendError(self, text):
-        """Displays an error message given text
-
-        Args:
-            text (str): error message to display
-        """
-        error_msg = QtWidgets.QMessageBox()
-        error_msg.setIcon(QtWidgets.QMessageBox.Icon.Critical)
-        error_msg.setWindowTitle("Error in State")
-        error_msg.setText(text)
-        error_msg.exec()
+            self.deleted.emit(self)
+        elif action == edit_action:
+            self.edited.emit(self)
 
     def get_objects_created(self):
         """Returns objects that self.state has created

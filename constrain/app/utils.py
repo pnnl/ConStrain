@@ -14,7 +14,7 @@ def send_error(window_title, text):
     error_msg.exec()
 
 
-def send_are_you_sure(text):
+def send_are_you_sure(text=""):
     """Displays an 'are you sure' message with given text
 
     Args:
