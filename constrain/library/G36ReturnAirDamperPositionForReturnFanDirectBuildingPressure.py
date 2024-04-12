@@ -28,6 +28,7 @@ end
 ```
 
 """
+
 from constrain.checklib import RuleCheckBase
 
 

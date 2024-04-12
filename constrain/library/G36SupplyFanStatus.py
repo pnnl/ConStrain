@@ -32,6 +32,7 @@ else:
 - supply_fan_status: supply fan status (speed): ['on', 'off'] (can be replaced by binary or numeric variables)
 
 """
+
 import pandas as pd
 from constrain.checklib import RuleCheckBase
 import numpy as np
