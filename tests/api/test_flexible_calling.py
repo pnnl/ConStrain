@@ -155,5 +155,6 @@ class TestFlexibleCalling(unittest.TestCase):
                 "INFO:root:Change current working path to the specified path.",
             )
 
+
 if __name__ == "__main__":
     unittest.main()
