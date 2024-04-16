@@ -155,10 +155,5 @@ class TestFlexibleCalling(unittest.TestCase):
                 "INFO:root:Change current working path to the specified path.",
             )
 
-    """
-    1. Probably another test is needed to check if the program can successfully detect if the WD provided is Linux format or Window format. 
-    """
-
-
 if __name__ == "__main__":
     unittest.main()
