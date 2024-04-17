@@ -31,3 +31,7 @@ Workflow done at 22:19:51, a total of 12 states were executed in 0:00:33.789468.
 ```
 poetry run pytest tests
 ```
+
+# Publish ConStrain to Pypi
+
+`poetry build` then `poetry publish`
