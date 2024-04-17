@@ -3,6 +3,7 @@ This file contains the classes Path, ControlPoint, CustomItem, and Scene. These 
 CustomItem contains the state, Path links 2 ControlPoints with an arrowed line, ControlPoints are on the edges of CustomItems, and Scene contains
 all of this.
 """
+
 import json
 import math
 import re
@@ -434,28 +435,31 @@ class CustomItem(QtWidgets.QGraphicsItem):
         action = menu.exec(event.screenPos())
 
         if action == delete_action:
+            self.delete()
             # find payloads that self.state has created
-            objects_created = self.get_objects_created()
 
-            # find what objects are currently being used by other states
-            all_objects_in_use = self.scene().getObjectsinUse()
+    def delete(self):
+        objects_created = self.get_objects_created()
 
-            # make sure that payloads from self.state are not being used by another state
-            for created_object in objects_created:
-                if created_object in all_objects_in_use:
-                    self.sendError("Object created in use")
-                    return
+        # find what objects are currently being used by other states
+        all_objects_in_use = self.scene().getObjectsinUse()
 
-            # remove lines
-            for c in self.controls:
-                for p in c.paths:
-                    p1 = p.start
-                    p2 = p.end
-                    if p1 in self.controls:
-                        p2.removeLine(p)
-                    else:
-                        p1.removeLine(p)
-            self.scene().removeItem(self)
+        # make sure that payloads from self.state are not being used by another state
+        for created_object in objects_created:
+            if created_object in all_objects_in_use:
+                self.sendError("Object created in use")
+                return
+
+        # remove lines
+        for c in self.controls:
+            for p in c.paths:
+                p1 = p.start
+                p2 = p.end
+                if p1 in self.controls:
+                    p2.removeLine(p)
+                else:
+                    p1.removeLine(p)
+        self.scene().removeItem(self)
 
     def sendError(self, text):
         """Displays an error message given text

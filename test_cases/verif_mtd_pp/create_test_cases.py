@@ -521,9 +521,9 @@ def integrated_econ(idf, idf_f, id, cases):
                                         "ep_path": "C:\EnergyPlusV9-0-1\energyplus.exe",
                                     }
                                     integrated_econ["expected_result"] = "fail"
-                                    integrated_econ[
-                                        "verification_class"
-                                    ] = "IntegratedEconomizerControl"
+                                    integrated_econ["verification_class"] = (
+                                        "IntegratedEconomizerControl"
+                                    )
                                     integrated_econ["datapoints_source"] = {
                                         "idf_output_variables": {
                                             "oa_flow": {
