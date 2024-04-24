@@ -111,11 +111,11 @@ class GUI(QMainWindow):
 
         file_menu = QMenu("File", self)
 
-        import_action = QAction("Import", self)
+        import_action = QAction("Import Workflow", self)
         import_action.triggered.connect(self.importFile)
         file_menu.addAction(import_action)
 
-        export_menu = QMenu("Export", self)
+        export_menu = QMenu("Export Workflow", self)
         file_menu.addMenu(export_menu)
 
         json_export_action = QAction("JSON", self)

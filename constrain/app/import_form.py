@@ -24,6 +24,7 @@ class ImportForm(QWidget):
         self.import_input = QLineEdit()
 
         add_button = QPushButton("Add")
+        add_button.setToolTip("Add a library to use in your workflow")
 
         self.import_list = QListWidget()
 
