@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <measure>
   <schema_version>3.1</schema_version>
-  <name>generate_constrain_report</name>
-  <uid></uid>
-  <version_id></version_id>
-  <version_modified>2024-03-08T12:00:00Z</version_modified>
+  <uid>a8f08533-6b07-4e82-b20a-6be8633a6658</uid>
+  <version_id>4ae6b69a-02ee-4fe1-a82b-1777c78c750f</version_id>
+  <version_modified>2024-04-25T12:00:00Z</version_modified>
+  <xml_checksum>7C9D3672</xml_checksum>
   <class_name>GenerateConStrainReport</class_name>
   <display_name>Generate a ConStrain report.</display_name>
   <description>This measure generates a ConStrain report given a workflow.</description>
@@ -52,7 +52,7 @@
         <identifier>2.0.0</identifier>
         <min_compatible>3.6.0</min_compatible>
       </version>
-      <filename>measure.pu</filename>
+      <filename>measure.py</filename>
       <filetype>py</filetype>
       <usage_type>script</usage_type>
     </file>
