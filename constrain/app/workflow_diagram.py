@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import (
     QGraphicsTextItem,
     QGraphicsRectItem,
     QMenu,
+    QGraphicsObject,
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QRectF
 from PyQt6.QtGui import (
@@ -29,6 +30,7 @@ from collections import Counter
 
 class Zoom(QGraphicsView):
     clicked = pyqtSignal()
+    mass_deleted = pyqtSignal(QGraphicsObject)
 
     def __init__(self, scene):
         """QGraphicsView that includes zoom function
@@ -78,24 +80,28 @@ class Zoom(QGraphicsView):
 
     def contextMenuEvent(self, event):
         menu = QMenu(self)
-
+        delete_action = menu.addAction(delete_action)
+        action = menu.exec(event.screenPos())
         # Check if there's an item under the mouse cursor
-        selected_states = [
-            item
-            for item in self.scene.items()
-            if item.isSelected() and isinstance(item, CustomItem)
-        ]
-        if selected_states:
-            delete_action = QAction("Delete", self)
-            delete_action.triggered.connect(lambda: self.delete_items(selected_states))
-            menu.addAction(delete_action)
-        else:
-            item = self.itemAt(event.pos())
 
-            if isinstance(item, CustomItem):
+        if action == delete_action:
+            selected_states = [
+                item
+                for item in self.scene.items()
+                if item.isSelected() and isinstance(item, CustomItem)
+            ]
+            if selected_states:
                 delete_action = QAction("Delete", self)
-                delete_action.triggered.connect(item.delete)
-                menu.addAction(delete_action)
+                self.mass_deleted.emit(selected_states)
+                # delete_action.triggered.connect(lambda: self.delete_items(selected_states))
+
+            else:
+                item = self.itemAt(event.pos())
+
+                if isinstance(item, CustomItem):
+                    delete_action = QAction("Delete", self)
+                    delete_action.triggered.connect(item.delete)
+                    menu.addAction(delete_action)
 
         menu.exec(event.globalPos())
 
@@ -119,7 +125,7 @@ class Zoom(QGraphicsView):
             error_msg = f"{error_msg_object} being used by other state"
             if len(intersection) > 1:
                 error_msg += "s"
-            send_error("Error deleting state", error_msg)
+            utils.send_error("Error Deleting State", error_msg)
             return
 
         for item in item_list:
