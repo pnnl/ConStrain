@@ -18,6 +18,7 @@ authors:
     orcid: 0000-0003-1311-8932
     affiliation: 1
   - name: Julian Slane-Holloway
+    orcid: 0009-0008-9572-9123
     affiliation: 1
   - name: Fan Feng
     orcid: 0000-0002-6230-0063
@@ -29,7 +30,7 @@ authors:
 affiliations:
  - name: Pacific Northwest National Laboratory, Richland, WA, USA
    index: 1
-date: 4 Avril 2024
+date: 4 April 2024
 bibliography: paper.bib
 ---
 
