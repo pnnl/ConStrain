@@ -35,3 +35,10 @@ poetry run pytest tests
 # Publish ConStrain to Pypi
 
 `poetry build` then `poetry publish`
+
+# Build the Documentation locally
+
+- Install sphinx: `pip install sphinx==7.3.7`
+- Build documentation: `poetry run sphinx-build .\docs\source\ .\docs\`
+
+This will create all the `*.html` files in the `.\docs` folder.
