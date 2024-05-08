@@ -30,7 +30,7 @@ from collections import Counter
 
 class Zoom(QGraphicsView):
     clicked = pyqtSignal()
-    mass_deleted = pyqtSignal(QGraphicsObject)
+    mass_deleted = pyqtSignal(list)
 
     def __init__(self, scene):
         """QGraphicsView that includes zoom function
@@ -80,8 +80,8 @@ class Zoom(QGraphicsView):
 
     def contextMenuEvent(self, event):
         menu = QMenu(self)
-        delete_action = menu.addAction(delete_action)
-        action = menu.exec(event.screenPos())
+        delete_action = menu.addAction("Delete")
+        action = menu.exec(event.globalPos())
         # Check if there's an item under the mouse cursor
 
         if action == delete_action:
@@ -93,17 +93,6 @@ class Zoom(QGraphicsView):
             if selected_states:
                 delete_action = QAction("Delete", self)
                 self.mass_deleted.emit(selected_states)
-                # delete_action.triggered.connect(lambda: self.delete_items(selected_states))
-
-            else:
-                item = self.itemAt(event.pos())
-
-                if isinstance(item, CustomItem):
-                    delete_action = QAction("Delete", self)
-                    delete_action.triggered.connect(item.delete)
-                    menu.addAction(delete_action)
-
-        menu.exec(event.globalPos())
 
     def delete_items(self, item_list):
         all_objects_in_use = Counter(self.scene.getObjectsinUse())
@@ -246,6 +235,8 @@ class WorkflowDiagram(QWidget):
         layout = QVBoxLayout(self)
         self.scene = Scene()
         self.view = Zoom(self.scene)
+
+        self.view.mass_deleted.connect(self.delete_states)
         self.view.clicked.connect(self.item_clicked)
 
         # last popup accessed
@@ -388,6 +379,32 @@ class WorkflowDiagram(QWidget):
             self.popup.close()
 
         self.update()
+
+    def delete_states(self, obj_list):
+        all_objects_in_use = Counter(self.scene.getObjectsinUse())
+        objects_used_in_items = Counter(
+            [
+                item_object
+                for item in obj_list
+                for item_object in item.get_objects_used()
+            ]
+        )
+        objects_not_used_in_items = set(all_objects_in_use - objects_used_in_items)
+        objects_created_in_items = set()
+        for item in obj_list:
+            objects_created_in_items |= set(item.get_objects_created())
+
+        intersection = objects_created_in_items & objects_not_used_in_items
+        if intersection:
+            error_msg_object = ", ".join(intersection)
+            error_msg = f"{error_msg_object} being used by other state"
+            if len(intersection) > 1:
+                error_msg += "s"
+            utils.send_error("Error Deleting State", error_msg)
+            return
+
+        for item in obj_list:
+            self.delete_state(item)
 
     def delete_state(self, obj):
         objects_created = obj.get_objects_created()
