@@ -94,32 +94,6 @@ class Zoom(QGraphicsView):
                 delete_action = QAction("Delete", self)
                 self.mass_deleted.emit(selected_states)
 
-    def delete_items(self, item_list):
-        all_objects_in_use = Counter(self.scene.getObjectsinUse())
-        objects_used_in_items = Counter(
-            [
-                item_object
-                for item in item_list
-                for item_object in item.get_objects_used()
-            ]
-        )
-        objects_not_used_in_items = set(all_objects_in_use - objects_used_in_items)
-        objects_created_in_items = set()
-        for item in item_list:
-            objects_created_in_items |= set(item.get_objects_created())
-
-        intersection = objects_created_in_items & objects_not_used_in_items
-        if intersection:
-            error_msg_object = ", ".join(intersection)
-            error_msg = f"{error_msg_object} being used by other state"
-            if len(intersection) > 1:
-                error_msg += "s"
-            utils.send_error("Error Deleting State", error_msg)
-            return
-
-        for item in item_list:
-            item.delete()
-
     def mouseDoubleClickEvent(self, event):
         super().mouseDoubleClickEvent(event)
         item = self.itemAt(event.pos())
