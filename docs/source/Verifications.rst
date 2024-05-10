@@ -1,0 +1,75 @@
+Verifications
+===============
+
+Listed below are all the verification currently implemented in ConStrain.
+
+.. toctree::
+   :maxdepth: 1
+
+   SupplyAirTempReset
+   EconomizerHighLimitA
+   EconomizerHighLimitB
+   EconomizerHighLimitC
+   EconomizerHighLimitD
+   IntegratedEconomizerControl
+   ERVRatio
+   ZoneTempControl
+   HWReset
+   CHWReset
+   ZoneHeatSetpointMinimum
+   ZoneCoolingSetpointMaximum
+   ZoneHeatingResetDepth
+   ZoneCoolingResetDepth
+   NightCycleOperation
+   ERVTemperatureControl
+   AutomaticOADamperControl
+   FanStaticPressureResetControl
+   HeatRejectionFanVariableFlowControlsCells
+   ServiceWaterHeatingSystemControl
+   VAVStaticPressureSensorLocation
+   VentilationFanControl
+   WLHPLoopHeatRejectionControl
+   AutomaticShutdown
+   HeatPumpSupplementalHeatLockout
+   HeatRejectionFanVariableFlowControl
+   DemandControlVentilation
+   GuestRoomControlTemp
+   GuestRoomControlVent
+   G36SupplyAirTemperatureSetpoint
+   G36SimultaneousHeatingCooling
+   G36ReturnAirDamperPositionForReliefDamperOrFan
+   G36OutdoorAirDamperPositionForReliefDamperOrFan
+   G36ReturnAirDamperPositionForReturnFanAirflowTracking
+   G36OutdoorAirDamperPositionForReturnFanAirflowTracking
+   G36ReliefAirDamperPositionForReturnFanAirflowTracking
+   G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure
+   G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure
+   G36FreezeProtectionStage1
+   G36FreezeProtectionStage2
+   G36FreezeProtectionStage3
+   G36MinOAwEconomizer
+   G36MinOAwoEconomizer
+   G36OutputChangeRateLimit
+   G36ReliefDamperStatus
+   G36SupplyFanStatus
+   LocalLoopSetPointTracking
+   LocalLoopUnmetHours
+   LocalLoopSaturationDirectActingMax
+   LocalLoopSaturationDirectActingMin
+   LocalLoopSaturationReverseActingMax
+   LocalLoopSaturationReverseActingMin
+   MZSystemOccupiedStandbyVentilationZoneControl
+   AppendixGHVACSystemFanOperation
+   InteriorLightingControlAutomaticFullOff
+   ExteriorLightingControlDaylightOff
+   ExteriorLightingControlOccupancySensingReduction
+   G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint
+   G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint
+   G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint
+   G36TerminalBoxVAVDamperTracking
+   G36TerminalBoxCoolingMinimumAirflow
+   G36ReheatTerminalBoxCoolingAirflowSetpoint
+   G36ReheatTerminalBoxDeadbandAirflowSetpoint
+   G36ReheatTerminalBoxHeatingAirflowSetpoint
+   G36ReheatTerminalBoxHeatingCoilTracking
+   G36ReheatTerminalBoxHeatingCoilLowerBound

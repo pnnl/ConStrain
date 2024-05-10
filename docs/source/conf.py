@@ -17,6 +17,10 @@ import sys, os
 sys.path.insert(0, os.path.abspath("../../constrain"))
 import api
 
+sys.path.append(os.getcwd())
+import generate_verification_docs
+
+generate_verification_docs.generate_verification_docs()
 
 # -- Project information -----------------------------------------------------
 
