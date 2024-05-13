@@ -21,8 +21,9 @@ Installing **ConStrain**
 Running Verifications using **ConStrain**
 ------------------------------------------------------
 
-**ConStrain** can 
-  1. Identify if the desired verification is already part of the default library. **ConStrain**'s default verifications are documented :doc:`here <../Verifications>`. 
+**ConStrain** relies on verification case files to perform verifications. These are JSON files that contain all the necessary information about data points, reference to verification logics, and simulation parameters when applicable. A verification case file can be built as follows:
+
+  1. Identify if the desired verification is already part of the default library. **ConStrain**'s default verifications are documented :doc:`here <../Verifications>`. If not, consider expanding the default verifications, help is provided :doc:`here <../Expand Exisiting Verifications>`.
   2. Create a JSON file that contains all the information needed by ConStrain to run the verification as detailed below or as defined on this schema (TBD).
   3. Run the verification either using **ConStrain** as a :ref:`library <library>` or using a **ConStrain** :ref:`workflow <workflow>`.
 
@@ -63,11 +64,12 @@ Running Verifications using **ConStrain**
 - :json:`"no"`: A verification case JSON file can contain multiple cases, this corresponds to the ID of a case
 - :json:`"run_simulation"`: Is a flag (:json:`true` or :json:`false`) that indicates if an EnergyPlus simulation should be performed
 - :json:`"simulation_IO"`: Is a dictionary that contains information about what reference files should be used for the simulation if a simulation is not required the :json:`"output"` is still required, it corresponds to the file that **ConStrain** will use to run verifications
-- :json:`"expected_result"`: Expected result from the verification
-- :json:`"verification_class"`: Name of the verification to carry out
-- :json:`"datapoints_source"`: Dictionary that contains information on the data points used for the verification; They can be of a different types :json:`"parameters"` (constant values), :json:`"dev_settings"` (mapping of the expected datapoint for the verification to column headers in the data), or :json:`"idf_output_variables"` (for EnergyPlus-based simulations); The latter should be defined also as a dictionary where each variable is expressed through a :json:`"subject"` (EnergyPlus output variable name), :json:`"variable"` (EnergyPlus output variable type), and :json:`"frequency"` (EnergyPlus output variable reporting frequency), see an example below
+- :json:`"expected_result"`: Expected result from the verification, either :json:`"pass"` or :json:`"fail"`
+- :json:`"verification_class"`: Name of the verification from the library to carry out
+- :json:`"datapoints_source"`: Dictionary that contains information on the data points used for the verification; They can be of different types: :json:`"parameters"` (constant values), :json:`"dev_settings"` (mapping of the expected datapoint for the verification to column headers in the data), or :json:`"idf_output_variables"` (for EnergyPlus-based simulations); The latter should be defined also as a dictionary where each variable is expressed through a :json:`"subject"` (EnergyPlus output variable name), :json:`"variable"` (EnergyPlus output variable type), and :json:`"frequency"` (EnergyPlus output variable reporting frequency), see an example below
 
 .. sourcecode:: JSON
+
   "idf_output_variables": {
     "T_sa_set": {
       "subject": "VAV_1 Supply Equipment Outlet Node",
@@ -77,8 +79,9 @@ Running Verifications using **ConStrain**
   }
 
 .. _library:
+
 Using **ConStrain** as a Python Library
----------------------------------
+----------------------------------------
 
 First, let's import the package.
 
@@ -86,7 +89,7 @@ First, let's import the package.
 
     import constrain as cs
 
-**ConStrain** includes an :python:`Examples` module which contains sample data and examples of verifications. Information about eac example can be obtained by running the following command. A dictionary is returned which shows information about each example. 
+**ConStrain** includes an :python:`Examples` module which contains sample data and examples of verifications. Information about each example can be obtained by running the following command. A dictionary is returned which shows information about each example. 
 
 .. sourcecode:: python
 
@@ -140,17 +143,13 @@ Finally, we can create summary report. A summary report for all verification wil
     reporting.report_multiple_cases()
 
 .. _workflow:
+
 Using **ConStrain**'s' Workflows
-------------------------------
+----------------------------------
 
 A workflow is a group of instructions that define an end-to-end verification, from data parsing and manipulation to running the verfication(s) and reporting the results. Workflows are defined using the JSON file format so once they have been established they can be re-used easily without making significant modifications. Workflows rely on **ConStrain**'s APIs.
 
-Below is shown a valid workflow. Let's look at its structure.
-
-- :json:`"workflow_name"`: Name of the workflow
-- :json:`"meta"`: Metadata about the workflow
-- :json:`"imports"`: Python package import needed to run the workflow
-- :json:`"states"`: Sequential steps to follow to perform the verification; :json:`"states"` can either be :json:`"MethodCall"` which represent a method call to one of **ConStrain**'s APIs or a :json:`"Choice"` which can be used to help define alternative steps in a workflow based on the result (referred to as payloads in a workflow).
+Below is shown a valid workflow.
 
 .. sourcecode:: JSON
 
@@ -309,6 +308,13 @@ Below is shown a valid workflow. Let's look at its structure.
         }
       }
     }
+
+Where:
+
+- :json:`"workflow_name"`: Name of the workflow
+- :json:`"meta"`: Metadata about the workflow
+- :json:`"imports"`: Python package import needed to run the workflow
+- :json:`"states"`: Sequential steps to follow to perform the verification; :json:`"states"` can either be :json:`"MethodCall"` which represent a method call to one of **ConStrain**'s APIs or a :json:`"Choice"` which can be used to help define alternative steps in a workflow based on the result (referred to as payloads in a workflow).
 
 Running a workflow can be done as follows.
 
