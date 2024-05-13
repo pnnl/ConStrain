@@ -18,7 +18,66 @@ Installing **ConStrain**
 
    pip install constrain
 
-Using **ConStrain** as a library
+Running Verifications using **ConStrain**
+------------------------------------------------------
+
+**ConStrain** can 
+  1. Identify if the desired verification is already part of the default library. **ConStrain**'s default verifications are documented :doc:`here <../Verifications>`. 
+  2. Create a JSON file that contains all the information needed by ConStrain to run the verification as detailed below or as defined on this schema (TBD).
+  3. Run the verification either using **ConStrain** as a :ref:`library <library>` or using a **ConStrain** :ref:`workflow <workflow>`.
+
+.. sourcecode:: JSON
+
+  {
+      "cases": [
+          {
+              "no": 1,
+              "run_simulation": false,
+              "simulation_IO": {
+                "idf": "modelica_dataset_set",
+                "idd": "./resources/Energy+V9_0_1.idd",
+                "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+              },
+              "expected_result": "pass",
+              "datapoints_source": {
+                  "dev_settings": {
+                      "heating_output": "heating_output",
+                      "cooling_output": "cooling_output",
+                      "ra_p": "ra_p",
+                      "max_ra_p": "max_ra_p",
+                      "oa_p": "oa_p",
+                      "max_oa_p": "max_oa_p"
+                  },
+                  "parameters": {
+                      "ra_p_tol": 0.01,
+                      "oa_p_tol": 0.01
+                  }
+              },
+              "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"
+          }
+      ]
+  }
+
+- :json:`"no"`: A verification case JSON file can contain multiple cases, this corresponds to the ID of a case
+- :json:`"run_simulation"`: Is a flag (:json:`true` or :json:`false`) that indicates if an EnergyPlus simulation should be performed
+- :json:`"simulation_IO"`: Is a dictionary that contains information about what reference files should be used for the simulation if a simulation is not required the :json:`"output"` is still required, it corresponds to the file that **ConStrain** will use to run verifications
+- :json:`"expected_result"`: Expected result from the verification
+- :json:`"verification_class"`: Name of the verification to carry out
+- :json:`"datapoints_source"`: Dictionary that contains information on the data points used for the verification; They can be of a different types :json:`"parameters"` (constant values), :json:`"dev_settings"` (mapping of the expected datapoint for the verification to column headers in the data), or :json:`"idf_output_variables"` (for EnergyPlus-based simulations); The latter should be defined also as a dictionary where each variable is expressed through a :json:`"subject"` (EnergyPlus output variable name), :json:`"variable"` (EnergyPlus output variable type), and :json:`"frequency"` (EnergyPlus output variable reporting frequency), see an example below
+
+.. sourcecode:: JSON
+  "idf_output_variables": {
+    "T_sa_set": {
+      "subject": "VAV_1 Supply Equipment Outlet Node",
+      "variable": "System Node Setpoint Temperature",
+      "frequency": "detailed"
+    }
+  }
+
+.. _library:
+Using **ConStrain** as a Python Library
 ---------------------------------
 
 First, let's import the package.
@@ -80,7 +139,8 @@ Finally, we can create summary report. A summary report for all verification wil
 
     reporting.report_multiple_cases()
 
-Using **ConStrain** workflows
+.. _workflow:
+Using **ConStrain**'s' Workflows
 ------------------------------
 
 A workflow is a group of instructions that define an end-to-end verification, from data parsing and manipulation to running the verfication(s) and reporting the results. Workflows are defined using the JSON file format so once they have been established they can be re-used easily without making significant modifications. Workflows rely on **ConStrain**'s APIs.
@@ -260,7 +320,7 @@ Running a workflow can be done as follows.
     workflow = cs.Workflow(workflow=workflow_file)
     workflow.run_workflow(verbose=True)
 
-Using **ConStrain**'s graphical user interface (GUI)
+Using **ConStrain**'s Graphical User Interface (GUI)
 -----------------------------------------------------
 
 Workflow can be pretty complex and difficult to fully visualise from JSON files. **ConStrain** includes a GUI to help user create, edit, and picture workflows. If **ConStrain** has been installed, the GUI can be run by just running :bash:`constrain` in a command prompt or terminal.

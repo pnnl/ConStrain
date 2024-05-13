@@ -13,6 +13,7 @@ Applications of **ConStrain** include verifications of the implementation of con
    Statement of Need
    Quickstart Guide
    Verifications
+   Expand Exisiting Verifications
    Code Documentation
    Contributing
    License
