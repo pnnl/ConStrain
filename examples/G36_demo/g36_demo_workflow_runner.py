@@ -1,11 +1,10 @@
-import sys
 import warnings
+import sys
+import constrain
 
-sys.path.append("./src")
-
-from api import Workflow
+from constrain.api import Workflow
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 warnings.simplefilter(action="ignore", category=ResourceWarning)
-workflow = Workflow(workflow="./demo/brick_demo/brick_workflow.json")
+workflow = Workflow(workflow="./examples/G36_demo/G36_demo_workflow.json")
 workflow.run_workflow(verbose=True)

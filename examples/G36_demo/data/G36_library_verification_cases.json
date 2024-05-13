@@ -7,7 +7,7 @@
 				"idf": "modelica_dataset_set",
 				"idd": "./resources/Energy+V9_0_1.idd",
 				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
-                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+                "output": "./examples/G36_demo/data/G36_Modelica_Jan.csv",
 				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
             },
             "expected_result": "pass",
@@ -34,7 +34,7 @@
 				"idf": "modelica_dataset_set",
 				"idd": "./resources/Energy+V9_0_1.idd",
 				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
-                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+                "output": "./examples/G36_demo/data/G36_Modelica_Jan.csv",
 				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
             },
             "expected_result": "pass",
@@ -63,7 +63,7 @@
 				"idf": "modelica_dataset_set",
 				"idd": "./resources/Energy+V9_0_1.idd",
 				"weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
-                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+                "output": "./examples/G36_demo/data/G36_Modelica_Jan.csv",
 				"ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
             },
             "expected_result": "pass",

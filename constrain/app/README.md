@@ -119,7 +119,7 @@ This file contains the `AdvancedPopup(QDialog)` class. This class handles the Ad
             "Type": "MethodCall",
             "MethodCall": "DataProcessing",
             "Parameters": {
-                "data_path": "./demo/api_demo/demo_dataset.csv",
+                "data_path": "./examples/api_demo/demo_dataset.csv",
                 "data_source": "EnergyPlus"
             },
             "Payloads": {

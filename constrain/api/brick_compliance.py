@@ -114,11 +114,11 @@ class BrickCompliance:
 
         # load brick schema and instance files
         self.g = brickschema.Graph(load_brick=False)
-        self.g.load_file(self.brick_schema_path)
-        if perform_reasoning:
-            self.g.expand(
-                profile="rdfs"
-            )  # reasoning on the graph, example: https://brickschema.org/tools/py-brickschema/
+#        self.g.load_file(self.brick_schema_path)
+#        if perform_reasoning:
+#            self.g.expand(
+#                profile="rdfs"
+#            )  # reasoning on the graph, example: https://brickschema.org/tools/py-brickschema/
         self.g.parse(self.brick_instance_path, format="ttl")
 
         # load files needed for brick

@@ -1,10 +1,11 @@
-import unittest, os, re
+import unittest, os, re, subprocess
 import pandas as pd
 
 from constrain.examples import Examples
 from constrain.api import VerificationCase
 from constrain.api import Verification
 from constrain.api import Reporting
+from constrain.api import Workflow
 
 
 class TestExamples(unittest.TestCase):
@@ -42,3 +43,10 @@ class TestExamples(unittest.TestCase):
         summary = open("./report_summary.md", "r").read()
         res = re.findall("False", summary)
         assert len(res) == 3
+
+    def test_brick_demo(self):
+        subprocess.call("python ./examples/brick_demo/brick_demo_workflow_runner.py")
+
+    def test_api_demo(self):
+        workflow = Workflow(workflow="./examples/api_demo/demo_workflow.json")
+        workflow.run_workflow(verbose=True)

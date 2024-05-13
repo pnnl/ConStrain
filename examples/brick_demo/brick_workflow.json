@@ -4,7 +4,7 @@
         "author": "Constrain Team",
         "date": "08/21/2023",
         "version": "1.0",
-        "description": "Demo workflow to showcase core brick API functionalities"
+        "description": "examples workflow to showcase core brick API functionalities"
     },
     "imports": ["numpy as np", "pandas as pd", "datetime", "glob"],
     "states": {
@@ -25,7 +25,7 @@
             "Parameters": {
                 "verification_item_lib_name": "ZoneTempControl",
                 "energyplus_naming_assembly": false,
-						    "default_verification_case_values": "{'run_simulation': False, 'simulation_IO': {'idf': 'EnergyPlus_data', 'idd': './resources/Energy+V9_0_1.idd', 'weather': './weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw', 'output': './demo/brick_demo/brick_dataset/data_file.csv', 'ep_path': 'C:\\\\\\\\EnergyPlusV9-0-1\\\\\\\\energyplus.exe'}, 'expected_result': 'pass', 'parameters': {}}"},
+						    "default_verification_case_values": "{'run_simulation': False, 'simulation_IO': {'idf': 'EnergyPlus_data', 'idd': './resources/Energy+V9_0_1.idd', 'weather': './weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw', 'output': './examples/brick_examples/brick_dataset/data_file.csv', 'ep_path': 'C:\\\\\\\\EnergyPlusV9-0-1\\\\\\\\energyplus.exe'}, 'expected_result': 'pass', 'parameters': {}}"},
             "Payloads": {"query_result": "$"},
             "Next": "instantiate verification case"
 			  },
@@ -40,7 +40,7 @@
             "Type": "MethodCall",
             "MethodCall": "Payloads['verification_case_obj'].save_verification_cases_to_json",
             "Parameters": {
-                "json_path": "./demo/brick_demo/brick_dataset/query_result.json",
+                "json_path": "./examples/brick_examples/brick_dataset/query_result.json",
                 "cases": "Payloads['query_result']"
             },
             "Payloads": {},
@@ -50,7 +50,7 @@
             "Type": "MethodCall",
             "MethodCall": "VerificationCase",
             "Parameters": {
-                "json_case_path": "./demo/brick_demo/brick_dataset/query_result.json"
+                "json_case_path": "./examples/brick_examples/brick_dataset/query_result.json"
             },
             "Payloads": {"verification_case_obj": "$"},
             "Next": "load timeseries data"
@@ -59,7 +59,7 @@
             "Type": "MethodCall",
             "MethodCall": "DataProcessing",
             "Parameters": {
-                "data_path": "./demo/brick_demo/brick_dataset/data_file.csv",
+                "data_path": "./examples/brick_examples/brick_dataset/data_file.csv",
                 "data_source": "EnergyPlus"
             },
             "Payloads": {"data_processing_obj": "$", "data": "$.data"},
@@ -76,7 +76,7 @@
             "Type": "MethodCall",
             "MethodCall": "Payloads['verification_obj'].configure",
             "Parameters": {
-                "output_path": "./demo/brick_demo/brick_dataset",
+                "output_path": "./examples/brick_examples/brick_dataset",
                 "lib_items_path": "./schema/library.json",
                 "plot_option": "+x None",
                 "fig_size": "+x (6, 5)",
@@ -97,7 +97,7 @@
             "Type": "MethodCall",
             "MethodCall": "Reporting",
             "Parameters": {
-                "verification_json": "./demo/brick_demo/brick_dataset/*_md.json",
+                "verification_json": "./examples/brick_examples/brick_dataset/*_md.json",
                 "result_md_name": "report_summary.md",
                 "report_format": "markdown"
             },
@@ -115,7 +115,7 @@
             "Type": "MethodCall",
             "MethodCall": "print",
             "Parameters": [
-                "Congratulations! the demo workflow is executed with expected results and no error!"
+                "Congratulations! the examples workflow is executed with expected results and no error!"
             ],
             "Payloads": {},
             "End": "True"
