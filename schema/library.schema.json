@@ -1,0 +1,48 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/pnnl/ConStrain/tree/develop/schema/LibraryItem",
+    "type": "object",
+    "properties": {
+        "library_item_id": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 67
+        },
+        "description_brief": {
+            "type": "string"
+        },
+        "description_detail": {
+            "type": "string"
+        },
+        "description_index": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "description_datapoints": {
+            "type": "object"
+        },
+        "description_verification_type": {
+            "enum": [
+                "rule-based",
+                "procedure-based"
+            ]
+        },
+        "assertions_type": {
+            "enum": [
+                "pass",
+                "fail"
+            ]
+        }
+    },
+    "required": [
+        "library_item_id",
+        "description_brief",
+        "description_detail",
+        "description_index",
+        "description_datapoints",
+        "description_verification_type",
+        "assertions_type"
+    ]
+}
