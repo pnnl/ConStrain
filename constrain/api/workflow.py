@@ -92,8 +92,12 @@ class WorkflowEngine:
                     os.chdir(self.workflow_dict["working_dir"])
                     logging.info("Change current working path to the specified path.")
                 else:
-                    Path(self.workflow_dict["working_dir"]).mkdir(parents=True, exist_ok=True)
-                    logging.info("working directory specified does not exist and create a new director.")
+                    Path(self.workflow_dict["working_dir"]).mkdir(
+                        parents=True, exist_ok=True
+                    )
+                    logging.info(
+                        "working directory specified does not exist and create a new director."
+                    )
 
     def validate(self, verbose: bool = False) -> bool:
         """function to be implemented to check for high level validity of the workflow definition"""
