@@ -109,7 +109,7 @@ class TestFlexibleCalling(unittest.TestCase):
             workflow = Workflow(workflow=json_case_path)
             self.assertEqual(
                 logobs.output[1],
-                "ERROR:root:working directory specified does not exist.",
+                "INFO:root:working directory specified does not exist and create a new director.",
             )
 
     def test_valid_dir(self):
