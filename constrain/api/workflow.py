@@ -56,7 +56,7 @@ class WorkflowEngine:
     def change_work_dir(self) -> None:
         # First, check if the workflow_dict has "working_dir"
         if "working_dir" not in self.workflow_dict:
-            logging.info("No working_dic is specified")
+            logging.info("No working_dir is specified")
         else:
             # Change the working path to the working_dir value in workflow_dict.
             if not isinstance(self.workflow_dict["working_dir"], str):
@@ -92,12 +92,21 @@ class WorkflowEngine:
                     os.chdir(self.workflow_dict["working_dir"])
                     logging.info("Change current working path to the specified path.")
                 else:
-                    Path(self.workflow_dict["working_dir"]).mkdir(
-                        parents=True, exist_ok=True
-                    )
-                    logging.info(
-                        "working directory specified does not exist and create a new director."
-                    )
+                    try:
+                        Path(self.workflow_dict["working_dir"]).mkdir(
+                            parents=True, exist_ok=True
+                        )
+                        logging.info(
+                            "working directory specified does not exist and create a new director."
+                        )
+                        os.chdir(self.workflow_dict["working_dir"])
+                    except Exception as e:
+                        # If an invalid escapse sequence string is specified. E.g. ".\tests\api\test"
+                        if e.winerror == 123:
+                            # The error is : OSError: [WinError 123] The filename, directory name, or volume label syntax is incorrect.
+                            logging.error(
+                                "The working directory specified is an invalid escape sequence string."
+                            )
 
     def validate(self, verbose: bool = False) -> bool:
         """function to be implemented to check for high level validity of the workflow definition"""
