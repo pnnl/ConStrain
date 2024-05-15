@@ -6,6 +6,7 @@ Workflow API
 
 import glob
 import sys, logging, json, os, datetime, platform
+from pathlib import Path
 from typing import Union
 
 sys.path.append("./constrain")
@@ -45,7 +46,14 @@ class WorkflowEngine:
             self.workflow_dict = workflow
 
         self.load_states()
+        # change working dir
+        self.change_work_dir()
 
+        # run workflow now
+        if run_workflow_now:
+            self.run_workflow()
+
+    def change_work_dir(self) -> None:
         # First, check if the workflow_dict has "working_dir"
         if "working_dir" not in self.workflow_dict:
             logging.info("No working_dic is specified")
@@ -78,16 +86,18 @@ class WorkflowEngine:
                             "working_dir"
                         ].replace("\\", "/")
                     logging.info("the working dir provided is in Win format.")
+
                 # change the working directory if it exists
                 if os.path.exists(self.workflow_dict["working_dir"]):
                     os.chdir(self.workflow_dict["working_dir"])
                     logging.info("Change current working path to the specified path.")
                 else:
-                    logging.error("working directory specified does not exist.")
-
-        # run workflow now
-        if run_workflow_now:
-            self.run_workflow()
+                    Path(self.workflow_dict["working_dir"]).mkdir(
+                        parents=True, exist_ok=True
+                    )
+                    logging.info(
+                        "working directory specified does not exist and create a new director."
+                    )
 
     def validate(self, verbose: bool = False) -> bool:
         """function to be implemented to check for high level validity of the workflow definition"""
