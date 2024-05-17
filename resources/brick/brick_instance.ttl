@@ -31,9 +31,8 @@ bldg:zone_2_zone_air_temperature_sensor a brick:Zone_Air_Temperature_Sensor .
 
 bldg:zone_2_occupancy_sensor a brick:Occupancy_Sensor .
 
-
 # service hot water
-bldg:service_water_heater a brick:Water_heater ;
+bldg:service_water_heater a brick:Water_Heater ;
     brick:feeds bldg:service_water_heater_pump ;
     brick:hasPoint bldg:service_water_heater_water_temperature_sensor .
 
@@ -41,7 +40,6 @@ bldg:service_water_heater_pump a brick:Water_Pump ;
     brick:feeds bldg:zone_1 .
 
 bldg:service_water_heater_water_temperature_sensor a brick:Water_Temperature_Sensor .
-
 
 # AHU
 bldg:ahu a brick:AHU  ;
@@ -66,15 +64,16 @@ bldg:ahu_cooling_start_stop_status a brick:Cooling_Start_Stop_Status .
 
 bldg:ahu_heating_coil a brick:Heating_Coil ;
     brick:hasPoint bldg:ahu_heating_coil_on_off_status ;
-    brick:hasPart bldg:ahu_heating_coil_electrical_meter .
+    brick:hasSubMeter bldg:ahu_heating_coil_electrical_meter .
+# 'brick:hasSubMeter' reference: https://docs.brickschema.org/modeling/meters.html#:~:text=%3ABuilding_Electrical_Meter%20.-,Meters%20and%20Submeters,-%23
 
 bldg:ahu_heating_coil_on_off_status a brick:On_Off_Status .
 
 bldg:ahu_heating_coil_electrical_meter a brick:Electrical_Meter .
 
 bldg:ahu_cooling_coil a brick:Cooling_Coil ;
-    brick:hasPart bldg:ahu_cooling_coil_thermal_power_meter .
-
+    brick:hasSubMeter bldg:ahu_cooling_coil_thermal_power_meter .
+ 
 bldg:ahu_cooling_coil_thermal_power_meter a brick:Thermal_Power_Meter .
 
 bldg:ahu_fan a brick:Fan ;
@@ -82,7 +81,7 @@ bldg:ahu_fan a brick:Fan ;
                 bldg:vav2 ;
     brick:hasPoint bldg:ahu_fan_on_off_status,
                    bldg:ahu_fan_supply_air_temperature_sensor ;
-    brick:hasPart  bldg:ahu_fan_electrical_meter .
+    brick:hasSubMeter bldg:ahu_fan_electrical_meter .
 
 bldg:ahu_fan_on_off_status a brick:Fan_On_Off_Status .
 
@@ -131,12 +130,12 @@ bldg:chiller a brick:Chiller ;
 
 bldg:chiller_chilled_water_flow_sensor a brick:Chilled_Water_Flow_Sensor .
 
-bldg:chiller_chilled_water_return_temperature_sensor a brick:Chilled_Water_Return_Temperature_Sensor .
+bldg:chiller_chilled_water_return_temperature_sensor a brick:Leaving_Water_Temperature_Sensor .
 
 bldg:cooling_tower a brick:Cooling_Tower ;
     brick:hasPoint bldg:cooling_tower_return_condenser_water_temperature_sensor .
 
-bldg:cooling_tower_return_condenser_water_temperature_sensor a brick:Return_Condenser_Water_Temperature_Sensor .
+bldg:cooling_tower_return_condenser_water_temperature_sensor a brick:Leaving_Water_Temperature_Sensor .
 
 bldg:chilled_water_pump a brick:Chilled_Water_Pump ;
     brick:hasPoint bldg:chilled_water_pump_flow_sensor ;
@@ -153,7 +152,7 @@ bldg:boiler a brick:Boiler ;
 
 bldg:boiler_hot_water_flow_sensor a brick:Hot_Water_Flow_Sensor .
 
-bldg:boiler_hot_water_return_temperature_sensor a brick:Hot_Water_Return_Temperature_Sensor .
+bldg:boiler_hot_water_return_temperature_sensor a brick:Leaving_Hot_Water_Temperature_Sensor .
 
 bldg:boiler_water_flow_sensor a brick:Water_Flow_Sensor .
 
