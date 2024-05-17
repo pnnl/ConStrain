@@ -1,6 +1,7 @@
 import sys
 import warnings
 import json
+import os
 
 from PyQt6.QtWidgets import (
     QApplication,
@@ -17,7 +18,7 @@ from PyQt6.QtWidgets import (
     QMessageBox,
 )
 from PyQt6.QtCore import Qt, QRectF
-from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor
+from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor, QIcon
 
 from constrain.app.import_form import ImportForm
 from constrain.app.meta_form import MetaForm
@@ -101,6 +102,10 @@ class GUI(QMainWindow):
         central_widget = QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
+
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        icon_asset_path = os.path.join(current_directory, "assets/strainer.png")
+        self.setWindowIcon(QIcon(icon_asset_path))
 
         self.initialize_toolbar()
 
