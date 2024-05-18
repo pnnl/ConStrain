@@ -1,5 +1,5 @@
 """
-Contained is the class for BasicPopup, the popup displayed when 'Add Basic' is chosen in the states tab.
+Contained is the class for BasicStateForm, the state form displayed when 'Add' is chosen in the states tab with Basic State Form Settings selected.
 """
 
 import json
@@ -16,18 +16,16 @@ from PyQt6.QtWidgets import (
     QDialog,
     QGroupBox,
     QMessageBox,
-    QSizePolicy,
     QLayout,
 )
-from PyQt6.QtGui import QPixmap
 
-from constrain.app.list_and_choice_popups import ListPopup, ChoicesPopup
+from constrain.app.forms.list_and_choice_forms import ListPopup, ChoicesPopup
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
-dependencies_path = os.path.join(script_directory, "dependencies.json")
-api_to_method_path = os.path.join(script_directory, "api_to_method.json")
+dependencies_path = os.path.join(script_directory, "../dependencies.json")
+api_to_method_path = os.path.join(script_directory, "../api_to_method.json")
 
-# mapping from object to its methods and its methods to its parameters for display in popup
+# mapping from object to its methods and its methods to its parameters for display in state form
 with open(dependencies_path) as f:
     schema = json.load(f)
 
@@ -36,42 +34,42 @@ with open(api_to_method_path) as f:
     api_to_method = json.load(f)
 
 
-class BasicPopup(QDialog):
+class BasicStateForm(QDialog):
     def __init__(self, payloads=[], state_names=[], rect=None, load=False):
         """Form to be displayed for user to edit or add a basic state
 
         Args:
             payloads (list): list of already-made objects to choose from when making a state
-            state_names (list): list of already_made state names because state name in this popup must be unique
-            rect (CustomItem): CustomItem associated with this popup
-            load (bool): True if this popup is being created because of an import, false otherwise
+            state_names (list): list of already_made state names because state name in this state form must be unique
+            rect (CustomItem): CustomItem associated with this state form
+            load (bool): True if this state form is being created because of an import, false otherwise
         """
         super().__init__()
 
-        # objects that this popup has created
+        # objects that this state form has created
         self.current_payloads = None
 
-        # parameters that this popup has created (only used in Custom MethodCall type)
+        # parameters that this state form has created (only used in Custom MethodCall type)
         self.current_params = None
 
-        # choices that this popup has created (only used in Choice type)
+        # choices that this state form has created (only used in Choice type)
         self.current_choices = None
 
         self.payloads = payloads
 
         self.state_names = state_names
 
-        # dictionary that stores the state contained in this popup
+        # dictionary that stores the state contained in this state form
         self.form_data = {}
 
-        # stores whether or not the popup has an error
+        # stores whether or not the state form has an error
         self.error = False
 
         self.initialize_base_ui()
         self.set_ui() if not load else self.load_ui(rect)
 
     def initialize_base_ui(self):
-        """Initializes UI that is used when both loading the popup and creating the popup"""
+        """Initializes UI that is used when both loading the state form and creating the state form"""
         self.type_combo_box = QComboBox()
         self.object_type_combo_box = QComboBox()
         self.method_combo_box = QComboBox()
@@ -166,13 +164,13 @@ class BasicPopup(QDialog):
         )
 
     def format_method(self, method):
-        """Translates method in API format to popup format
+        """Translates method in API format to state form format
 
         Args:
             method (str): a method in API format, i.e. 'get_library_items'
 
         Returns:
-            str: a method in popup format, i.e. 'Get Library Items'
+            str: a method in state form format, i.e. 'Get Library Items'
         """
         lowercase_words = ["of", "in"]
         result = " ".join(word.capitalize() for word in method.split("_"))
@@ -189,7 +187,7 @@ class BasicPopup(QDialog):
         """On import, fills form with text based on state that is passed to it
 
         Args:
-            to_set (dict): state that is to be input into popup
+            to_set (dict): state that is to be input into state form
         """
 
         # make list of keys with optional added to each parameter
@@ -243,7 +241,7 @@ class BasicPopup(QDialog):
 
         Args:
             state (dict): state of the CustomItem associated with self
-            layout (PyQt6.QtWidgets.QVBoxLayout): base layout for this popup
+            layout (PyQt6.QtWidgets.QVBoxLayout): base layout for this state form
         """
 
         object_types = list(schema.keys())
@@ -252,7 +250,7 @@ class BasicPopup(QDialog):
 
         title = state["Title"]
 
-        # parameters to add in first layer of popup
+        # parameters to add in first layer of state form
         parameters = {}
 
         if "Choices" in state.keys():
@@ -269,7 +267,7 @@ class BasicPopup(QDialog):
         layout.addLayout(self.form_layout)
         layout.addLayout(self.buttons_layout)
 
-        # add parameter values to first layer of popup
+        # add parameter values to first layer of state form
         self.set_state(parameters)
 
         # fill choice list widget with imported choices
@@ -290,7 +288,7 @@ class BasicPopup(QDialog):
 
         Args:
             state (dict): state of the CustomItem associated with self
-            layout (PyQt6.QtWidgets.QVBoxLayout): base layout for this popup
+            layout (PyQt6.QtWidgets.QVBoxLayout): base layout for this state form
         """
 
         object_types = list(schema.keys())
@@ -301,7 +299,7 @@ class BasicPopup(QDialog):
         title = state["Title"]
         self.type_combo_box.setCurrentText(type)
 
-        # parameters to add in first layer of popup
+        # parameters to add in first layer of state form
         parameters = {}
 
         # payloads that this state creates
@@ -524,7 +522,7 @@ class BasicPopup(QDialog):
             custom (bool): whether or not this is a custom object type
         """
 
-        # need to first clear all data, if any, that was previously written in this popup
+        # need to first clear all data, if any, that was previously written in this state form
         self.clear_form()
         self.current_payloads = {}
         self.current_params = []
@@ -544,7 +542,7 @@ class BasicPopup(QDialog):
 
         self.make_and_add_groupbox("Name of State", QLineEdit())
 
-        # show object combo box only if popup is not an MethodCall initialization
+        # show object combo box only if state form is not an MethodCall initialization
         if custom or method != "Initialize":
             self.make_and_add_groupbox("Object", self.payload_combo_box)
 
@@ -730,10 +728,10 @@ class BasicPopup(QDialog):
         error_msg.exec()
 
     def get_state(self):
-        """Returns compiled state of the popup
+        """Returns compiled state of the state form
 
         Returns:
-            dict: compiled state of the popup
+            dict: compiled state of the state form
         """
         if self.current_payloads and len(self.current_payloads) > 0:
             self.form_data["Payloads"] = self.current_payloads

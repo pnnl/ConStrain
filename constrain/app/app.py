@@ -20,10 +20,9 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor, QIcon
 
-from constrain.app.import_form import ImportForm
-from constrain.app.meta_form import MetaForm
+from constrain.app.forms.import_form import ImportForm
+from constrain.app.forms.meta_form import MetaForm
 from constrain.app.workflow_diagram import WorkflowDiagram
-from constrain.app.rect_connect import CustomItem
 from constrain.app.submit import Worker, SubmitPopup
 from constrain.app import utils
 
@@ -117,48 +116,50 @@ class GUI(QMainWindow):
         file_menu = QMenu("File", self)
 
         import_action = QAction("Import Workflow", self)
-        import_action.triggered.connect(self.importFile)
+        import_action.triggered.connect(self.import_file)
         file_menu.addAction(import_action)
 
         export_menu = QMenu("Export Workflow", self)
         file_menu.addMenu(export_menu)
 
         json_export_action = QAction("JSON", self)
-        json_export_action.triggered.connect(self.exportFile)
+        json_export_action.triggered.connect(self.export_file)
         export_menu.addAction(json_export_action)
 
         png_export_action = QAction("PNG", self)
-        png_export_action.triggered.connect(self.exportAsPng)
+        png_export_action.triggered.connect(self.export_as_png)
         export_menu.addAction(png_export_action)
 
         settings_menu = QMenu("Settings", self)
-        popup_settings_menu = QMenu("Popup Settings", self)
+        state_form_settings_menu = QMenu("State Form Settings", self)
 
-        self.basic_action = QAction("Basic Popup", self, checkable=True)
-        self.basic_action.triggered.connect(self.basicPopupSetting)
-        popup_settings_menu.addAction(self.basic_action)
+        self.basic_action = QAction("Basic Form", self, checkable=True)
+        self.basic_action.triggered.connect(self.select_basic_state_form_setting)
+        state_form_settings_menu.addAction(self.basic_action)
         self.basic_action.setChecked(True)
 
-        self.advanced_action = QAction("Advanced Popup", self, checkable=True)
-        self.advanced_action.triggered.connect(self.advancedPopupSetting)
-        popup_settings_menu.addAction(self.advanced_action)
+        self.json_form_setting_select = QAction("JSON Form", self, checkable=True)
+        self.json_form_setting_select.triggered.connect(
+            self.select_json_state_form_setting
+        )
+        state_form_settings_menu.addAction(self.json_form_setting_select)
 
-        settings_menu.addMenu(popup_settings_menu)
+        settings_menu.addMenu(state_form_settings_menu)
 
         toolbar.addAction(file_menu.menuAction())
         toolbar.addAction(settings_menu.menuAction())
 
-    def basicPopupSetting(self):
+    def select_basic_state_form_setting(self):
         self.states_form.setting = "basic"
-        if self.advanced_action.isChecked():
-            self.advanced_action.setChecked(False)
+        if self.json_form_setting_select.isChecked():
+            self.json_form_setting_select.setChecked(False)
 
-    def advancedPopupSetting(self):
-        self.states_form.setting = "advanced"
+    def select_json_state_form_setting(self):
+        self.states_form.setting = "json"
         if self.basic_action.isChecked():
             self.basic_action.setChecked(False)
 
-    def exportFile(self):
+    def export_file(self):
         """Exports current state as a .json to local storage"""
 
         scene = self.states_form.scene
@@ -180,7 +181,7 @@ class GUI(QMainWindow):
             except Exception:
                 print("error")
 
-    def exportAsPng(self):
+    def export_as_png(self):
         """Exports current state as a .png to local storage"""
 
         scene = self.states_form.scene
@@ -200,7 +201,7 @@ class GUI(QMainWindow):
             painter.end()
             pixmap.save(fp, "PNG")
 
-    def importFile(self):
+    def import_file(self):
         """Imports a .json file to use a state and loads file into the GUI"""
 
         # Check if any of the forms contain data before resetting GUI state

@@ -8,11 +8,8 @@ This tool builds workflows following the ConStrain API schema. The GUI provides 
 
 ## How to Use
 
-#### First Dialog:
-When starting this GUI, a popup asks whether you want Basic or Advanced settings. The basic settings will let you to see the basic form when clicking on a state to edit it, while the advanced settings will let you see an advanced form.
-
 #### Basic Form:
-The basic form is meant to guide the user in the creation of a state. It is triggered by navigating to the 'State' tab and pressing the 'Add Basic' button, and also triggered by clicking a state in the Workflow Diagram while using Basic Settings. The following are the steps when creating a state from the basic popup:
+The basic form is meant to guide the user in the creation of a state. It is triggered by navigating to the 'State' tab and pressing the 'Add Basic' button, and also triggered by clicking a state in the Workflow Diagram while using Basic Settings. The following are the steps when creating a state from the basic form:
 
 1. Choose a state type
 2. Continue reading these steps if 'MethodCall'. Else, go to the steps after the line below.
@@ -23,11 +20,11 @@ The basic form is meant to guide the user in the creation of a state. It is trig
 7. Press the 'Save' button to add this state to the workflow diagram.
 ---
 1. Fill out the parameters here.
-2. To add choices, click 'Edit'. They can be added by selecting an 'Object Type', a 'Method', an 'Object', an 'Equals' value, adding a 'Next' value, and clicking add. This form will be added to the previous popup after you select 'OK'.
+2. To add choices, click 'Edit'. They can be added by selecting an 'Object Type', a 'Method', an 'Object', an 'Equals' value, adding a 'Next' value, and clicking add. This form will be added to the previous form after you select 'OK'.
 3. Press the 'Save' button to add this state to the workflow diagram.
 
-#### Advanced Form:
-The advanced form offers no guidance in the creation of a state. It is triggered by navigating to the 'State' tab and pressing the 'Add Advanced' button, and also triggered by clicking a state in the Workflow Diagram while using Advanced Settings. It is a text box where the user inputs a state. The state should be in the following format:
+#### JSON Form:
+The JSON form offers no guidance in the creation of a state. It is triggered by navigating to the 'State' tab and pressing the 'Add' button with the JSON State Form setting selected (disabled by default), and also when clicking a state in the Workflow Diagram while using JSON State Form Settings. It is a text box where the user inputs a state. The state should be in the following format:
 
 ```json
  {
@@ -49,7 +46,7 @@ You can select the Meta Form by selecting the Meta tab. Here, you can add the fo
 You can select the Imports Form by selecting the Imports tab. Here, you can import Python modules to use inside of your workflow. To add to the Imports Form, simply type in the import, e.g. `numpy as np`, and press the 'Add' button. Imports can be deleted by right-clicking on an import in the list and pressing 'Delete'.
 
 #### Workflow Diagram:
-The Workflow Diagram can be accessed by navigating to the 'States' tab. States to add in your Workflow Diagram can either be created manually or imported. To create manually, you would select either the 'Add Basic' or 'Add Advanced' button. To import, you would click on the 'File' button in the toolbar and select 'Import' to find a JSON file to import.
+The Workflow Diagram can be accessed by navigating to the 'States' tab. States to add in your Workflow Diagram can either be created manually or imported. To create manually, you would select either the 'Add Basic' or 'Add JSON' button. To import, you would click on the 'File' button in the toolbar and select 'Import' to find a JSON file to import.
 
 ##### Moving a State:
 A state can be moved by dragging and dropping.
@@ -79,19 +76,19 @@ To submit your workflow, press the 'Submit' button on the bottom of the main win
 The application contains 9 Python source files:
 
 - `app`
-- `import_form`
-- `meta_form`
+- `forms/import_form`
+- `forms/meta_form`
+- `forms/basic_state_form`
+- `forms/json_state_form`
 - `workflow_diagram`
-- `popup_window`
-- `advanced_popup`
-- `list_and_choice_popups`
+- `forms/list_and_choice_forms`
 - `rect_connect`
 - `submit`
 
 #### app
 This file runs the GUI. It is responsible for piecing together the main components of the app, like the meta form, the import form, and the workflow diagram. It also handles validate, import, and export functionalities. It contains 2 classes:
 - `GUI(QMainWindow)`: pieces classes together
-- `UserSetting(QDialog)`: dialog to configure basic or advanced setting
+- `UserSetting(QDialog)`: dialog to configure basic or JSON setting
 
 #### import_form
 
@@ -107,11 +104,11 @@ This file is based on classes for organizing the UI of workflow visualization. I
 - `Zoom(QGraphicsView)`: a view of the workflow diagram that includes a zoom feature
 - `WorkflowDiagram(QWidget)`: node manager
 
-#### popup_window
-This file contains the `BasicPopup(QDialog)` class. This class handles the Basic Popup, which is a form that describes a state. It is responsible for handling the creation of a state and the import of a state.
+#### basic_state_form
+This file contains the `BasicStateForm(QDialog)` class. This class handles the Basic State Form, which is a form that describes a state. It is responsible for handling the creation of a state and the import of a state.
 
-#### advanced_popup
-This file contains the `AdvancedPopup(QDialog)` class. This class handles the Advanced Popup, which is a text box that describes a state in JSON format. It is responsible for handling the creation of a state and the import of a state. The following is an example entry to this text box:
+#### json_state_form
+This file contains the `JSONStateForm(QDialog)` class. This class handles the JSON State Form, which is a text box that describes a state in JSON format. It is responsible for handling the creation of a state and the import of a state. The following is an example entry to this text box:
 
 ```json
   {
@@ -133,8 +130,8 @@ This file contains the `AdvancedPopup(QDialog)` class. This class handles the Ad
 
 Note that this is slightly different than the format that is read by the API.
 
-#### list_and_choice_popups
-This file defines 2 classes to be used within Basic Popups:
+#### list_and_choice_forms
+This file defines 2 classes to be used within Basic Forms:
 - `ListPopup(QDialog)`: This class is used as a popup to define parameters in a Custom MethodCall and to define payloads in all MethodCalls.
 - `ChoicesPopup(QDialog)`: This class is used as a popup to define choices.
 #### rect_connect

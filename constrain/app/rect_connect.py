@@ -311,12 +311,12 @@ class CustomItem(QtWidgets.QGraphicsObject):
     edited = QtCore.pyqtSignal(QtWidgets.QGraphicsObject)
     controlBrush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
 
-    def __init__(self, state, popup=None):
+    def __init__(self, state, state_form=None):
         """Shape on Scene to represents a state in the workflow
 
         Args:
             state (dict): state that self represents
-            popup (BasicPopup or AdvancedPopup): popup associated with self
+            state_form (BasicStateForm or JSONStateForm): form associated with self
         """
         super().__init__()
         # fill
@@ -328,7 +328,7 @@ class CustomItem(QtWidgets.QGraphicsObject):
         self.rect = QtCore.QRectF(0, 0, 100, 30)
         self.titleItem = QtWidgets.QGraphicsTextItem(parent=self)
 
-        self.popup = popup
+        self.state_form = state_form
 
         # child states (list of CustomItems)
         self.children = []

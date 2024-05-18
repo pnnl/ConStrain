@@ -9,7 +9,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('advanced_popup.py', '.'),
+        ('json_popup.py', '.'),
         ('import_form.py', '.'),
         ('meta_form.py', '.'),
         ('popup_window.py', '.'),

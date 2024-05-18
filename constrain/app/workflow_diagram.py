@@ -19,10 +19,10 @@ from PyQt6.QtGui import (
     QBrush,
     QAction,
 )
-from constrain.app.basic_popup import BasicPopup
-from constrain.app.advanced_popup import AdvancedPopup
+from constrain.app.forms.basic_state_form import BasicStateForm
+from constrain.app.forms.json_state_form import JSONStateForm
 from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
-from constrain.app.utils import send_error
+from constrain.app import utils
 import json
 from collections import Counter
 
@@ -119,7 +119,7 @@ class Zoom(QGraphicsView):
             error_msg = f"{error_msg_object} being used by other state"
             if len(intersection) > 1:
                 error_msg += "s"
-            send_error("Error deleting state", error_msg)
+            utils.send_error("Error deleting state", error_msg)
             return
 
         for item in item_list:
@@ -232,7 +232,7 @@ class WorkflowDiagram(QWidget):
     def __init__(self, setting):
         """Widget to contain view
 
-        setting (str): either "basic" or "advanced". Determines if clicking on a CustomItem should bring up a basic form or an advanced form
+        setting (str): either "basic" or "json". Determines if clicking on a CustomItem should bring up a basic form or an json form
         """
         super().__init__()
 
@@ -242,8 +242,8 @@ class WorkflowDiagram(QWidget):
         self.view = Zoom(self.scene)
         self.view.clicked.connect(self.item_clicked)
 
-        # last popup accessed
-        self.popup = None
+        # last state form accessed
+        self.last_state_form = None
 
         self.root = None
 
@@ -251,17 +251,11 @@ class WorkflowDiagram(QWidget):
         add_buttons = QHBoxLayout()
         reformat_button_layout = QHBoxLayout()
 
-        basic_button = QPushButton("Add Basic")
-        basic_button.setToolTip("Create a state using the basic popup")
-        basic_button.setFixedSize(100, 23)
-        basic_button.clicked.connect(self.call_basic_popup)
-        add_buttons.addWidget(basic_button)
-
-        advanced_button = QPushButton("Add Advanced")
-        advanced_button.setToolTip("Create a state using the advanced popup")
-        advanced_button.setFixedSize(100, 23)
-        advanced_button.clicked.connect(self.call_advanced_popup)
-        add_buttons.addWidget(advanced_button)
+        add_state_button = QPushButton("Add State")
+        add_state_button.setToolTip("Create a state using the basic form")
+        add_state_button.setFixedSize(100, 23)
+        add_state_button.clicked.connect(self.display_state_form)
+        add_buttons.addWidget(add_state_button)
 
         reformat_button = QPushButton("Rearrange")
         reformat_button.setToolTip("Rearrange diagram to a tree layout")
@@ -281,12 +275,18 @@ class WorkflowDiagram(QWidget):
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.setLayout(layout)
 
+    def display_state_form(self):
+        if self.setting == "basic":
+            self.display_basic_state_form()
+        else:
+            self.display_json_state_form()
+
     def add_state(self):
-        """Creates CustomItem based on state described in self.popup if there was no error"""
-        if self.popup.error:
+        """Creates CustomItem based on state described in self.last_state_form if there was no error"""
+        if self.last_state_form.error:
             return
 
-        state = self.popup.get_state()
+        state = self.last_state_form.get_state()
         self.create_item(state)
 
     def create_item(self, state):
@@ -296,26 +296,26 @@ class WorkflowDiagram(QWidget):
             state (dict): state to be made into a CustomItem
         """
 
-        # test whether state was made with popup, or if it was imported. Adds self.popup to CustomItem if not imported
-        if self.popup and self.popup.get_state():
-            self.popup.get_state()["Title"]
+        # test whether state was made with state form or if it was imported. Adds self.last_state_form to CustomItem if not imported
+        if self.last_state_form and self.last_state_form.get_state():
+            self.last_state_form.get_state()["Title"]
 
-        if self.popup and self.popup.get_state():
+        if self.last_state_form and self.last_state_form.get_state():
             state["Title"]
 
         if (
-            self.popup
-            and self.popup.get_state()
-            and self.popup.get_state()["Title"] == state["Title"]
+            self.last_state_form
+            and self.last_state_form.get_state()
+            and self.last_state_form.get_state()["Title"] == state["Title"]
         ):
-            popup_used = True
-            rect_item = CustomItem(state, popup=self.popup)
+            state_form_used = True
+            rect_item = CustomItem(state, last_state_form=self.last_state_form)
         else:
-            popup_used = False
+            state_form_used = False
             rect_item = CustomItem(state)
 
         rect_item.deleted.connect(self.delete_state)
-        rect_item.edited.connect(self.edit_item)
+        rect_item.edited.connect(self.display_edit_state_form)
 
         def connect_rects(parent, child):
             """Connects a parent CustomItem to a child CustomItem
@@ -378,8 +378,8 @@ class WorkflowDiagram(QWidget):
             size = rect_with_max_y.boundingRect().height()
             rect_item.setPos(0, max_y + size + stepsize)
 
-        if popup_used:
-            self.popup.close()
+        if state_form_used:
+            self.last_state_form.close()
 
         self.update()
 
@@ -434,11 +434,11 @@ class WorkflowDiagram(QWidget):
             rect (CustomItem): CustomItem to be edited
         """
 
-        # do not continue if there was an error in self.popup
-        if self.popup.error:
+        # do not continue if there was an error in self.last_state_form
+        if self.last_state_form.error:
             return
 
-        current_state = self.popup.get_state()
+        current_state = self.last_state_form.get_state()
 
         if current_state["Type"] not in ["Choice", "MethodCall"]:
             return
@@ -470,7 +470,7 @@ class WorkflowDiagram(QWidget):
                 )
                 return
 
-        self.popup.close()
+        self.last_state_form.close()
 
     def get_workflow(self, reformat=True):
         """Computes structure of the workflow using Depth First Search and paints CustomItems depending on place in graph"""
@@ -539,62 +539,69 @@ class WorkflowDiagram(QWidget):
                     visited2.add(node)
         return workflow_path
 
-    def call_basic_popup(self, rect=None, edit=False):
-        """Calls basic popup on click of CustomItem, or if 'Add Basic' button is pressed
+    def display_basic_state_form(self, rect=None, edit=False):
+        """Displays basic state form on click of CustomItem, or if 'Add Basic' button is pressed
 
         Args:
-            rect (CustomItem): CustomItem associated with the popup needed
+            rect (CustomItem): CustomItem associated with the state form needed
             edit (bool): False if creating new CustomItem, True otherwise
         """
         payloads = self.scene.getObjectsCreated()
         if rect:
-            if not rect.popup or isinstance(rect.popup, AdvancedPopup):
-                # make a new popup
-                rect.popup = BasicPopup(
+            if not rect.state_form or isinstance(rect.state_form, JSONStateForm):
+                # make a new state form
+                rect.state_form = BasicStateForm(
                     payloads,
                     state_names=self.scene.getStateNames(),
                     rect=rect,
                     load=True,
                 )
-            rect.popup.edit_mode(payloads)
-            self.popup = rect.popup
+            rect.state_form.edit_mode(payloads)
+            self.last_state_form = rect.state_form
         else:
-            self.popup = BasicPopup(payloads, state_names=self.scene.getStateNames())
+            self.last_state_form = BasicStateForm(
+                payloads, state_names=self.scene.getStateNames()
+            )
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.add_state)
+                self.last_state_form.save_button.clicked.disconnect(self.add_state)
             except TypeError:
-                self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
+                self.last_state_form.save_button.clicked.connect(
+                    lambda: self.edit_state(rect)
+                )
         else:
-            self.popup.save_button.clicked.connect(self.add_state)
-        self.popup.exec()
+            self.last_state_form.save_button.clicked.connect(self.add_state)
+        self.last_state_form.exec()
 
-    def call_advanced_popup(self, rect=None, edit=False):
-        """Calls popup on click of CustomItem, or if 'Add Advanced' button is pressed"""
-        # create new popup
-        self.popup = AdvancedPopup(rect, edit)
+    def display_json_state_form(self, rect=None, edit=False):
+        """Calls state form on click of CustomItem, or if 'Add' button is pressed with JSON state form setting selected"""
+        # create new state form
+        self.last_state_form = JSONStateForm(rect, edit)
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.add_state)
+                self.last_state_form.save_button.clicked.disconnect(self.add_state)
             except TypeError:
-                self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
+                self.last_state_form.save_button.clicked.connect(
+                    lambda: self.edit_state(rect)
+                )
         else:
-            self.popup.save_button.clicked.connect(self.add_state)
-        self.popup.exec()
+            self.last_state_form.save_button.clicked.connect(self.add_state)
+        self.last_state_form.exec()
 
     def item_clicked(self):
-        """When a CustomItem is clicked, calls self.call_basic_popup in order to display popup associated with the CustomItem clicked"""
+        """When a CustomItem is clicked, calls self.display_edit_state_form in order to display state form associated with the CustomItem clicked"""
         if self.view.itemClicked:
             rect = self.view.itemClicked
-            self.edit_item(rect)
+            if isinstance(rect, CustomItem):
+                self.display_edit_state_form(rect)
 
-    def edit_item(self, rect):
+    def display_edit_state_form(self, rect):
         if self.setting == "basic":
-            self.call_basic_popup(rect, True)
-        elif self.setting == "advanced":
-            self.call_advanced_popup(rect, True)
+            self.display_basic_state_form(rect, True)
+        else:
+            self.display_json_state_form(rect, True)
 
     def read_import(self, states):
         """Adds imported states to workflow diagram
@@ -615,8 +622,7 @@ class WorkflowDiagram(QWidget):
     def clear(self):
         """Clear all state"""
         self.scene.clear()
-        self.popup = None
+        self.last_state_form = None
         self.root = None
         self.view.resetTransform()
         self.update()
-        self.popup = None

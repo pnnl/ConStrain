@@ -6,26 +6,25 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QDialog,
     QTextEdit,
-    QMessageBox,
 )
 from PyQt6.QtGui import QFontMetricsF
 from constrain.app import utils
 
 
-class AdvancedPopup(QDialog):
+class JSONStateForm(QDialog):
     def __init__(self, rect=None, edit=False):
-        """AdvancedPopup is a QDialog for users to make states which contain the entire json definition
+        """JSONStateForm is a QDialog for users to make states which contain the entire json definition
         for the state in a TextEdit
 
         Args:
-            rect (CustomItem): the CustomItem that this popup is assigned to. If rect is passed, AdvancedPopup
+            rect (CustomItem): the CustomItem that this state form is assigned to. If rect is passed, JSONStateForm
             will load the state of the rect into its TextEdit
 
             edit (bool): Don't think this is necessary. Specifies whether or not a rect's state is being edited
         """
         super().__init__()
 
-        # value to say whether the popup has any errors
+        # value to say whether the state form has any errors
         self.error = False
 
         # layout
@@ -83,7 +82,7 @@ class AdvancedPopup(QDialog):
         return state_json
 
     def check_state(self):
-        """Performs basic validity checks on the popup, setting self.error as True and displaying
+        """Performs basic validity checks on the state form, setting self.error as True and displaying
         an error popup if any checks are failed
         """
         self.error = False

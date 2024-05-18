@@ -19,8 +19,8 @@ import json
 # mapping from object to its methods and its methods to its parameters for display in popup
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
-dependencies_path = os.path.join(script_directory, "dependencies.json")
-api_to_method_path = os.path.join(script_directory, "api_to_method.json")
+dependencies_path = os.path.join(script_directory, "../dependencies.json")
+api_to_method_path = os.path.join(script_directory, "../api_to_method.json")
 
 with open(dependencies_path) as f:
     schema = json.load(f)
@@ -34,7 +34,7 @@ class ListPopup(QDialog):
     def __init__(self, input=None, payload=True):
         """Popup that will display for either parameters (Custom object) or payloads (all other objects) when
         selected in the basic popup. Currently remade each time it is chosen instead of being saved inside of
-        the BasicPopup or CustomItem
+        the BasicStateForm or CustomItem
 
         Args:
             input (dict or list): a data structure containing what should be in the list widget
@@ -159,7 +159,7 @@ class ListPopup(QDialog):
 class ChoicesPopup(QDialog):
     def __init__(self, payloads=[], choices=[]):
         """Popup displayed for creating choices in the basic popup. Currently remade each time it is
-        chosen instead of being stored inside of a BasicPopup or CustomItem
+        chosen instead of being stored inside of a BasicStateForm or CustomItem
 
         Args:
             payloads (list): The list of objects that are available to be chosen from
