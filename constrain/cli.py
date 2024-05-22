@@ -5,7 +5,7 @@ This the command line interface module of ConStrain. Currently it is mostly used
 """
 
 import click, sys
-from .app.app import GUI
+from .app.views.main_window import MainWindow
 from PyQt6.QtWidgets import QApplication
 
 
@@ -20,7 +20,7 @@ def cli():
 
 def open_app():
     app = QApplication(sys.argv)
-    window = GUI()
+    window = MainWindow()
     window.show()
     sys.exit(app.exec())
 

@@ -1,10 +1,8 @@
-import sys
 import warnings
 import json
 import os
 
 from PyQt6.QtWidgets import (
-    QApplication,
     QMainWindow,
     QVBoxLayout,
     QWidget,
@@ -20,16 +18,16 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QRectF
 from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor, QIcon
 
-from constrain.app.forms.import_form import ImportForm
-from constrain.app.forms.meta_form import MetaForm
-from constrain.app.workflow_diagram import WorkflowDiagram
-from constrain.app.submit import Worker, SubmitPopup
-from constrain.app import utils
-
+from constrain.app.views.import_form import ImportForm
+from constrain.app.views.meta_form import MetaForm
+from constrain.app.views.workflow_diagram import WorkflowDiagram
+from constrain.app.views.submission_dialog import SubmissionDialog
+from constrain.app.controllers.submit import Worker
+from constrain.app.utils import utils
 from constrain.api.workflow import Workflow
 
 
-class GUI(QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
         """QMainWindow to contain MetaForm, ImportForm, and Workflow Diagram."""
 
@@ -103,7 +101,9 @@ class GUI(QMainWindow):
         self.setCentralWidget(central_widget)
 
         current_directory = os.path.dirname(os.path.abspath(__file__))
-        icon_asset_path = os.path.join(current_directory, "assets/strainer.png")
+        icon_asset_path = os.path.join(
+            current_directory, "resources/images/strainer.png"
+        )
         self.setWindowIcon(QIcon(icon_asset_path))
 
         self.initialize_toolbar()
@@ -290,7 +290,7 @@ class GUI(QMainWindow):
         states = self.states_form.get_workflow(reformat=False)
         json_data = self.create_json(states)
 
-        popup = SubmitPopup()
+        popup = SubmissionDialog()
 
         # make worker a GUI attribute to not block the rest of the application
         self.worker = Worker(json_data)
@@ -327,11 +327,3 @@ class GUI(QMainWindow):
         self.meta_form.clear()
         self.import_form.clear()
         self.states_form.clear()
-
-
-app = QApplication(sys.argv)
-
-window = GUI()
-window.show()
-
-sys.exit(app.exec())

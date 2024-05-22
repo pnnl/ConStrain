@@ -76,18 +76,18 @@ To submit your workflow, press the 'Submit' button on the bottom of the main win
 The application contains 9 Python source files:
 
 - `app`
-- `forms/import_form`
-- `forms/meta_form`
-- `forms/basic_state_form`
-- `forms/json_state_form`
+- `views/import_form`
+- `views/meta_form`
+- `views/basic_state_form`
+- `views/json_state_form`
 - `workflow_diagram`
-- `forms/list_and_choice_forms`
-- `rect_connect`
+- `views/list_and_choice_forms`
+- `controllers/rect_connect`
 - `submit`
 
 #### app
 This file runs the GUI. It is responsible for piecing together the main components of the app, like the meta form, the import form, and the workflow diagram. It also handles validate, import, and export functionalities. It contains 2 classes:
-- `GUI(QMainWindow)`: pieces classes together
+- `MainWindow(QMainWindow)`: pieces classes together
 - `UserSetting(QDialog)`: dialog to configure basic or JSON setting
 
 #### import_form
@@ -139,10 +139,12 @@ This file contains the UI components that make up the workflow. It contains 4 cl
 - `Path(QGraphicsPathItem)`: paints path from a ControlPoint
 - `ControlPoint(QGraphicsEllipseItem)`: points on a CustomItem that can connect to ControlPoints on other CustomItems
 - `CustomItem(QGraphicsItem)`: shape on Scene representing a state
-- `Scene(QGraphicsScene)`: scene to hold CustomItems, ControlPoints, and Paths
+
+#### workflow_diagram_scene
+- `WorkflowDiagramScene(QGraphicsScene)`: scene to hold CustomItems, ControlPoints, and Paths
 
 #### submit
 This file allows for the submission of Workflows to the API. It contains 3 classes:
 - `Worker(QThread)`: runs the workflow in the API
-- `EmittingStream`: emits output of API to `SubmitPopup`
-- `SubmitPopup(QDialog)`: popup that displays output of API when running the workflow
+- `EmittingStream`: emits output of API to `SubmissionDialog`
+- `SubmissionDialog(QDialog)`: popup that displays output of API when running the workflow

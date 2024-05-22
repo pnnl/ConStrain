@@ -8,7 +8,8 @@ from PyQt6.QtWidgets import (
     QTextEdit,
 )
 from PyQt6.QtGui import QFontMetricsF
-from constrain.app import utils
+
+from constrain.app.utils import utils
 
 
 class JSONStateForm(QDialog):

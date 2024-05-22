@@ -8,7 +8,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
 )
 from PyQt6.QtCore import QDate
-from constrain.app import utils
+from constrain.app.utils import utils
 
 
 class MetaForm(QWidget):

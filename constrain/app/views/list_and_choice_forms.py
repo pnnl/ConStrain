@@ -1,3 +1,7 @@
+import os
+import re
+import json
+
 from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
@@ -12,15 +16,15 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 
-import os
-import re
-import json
-
 # mapping from object to its methods and its methods to its parameters for display in popup
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
-dependencies_path = os.path.join(script_directory, "../dependencies.json")
-api_to_method_path = os.path.join(script_directory, "../api_to_method.json")
+dependencies_path = os.path.join(
+    script_directory, "../resources/maps/dependencies.json"
+)
+api_to_method_path = os.path.join(
+    script_directory, "../resources/maps/api_to_method.json"
+)
 
 with open(dependencies_path) as f:
     schema = json.load(f)

@@ -1,11 +1,6 @@
 import sys
 import warnings
 
-from PyQt6.QtWidgets import (
-    QVBoxLayout,
-    QDialog,
-    QTextEdit,
-)
 from PyQt6.QtCore import QThread, pyqtSignal
 
 from constrain.api.workflow import Workflow
@@ -48,22 +43,3 @@ class EmittingStream:
 
     def flush(self):
         pass
-
-
-class SubmitPopup(QDialog):
-    def __init__(self):
-        """Creates a read-only popup containing the verbose run through Workflow"""
-        super(SubmitPopup, self).__init__()
-        self.init_ui()
-
-    def init_ui(self):
-        self.setMinimumSize(400, 500)
-        self.setWindowTitle("Results")
-        self.layout = QVBoxLayout()
-        self.text_edit = QTextEdit()
-        self.text_edit.setReadOnly(True)
-        self.layout.addWidget(self.text_edit)
-        self.setLayout(self.layout)
-
-    def update_text(self, message):
-        self.text_edit.append(message)

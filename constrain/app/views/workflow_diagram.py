@@ -1,3 +1,6 @@
+import json
+from collections import Counter
+
 from PyQt6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
@@ -19,12 +22,12 @@ from PyQt6.QtGui import (
     QBrush,
     QAction,
 )
-from constrain.app.forms.basic_state_form import BasicStateForm
-from constrain.app.forms.json_state_form import JSONStateForm
-from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
-from constrain.app import utils
-import json
-from collections import Counter
+
+from constrain.app.views.basic_state_form import BasicStateForm
+from constrain.app.views.json_state_form import JSONStateForm
+from constrain.app.views.workflow_diagram_scene import WorkflowDiagramScene
+from constrain.app.controllers.rect_connect import CustomItem, ControlPoint, Path
+from constrain.app.utils import utils
 
 
 class Zoom(QGraphicsView):
@@ -33,7 +36,7 @@ class Zoom(QGraphicsView):
     def __init__(self, scene):
         """QGraphicsView that includes zoom function
 
-        scene (Scene): scene to be contained by self
+        scene (WorkflowDiagramScene): scene to be contained by self
         """
         super().__init__(scene)
         self.scene = scene
@@ -238,7 +241,7 @@ class WorkflowDiagram(QWidget):
 
         self.setting = setting
         layout = QVBoxLayout(self)
-        self.scene = Scene()
+        self.scene = WorkflowDiagramScene()
         self.view = Zoom(self.scene)
         self.view.clicked.connect(self.item_clicked)
 
