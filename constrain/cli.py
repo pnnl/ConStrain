@@ -16,9 +16,12 @@ def cli():
 
     ConStrain or Control Strainer is a data-driven knowledge-integrated framework that automatically verifies that building system controls function as intended
     """
+    pass
 
 
-def open_app():
+@cli.command()
+def open():
+    """Open the ConStrain GUI."""
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
@@ -26,4 +29,4 @@ def open_app():
 
 
 if __name__ == "__main__":
-    open_app()
+    cli()
