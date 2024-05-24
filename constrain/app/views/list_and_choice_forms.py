@@ -91,7 +91,6 @@ class ListPopup(QDialog):
         """Populates the input list depending on what is in the current input. The input
         list contains a formatted string version of the inputs.
         """
-        # TODO: Figure out why I decided to reset input_list instead of just appending
         self.input_list.clear()
 
         if self.payload:

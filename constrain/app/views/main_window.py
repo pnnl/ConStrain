@@ -102,7 +102,7 @@ class MainWindow(QMainWindow):
 
         current_directory = os.path.dirname(os.path.abspath(__file__))
         icon_asset_path = os.path.join(
-            current_directory, "resources/images/strainer.png"
+            current_directory, "../resources/images/strainer.png"
         )
         self.setWindowIcon(QIcon(icon_asset_path))
 
