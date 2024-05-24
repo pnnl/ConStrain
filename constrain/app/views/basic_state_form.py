@@ -5,21 +5,12 @@ Contained is the class for BasicStateForm, the state form displayed when 'Add' i
 import json
 import re
 import os
+from typing import Optional
 
-from PyQt6.QtWidgets import (
-    QLineEdit,
-    QVBoxLayout,
-    QPushButton,
-    QHBoxLayout,
-    QComboBox,
-    QListWidget,
-    QDialog,
-    QGroupBox,
-    QMessageBox,
-    QLayout,
-)
+from PyQt6 import QtWidgets
 
 from constrain.app.views.list_and_choice_forms import ListPopup, ChoicesPopup
+from constrain.app.controllers.rect_connect import CustomItem
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
 dependencies_path = os.path.join(
@@ -38,8 +29,14 @@ with open(api_to_method_path) as f:
     api_to_method = json.load(f)
 
 
-class BasicStateForm(QDialog):
-    def __init__(self, payloads=[], state_names=[], rect=None, load=False):
+class BasicStateForm(QtWidgets.QDialog):
+    def __init__(
+        self,
+        payloads: Optional[list] = [],
+        state_names: Optional[list] = [],
+        rect: Optional[CustomItem] = None,
+        load: Optional[bool] = False,
+    ) -> None:
         """Form to be displayed for user to edit or add a basic state
 
         Args:
@@ -72,17 +69,17 @@ class BasicStateForm(QDialog):
         self.initialize_base_ui()
         self.set_ui() if not load else self.load_ui(rect)
 
-    def initialize_base_ui(self):
+    def initialize_base_ui(self) -> None:
         """Initializes UI that is used when both loading the state form and creating the state form"""
-        self.type_combo_box = QComboBox()
-        self.object_type_combo_box = QComboBox()
-        self.method_combo_box = QComboBox()
-        self.form_layout = QVBoxLayout()
+        self.type_combo_box = QtWidgets.QComboBox()
+        self.object_type_combo_box = QtWidgets.QComboBox()
+        self.method_combo_box = QtWidgets.QComboBox()
+        self.form_layout = QtWidgets.QVBoxLayout()
 
-        self.buttons_layout = QHBoxLayout()
-        self.save_button = QPushButton("Save")
-        self.cancel_button = QPushButton("Cancel")
-        self.payload_button = QPushButton("Edit")
+        self.buttons_layout = QtWidgets.QHBoxLayout()
+        self.save_button = QtWidgets.QPushButton("Save")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
+        self.payload_button = QtWidgets.QPushButton("Edit")
 
         self.save_button.setFixedSize(100, 20)
         self.cancel_button.setFixedSize(100, 20)
@@ -92,18 +89,18 @@ class BasicStateForm(QDialog):
         self.cancel_button.clicked.connect(self.close)
         self.payload_button.clicked.connect(self.payload_form)
 
-        self.payload_list_widget = QListWidget()
-        self.parameter_list_widget = QListWidget()
+        self.payload_list_widget = QtWidgets.QListWidget()
+        self.parameter_list_widget = QtWidgets.QListWidget()
 
         self.buttons_layout.addWidget(self.save_button)
         self.buttons_layout.addWidget(self.cancel_button)
 
-    def set_ui(self):
+    def set_ui(self) -> None:
         """Loads UI for when user is manually adding information instead of importing"""
         self.setWindowTitle("Add State")
 
-        layout = QVBoxLayout()
-        layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        layout = QtWidgets.QVBoxLayout()
+        layout.setSizeConstraint(QtWidgets.QLayout.SizeConstraint.SetFixedSize)
         self.setLayout(layout)
 
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
@@ -132,7 +129,9 @@ class BasicStateForm(QDialog):
             lambda: self.update_form(False)
         )
 
-    def get_object_method_from_call(self, call):
+    def get_object_method_from_call(
+        self, call: str
+    ) -> tuple[Optional[str], Optional[str]]:
         """Given a MethodCall to be used in the API, this function returns the object and method from
         this MethodCall
 
@@ -154,7 +153,7 @@ class BasicStateForm(QDialog):
 
         return object, method
 
-    def get_api_from_method(self, method):
+    def get_api_from_method(self, method: str) -> Optional[str]:
         """Given a method, returns its object type
 
         Args:
@@ -167,7 +166,7 @@ class BasicStateForm(QDialog):
             (api for api, methods in api_to_method.items() if method in methods), None
         )
 
-    def format_method(self, method):
+    def format_method(self, method: str) -> str:
         """Translates method in API format to state form format
 
         Args:
@@ -187,7 +186,7 @@ class BasicStateForm(QDialog):
 
         return result
 
-    def set_state(self, to_set):
+    def set_state(self, to_set: dict) -> None:
         """On import, fills form with text based on state that is passed to it
 
         Args:
@@ -212,20 +211,20 @@ class BasicStateForm(QDialog):
             elif parameter not in to_set.keys():
                 continue
 
-            if item.findChild(QLineEdit):
-                item.findChild(QLineEdit).setText(to_set[parameter])
-            elif item.findChild(QComboBox):
-                item.findChild(QComboBox).setCurrentText(to_set[parameter])
+            if item.findChild(QtWidgets.QLineEdit):
+                item.findChild(QtWidgets.QLineEdit).setText(to_set[parameter])
+            elif item.findChild(QtWidgets.QComboBox):
+                item.findChild(QtWidgets.QComboBox).setCurrentText(to_set[parameter])
 
-    def load_ui(self, rect):
+    def load_ui(self, rect: CustomItem) -> None:
         """Loads UI based on state of rect. Called when edit rect after import
 
         Args:
             rect (CustomItem): rect associated with self
         """
 
-        layout = QVBoxLayout()
-        layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        layout = QtWidgets.QVBoxLayout()
+        layout.setSizeConstraint(QtWidgets.QLayout.SizeConstraint.SetFixedSize)
         self.setLayout(layout)
 
         state = rect.state
@@ -240,7 +239,7 @@ class BasicStateForm(QDialog):
         else:
             return
 
-    def load_choice_ui(self, state, layout):
+    def load_choice_ui(self, state: dict, layout: QtWidgets.QVBoxLayout) -> None:
         """Adds Choice UI to layout from self.load_ui given state and layout
 
         Args:
@@ -287,7 +286,7 @@ class BasicStateForm(QDialog):
                 )
             self.choice_list_widget.addItem(widget_line)
 
-    def load_method_ui(self, state, layout):
+    def load_method_ui(self, state: dict, layout: QtWidgets.QVBoxLayout) -> None:
         """Adds MethodCall UI to layout from self.load_ui given state and layout. Requires state['Type'] == 'MethodCall'
 
         Args:
@@ -401,7 +400,7 @@ class BasicStateForm(QDialog):
         for item in current_payloads.keys():
             self.payload_list_widget.addItem(f"{item}: {current_payloads[item]}")
 
-    def edit_mode(self, payloads):
+    def edit_mode(self, payloads: list) -> None:
         """Called when CustomItem is clicked. Sets window title and updates payloads
 
         Args:
@@ -410,7 +409,7 @@ class BasicStateForm(QDialog):
         self.setWindowTitle("Edit State")
         self.payloads = payloads
 
-    def on_type_selected(self):
+    def on_type_selected(self) -> None:
         """Sets UI based on which state type is selected"""
         type = self.type_combo_box.currentText()
         self.clear_form()
@@ -424,40 +423,40 @@ class BasicStateForm(QDialog):
             self.object_type_combo_box.hide()
         self.method_combo_box.hide()
 
-    def choice_form(self):
+    def choice_form(self) -> None:
         """Sets UI for Choice type. Called when Choice is selected as object type"""
-        self.make_and_add_groupbox("Name of State", QLineEdit())
+        self.make_and_add_groupbox("Name of State", QtWidgets.QLineEdit())
 
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
 
-        choice_widget = QGroupBox()
+        choice_widget = QtWidgets.QGroupBox()
         choice_widget.setTitle("Choices")
 
-        edit_button = QPushButton("Edit")
+        edit_button = QtWidgets.QPushButton("Edit")
         edit_button.setFixedSize(100, 20)
         edit_button.clicked.connect(self.choice_popup)
         layout.addWidget(edit_button)
 
-        self.choice_list_widget = QListWidget()
+        self.choice_list_widget = QtWidgets.QListWidget()
         layout.addWidget(self.choice_list_widget)
 
         choice_widget.setLayout(layout)
         self.form_layout.addWidget(choice_widget)
 
-        self.make_and_add_groupbox("Default", QLineEdit())
+        self.make_and_add_groupbox("Default", QtWidgets.QLineEdit())
 
-    def choice_popup(self):
+    def choice_popup(self) -> None:
         """Creates a ChoicesPopup object. Called when Edit button is clicked in Choice UI"""
 
         # initialize popup
         choice_popup = ChoicesPopup(self.payloads, self.current_choices)
 
         # set self.current_choices and update list widget when popup is OK'ed
-        if choice_popup.exec() == QDialog.DialogCode.Accepted:
+        if choice_popup.exec() == QtWidgets.QDialog.DialogCode.Accepted:
             self.current_choices = choice_popup.get_input()
             self.update_list(self.choice_list_widget)
 
-    def on_state_selected(self):
+    def on_state_selected(self) -> None:
         """Sets UI based on which object type is selected"""
         object_type = self.object_type_combo_box.currentText()
         self.method_combo_box.clear()
@@ -475,7 +474,7 @@ class BasicStateForm(QDialog):
             self.method_combo_box.addItems(methods)
             self.method_combo_box.show()
 
-    def make_and_add_groupbox(self, title, widget):
+    def make_and_add_groupbox(self, title: str, widget) -> QtWidgets.QGroupBox:
         """Creates and adds QGroupBox to layout with given title and widget
 
         Args:
@@ -485,41 +484,36 @@ class BasicStateForm(QDialog):
         Returns:
             PyQt6.QtWidgets.QGroupBox: groupbox created
         """
-        gb = QGroupBox()
+        gb = QtWidgets.QGroupBox()
         gb.setTitle(title)
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
 
-        # tt_label = QLabel()
-        # pixmap = QPixmap("tt.png")
-        # tt_label.setPixmap(pixmap)
-
-        # layout.addWidget(tt_label)
         layout.addWidget(widget)
         gb.setLayout(layout)
         self.form_layout.addWidget(gb)
         return gb
 
-    def update_custom_form(self):
+    def update_custom_form(self) -> None:
         """Sets UI for when Custom object type is chosen"""
 
-        layout = QVBoxLayout()
-        self.make_and_add_groupbox("MethodCall", QLineEdit())
+        layout = QtWidgets.QVBoxLayout()
+        self.make_and_add_groupbox("MethodCall", QtWidgets.QLineEdit())
 
-        parameter_widget = QGroupBox()
+        parameter_widget = QtWidgets.QGroupBox()
         parameter_widget.setTitle("Parameters")
 
-        parameter_button = QPushButton("Edit")
+        parameter_button = QtWidgets.QPushButton("Edit")
         parameter_button.setFixedSize(100, 20)
         parameter_button.clicked.connect(self.parameter_form)
         layout.addWidget(parameter_button)
 
-        self.parameter_list_widget = QListWidget()
+        self.parameter_list_widget = QtWidgets.QListWidget()
         layout.addWidget(self.parameter_list_widget)
 
         parameter_widget.setLayout(layout)
         self.form_layout.addWidget(parameter_widget)
 
-    def update_form(self, custom=False):
+    def update_form(self, custom: bool = False) -> None:
         """Sets UI based on which method is chosen
 
         Args:
@@ -538,13 +532,13 @@ class BasicStateForm(QDialog):
         fields = schema.get(object_type, {}).get(method, [])
 
         # set possible objects to be chosen
-        self.payload_combo_box = QComboBox()
+        self.payload_combo_box = QtWidgets.QComboBox()
         if self.payloads:
             payloads_formatted = [f"{item}" for item in self.payloads]
             payloads_formatted.insert(0, "")
             self.payload_combo_box.addItems(payloads_formatted)
 
-        self.make_and_add_groupbox("Name of State", QLineEdit())
+        self.make_and_add_groupbox("Name of State", QtWidgets.QLineEdit())
 
         # show object combo box only if state form is not an MethodCall initialization
         if custom or method != "Initialize":
@@ -556,52 +550,52 @@ class BasicStateForm(QDialog):
             # create groupboxes for each necessary field for the method
             for field in fields:
                 if field["type"] == "line_edit":
-                    self.make_and_add_groupbox(field["label"], QLineEdit())
+                    self.make_and_add_groupbox(field["label"], QtWidgets.QLineEdit())
                 elif field["type"] == "combo_box":
-                    combo_box = QComboBox()
+                    combo_box = QtWidgets.QComboBox()
                     combo_box.addItems(["", "True", "False"])
                     self.make_and_add_groupbox(field["label"], combo_box)
 
-        payload_widget = QGroupBox()
+        payload_widget = QtWidgets.QGroupBox()
         payload_widget.setTitle("Payloads")
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
 
-        self.payload_button = QPushButton("Edit")
+        self.payload_button = QtWidgets.QPushButton("Edit")
         self.payload_button.setFixedSize(100, 20)
         self.payload_button.clicked.connect(self.payload_form)
         layout.addWidget(self.payload_button)
 
-        self.payload_list_widget = QListWidget()
+        self.payload_list_widget = QtWidgets.QListWidget()
         layout.addWidget(self.payload_list_widget)
 
         payload_widget.setLayout(layout)
         self.form_layout.addWidget(payload_widget)
 
-        self.make_and_add_groupbox("Next - Optional", QLineEdit())
+        self.make_and_add_groupbox("Next - Optional", QtWidgets.QLineEdit())
 
-    def payload_form(self):
+    def payload_form(self) -> None:
         """Creates a ListPopup object. Called when payload Edit button is clicked"""
 
         # pass in current_payloads in order to fill list widget in popup
         payload_popup = ListPopup(self.current_payloads)
 
         # set self.current_payloads and update list widget when popup is OK'ed
-        if payload_popup.exec() == QDialog.DialogCode.Accepted:
+        if payload_popup.exec() == QtWidgets.QDialog.DialogCode.Accepted:
             self.current_payloads = payload_popup.get_input()
             self.update_list(self.payload_list_widget)
 
-    def parameter_form(self):
+    def parameter_form(self) -> None:
         """Creates a ListPopup object. Called when parameter Edit button is clicked"""
 
         # pass in current_params in order to fill list widget in popup
         popup = ListPopup(self.current_params, payload=False)
 
         # set self.current_params and update list widget when popup is OK'ed
-        if popup.exec() == QDialog.DialogCode.Accepted:
+        if popup.exec() == QtWidgets.QDialog.DialogCode.Accepted:
             self.current_params = popup.get_input()
             self.update_list(self.parameter_list_widget)
 
-    def update_list(self, list_widget):
+    def update_list(self, list_widget: QtWidgets.QListWidget) -> None:
         """Updates list widget with current values
 
         Args:
@@ -627,14 +621,14 @@ class BasicStateForm(QDialog):
                     f"{input['Value']} = {input['Equals']} -> {input['Next']}"
                 )
 
-    def clear_form(self):
+    def clear_form(self) -> None:
         """Clears main form"""
         while self.form_layout.count() > 0:
             item = self.form_layout.takeAt(0)
             widget = item.widget()
             widget.deleteLater()
 
-    def save(self):
+    def save(self) -> None:
         """On click of save button, generates a dict containing the state"""
 
         # state
@@ -676,10 +670,10 @@ class BasicStateForm(QDialog):
             item = self.form_layout.itemAt(i).widget()
             parameter = item.title()
 
-            if item.findChild(QLineEdit):
-                text = item.findChild(QLineEdit).text()
-            elif item.findChild(QComboBox):
-                text = item.findChild(QComboBox).currentText()
+            if item.findChild(QtWidgets.QLineEdit):
+                text = item.findChild(QtWidgets.QLineEdit).text()
+            elif item.findChild(QtWidgets.QComboBox):
+                text = item.findChild(QtWidgets.QComboBox).currentText()
 
             # report error if necessary parameter is not filled
             if not text or text == "":
@@ -718,20 +712,20 @@ class BasicStateForm(QDialog):
         if not self.error:
             self.close()
 
-    def send_error(self, text):
+    def send_error(self, text: str) -> None:
         """Displays an error message with given text
 
         Args:
             text (str): text to be displayed
         """
         self.error = True
-        error_msg = QMessageBox()
-        error_msg.setIcon(QMessageBox.Icon.Critical)
+        error_msg = QtWidgets.QMessageBox()
+        error_msg.setIcon(QtWidgets.QMessageBox.Icon.Critical)
         error_msg.setWindowTitle("Error in State")
         error_msg.setText(text)
         error_msg.exec()
 
-    def get_state(self):
+    def get_state(self) -> None:
         """Returns compiled state of the state form
 
         Returns:

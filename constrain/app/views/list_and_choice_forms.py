@@ -2,19 +2,7 @@ import os
 import re
 import json
 
-from PyQt6.QtWidgets import (
-    QLabel,
-    QLineEdit,
-    QVBoxLayout,
-    QPushButton,
-    QComboBox,
-    QListWidget,
-    QDialog,
-    QDialogButtonBox,
-    QMenu,
-)
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QAction
+from PyQt6 import QtWidgets, QtCore, QtGui
 
 # mapping from object to its methods and its methods to its parameters for display in popup
 
@@ -34,7 +22,7 @@ with open(api_to_method_path) as f:
     api_to_method = json.load(f)
 
 
-class ListPopup(QDialog):
+class ListPopup(QtWidgets.QDialog):
     def __init__(self, input=None, payload=True):
         """Popup that will display for either parameters (Custom object) or payloads (all other objects) when
         selected in the basic popup. Currently remade each time it is chosen instead of being saved inside of
@@ -56,30 +44,33 @@ class ListPopup(QDialog):
         """Creates the layout of the ListPopup. Will make different layout depending on whether ListPopup
         is for payloads or parameters
         """
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
 
         self.setWindowTitle("Payloads" if self.payload else "Parameters")
 
-        layout.addWidget(QLabel("Name:"))
-        self.name_line_edit = QLineEdit()
+        layout.addWidget(QtWidgets.QLabel("Name:"))
+        self.name_line_edit = QtWidgets.QLineEdit()
         layout.addWidget(self.name_line_edit)
 
-        layout.addWidget(QLabel("Payload:" if self.payload else "Parameter:"))
-        self.line_edit = QLineEdit()
+        layout.addWidget(QtWidgets.QLabel("Payload:" if self.payload else "Parameter:"))
+        self.line_edit = QtWidgets.QLineEdit()
         layout.addWidget(self.line_edit)
 
-        add_button = QPushButton("Add")
+        add_button = QtWidgets.QPushButton("Add")
         add_button.clicked.connect(self.add_input)
         layout.addWidget(add_button)
 
-        self.input_list = QListWidget()
-        self.input_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.input_list = QtWidgets.QListWidget()
+        self.input_list.setContextMenuPolicy(
+            QtCore.Qt.ContextMenuPolicy.CustomContextMenu
+        )
         self.input_list.customContextMenuRequested.connect(self.show_context_menu)
         layout.addWidget(self.input_list)
 
         # accept or cancel changes
-        buttons = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        buttons = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.StandardButton.Ok
+            | QtWidgets.QDialogButtonBox.StandardButton.Cancel
         )
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
@@ -121,7 +112,7 @@ class ListPopup(QDialog):
         self.name_line_edit.clear()
         self.line_edit.clear()
 
-    def show_context_menu(self, position):
+    def show_context_menu(self, position: QtCore.QPoint):
         """Allows user to delete an import on right click of an item on the list
         Args:
             position (PyQt6.QtCore.QPoint): The position of the point where the user clicks
@@ -130,8 +121,8 @@ class ListPopup(QDialog):
         if item is None:
             return
 
-        menu = QMenu(self)
-        delete_action = QAction("Delete", self)
+        menu = QtWidgets.QMenu(self)
+        delete_action = QtGui.QAction("Delete", self)
 
         delete_action.triggered.connect(lambda: self.delete_input(item))
 
@@ -139,7 +130,7 @@ class ListPopup(QDialog):
 
         menu.exec(self.input_list.mapToGlobal(position))
 
-    def delete_input(self, item):
+    def delete_input(self, item: QtWidgets.QListWidgetItem):
         """Deletes a given item from the import list
 
         Args:
@@ -159,8 +150,8 @@ class ListPopup(QDialog):
         return self.current_input
 
 
-class ChoicesPopup(QDialog):
-    def __init__(self, payloads=[], choices=[]):
+class ChoicesPopup(QtWidgets.QDialog):
+    def __init__(self, payloads: list = [], choices: list = []) -> None:
         """Popup displayed for creating choices in the basic popup. Currently remade each time it is
         chosen instead of being stored inside of a BasicStateForm or CustomItem
 
@@ -178,67 +169,70 @@ class ChoicesPopup(QDialog):
 
         self.populate_input_list()
 
-    def set_ui(self):
+    def set_ui(self) -> None:
         """Sets the layout for the popup"""
         self.setWindowTitle("Choices")
 
-        self.layout = QVBoxLayout()
+        self.layout = QtWidgets.QVBoxLayout()
 
         # form
-        object_type_label = QLabel("Object Type")
-        self.object_type_combo_box = QComboBox()
+        object_type_label = QtWidgets.QLabel("Object Type")
+        self.object_type_combo_box = QtWidgets.QComboBox()
         object_types = list(schema.keys())
         object_types.insert(0, "")
         object_types.append("Custom")
         self.object_type_combo_box.addItems(object_types)
 
         # hide until object type is chosen
-        self.method_label = QLabel("Method")
+        self.method_label = QtWidgets.QLabel("Method")
         self.method_label.hide()
 
         # Line for method if Custom object, hide until Custom is chosen
-        self.method_input = QLineEdit()
+        self.method_input = QtWidgets.QLineEdit()
         self.method_input.hide()
 
         # hide this until non-Custom object is chosen
-        self.method_combo_box = QComboBox()
+        self.method_combo_box = QtWidgets.QComboBox()
         self.method_combo_box.hide()
 
         self.object_type_combo_box.currentIndexChanged.connect(self.on_state_selected)
 
         # possible objects to choose from
-        self.payload_combo_box = QComboBox()
+        self.payload_combo_box = QtWidgets.QComboBox()
         payloads_formatted = [""]
         if self.payloads:
             payloads_formatted += [f"{item}" for item in self.payloads]
         self.payload_combo_box.addItems(payloads_formatted)
 
-        self.object_label = QLabel("Object")
+        self.object_label = QtWidgets.QLabel("Object")
         self.object_input = self.payload_combo_box
 
         # equals
-        equals_label = QLabel("Equals")
-        self.equals_input = QComboBox()
+        equals_label = QtWidgets.QLabel("Equals")
+        self.equals_input = QtWidgets.QComboBox()
         self.equals_input.addItems(["True", "False"])
 
         # next
-        next_label = QLabel("Next")
-        self.next_input = QLineEdit()
+        next_label = QtWidgets.QLabel("Next")
+        self.next_input = QtWidgets.QLineEdit()
 
         # add
-        add_button = QPushButton("Add")
+        add_button = QtWidgets.QPushButton("Add")
         add_button.clicked.connect(self.add_input)
 
         # buttons for accept or reject
-        buttons = QDialogButtonBox(
-            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        buttons = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.StandardButton.Ok
+            | QtWidgets.QDialogButtonBox.StandardButton.Cancel
         )
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
 
         # displayed list to store input in strings
-        self.input_list = QListWidget()
-        self.input_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.input_list = QtWidgets.QListWidget()
+        self.input_list.setContextMenuPolicy(
+            QtCore.Qt.ContextMenuPolicy.CustomContextMenu
+        )
         self.input_list.customContextMenuRequested.connect(self.show_context_menu)
 
         self.layout.addWidget(object_type_label)
@@ -258,7 +252,7 @@ class ChoicesPopup(QDialog):
 
         self.setLayout(self.layout)
 
-    def on_state_selected(self):
+    def on_state_selected(self) -> None:
         """Sets UI based on which object type is selected"""
         object_type = self.object_type_combo_box.currentText()
         self.method_combo_box.clear()
@@ -277,14 +271,14 @@ class ChoicesPopup(QDialog):
             self.method_combo_box.addItems(methods)
             self.method_combo_box.show()
 
-    def clear_form(self):
+    def clear_form(self) -> None:
         """Deletes entire form"""
         while self.layout.count() > 0:
             item = self.layout.takeAt(0)
             widget = item.widget()
             widget.deleteLater()
 
-    def get_object_method_from_call(self, call):
+    def get_object_method_from_call(self, call: str) -> tuple[str, str]:
         """Searches method call to retrieve object and method used on the object
 
         Args:
@@ -305,7 +299,7 @@ class ChoicesPopup(QDialog):
 
         return object, method
 
-    def populate_input_list(self):
+    def populate_input_list(self) -> None:
         """Fills input list widget with formatted strings based on the choice/s defined"""
         self.input_list.clear()
 
@@ -319,7 +313,7 @@ class ChoicesPopup(QDialog):
                     widget_line = f"Payloads['{object}'].{method} = {choice['Equals']} -> {choice['Next']}"
                 self.input_list.addItem(widget_line)
 
-    def add_input(self):
+    def add_input(self) -> None:
         """On choice addition, adds choice dict to current list and repopulates list widget"""
         object = self.object_input.currentText()
         method = (
@@ -341,7 +335,7 @@ class ChoicesPopup(QDialog):
             self.equals_input.clear()
             self.next_input.clear()
 
-    def show_context_menu(self, position):
+    def show_context_menu(self, position: QtCore.QPoint) -> None:
         """Allows user to delete an import on right click of an item on the list
         Args:
             position (PyQt6.QtCore.QPoint): The position of the point where the user clicks
@@ -350,8 +344,8 @@ class ChoicesPopup(QDialog):
         if item is None:
             return
 
-        menu = QMenu(self)
-        delete_action = QAction("Delete", self)
+        menu = QtWidgets.QMenu(self)
+        delete_action = QtGui.QAction("Delete", self)
 
         delete_action.triggered.connect(lambda: self.delete_input(item))
 
@@ -359,7 +353,7 @@ class ChoicesPopup(QDialog):
 
         menu.exec(self.input_list.mapToGlobal(position))
 
-    def delete_input(self, item):
+    def delete_input(self, item: QtWidgets.QListWidgetItem) -> None:
         """Deletes a given item from the import list
 
         Args:
@@ -368,7 +362,7 @@ class ChoicesPopup(QDialog):
         self.current_input.pop(self.input_list.row(item))
         self.input_list.takeItem(self.input_list.row(item))
 
-    def get_input(self):
+    def get_input(self) -> list:
         """Returns list of choice dicts
 
         Returns:

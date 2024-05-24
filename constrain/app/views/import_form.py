@@ -1,42 +1,33 @@
-from PyQt6.QtWidgets import (
-    QLabel,
-    QLineEdit,
-    QVBoxLayout,
-    QWidget,
-    QPushButton,
-    QHBoxLayout,
-    QListWidget,
-    QMenu,
-)
-from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt
+from PyQt6 import QtWidgets, QtGui, QtCore
 
 from constrain.app.utils import utils
 
 
-class ImportForm(QWidget):
-    def __init__(self):
+class ImportForm(QtWidgets.QWidget):
+    def __init__(self) -> None:
         """Creates an import form to be displayed when 'Import' is selected from the LHS column frame
         on the Main Window. This form allows the user to create a list of python imports to use in their
         workflow"""
         super().__init__()
 
-        import_label = QLabel("Imports:")
-        self.import_input = QLineEdit()
+        import_label = QtWidgets.QLabel("Imports:")
+        self.import_input = QtWidgets.QLineEdit()
 
-        add_button = QPushButton("Add")
+        add_button = QtWidgets.QPushButton("Add")
         add_button.setToolTip("Add a library to use in your workflow")
 
-        self.import_list = QListWidget()
+        self.import_list = QtWidgets.QListWidget()
 
-        self.import_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.import_list.setContextMenuPolicy(
+            QtCore.Qt.ContextMenuPolicy.CustomContextMenu
+        )
         self.import_list.customContextMenuRequested.connect(self.show_context_menu)
 
-        middle = QHBoxLayout()
+        middle = QtWidgets.QHBoxLayout()
         middle.addWidget(self.import_input)
         middle.addWidget(add_button)
 
-        bottom = QVBoxLayout()
+        bottom = QtWidgets.QVBoxLayout()
         bottom.addWidget(self.import_list)
 
         add_button.clicked.connect(self.add_import)
@@ -44,7 +35,7 @@ class ImportForm(QWidget):
         # list of imports to be kept equal to what is in the QListWidget
         self.imports = []
 
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(import_label)
 
         layout.addLayout(middle)
@@ -52,7 +43,7 @@ class ImportForm(QWidget):
 
         self.setLayout(layout)
 
-    def add_import(self):
+    def add_import(self) -> None:
         """On click of 'Add', will gather the current input and add to the display"""
         import_text = self.import_input.text()
         if import_text:
@@ -60,11 +51,11 @@ class ImportForm(QWidget):
             self.import_list.addItem(import_text)
             self.import_input.clear()
 
-    def read_import(self, imports):
+    def read_import(self, imports: list) -> None:
         """Reads a list of imports, adding each import to the display
 
         Args:
-            imports (list): A list of python imports
+            imports (list): A slist of python imports
         """
         try:
             self.verify_import(imports)
@@ -77,12 +68,12 @@ class ImportForm(QWidget):
             self.import_list.addItem(i)
         self.update()
 
-    def verify_import(self, imports):
+    def verify_import(self, imports: list) -> None:
         assert isinstance(imports, list) and all(
             isinstance(item, str) for item in imports
         )
 
-    def show_context_menu(self, position):
+    def show_context_menu(self, position: QtCore.QPoint) -> None:
         """Allows user to delete an import on right click of an item on the list
         Args:
             position (PyQt6.QtCore.QPoint): The position of the point where the user clicks
@@ -93,8 +84,8 @@ class ImportForm(QWidget):
         if item is None:
             return
 
-        menu = QMenu(self)
-        delete_action = QAction("Delete", self)
+        menu = QtWidgets.QMenu(self)
+        delete_action = QtGui.QAction("Delete", self)
 
         delete_action.triggered.connect(lambda: self.delete_input(item))
 
@@ -102,7 +93,7 @@ class ImportForm(QWidget):
 
         menu.exec(self.import_list.mapToGlobal(position))
 
-    def delete_input(self, item):
+    def delete_input(self, item: QtWidgets.QListWidgetItem) -> None:
         """Deletes a given item from the import list
 
         Args:
@@ -111,7 +102,7 @@ class ImportForm(QWidget):
         self.imports.pop(self.import_list.row(item))
         self.import_list.takeItem(self.import_list.row(item))
 
-    def get_imports(self):
+    def get_imports(self) -> list:
         """Returns current imports
 
         Returns:
@@ -119,11 +110,11 @@ class ImportForm(QWidget):
         """
         return self.imports
 
-    def contains_data(self):
+    def contains_data(self) -> bool:
         """Check if import form contains any data"""
         return bool(self.imports)
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear import form"""
         self.import_list.clear()
         self.imports.clear()

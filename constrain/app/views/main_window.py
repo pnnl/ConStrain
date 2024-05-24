@@ -2,39 +2,25 @@ import warnings
 import json
 import os
 
-from PyQt6.QtWidgets import (
-    QMainWindow,
-    QVBoxLayout,
-    QWidget,
-    QPushButton,
-    QHBoxLayout,
-    QListWidget,
-    QFrame,
-    QToolBar,
-    QMenu,
-    QFileDialog,
-    QMessageBox,
-)
-from PyQt6.QtCore import Qt, QRectF
-from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor, QIcon
+from PyQt6 import QtWidgets, QtCore, QtGui
 
 from constrain.app.views.import_form import ImportForm
 from constrain.app.views.meta_form import MetaForm
-from constrain.app.views.workflow_diagram import WorkflowDiagram
+from constrain.app.controllers.workflow_diagram import WorkflowDiagram
 from constrain.app.views.submission_dialog import SubmissionDialog
 from constrain.app.controllers.submit import Worker
 from constrain.app.utils import utils
 from constrain.api.workflow import Workflow
 
 
-class MainWindow(QMainWindow):
-    def __init__(self):
+class MainWindow(QtWidgets.QMainWindow):
+    def __init__(self) -> None:
         """QMainWindow to contain MetaForm, ImportForm, and Workflow Diagram."""
 
         super().__init__()
         self.initialize_ui()
 
-    def initialize_ui(self):
+    def initialize_ui(self) -> None:
         self.setWindowTitle("ConStrain")
 
         self.meta_form = MetaForm()
@@ -42,7 +28,7 @@ class MainWindow(QMainWindow):
         self.states_form = WorkflowDiagram("basic")
 
         # list containing meta, imports, and state for display on LHS
-        self.column_list = QListWidget()
+        self.column_list = QtWidgets.QListWidget()
         self.column_list.addItems(["Meta", "Imports", "State"])
         self.column_list.currentItemChanged.connect(self.display_form)
         self.column_list.setStyleSheet(
@@ -51,52 +37,52 @@ class MainWindow(QMainWindow):
         self.column_list.setCurrentItem(self.column_list.item(0))
 
         # make and reposition frame containing meta, imports, and state
-        self.column_frame = QFrame()
-        self.column_frame.setFrameStyle(QFrame.Shape.NoFrame)
+        self.column_frame = QtWidgets.QFrame()
+        self.column_frame.setFrameStyle(QtWidgets.QFrame.Shape.NoFrame)
         self.column_frame.setFixedWidth(100)
         self.column_frame.setFixedHeight(76)
         self.column_frame.setStyleSheet(
             "background-color: #f0f0f0; border: 0px solid #f0f0f0;"
         )
-        column_layout = QVBoxLayout()
+        column_layout = QtWidgets.QVBoxLayout()
         column_layout.addWidget(self.column_list)
-        column_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        column_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
         self.column_frame.setLayout(column_layout)
-        self.column_frame_container = QVBoxLayout()
+        self.column_frame_container = QtWidgets.QVBoxLayout()
         self.column_frame_container.addWidget(self.column_frame)
-        self.column_frame_container.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.column_frame_container.setAlignment(QtCore.Qt.AlignmentFlag.AlignTop)
 
         # layouts that are displayed when meta, imports, or state is selected
-        middle_layout = QHBoxLayout()
+        middle_layout = QtWidgets.QHBoxLayout()
         middle_layout.addLayout(self.column_frame_container)
         middle_layout.addWidget(self.meta_form)
         middle_layout.addWidget(self.import_form)
         middle_layout.addWidget(self.states_form)
 
         # validate and submit buttons
-        validate_button = QPushButton("Validate")
+        validate_button = QtWidgets.QPushButton("Validate")
         validate_button.setToolTip("Validate workflow")
         validate_button.setFixedSize(100, 23)
         validate_button.clicked.connect(self.validate_form)
 
-        self.submit_button = QPushButton("Submit")
+        self.submit_button = QtWidgets.QPushButton("Submit")
         self.submit_button.setToolTip("Submit workflow")
         # self.submit_button.setEnabled(False)
         self.submit_button.setFixedSize(100, 23)
         self.submit_button.clicked.connect(self.submit_form)
 
         # group validate and submit buttons
-        buttons = QHBoxLayout()
+        buttons = QtWidgets.QHBoxLayout()
         # buttons.addWidget(validate_button)
         buttons.addWidget(self.submit_button)
-        buttons.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        buttons.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter)
 
         # set layout for entire window
-        main_layout = QVBoxLayout()
+        main_layout = QtWidgets.QVBoxLayout()
         main_layout.addLayout(middle_layout)
         main_layout.addLayout(buttons)
 
-        central_widget = QWidget()
+        central_widget = QtWidgets.QWidget()
         central_widget.setLayout(main_layout)
         self.setCentralWidget(central_widget)
 
@@ -104,41 +90,41 @@ class MainWindow(QMainWindow):
         icon_asset_path = os.path.join(
             current_directory, "../resources/images/strainer.png"
         )
-        self.setWindowIcon(QIcon(icon_asset_path))
+        self.setWindowIcon(QtGui.QIcon(icon_asset_path))
 
         self.initialize_toolbar()
 
-    def initialize_toolbar(self):
+    def initialize_toolbar(self) -> None:
         """Creates toolbar to give option for importing .json and exporting .json"""
-        toolbar = QToolBar()
+        toolbar = QtWidgets.QToolBar()
         self.addToolBar(toolbar)
 
-        file_menu = QMenu("File", self)
+        file_menu = QtWidgets.QMenu("File", self)
 
-        import_action = QAction("Import Workflow", self)
+        import_action = QtGui.QAction("Import Workflow", self)
         import_action.triggered.connect(self.import_file)
         file_menu.addAction(import_action)
 
-        export_menu = QMenu("Export Workflow", self)
+        export_menu = QtWidgets.QMenu("Export Workflow", self)
         file_menu.addMenu(export_menu)
 
-        json_export_action = QAction("JSON", self)
+        json_export_action = QtGui.QAction("JSON", self)
         json_export_action.triggered.connect(self.export_file)
         export_menu.addAction(json_export_action)
 
-        png_export_action = QAction("PNG", self)
+        png_export_action = QtGui.QAction("PNG", self)
         png_export_action.triggered.connect(self.export_as_png)
         export_menu.addAction(png_export_action)
 
-        settings_menu = QMenu("Settings", self)
-        state_form_settings_menu = QMenu("State Form Settings", self)
+        settings_menu = QtWidgets.QMenu("Settings", self)
+        state_form_settings_menu = QtWidgets.QMenu("State Form Settings", self)
 
-        self.basic_action = QAction("Basic Form", self, checkable=True)
+        self.basic_action = QtGui.QAction("Basic Form", self, checkable=True)
         self.basic_action.triggered.connect(self.select_basic_state_form_setting)
         state_form_settings_menu.addAction(self.basic_action)
         self.basic_action.setChecked(True)
 
-        self.json_form_setting_select = QAction("JSON Form", self, checkable=True)
+        self.json_form_setting_select = QtGui.QAction("JSON Form", self, checkable=True)
         self.json_form_setting_select.triggered.connect(
             self.select_json_state_form_setting
         )
@@ -149,17 +135,17 @@ class MainWindow(QMainWindow):
         toolbar.addAction(file_menu.menuAction())
         toolbar.addAction(settings_menu.menuAction())
 
-    def select_basic_state_form_setting(self):
+    def select_basic_state_form_setting(self) -> None:
         self.states_form.setting = "basic"
         if self.json_form_setting_select.isChecked():
             self.json_form_setting_select.setChecked(False)
 
-    def select_json_state_form_setting(self):
+    def select_json_state_form_setting(self) -> None:
         self.states_form.setting = "json"
         if self.basic_action.isChecked():
             self.basic_action.setChecked(False)
 
-    def export_file(self):
+    def export_file(self) -> None:
         """Exports current state as a .json to local storage"""
 
         scene = self.states_form.scene
@@ -169,7 +155,7 @@ class MainWindow(QMainWindow):
             )
             return
 
-        fp, _ = QFileDialog.getSaveFileName(
+        fp, _ = QtWidgets.QFileDialog.getSaveFileName(
             self, "Save JSON File", "", "JSON Files (*.json);;All Files (*)"
         )
 
@@ -181,7 +167,7 @@ class MainWindow(QMainWindow):
             except Exception:
                 print("error")
 
-    def export_as_png(self):
+    def export_as_png(self) -> None:
         """Exports current state as a .png to local storage"""
 
         scene = self.states_form.scene
@@ -191,17 +177,19 @@ class MainWindow(QMainWindow):
             )
             return
 
-        fp, _ = QFileDialog.getSaveFileName(self, "Save Image", "", "PNG Files (*.png)")
+        fp, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, "Save Image", "", "PNG Files (*.png)"
+        )
 
         if fp:
-            pixmap = QPixmap(scene.sceneRect().size().toSize())
-            pixmap.fill(QColor(255, 255, 255))
-            painter = QPainter(pixmap)
-            scene.render(painter, QRectF(pixmap.rect()), scene.sceneRect())
+            pixmap = QtGui.QPixmap(scene.sceneRect().size().toSize())
+            pixmap.fill(QtGui.QColor(255, 255, 255))
+            painter = QtGui.QPainter(pixmap)
+            scene.render(painter, QtCore.QRectF(pixmap.rect()), scene.sceneRect())
             painter.end()
             pixmap.save(fp, "PNG")
 
-    def import_file(self):
+    def import_file(self) -> None:
         """Imports a .json file to use a state and loads file into the GUI"""
 
         # Check if any of the forms contain data before resetting GUI state
@@ -212,15 +200,15 @@ class MainWindow(QMainWindow):
                 need_to_reset := utils.send_are_you_sure(
                     "This will delete all data in your current workflow."
                 )
-                == QMessageBox.StandardButton.Yes
+                == QtWidgets.QMessageBox.StandardButton.Yes
             ):
                 return
 
-        file_dialog = QFileDialog()
+        file_dialog = QtWidgets.QFileDialog()
         file_dialog.setWindowTitle("Select a JSON File")
-        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        file_dialog.setFileMode(QtWidgets.QFileDialog.FileMode.ExistingFile)
         file_dialog.setNameFilter("JSON files (*.json)")
-        if file_dialog.exec() == QFileDialog.DialogCode.Accepted:
+        if file_dialog.exec() == QtWidgets.QFileDialog.DialogCode.Accepted:
             # clear forms if state already exists in the GUI
             if need_to_reset:
                 self.clear()
@@ -239,7 +227,7 @@ class MainWindow(QMainWindow):
                     # error if selected file cannot be converted to a dict
                     print("error")
 
-    def display_form(self, current_item):
+    def display_form(self, current_item: str) -> None:
         """Displays tab that is selected
 
         Args:
@@ -258,7 +246,7 @@ class MainWindow(QMainWindow):
             self.import_form.hide()
             self.states_form.show()
 
-    def create_json(self, states):
+    def create_json(self, states: dict) -> dict:
         """Collects information from all tabs in order to build a final .json
 
         Args:
@@ -283,7 +271,7 @@ class MainWindow(QMainWindow):
         json_data = data
         return json_data
 
-    def submit_form(self):
+    def submit_form(self) -> None:
         """Workflow for submitting the state. Triggered on the click of the Submit button. Displays a popup which
         shows the progress of running the state.
         """
@@ -299,7 +287,7 @@ class MainWindow(QMainWindow):
         self.worker.start()
         popup.exec()
 
-    def validate_form(self):
+    def validate_form(self) -> None:
         """Workflow for validating the state. Triggered on the click of the Validate button. Enables the submit
         button if the workflow is validated.
         """
@@ -315,14 +303,14 @@ class MainWindow(QMainWindow):
             self.valid_workflow = json_data
             self.submit_button.setEnabled(True)
 
-    def contains_data(self):
+    def contains_data(self) -> bool:
         """Check if any forms contain data"""
         return any(
             form.contains_data()
             for form in [self.states_form, self.meta_form, self.import_form]
         )
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear all forms"""
         self.meta_form.clear()
         self.import_form.clear()

@@ -1,19 +1,12 @@
 import json
 
-from PyQt6.QtWidgets import (
-    QLabel,
-    QVBoxLayout,
-    QPushButton,
-    QDialog,
-    QTextEdit,
-)
-from PyQt6.QtGui import QFontMetricsF
+from PyQt6 import QtWidgets, QtGui
 
 from constrain.app.utils import utils
 
 
-class JSONStateForm(QDialog):
-    def __init__(self, rect=None, edit=False):
+class JSONStateForm(QtWidgets.QDialog):
+    def __init__(self, rect=None, edit=False) -> None:
         """JSONStateForm is a QDialog for users to make states which contain the entire json definition
         for the state in a TextEdit
 
@@ -29,8 +22,8 @@ class JSONStateForm(QDialog):
         self.error = False
 
         # layout
-        form_layout = QVBoxLayout()
-        state_label = QLabel("State:")
+        form_layout = QtWidgets.QVBoxLayout()
+        state_label = QtWidgets.QLabel("State:")
 
         if edit:
             self.setWindowTitle("Edit State")
@@ -38,17 +31,17 @@ class JSONStateForm(QDialog):
             self.setWindowTitle("Add State")
 
         # text edit where the user will type in the json
-        self.state_input = QTextEdit()
+        self.state_input = QtWidgets.QTextEdit()
         if rect:
             self.state_input.setText(rect.get_state_string())
 
         # make it so that tab equals 4 spaces
         font = self.state_input.font()
-        fontMetrics = QFontMetricsF(font)
+        fontMetrics = QtGui.QFontMetricsF(font)
         spaceWidth = fontMetrics.horizontalAdvance(" ")
         self.state_input.setTabStopDistance(spaceWidth * 4)
 
-        self.save_button = QPushButton("Save")
+        self.save_button = QtWidgets.QPushButton("Save")
         self.save_button.clicked.connect(self.check_state)
 
         # finalize layout
@@ -58,7 +51,7 @@ class JSONStateForm(QDialog):
 
         self.setLayout(form_layout)
 
-    def get_state(self):
+    def get_state(self) -> dict:
         """Retrieves input state from self.
 
         Returns:
@@ -82,7 +75,7 @@ class JSONStateForm(QDialog):
                 state_json["Title"] = title
         return state_json
 
-    def check_state(self):
+    def check_state(self) -> None:
         """Performs basic validity checks on the state form, setting self.error as True and displaying
         an error popup if any checks are failed
         """

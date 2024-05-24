@@ -101,7 +101,7 @@ This file contains the `MetaForm(QWidget)` class. This class is responsible for 
 #### workflow_diagram
 
 This file is based on classes for organizing the UI of workflow visualization. It contains 2 classes:
-- `Zoom(QGraphicsView)`: a view of the workflow diagram that includes a zoom feature
+- `ZoomView(QGraphicsView)`: a view of the workflow diagram that includes a zoom feature
 - `WorkflowDiagram(QWidget)`: node manager
 
 #### basic_state_form

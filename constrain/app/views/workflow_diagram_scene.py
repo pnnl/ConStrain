@@ -1,3 +1,5 @@
+from typing import Optional
+
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from constrain.app.controllers.rect_connect import ControlPoint, Path, CustomItem
@@ -8,7 +10,7 @@ class WorkflowDiagramScene(QtWidgets.QGraphicsScene):
 
     startItem = newConnection = None
 
-    def controlPointAt(self, pos):
+    def controlPointAt(self, pos: QtCore.QPointF) -> Optional[ControlPoint]:
         """Returns ControlPoint at given position
 
         Args:
@@ -26,7 +28,7 @@ class WorkflowDiagramScene(QtWidgets.QGraphicsScene):
             if not isinstance(item, Path):
                 mask.addPath(item.shape().translated(item.scenePos()))
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent) -> None:
         """Tries drawing a path on mouse press, otherwise default action"""
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             # check if mouse press at ControlPoint object
@@ -39,7 +41,7 @@ class WorkflowDiagramScene(QtWidgets.QGraphicsScene):
                 return
         super().mousePressEvent(event)
 
-    def mouseMoveEvent(self, event):
+    def mouseMoveEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent) -> None:
         """Tries tracing path from starting ControlPoint to next ControlPoint, otherwise default action"""
         if self.newConnection:
             item = self.controlPointAt(event.scenePos())
@@ -51,7 +53,7 @@ class WorkflowDiagramScene(QtWidgets.QGraphicsScene):
             return
         super().mouseMoveEvent(event)
 
-    def mouseReleaseEvent(self, event):
+    def mouseReleaseEvent(self, event: QtWidgets.QGraphicsSceneMouseEvent) -> None:
         """Tries connecting start ControlPoint to end ControlPoint, otherwise default action"""
         if self.newConnection:
             item = self.controlPointAt(event.scenePos())
@@ -68,7 +70,7 @@ class WorkflowDiagramScene(QtWidgets.QGraphicsScene):
         self.startItem = self.newConnection = None
         super().mouseReleaseEvent(event)
 
-    def getObjectsinUse(self):
+    def getObjectsinUse(self) -> list:
         """Returns objects that are used in this scene
 
         Returns:
@@ -82,7 +84,7 @@ class WorkflowDiagramScene(QtWidgets.QGraphicsScene):
                 objects_in_use.append(rect_item_object)
         return objects_in_use
 
-    def getObjectsCreated(self):
+    def getObjectsCreated(self) -> list:
         """Returns objects that are created in this scene
 
         Returns:
@@ -96,7 +98,7 @@ class WorkflowDiagramScene(QtWidgets.QGraphicsScene):
                 objects_in_use.append(rect_item_object)
         return objects_in_use
 
-    def getStateNames(self):
+    def getStateNames(self) -> list:
         """Returns state names that are created in this scene
 
         Returns:

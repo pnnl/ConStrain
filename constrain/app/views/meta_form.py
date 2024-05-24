@@ -1,40 +1,32 @@
-from PyQt6.QtWidgets import (
-    QLabel,
-    QLineEdit,
-    QDateEdit,
-    QTextEdit,
-    QVBoxLayout,
-    QWidget,
-    QHBoxLayout,
-)
-from PyQt6.QtCore import QDate
+from PyQt6 import QtCore, QtWidgets
+
 from constrain.app.utils import utils
 
 
-class MetaForm(QWidget):
-    def __init__(self):
+class MetaForm(QtWidgets.QWidget):
+    def __init__(self) -> None:
         super().__init__()
 
-        name_label = QLabel("Workflow Name:")
-        self.name_input = QLineEdit()
+        name_label = QtWidgets.QLabel("Workflow Name:")
+        self.name_input = QtWidgets.QLineEdit()
 
-        author_label = QLabel("Author:")
-        self.author_input = QLineEdit()
+        author_label = QtWidgets.QLabel("Author:")
+        self.author_input = QtWidgets.QLineEdit()
 
-        date_label = QLabel("Date:")
-        self.date_input = QDateEdit()
+        date_label = QtWidgets.QLabel("Date:")
+        self.date_input = QtWidgets.QDateEdit()
         self.date_format = "MM/dd/yyyy"
         self.date_input.setDisplayFormat(self.date_format)
 
-        version_label = QLabel("Version:")
-        self.version_input = QLineEdit()
+        version_label = QtWidgets.QLabel("Version:")
+        self.version_input = QtWidgets.QLineEdit()
 
-        description_label = QLabel("Description:")
-        self.description_input = QTextEdit()
+        description_label = QtWidgets.QLabel("Description:")
+        self.description_input = QtWidgets.QTextEdit()
 
-        layout = QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
 
-        top = QHBoxLayout()
+        top = QtWidgets.QHBoxLayout()
         top.addWidget(name_label)
         top.addWidget(self.name_input)
         top.addWidget(author_label)
@@ -50,7 +42,7 @@ class MetaForm(QWidget):
 
         self.setLayout(layout)
 
-    def get_meta(self):
+    def get_meta(self) -> dict:
         return {
             "author": self.author_input.text(),
             "date": self.date_input.text(),
@@ -58,7 +50,7 @@ class MetaForm(QWidget):
             "description": self.description_input.toPlainText(),
         }
 
-    def read_import(self, workflow_name=None, meta=None):
+    def read_import(self, workflow_name: str = None, meta: str = None) -> None:
         try:
             self.verify_import(workflow_name=workflow_name, meta=meta)
         except AssertionError:
@@ -67,14 +59,14 @@ class MetaForm(QWidget):
 
         self.name_input.setText(workflow_name)
         self.author_input.setText(meta.get("author"))
-        d = QDate.fromString(meta.get("date"), self.date_format)
+        d = QtCore.QDate.fromString(meta.get("date"), self.date_format)
         self.date_input.setDate(d)
         self.version_input.setText(meta.get("version"))
         self.description_input.setText(meta.get("description"))
 
         self.update()
 
-    def verify_import(self, workflow_name=None, meta=None):
+    def verify_import(self, workflow_name: str = None, meta: str = None) -> None:
         def is_str(input):
             return isinstance(input, str)
 
@@ -86,10 +78,10 @@ class MetaForm(QWidget):
                 if v := meta.get(k):
                     assert is_str(v)
 
-    def get_workflow_name(self):
+    def get_workflow_name(self) -> str:
         return self.name_input.text()
 
-    def contains_data(self):
+    def contains_data(self) -> bool:
         """Check if meta form contains any data"""
         return all(
             [
@@ -101,7 +93,7 @@ class MetaForm(QWidget):
             ]
         )
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear meta form"""
         self.name_input.clear()
         self.author_input.clear()

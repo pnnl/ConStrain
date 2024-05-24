@@ -1,238 +1,18 @@
 import json
-from collections import Counter
+from typing import Optional
 
-from PyQt6.QtWidgets import (
-    QHBoxLayout,
-    QVBoxLayout,
-    QWidget,
-    QPushButton,
-    QGraphicsView,
-    QGraphicsTextItem,
-    QGraphicsRectItem,
-    QMenu,
-)
-from PyQt6.QtCore import Qt, pyqtSignal, QRectF
-from PyQt6.QtGui import (
-    QPainter,
-    QWheelEvent,
-    QKeyEvent,
-    QKeySequence,
-    QColor,
-    QPen,
-    QBrush,
-    QAction,
-)
+from PyQt6 import QtWidgets, QtCore
 
 from constrain.app.views.basic_state_form import BasicStateForm
 from constrain.app.views.json_state_form import JSONStateForm
 from constrain.app.views.workflow_diagram_scene import WorkflowDiagramScene
-from constrain.app.controllers.rect_connect import CustomItem, ControlPoint, Path
+from constrain.app.views.workflow_diagram_view import ZoomView
+from constrain.app.controllers.rect_connect import CustomItem, Path
 from constrain.app.utils import utils
 
 
-class Zoom(QGraphicsView):
-    clicked = pyqtSignal()
-
-    def __init__(self, scene):
-        """QGraphicsView that includes zoom function
-
-        scene (WorkflowDiagramScene): scene to be contained by self
-        """
-        super().__init__(scene)
-        self.scene = scene
-        self.setRenderHint(QPainter.RenderHint.Antialiasing)
-        self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
-        self.setResizeAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
-        self.setOptimizationFlag(
-            QGraphicsView.OptimizationFlag.DontAdjustForAntialiasing
-        )
-
-        # factor for how much to zoom
-        self.zoom = 1.1
-        self.zoom_in = QKeySequence.StandardKey.ZoomIn
-        self.zoom_out = QKeySequence.StandardKey.ZoomOut
-
-        # last CustomItem that was clicked
-        self.itemClicked = None
-
-        # on mouse click + drag, where the drag started
-        self.dragStartPosition = None
-
-        # area of selection
-        self.selection_rect = None
-
-        self.max_x = 0
-
-    def wheelEvent(self, event: QWheelEvent):
-        """Zooms in or out on view"""
-        factor = self.zoom ** (event.angleDelta().y() / 240.0)
-        self.scale(factor, factor)
-
-    def keyPressEvent(self, event: QKeyEvent):
-        """Zooms in or out on view with trackpad event"""
-        if event.matches(self.zoom_in):
-            self.scale(self.zoom, self.zoom)
-            event.accept()
-        elif event.matches(self.zoom_out):
-            self.scale(1 / self.zoom, 1 / self.zoom)
-            event.accept()
-        else:
-            super().keyPressEvent(event)
-
-    def contextMenuEvent(self, event):
-        menu = QMenu(self)
-
-        # Check if there's an item under the mouse cursor
-        selected_states = [
-            item
-            for item in self.scene.items()
-            if item.isSelected() and isinstance(item, CustomItem)
-        ]
-        if selected_states:
-            delete_action = QAction("Delete", self)
-            delete_action.triggered.connect(lambda: self.delete_items(selected_states))
-            menu.addAction(delete_action)
-        else:
-            item = self.itemAt(event.pos())
-
-            if isinstance(item, CustomItem):
-                delete_action = QAction("Delete", self)
-                delete_action.triggered.connect(item.delete)
-                menu.addAction(delete_action)
-
-        menu.exec(event.globalPos())
-
-    def delete_items(self, item_list):
-        all_objects_in_use = Counter(self.scene.getObjectsinUse())
-        objects_used_in_items = Counter(
-            [
-                item_object
-                for item in item_list
-                for item_object in item.get_objects_used()
-            ]
-        )
-        objects_not_used_in_items = set(all_objects_in_use - objects_used_in_items)
-        objects_created_in_items = set()
-        for item in item_list:
-            objects_created_in_items |= set(item.get_objects_created())
-
-        intersection = objects_created_in_items & objects_not_used_in_items
-        if intersection:
-            error_msg_object = ", ".join(intersection)
-            error_msg = f"{error_msg_object} being used by other state"
-            if len(intersection) > 1:
-                error_msg += "s"
-            utils.send_error("Error deleting state", error_msg)
-            return
-
-        for item in item_list:
-            item.delete()
-
-    def mouseDoubleClickEvent(self, event):
-        super().mouseDoubleClickEvent(event)
-        item = self.itemAt(event.pos())
-        if item:
-            if isinstance(item, QGraphicsTextItem):
-                item = item.parentItem()
-            elif isinstance(item, ControlPoint):
-                return
-
-            if isinstance(item, CustomItem):
-                self.itemClicked = item
-
-    def mousePressEvent(self, event):
-        """Performs default action then stores clicked item if item is associated with CustomItem"""
-        super().mousePressEvent(event)
-        if event.button() == Qt.MouseButton.LeftButton:
-            self.itemClicked = None
-            self.dragStartPosition = self.mapToScene(event.pos())
-            if not self.itemAt(event.pos()):
-                self.selection_rect = QGraphicsRectItem()
-                pen = QPen(QColor(0, 0, 255))
-
-                pen.setWidth(1)
-                self.selection_rect.setPen(pen)
-                brush = QBrush(QColor(0, 0, 230))
-                color = QColor(0, 0, 255)
-                color.setAlphaF(0.2)
-                brush = QBrush(color)
-                self.selection_rect.setBrush(brush)
-                self.scene.addItem(self.selection_rect)
-
-    def mouseMoveEvent(self, event):
-        if self.dragStartPosition and self.selection_rect:
-            current_pos = self.mapToScene(event.pos())
-            rect = QRectF(self.dragStartPosition, current_pos).normalized()
-            self.selection_rect.setRect(rect)
-        super().mouseMoveEvent(event)
-
-    def mouseReleaseEvent(self, event):
-        """Performs default action and triggers self.clicked if user action was a click"""
-        super().mouseReleaseEvent(event)
-
-        # check if left mouse button release and if item was not dragged
-        if (
-            event.button() == Qt.MouseButton.LeftButton
-            and self.mapToScene(event.pos()) == self.dragStartPosition
-        ):
-            if self.selection_rect:
-                self.scene.removeItem(self.selection_rect)
-                self.selection_rect = None
-                self.dragStartPosition = None
-                self.scene.update()
-
-            item = self.itemAt(event.pos())
-            if item:
-                if isinstance(item, QGraphicsTextItem):
-                    item = item.parentItem()
-                elif isinstance(item, ControlPoint):
-                    return
-                if isinstance(item, CustomItem):
-                    self.clicked.emit()
-                    self.itemClicked = item
-        elif self.selection_rect:
-            selected_items = []
-            rect = self.selection_rect.rect()
-
-            for item in self.scene.items():
-                if isinstance(item, CustomItem) and rect.intersects(
-                    item.mapRectToScene(item.rect)
-                ):
-                    selected_items.append(item)
-                    item.setSelected(True)
-
-            self.scene.removeItem(self.selection_rect)
-            self.selection_rect = None
-            self.dragStartPosition = None
-
-            self.scene.update()
-
-    def arrange_tree(self, parent_item, x, y, step):
-        """Arranges workflow diagram to form a tree
-
-        Args:
-            parent_item (CustomItem): node with children items
-            x (float): x value of CustomItem
-            y (float): y value of CustomItem
-            step (int): spacing factor
-        """
-        if not parent_item:
-            return
-
-        parent_item.setPos(x, y)
-        parent_item_h = parent_item.boundingRect().height()
-        num_children = len(parent_item.children)
-        if num_children:
-            total_width = (num_children - 1) * step
-            start_x = x - total_width / 2
-
-            for child in parent_item.children:
-                self.arrange_tree(child, start_x, y + parent_item_h + 20, step)
-                start_x += step
-
-
-class WorkflowDiagram(QWidget):
-    def __init__(self, setting):
+class WorkflowDiagram(QtWidgets.QWidget):
+    def __init__(self, setting: str) -> None:
         """Widget to contain view
 
         setting (str): either "basic" or "json". Determines if clicking on a CustomItem should bring up a basic form or an json form
@@ -240,9 +20,9 @@ class WorkflowDiagram(QWidget):
         super().__init__()
 
         self.setting = setting
-        layout = QVBoxLayout(self)
+        layout = QtWidgets.QVBoxLayout(self)
         self.scene = WorkflowDiagramScene()
-        self.view = Zoom(self.scene)
+        self.view = ZoomView(self.scene)
         self.view.clicked.connect(self.item_clicked)
 
         # last state form accessed
@@ -251,40 +31,40 @@ class WorkflowDiagram(QWidget):
         self.root = None
 
         # buttons
-        add_buttons = QHBoxLayout()
-        reformat_button_layout = QHBoxLayout()
+        add_buttons = QtWidgets.QHBoxLayout()
+        reformat_button_layout = QtWidgets.QHBoxLayout()
 
-        add_state_button = QPushButton("Add State")
+        add_state_button = QtWidgets.QPushButton("Add State")
         add_state_button.setToolTip("Create a state using the basic form")
         add_state_button.setFixedSize(100, 23)
         add_state_button.clicked.connect(self.display_state_form)
         add_buttons.addWidget(add_state_button)
 
-        reformat_button = QPushButton("Rearrange")
+        reformat_button = QtWidgets.QPushButton("Rearrange")
         reformat_button.setToolTip("Rearrange diagram to a tree layout")
         reformat_button.setFixedSize(100, 23)
         reformat_button.clicked.connect(self.get_workflow)
         reformat_button_layout.addWidget(reformat_button)
 
-        add_buttons.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        reformat_button_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+        add_buttons.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
+        reformat_button_layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
 
-        buttons = QHBoxLayout()
+        buttons = QtWidgets.QHBoxLayout()
         buttons.addLayout(add_buttons)
         buttons.addLayout(reformat_button_layout)
 
         layout.addWidget(self.view)
         layout.addLayout(buttons)
-        layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        layout.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter)
         self.setLayout(layout)
 
-    def display_state_form(self):
+    def display_state_form(self) -> None:
         if self.setting == "basic":
             self.display_basic_state_form()
         else:
             self.display_json_state_form()
 
-    def add_state(self):
+    def add_state(self) -> None:
         """Creates CustomItem based on state described in self.last_state_form if there was no error"""
         if self.last_state_form.error:
             return
@@ -292,7 +72,7 @@ class WorkflowDiagram(QWidget):
         state = self.last_state_form.get_state()
         self.create_item(state)
 
-    def create_item(self, state):
+    def create_item(self, state: dict) -> None:
         """Creates and displays a CustomItem which represents the given state
 
         Args:
@@ -320,7 +100,7 @@ class WorkflowDiagram(QWidget):
         rect_item.deleted.connect(self.delete_state)
         rect_item.edited.connect(self.display_edit_state_form)
 
-        def connect_rects(parent, child):
+        def connect_rects(parent: CustomItem, child: CustomItem):
             """Connects a parent CustomItem to a child CustomItem
 
             Args:
@@ -386,7 +166,7 @@ class WorkflowDiagram(QWidget):
 
         self.update()
 
-    def delete_state(self, obj):
+    def delete_state(self, obj: CustomItem) -> None:
         objects_created = obj.get_objects_created()
         all_objects_in_use = self.scene.getObjectsinUse()
         for created_object in objects_created:
@@ -406,7 +186,7 @@ class WorkflowDiagram(QWidget):
 
         self.scene.removeItem(obj)
 
-    def is_new_start_state_valid(self, rect):
+    def is_new_start_state_valid(self, rect: CustomItem) -> bool:
         rects = self.get_rects_in_scene()
         start_or_end_state_rects = [
             rect
@@ -419,18 +199,18 @@ class WorkflowDiagram(QWidget):
         )
         return len(start_or_end_state_rects) == 0 and rect_has_no_parents
 
-    def get_rect_parents(self, rect):
+    def get_rect_parents(self, rect: CustomItem) -> list:
         return [
             parent for parent in self.get_rects_in_scene() if rect in parent.children
         ]
 
-    def is_new_end_state_valid(self, rect):
+    def is_new_end_state_valid(self, rect: CustomItem) -> bool:
         return len(rect.children) == 0
 
-    def get_rects_in_scene(self):
+    def get_rects_in_scene(self) -> list:
         return [item for item in self.scene.items() if isinstance(item, CustomItem)]
 
-    def edit_state(self, rect):
+    def edit_state(self, rect: CustomItem) -> None:
         """Gives previously made CustomItem a new state
 
         Args:
@@ -475,7 +255,7 @@ class WorkflowDiagram(QWidget):
 
         self.last_state_form.close()
 
-    def get_workflow(self, reformat=True):
+    def get_workflow(self, reformat: bool = True) -> Optional[list]:
         """Computes structure of the workflow using Depth First Search and paints CustomItems depending on place in graph"""
         if not reformat:
             reformat = True
@@ -503,7 +283,7 @@ class WorkflowDiagram(QWidget):
         visited1 = set()
         paths = []
 
-        def dfs_helper(item, path):
+        def dfs_helper(item, path: list) -> None:
             path.append(item)
             visited1.add(item)
 
@@ -542,7 +322,9 @@ class WorkflowDiagram(QWidget):
                     visited2.add(node)
         return workflow_path
 
-    def display_basic_state_form(self, rect=None, edit=False):
+    def display_basic_state_form(
+        self, rect: CustomItem = None, edit: bool = False
+    ) -> None:
         """Displays basic state form on click of CustomItem, or if 'Add Basic' button is pressed
 
         Args:
@@ -577,7 +359,9 @@ class WorkflowDiagram(QWidget):
             self.last_state_form.save_button.clicked.connect(self.add_state)
         self.last_state_form.exec()
 
-    def display_json_state_form(self, rect=None, edit=False):
+    def display_json_state_form(
+        self, rect: CustomItem = None, edit: bool = False
+    ) -> None:
         """Calls state form on click of CustomItem, or if 'Add' button is pressed with JSON state form setting selected"""
         # create new state form
         self.last_state_form = JSONStateForm(rect, edit)
@@ -593,20 +377,20 @@ class WorkflowDiagram(QWidget):
             self.last_state_form.save_button.clicked.connect(self.add_state)
         self.last_state_form.exec()
 
-    def item_clicked(self):
+    def item_clicked(self) -> None:
         """When a CustomItem is clicked, calls self.display_edit_state_form in order to display state form associated with the CustomItem clicked"""
         if self.view.itemClicked:
             rect = self.view.itemClicked
             if isinstance(rect, CustomItem):
                 self.display_edit_state_form(rect)
 
-    def display_edit_state_form(self, rect):
+    def display_edit_state_form(self, rect: CustomItem) -> None:
         if self.setting == "basic":
             self.display_basic_state_form(rect, True)
         else:
             self.display_json_state_form(rect, True)
 
-    def read_import(self, states):
+    def read_import(self, states: dict) -> None:
         """Adds imported states to workflow diagram
 
         states (dict): states to import
@@ -618,11 +402,11 @@ class WorkflowDiagram(QWidget):
                 new_state["Title"] = state_name
                 self.create_item(new_state)
 
-    def contains_data(self):
+    def contains_data(self) -> bool:
         """Check if workflow diagram contains any data"""
         return bool(self.scene.items())
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear all state"""
         self.scene.clear()
         self.last_state_form = None

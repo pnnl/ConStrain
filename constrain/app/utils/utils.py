@@ -1,10 +1,11 @@
 from PyQt6.QtWidgets import QMessageBox
 
 
-def send_error(window_title, text):
+def send_error(window_title: str, text: str = "") -> None:
     """Displays an error message with given text
 
     Args:
+        window_title (str): window title of message box
         text (str): text to be displayed
     """
     error_msg = QMessageBox()
@@ -14,7 +15,7 @@ def send_error(window_title, text):
     error_msg.exec()
 
 
-def send_are_you_sure(text=""):
+def send_are_you_sure(text: str = "") -> str:
     """Displays an 'are you sure' message with given text
 
     Args:

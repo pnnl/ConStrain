@@ -7,14 +7,280 @@ all of this.
 import json
 import math
 import re
+from typing import Optional, Union, Any
 
 from PyQt6 import QtCore, QtGui, QtWidgets
 
 from constrain.app.utils import utils
+from constrain.app.views.json_state_form import JSONStateForm
+from constrain.app.views.basic_state_form import BasicStateForm
+
+
+class CustomItem(QtWidgets.QGraphicsObject):
+    # ControlPoint outline
+    deleted = QtCore.pyqtSignal(QtWidgets.QGraphicsObject)
+    edited = QtCore.pyqtSignal(QtWidgets.QGraphicsObject)
+    controlBrush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+
+    def __init__(
+        self,
+        state: dict,
+        state_form: Optional[Union[JSONStateForm, BasicStateForm]] = None,
+    ) -> None:
+        """Shape on Scene to represents a state in the workflow
+
+        Args:
+            state (dict): state that self represents
+            state_form (BasicStateForm or JSONStateForm): form associated with self
+        """
+        super().__init__()
+        # fill
+        self.pen = QtGui.QPen(QtGui.QColor(98, 99, 102, 255))
+        self.brush = QtGui.QBrush(QtGui.QColor(214, 127, 46))
+        self.state = state
+        self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
+        self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
+        self.rect = QtCore.QRectF(0, 0, 100, 30)
+        self.titleItem = QtWidgets.QGraphicsTextItem(parent=self)
+
+        self.state_form = state_form
+
+        # child states (list of CustomItems)
+        self.children = []
+
+        # ControlPoints on self
+        self.controls = []
+        self.initialize_ui()
+
+    def initialize_ui(self) -> None:
+        """Initialize how self looks"""
+
+        if "Title" not in self.state.keys():
+            self.state["Title"] = ""
+        title = self.state["Title"]
+
+        # display title on self
+        self.titleItem.setHtml(f"<center>{title}</center>")
+
+        max_width = 100
+        self.titleItem.setTextWidth(max_width)
+
+        self.titleRect = self.titleItem.boundingRect()
+        text_width = self.titleRect.width()
+        text_height = self.titleRect.height()
+
+        # make width and height of shape a bit larger than text
+        w = text_width * 1.2
+        h = text_height * 1.2
+
+        self.rect.setRect(0, 0, w, h)
+
+        self.titleRect.moveCenter(self.rect.center())
+        self.titleItem.setPos(self.titleRect.topLeft())
+
+        # where to place control points
+        control_placements = [
+            (self.rect.width() / 2, self.rect.height()),
+            (self.rect.width(), self.rect.height() / 2),
+            (self.rect.width() / 2, 0),
+            (0, self.rect.height() / 2),
+        ]
+
+        # initialize control points
+        if not self.controls:
+            self.controls = [ControlPoint(self) for i in range(len(control_placements))]
+
+        # draw control points
+        for i, control in enumerate(self.controls):
+            control.setPen(self.pen)
+            control.setBrush(self.controlBrush)
+            control.setX(control_placements[i][0])
+            control.setY(control_placements[i][1])
+
+    def boundingRect(self) -> QtCore.QRectF:
+        """Make bounding rect a little larger so that it is easier to click"""
+        adjust = self.pen.width() / 2
+        return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
+
+    def paint(self, painter: Optional[QtGui.QPainter]) -> None:
+        """Paints self on scene"""
+        painter.save()
+
+        if self.isSelected():
+            self.pen.setWidth(2)
+        else:
+            self.pen.setWidth(1)
+
+        painter.setPen(self.pen)
+        painter.setBrush(self.brush)
+
+        if self.state["Type"] == "Choice":
+            # make shape a diamond if state is a choice type
+            diamond_points = [
+                QtCore.QPointF(self.rect.center().x(), self.rect.top()),
+                QtCore.QPointF(self.rect.right(), self.rect.center().y()),
+                QtCore.QPointF(self.rect.center().x(), self.rect.bottom()),
+                QtCore.QPointF(self.rect.left(), self.rect.center().y()),
+            ]
+            painter.drawPolygon(QtGui.QPolygonF(diamond_points))
+        else:
+            # else, make it a rounded rectangle
+            painter.drawRoundedRect(self.rect, 4, 4)
+        painter.restore()
+
+    def setBrush(self, color: str = "orange") -> None:
+        """Sets color of fill on self
+
+        Args:
+            color (str): color to be changed to; ideally should
+            be "red", "green", or "orange"
+        """
+        if color == "red":
+            color = QtGui.QColor(214, 54, 64)
+        elif color == "green":
+            color = QtGui.QColor(10, 168, 89)
+        else:
+            color = QtGui.QColor(214, 127, 46)
+        self.brush = QtGui.QBrush(color)
+        self.update()
+
+    def contextMenuEvent(self, event: QtWidgets.QGraphicsSceneContextMenuEvent) -> None:
+        """Context menu to allow deletion of self in scene"""
+        menu = QtWidgets.QMenu()
+        edit_action = menu.addAction("Edit")
+        delete_action = menu.addAction("Delete")
+
+        action = menu.exec(event.screenPos())
+
+        if action == delete_action:
+            self.delete()
+            # find payloads that self.state has created
+
+    def delete(self) -> None:
+        objects_created = self.get_objects_created()
+
+        # find what objects are currently being used by other states
+        all_objects_in_use = self.scene().getObjectsinUse()
+
+        # make sure that payloads from self.state are not being used by another state
+        for created_object in objects_created:
+            if created_object in all_objects_in_use:
+                self.sendError("Object created in use")
+                return
+
+        # remove lines
+        for c in self.controls:
+            for p in c.paths:
+                p1 = p.start
+                p2 = p.end
+                if p1 in self.controls:
+                    p2.removeLine(p)
+                else:
+                    p1.removeLine(p)
+        self.scene().removeItem(self)
+
+    def sendError(self, text: str) -> None:
+        """Displays an error message given text
+
+        Args:
+            text (str): error message to display
+        """
+        error_msg = QtWidgets.QMessageBox()
+        error_msg.setIcon(QtWidgets.QMessageBox.Icon.Critical)
+        error_msg.setWindowTitle("Error in State")
+        error_msg.setText(text)
+        error_msg.exec()
+
+    def get_objects_created(self) -> list:
+        """Returns objects that self.state has created
+
+        Returns:
+            list: list of object names (strs)
+        """
+        if self.state["Type"] == "MethodCall":
+            if "Payloads" in self.state:
+                payloads = self.state["Payloads"]
+                return [object_name for object_name in payloads]
+        return []
+
+    def get_objects_used(self) -> list:
+        """Returns objects that are used from self.state
+
+        Returns:
+            list: list of object names that self.state uses
+        """
+        objects = []
+        pattern = r"Payloads\['(.*?)'\]"
+        if self.state["Type"] == "MethodCall":
+            methodcall = self.state["MethodCall"]
+            match = re.search(pattern, methodcall)
+
+            if match:
+                object = match.group(1)
+                objects.append(object)
+        elif self.state["Type"] == "Choice":
+            choices = self.state["Choices"]
+            for choice in choices:
+                match = re.search(pattern, choice["Value"])
+
+                if match:
+                    object = match.group(1)
+                    objects.append(object)
+        return objects
+
+    def get_state_string(self) -> dict:
+        """Returns state in API format
+
+        Returns:
+            str: self.state in API format
+        """
+        copy_of_state = dict(self.state)
+
+        # make state['Title'] a key for rest of state
+        title = copy_of_state.pop("Title")
+        state_string = json.dumps({title: copy_of_state}, indent=4)
+        return state_string
+
+    def set_state(self, new_state: dict) -> None:
+        """Given an updated state, updates self
+
+        Args:
+            new_state (dict): new state
+        """
+
+        self.state = new_state
+        self.initialize_ui()
+
+    def get_nexts(self) -> list:
+        """Returns children names of self
+
+        Returns:
+            list: list of children names
+        """
+        next = []
+        if self.state["Type"] == "MethodCall":
+            if "Next" in self.state.keys():
+                next.append(self.state["Next"])
+        else:
+            if "Choices" in self.state.keys():
+                choices = self.state["Choices"]
+                if isinstance(choices, list):
+                    next = [
+                        choices[i]["Next"]
+                        for i in range(len(choices))
+                        if "Next" in choices[i]
+                    ]
+                elif isinstance(choices, dict):
+                    if "Next" in choices.keys():
+                        next = [choices["Next"]]
+            if "Default" in self.state.keys():
+                next.append(self.state["Default"])
+        return next
 
 
 class Path(QtWidgets.QGraphicsPathItem):
-    def __init__(self, start, p2, end=None):
+
+    def __init__(self, start, p2: QtCore.QPointF, end=None) -> None:
         """Initializes a Path from start to p2
 
         Args:
@@ -38,7 +304,7 @@ class Path(QtWidgets.QGraphicsPathItem):
 
         self.setPath(self._path)
 
-    def controlPoints(self):
+    def controlPoints(self) -> None:
         """Returns control points that this path connects
 
         Returns:
@@ -47,7 +313,7 @@ class Path(QtWidgets.QGraphicsPathItem):
         """
         return self.start, self.end
 
-    def setP2(self, p2):
+    def setP2(self, p2: QtCore.QPointF) -> None:
         """Sets path to given point
 
         Args:
@@ -56,7 +322,7 @@ class Path(QtWidgets.QGraphicsPathItem):
         self._path.lineTo(p2)
         self.setPath(self._path)
 
-    def setStart(self, start):
+    def setStart(self, start) -> None:
         """Sets start
 
         Args:
@@ -65,7 +331,7 @@ class Path(QtWidgets.QGraphicsPathItem):
         self._start = start
         self.updatePath()
 
-    def setEnd(self, end):
+    def setEnd(self, end) -> None:
         """Sets end
 
         Args:
@@ -74,7 +340,7 @@ class Path(QtWidgets.QGraphicsPathItem):
         self.end = end
         self.updatePath(end)
 
-    def updatePath(self, source):
+    def updatePath(self, source) -> None:
         """Updates path from start to end
 
         source (ControlPoint): where the path starts
@@ -88,7 +354,7 @@ class Path(QtWidgets.QGraphicsPathItem):
 
         self.setPath(self._path)
 
-    def arrowCalc(self, start_point=None, end_point=None):
+    def arrowCalc(self, start_point=None, end_point=None) -> None:
         """Calculates the point where the arrow should be drawn
 
         Args:
@@ -144,13 +410,13 @@ class Path(QtWidgets.QGraphicsPathItem):
         except (ZeroDivisionError, Exception):
             return None
 
-    def directPath(self):
+    def directPath(self) -> None:
         """Returns a direct path from start ControlPoint to end ControlPoint"""
         path = QtGui.QPainterPath(self.start.scenePos())
         path.lineTo(self.end.scenePos())
         return path
 
-    def paint(self, painter: QtGui.QPainter, option, widget=None) -> None:
+    def paint(self, painter: QtGui.QPainter) -> None:
         """Paints path"""
         painter.pen().setWidth(2)
         painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)
@@ -171,7 +437,7 @@ class Path(QtWidgets.QGraphicsPathItem):
         if triangle_source is not None:
             painter.drawPolyline(triangle_source)
 
-    def contextMenuEvent(self, event):
+    def contextMenuEvent(self, event: QtWidgets.QGraphicsSceneContextMenuEvent) -> None:
         """Context menu for deletion on path
 
         Args:
@@ -188,7 +454,8 @@ class Path(QtWidgets.QGraphicsPathItem):
 
 
 class ControlPoint(QtWidgets.QGraphicsEllipseItem):
-    def __init__(self, parent):
+
+    def __init__(self, parent: CustomItem) -> None:
         """QGraphicsEllipseItem to act as point on edge of CustomItem and endpoint of Path
 
         Args:
@@ -211,7 +478,7 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
         # TODO Find out if I need this
         self.clicked = False
 
-    def addLine(self, pathItem):
+    def addLine(self, pathItem: Path) -> None:
         """Adds path to self if the path is viable
 
         Args:
@@ -229,7 +496,7 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
             return True
         return False
 
-    def newLineErrorCheck(self, pathItem):
+    def newLineErrorCheck(self, pathItem: Path) -> bool:
         """Checks pathItem to determine whether it is a viable path
 
         Args:
@@ -269,7 +536,7 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
             self.parent.children.append(pathItem.end.parent)
         return True
 
-    def removeLine(self, pathItem):
+    def removeLine(self, pathItem: Path) -> bool:
         """Given pathItem to remove, removes pathItem from scene and self.paths
 
         Args:
@@ -290,274 +557,16 @@ class ControlPoint(QtWidgets.QGraphicsEllipseItem):
                 return True
         return False
 
-    def itemChange(self, change, value):
+    def itemChange(self, change, value) -> Any:
         """Updates path on item change for path in paths"""
         for path in self.paths:
             path.updatePath(self)
         return super().itemChange(change, value)
 
-    def hoverEnterEvent(self, event):
+    def hoverEnterEvent(self, event: QtWidgets.QGraphicsSceneHoverEvent) -> None:
         """Change opacity when hovered over"""
         self.setOpacity(1.0)
 
-    def hoverLeaveEvent(self, event):
+    def hoverLeaveEvent(self, event: QtWidgets.QGraphicsSceneHoverEvent) -> None:
         """Change opacity when not hovered over"""
         self.setOpacity(0.3)
-
-
-class CustomItem(QtWidgets.QGraphicsObject):
-    # ControlPoint outline
-    deleted = QtCore.pyqtSignal(QtWidgets.QGraphicsObject)
-    edited = QtCore.pyqtSignal(QtWidgets.QGraphicsObject)
-    controlBrush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-
-    def __init__(self, state, state_form=None):
-        """Shape on Scene to represents a state in the workflow
-
-        Args:
-            state (dict): state that self represents
-            state_form (BasicStateForm or JSONStateForm): form associated with self
-        """
-        super().__init__()
-        # fill
-        self.pen = QtGui.QPen(QtGui.QColor(98, 99, 102, 255))
-        self.brush = QtGui.QBrush(QtGui.QColor(214, 127, 46))
-        self.state = state
-        self.setFlag(self.GraphicsItemFlag.ItemIsMovable)
-        self.setFlag(self.GraphicsItemFlag.ItemIsSelectable)
-        self.rect = QtCore.QRectF(0, 0, 100, 30)
-        self.titleItem = QtWidgets.QGraphicsTextItem(parent=self)
-
-        self.state_form = state_form
-
-        # child states (list of CustomItems)
-        self.children = []
-
-        # ControlPoints on self
-        self.controls = []
-        self.initialize_ui()
-
-    def initialize_ui(self):
-        """Initialize how self looks"""
-
-        if "Title" not in self.state.keys():
-            self.state["Title"] = ""
-        title = self.state["Title"]
-
-        # display title on self
-        self.titleItem.setHtml(f"<center>{title}</center>")
-
-        max_width = 100
-        self.titleItem.setTextWidth(max_width)
-
-        self.titleRect = self.titleItem.boundingRect()
-        text_width = self.titleRect.width()
-        text_height = self.titleRect.height()
-
-        # make width and height of shape a bit larger than text
-        w = text_width * 1.2
-        h = text_height * 1.2
-
-        self.rect.setRect(0, 0, w, h)
-
-        self.titleRect.moveCenter(self.rect.center())
-        self.titleItem.setPos(self.titleRect.topLeft())
-
-        # where to place control points
-        control_placements = [
-            (self.rect.width() / 2, self.rect.height()),
-            (self.rect.width(), self.rect.height() / 2),
-            (self.rect.width() / 2, 0),
-            (0, self.rect.height() / 2),
-        ]
-
-        # initialize control points
-        if not self.controls:
-            self.controls = [ControlPoint(self) for i in range(len(control_placements))]
-
-        # draw control points
-        for i, control in enumerate(self.controls):
-            control.setPen(self.pen)
-            control.setBrush(self.controlBrush)
-            control.setX(control_placements[i][0])
-            control.setY(control_placements[i][1])
-
-    def boundingRect(self):
-        """Make bounding rect a little larger so that it is easier to click"""
-        adjust = self.pen.width() / 2
-        return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
-
-    def paint(self, painter, option, widget=None):
-        """Paints self on scene"""
-        painter.save()
-
-        if self.isSelected():
-            self.pen.setWidth(2)
-        else:
-            self.pen.setWidth(1)
-
-        painter.setPen(self.pen)
-        painter.setBrush(self.brush)
-
-        if self.state["Type"] == "Choice":
-            # make shape a diamond if state is a choice type
-            diamond_points = [
-                QtCore.QPointF(self.rect.center().x(), self.rect.top()),
-                QtCore.QPointF(self.rect.right(), self.rect.center().y()),
-                QtCore.QPointF(self.rect.center().x(), self.rect.bottom()),
-                QtCore.QPointF(self.rect.left(), self.rect.center().y()),
-            ]
-            painter.drawPolygon(QtGui.QPolygonF(diamond_points))
-        else:
-            # else, make it a rounded rectangle
-            painter.drawRoundedRect(self.rect, 4, 4)
-        painter.restore()
-
-    def setBrush(self, color="orange"):
-        """Sets color of fill on self
-
-        Args:
-            color (str): color to be changed to; ideally should
-            be "red", "green", or "orange"
-        """
-        if color == "red":
-            color = QtGui.QColor(214, 54, 64)
-        elif color == "green":
-            color = QtGui.QColor(10, 168, 89)
-        else:
-            color = QtGui.QColor(214, 127, 46)
-        self.brush = QtGui.QBrush(color)
-        self.update()
-
-    def contextMenuEvent(self, event):
-        """Context menu to allow deletion of self in scene"""
-        menu = QtWidgets.QMenu()
-        edit_action = menu.addAction("Edit")
-        delete_action = menu.addAction("Delete")
-
-        action = menu.exec(event.screenPos())
-
-        if action == delete_action:
-            self.delete()
-            # find payloads that self.state has created
-
-    def delete(self):
-        objects_created = self.get_objects_created()
-
-        # find what objects are currently being used by other states
-        all_objects_in_use = self.scene().getObjectsinUse()
-
-        # make sure that payloads from self.state are not being used by another state
-        for created_object in objects_created:
-            if created_object in all_objects_in_use:
-                self.sendError("Object created in use")
-                return
-
-        # remove lines
-        for c in self.controls:
-            for p in c.paths:
-                p1 = p.start
-                p2 = p.end
-                if p1 in self.controls:
-                    p2.removeLine(p)
-                else:
-                    p1.removeLine(p)
-        self.scene().removeItem(self)
-
-    def sendError(self, text):
-        """Displays an error message given text
-
-        Args:
-            text (str): error message to display
-        """
-        error_msg = QtWidgets.QMessageBox()
-        error_msg.setIcon(QtWidgets.QMessageBox.Icon.Critical)
-        error_msg.setWindowTitle("Error in State")
-        error_msg.setText(text)
-        error_msg.exec()
-
-    def get_objects_created(self):
-        """Returns objects that self.state has created
-
-        Returns:
-            list: list of object names (strs)
-        """
-        if self.state["Type"] == "MethodCall":
-            if "Payloads" in self.state:
-                payloads = self.state["Payloads"]
-                return [object_name for object_name in payloads]
-        return []
-
-    def get_objects_used(self):
-        """Returns objects that are used from self.state
-
-        Returns:
-            list: list of object names that self.state uses
-        """
-        objects = []
-        pattern = r"Payloads\['(.*?)'\]"
-        if self.state["Type"] == "MethodCall":
-            methodcall = self.state["MethodCall"]
-            match = re.search(pattern, methodcall)
-
-            if match:
-                object = match.group(1)
-                objects.append(object)
-        elif self.state["Type"] == "Choice":
-            choices = self.state["Choices"]
-            for choice in choices:
-                match = re.search(pattern, choice["Value"])
-
-                if match:
-                    object = match.group(1)
-                    objects.append(object)
-        return objects
-
-    def get_state_string(self):
-        """Returns state in API format
-
-        Returns:
-            dict: self.state in API format
-        """
-        copy_of_state = dict(self.state)
-
-        # make state['Title'] a key for rest of state
-        title = copy_of_state.pop("Title")
-        state_string = json.dumps({title: copy_of_state}, indent=4)
-        return state_string
-
-    def set_state(self, new_state):
-        """Given an updated state, updates self
-
-        Args:
-            new_state (dict): new state
-        """
-
-        self.state = new_state
-        self.initialize_ui()
-
-    def get_nexts(self):
-        """Returns children names of self
-
-        Returns:
-            list: list of children names
-        """
-        next = []
-        if self.state["Type"] == "MethodCall":
-            if "Next" in self.state.keys():
-                next.append(self.state["Next"])
-        else:
-            if "Choices" in self.state.keys():
-                choices = self.state["Choices"]
-                if isinstance(choices, list):
-                    next = [
-                        choices[i]["Next"]
-                        for i in range(len(choices))
-                        if "Next" in choices[i]
-                    ]
-                elif isinstance(choices, dict):
-                    if "Next" in choices.keys():
-                        next = [choices["Next"]]
-            if "Default" in self.state.keys():
-                next.append(self.state["Default"])
-        return next
