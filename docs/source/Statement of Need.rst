@@ -1,0 +1,6 @@
+Statement of Need
+==================
+
+Advances in building control have shown significant potential for improving building energy performance and decarbonization. Studies show that designs utilizing optimized controls that are properly tuned could reduce commercial building energy consumption. Driven by the significant control-related energy-saving potential, commercial building energy codes (such as ASHRAE Standard 90.1) have progressed with many control-related addenda.
+
+However, one of the challenges to realizing those savings is the correct implementation of such advanced control strategies and regularly verifying their actual operational performance. A field study found that only 50% of systems observed have their control system correctly configured to meet the energy codes requirement, and control-related compliance verification is typically not included in the commissioning scope. Current control verification is often conducted manually, which is time-consuming, ad-hoc, incomplete, and error-prone.
