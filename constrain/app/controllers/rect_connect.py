@@ -102,7 +102,7 @@ class CustomItem(QtWidgets.QGraphicsObject):
         adjust = self.pen.width() / 2
         return self.rect.adjusted(-adjust, -adjust, adjust, adjust)
 
-    def paint(self, painter: Optional[QtGui.QPainter]) -> None:
+    def paint(self, painter: QtGui.QPainter, option=None, widget=None) -> None:
         """Paints self on scene"""
         painter.save()
 
@@ -416,7 +416,7 @@ class Path(QtWidgets.QGraphicsPathItem):
         path.lineTo(self.end.scenePos())
         return path
 
-    def paint(self, painter: QtGui.QPainter) -> None:
+    def paint(self, painter: QtGui.QPainter, option=None, widget=None) -> None:
         """Paints path"""
         painter.pen().setWidth(2)
         painter.setBrush(QtCore.Qt.BrushStyle.NoBrush)

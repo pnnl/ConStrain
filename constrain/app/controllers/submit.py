@@ -1,5 +1,6 @@
 import sys
 import warnings
+from multiprocessing import Process
 
 from PyQt6 import QtCore
 
@@ -18,6 +19,8 @@ class Worker(QtCore.QThread):
         super(Worker, self).__init__()
         self.json_data = json_data
 
+        self.wf = Workflow(self.json_data)
+
     def run(self) -> None:
         """Runs the thread"""
 
@@ -27,9 +30,8 @@ class Worker(QtCore.QThread):
         warnings.simplefilter(action="ignore", category=FutureWarning)
         warnings.simplefilter(action="ignore", category=ResourceWarning)
 
-        # creates and runs the workflow based on the workflow provided
-        wf = Workflow(self.json_data)
-        wf.run_workflow(verbose=True)
+        # runs the workflow based on the workflow provided
+        self.wf.run_workflow(verbose=True)
 
 
 class EmittingStream:

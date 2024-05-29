@@ -10,7 +10,6 @@ from typing import Optional
 from PyQt6 import QtWidgets
 
 from constrain.app.views.list_and_choice_forms import ListPopup, ChoicesPopup
-from constrain.app.controllers.rect_connect import CustomItem
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
 dependencies_path = os.path.join(
@@ -30,11 +29,12 @@ with open(api_to_method_path) as f:
 
 
 class BasicStateForm(QtWidgets.QDialog):
+
     def __init__(
         self,
         payloads: Optional[list] = [],
         state_names: Optional[list] = [],
-        rect: Optional[CustomItem] = None,
+        rect=None,
         load: Optional[bool] = False,
     ) -> None:
         """Form to be displayed for user to edit or add a basic state
@@ -216,7 +216,7 @@ class BasicStateForm(QtWidgets.QDialog):
             elif item.findChild(QtWidgets.QComboBox):
                 item.findChild(QtWidgets.QComboBox).setCurrentText(to_set[parameter])
 
-    def load_ui(self, rect: CustomItem) -> None:
+    def load_ui(self, rect) -> None:
         """Loads UI based on state of rect. Called when edit rect after import
 
         Args:
