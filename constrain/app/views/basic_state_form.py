@@ -11,12 +11,12 @@ from PyQt6 import QtWidgets
 
 from constrain.app.views.list_and_choice_forms import ListPopup, ChoicesPopup
 
-script_directory = os.path.dirname(os.path.abspath(__file__))
+current_directory = os.path.dirname(os.path.abspath(__file__))
 dependencies_path = os.path.join(
-    script_directory, "../resources/maps/dependencies.json"
+    current_directory, "../resources/jsons/dependencies.json"
 )
 api_to_method_path = os.path.join(
-    script_directory, "../resources/maps/api_to_method.json"
+    current_directory, "../resources/jsons/api_to_method.json"
 )
 
 # mapping from object to its methods and its methods to its parameters for display in state form

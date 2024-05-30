@@ -6,12 +6,12 @@ from PyQt6 import QtWidgets, QtCore, QtGui
 
 # mapping from object to its methods and its methods to its parameters for display in popup
 
-script_directory = os.path.dirname(os.path.abspath(__file__))
+current_directory = os.path.dirname(os.path.abspath(__file__))
 dependencies_path = os.path.join(
-    script_directory, "../resources/maps/dependencies.json"
+    current_directory, "../resources/jsons/dependencies.json"
 )
 api_to_method_path = os.path.join(
-    script_directory, "../resources/maps/api_to_method.json"
+    current_directory, "../resources/jsons/api_to_method.json"
 )
 
 with open(dependencies_path) as f:
