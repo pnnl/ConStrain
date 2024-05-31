@@ -22,6 +22,12 @@
         "description_datapoints": {
             "type": "object"
         },
+        "description_assertions": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "description_verification_type": {
             "enum": [
                 "rule-based",
@@ -43,5 +49,6 @@
         "description_datapoints",
         "description_verification_type",
         "assertions_type"
-    ]
+    ],
+    "additionalProperties": "false"
 }
