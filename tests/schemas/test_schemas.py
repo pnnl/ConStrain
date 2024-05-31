@@ -10,9 +10,7 @@ class JSONSchemaTest(unittest.TestCase):
     def setUp(self):
         workflow_schema_path = "./schema/workflow.schema.json"
         library_item_schema_path = "./schema/library.schema.json"
-        verification_cases_schema_path = (
-            "./schema/new_library_verification_cases.schema.json"
-        )
+        verification_cases_schema_path = "./schema/verification_cases.schema.json"
 
         with open(workflow_schema_path, "r") as f:
             self.workflow_schema = json.load(f)
