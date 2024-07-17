@@ -4,8 +4,7 @@
     "properties": {
         "library_item_id": {
             "type": "integer",
-            "minimum": 1,
-            "maximum": 67
+            "minimum": 1
         },
         "description_brief": {
             "type": "string"
