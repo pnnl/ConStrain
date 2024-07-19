@@ -33,6 +33,8 @@ version = "0.4.0"
 # The full version, including alpha/beta/rc tags
 release = "0.4.0"
 
+# Document class docstrings
+autoclass_content = 'both'
 
 # -- General configuration ---------------------------------------------------
 
