@@ -34,7 +34,7 @@ version = "0.4.0"
 release = "0.4.0"
 
 # Document class docstrings
-autoclass_content = 'both'
+autoclass_content = "both"
 
 # -- General configuration ---------------------------------------------------
 
