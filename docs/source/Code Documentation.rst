@@ -1,6 +1,16 @@
 Code Documentation
 ===================
 
+.. automodule:: checklib
+    :members:
+    :inherited-members:
+    :undoc-members:
+    :show-inheritance:
+.. automodule:: api.brick_compliance
+    :members:
+    :inherited-members:
+    :undoc-members:
+    :show-inheritance:
 .. automodule:: api.data_processing
     :members:
     :inherited-members:

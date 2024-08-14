@@ -17,6 +17,10 @@ import sys, os
 sys.path.insert(0, os.path.abspath("../../constrain"))
 import api
 
+sys.path.append(os.getcwd())
+import generate_verification_docs
+
+generate_verification_docs.generate_verification_docs()
 
 # -- Project information -----------------------------------------------------
 
@@ -25,10 +29,12 @@ copyright = "2023, Pacific Northwest National Laboratory"
 author = "Pacific Northwest National Laboratory"
 
 # The short X.Y version
-version = "0.1.0"
+version = "0.4.0"
 # The full version, including alpha/beta/rc tags
-release = "0.1.0"
+release = "0.4.0"
 
+# Document class docstrings
+autoclass_content = "both"
 
 # -- General configuration ---------------------------------------------------
 
@@ -214,7 +220,7 @@ epub_exclude_files = ["search.html"]
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"https://docs.python.org/": None}
+intersphinx_mapping = {"<name>": ("https://docs.python.org/", None)}
 
 # -- Options for todo extension ----------------------------------------------
 
