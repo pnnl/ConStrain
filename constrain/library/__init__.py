@@ -51,6 +51,8 @@ from .G36ReheatTerminalBoxCoolingAirflowSetpoint import *
 from .G36ReheatTerminalBoxHeatingAirflowSetpoint import *
 from .G36ReheatTerminalBoxDeadbandAirflowSetpoint import *
 from .G36TerminalBoxCoolingMinimumAirflow import *
+from .hpwh_sizing import *
+from .dhw_tank_temperature import *
 
 __all__ = [
     "AutomaticOADamperControl",
@@ -110,4 +112,6 @@ __all__ = [
     "G36ReheatTerminalBoxHeatingAirflowSetpoint",
     "G36ReheatTerminalBoxDeadbandAirflowSetpoint",
     "G36TerminalBoxCoolingMinimumAirflow",
+    "HPWH_sizing",
+    "DHW_tank_temperature",
 ]
