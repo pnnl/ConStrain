@@ -1577,7 +1577,7 @@
             "total_hpwh_load = HeatingRate_dx_coil + HeatingRate_waterheater1 + HeatingRate_waterheater2",
             "HPWH_output = np.where(df['total_hpwh_load'] != 0.0, df['HeatingRate_dx_coil'] / df['total_hpwh_load'] * 100, 0.0)",
             "min_hpwh_output = df[(df['T_amb'] > df['T_amb_parameter']) & (df['HPWH_output'] > 0.0)]['HPWH_output'].min()",
-            "min_hpwh_output >= HPWH_output_target_percent: "
+            "min_hpwh_output >= HPWH_output_target_percent: ",
             "    pass",
             "else: ",
             "    fail",
