@@ -18,7 +18,7 @@ class TestHPWHSizing(unittest.TestCase):
 
         data = [
             [3.0, 0, 0, 0, 3.7],  # untested - when T_amb <= T_amb_parameter,
-            [0, 0, 0, 0, 0],  # untested - when total_hpwh_load == 0
+            [5, 0, 0, 0, 3.7],  # untested - when total_hpwh_load == 0
             [
                 5.0,
                 30,
