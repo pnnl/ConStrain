@@ -35,10 +35,9 @@ class HPWH_sizing(RuleCheckBase):
 
         HPWH_output_target_percent = self.df["HPWH_output_target_percent"].iloc[0]
 
-        if min_hpwh_output >= HPWH_output_target_percent:
-            self.df["result"] = True
-        else:
-            self.df["result"] = False
+        self.df["result"] = (
+            True if min_hpwh_output >= HPWH_output_target_percent else False
+        )
 
         self.result = self.df["result"]
 
