@@ -1556,5 +1556,54 @@
             "        pass",
             "end"
         ]
+    },
+	"HPWH_sizing": {
+        "library_item_id": 68,
+        "description_brief": "The algorithm verifies whether hpwh DX coil can achieve 100% heating rate at every time step.",
+        "description_index": [
+            "N/A"
+        ],
+        "description_datapoints": {
+            "T_amb": "outdoor ambient temperature",
+            "HeatingRate_dx_coil": "HPWH coil's total water heating rate",
+            "HeatingRate_waterheater1": "HPWH 1 heating rate",
+            "HeatingRate_waterheater2": "HPWH 2 heating rate",
+            "T_amb_parameter": "outdoor ambient temperature parameter",
+            "HPWH_output_target_percent": "HPWH output target in percent",
+            "tol_p": "percent tolerance"
+        },
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "total_hpwh_load = HeatingRate_dx_coil + HeatingRate_waterheater1 + HeatingRate_waterheater2",
+            "HPWH_output = np.where(df['total_hpwh_load'] != 0.0, df['HeatingRate_dx_coil'] / df['total_hpwh_load'] * 100, 0.0)",
+            "min_hpwh_output = df[(df['T_amb'] > df['T_amb_parameter']) & (df['HPWH_output'] > 0.0)]['HPWH_output'].min()",
+            "if abs(min_hpwh_output - HPWH_output_target_percent) <= tol_p: ",
+            "    pass",
+            "else: ",
+            "    fail",
+            "end"
+        ]
+    },
+	"DHW_tank_temperature": {
+        "library_item_id": 69,
+        "description_brief": "The algorithm verifies whether water temperature in the domestic hot water tank is within the deadband.",
+        "description_index": [
+            "N/A"
+        ],
+        "description_datapoints": {
+            "T_dhw": "Water temperature in DHW tank",
+            "T_dhw_deadband": "DHW tank temperature deadband",
+            "T_dhw_design_parameter": "DHW tank design temperature"
+        },
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if abs(T_dhw - T_dhw_design_parameter) <= 0.5 * T_dhw_deadband:",
+            "    pass",
+            "else: ",
+            "    fail",
+            "end"
+        ]
     }
 }
