@@ -36,7 +36,8 @@
                 },
                 "parameters": {
                     "T_amb_parameter": 3.7,
-					"HPWH_output_target_percent": 0.55
+					"HPWH_output_target_percent": 0.55,
+					"tol_p": 0.01
                 }
             },
             "verification_class": "HPWH_sizing"

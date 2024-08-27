@@ -1,8 +1,6 @@
 from constrain.checklib import RuleCheckBase
 import numpy as np
 
-PERCENT_TOLERANCE = 0.01  # %
-
 
 class HPWH_sizing(RuleCheckBase):
     points = [
@@ -12,6 +10,7 @@ class HPWH_sizing(RuleCheckBase):
         "HeatingRate_waterheater2",
         "T_amb_parameter",
         "HPWH_output_target_percent",
+        "tol_p",
     ]
 
     def verify(self):
@@ -34,12 +33,11 @@ class HPWH_sizing(RuleCheckBase):
         min_hpwh_output = 0.0 if min_hpwh_output is np.nan else min_hpwh_output
 
         HPWH_output_target_percent = self.df["HPWH_output_target_percent"].iloc[0]
-
-        print(f"min_hpwh_output: {min_hpwh_output}")
+        tol_p = self.df["tol_p"].iloc[0]
 
         self.df["result"] = (
             True
-            if abs(min_hpwh_output - HPWH_output_target_percent) <= PERCENT_TOLERANCE
+            if abs(min_hpwh_output - HPWH_output_target_percent) <= tol_p
             else False
         )
 

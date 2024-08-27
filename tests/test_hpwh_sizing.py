@@ -17,6 +17,7 @@ class TestHPWHSizing(unittest.TestCase):
             "HeatingRate_waterheater2",
             "T_amb_parameter",
             "HPWH_output_target_percent",
+            "tol_p",
         ]
 
         timestamp = [
@@ -27,10 +28,10 @@ class TestHPWHSizing(unittest.TestCase):
         ]
 
         data = [
-            [3.0, 50, 0, 50, 2.7, 0.5],
-            [3.0, 60, 0, 60, 2.7, 0.5],
-            [5.0, 60, 10, 30, 2.7, 0.5],
-            [5.0, 80, 40, 40, 2.7, 0.5],
+            [3.0, 50, 0, 50, 2.7, 0.5, 0.01],
+            [3.0, 60, 0, 60, 2.7, 0.5, 0.01],
+            [5.0, 60, 10, 30, 2.7, 0.5, 0.01],
+            [5.0, 80, 40, 40, 2.7, 0.5, 0.01],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
@@ -59,6 +60,7 @@ class TestHPWHSizing(unittest.TestCase):
             "HeatingRate_waterheater2",
             "T_amb_parameter",
             "HPWH_output_target_percent",
+            "tol_p",
         ]
 
         timestamp = [
@@ -69,9 +71,9 @@ class TestHPWHSizing(unittest.TestCase):
         ]
 
         data = [
-            [3.0, 50, 0, 50, 2.7, 0.5],
-            [3.0, 60, 0, 60, 2.7, 0.5],
-            [5.0, 60, 10, 30, 2.7, 0.5],
+            [3.0, 50, 0, 50, 2.7, 0.5, 0.01],
+            [3.0, 60, 0, 60, 2.7, 0.5, 0.01],
+            [5.0, 60, 10, 30, 2.7, 0.5, 0.01],
             [
                 5.0,
                 30,
@@ -79,6 +81,7 @@ class TestHPWHSizing(unittest.TestCase):
                 40,
                 2.7,
                 0.4,
+                0.01,
             ],  # fail because of this line (e.g., 30 / (30+40+40) < 0.4)
         ]
 
@@ -108,6 +111,7 @@ class TestHPWHSizing(unittest.TestCase):
             "HeatingRate_waterheater2",
             "T_amb_parameter",
             "HPWH_output_target_percent",
+            "tol_p",
         ]
 
         timestamp = [
@@ -118,17 +122,10 @@ class TestHPWHSizing(unittest.TestCase):
         ]
 
         data = [
-            [1.0, 50, 0, 50, 2.7, 0.5],
-            [1.0, 60, 0, 60, 2.7, 0.5],
-            [2.0, 60, 10, 30, 2.7, 0.5],
-            [
-                2.0,
-                30,
-                40,
-                40,
-                2.7,
-                0.5,
-            ],
+            [1.0, 50, 0, 50, 2.7, 0.5, 0.01],
+            [1.0, 60, 0, 60, 2.7, 0.5, 0.01],
+            [2.0, 60, 10, 30, 2.7, 0.5, 0.01],
+            [2.0, 30, 40, 40, 2.7, 0.5, 0.01],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
