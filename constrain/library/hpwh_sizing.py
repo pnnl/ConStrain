@@ -1,7 +1,7 @@
 from constrain.checklib import RuleCheckBase
 import numpy as np
 
-TEMP_TOLERANCE = 0.5  # deg C
+PERCENT_TOLERANCE = 0.01  # %
 
 
 class HPWH_sizing(RuleCheckBase):
@@ -23,7 +23,7 @@ class HPWH_sizing(RuleCheckBase):
 
         self.df["HPWH_output"] = np.where(
             self.df["total_hpwh_load"] != 0.0,
-            self.df["HeatingRate_dx_coil"] / self.df["total_hpwh_load"] * 100,
+            self.df["HeatingRate_dx_coil"] / self.df["total_hpwh_load"],
             0.0,
         )
 
@@ -35,8 +35,12 @@ class HPWH_sizing(RuleCheckBase):
 
         HPWH_output_target_percent = self.df["HPWH_output_target_percent"].iloc[0]
 
+        print(f"min_hpwh_output: {min_hpwh_output}")
+
         self.df["result"] = (
-            True if min_hpwh_output >= HPWH_output_target_percent else False
+            True
+            if abs(min_hpwh_output - HPWH_output_target_percent) <= PERCENT_TOLERANCE
+            else False
         )
 
         self.result = self.df["result"]
