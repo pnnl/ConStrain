@@ -1570,7 +1570,7 @@
             "HeatingRate_waterheater2": "HPWH 2 heating rate",
             "T_amb_parameter": "outdoor ambient temperature parameter",
             "HPWH_output_target_percent": "HPWH output target in percent",
-			"tol_p": "percent tolerance"
+            "tol_p": "percent tolerance"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
