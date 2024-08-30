@@ -96,17 +96,29 @@ def run_libcase(
         ).transform()
     verification_class = item.item["verification_class"]
 
-    if user_lib_folder is not None:
-        if os.path.isdir(user_lib_folder):
-            exec(f"from {user_lib_folder} import *")
-
-    cls = globals()[verification_class]
     parameters = (
         item.item["datapoints_source"]["parameters"]
         if ("parameters" in item.item["datapoints_source"])
         else None
     )
-    verification_obj = cls(df, parameters, f"{run_path}")
+
+    if user_lib_folder is not None:
+        if os.path.isfile(user_lib_folder):
+            import importlib
+            from pathlib import Path
+
+            file_name = Path(user_lib_folder).name
+            spec = importlib.util.spec_from_file_location(
+                file_name.replace(".py", ""), user_lib_folder
+            )
+            mods = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mods)
+            verification_obj = eval(
+                f"mods.{verification_class}(df, parameters, '{run_path}')"
+            )
+    else:
+        cls = globals()[verification_class]
+        verification_obj = cls(df, parameters, f"{run_path}")
     if produce_outputs:
         md_content = verification_obj.add_md(
             None, output_path, "./", item_dict, plot_option, fig_size
