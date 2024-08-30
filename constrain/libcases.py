@@ -11,6 +11,7 @@ import sys, os
 
 def run_libcase(
     item_dict,
+    user_lib_folder=None,
     plot_option="all-compact",
     output_path="./",
     fig_size=(6.4, 4.8),
@@ -21,6 +22,7 @@ def run_libcase(
 
     Args:
         item_dict (Dict): verification item dict loaded from json files through `assemble_verification_items`
+        user_lib_folder (str, optional): path to user provided library folder (containing Python class files). Defaults to "".
         plot_option: result plotting option.
     """
 
@@ -93,6 +95,11 @@ def run_libcase(
             )
         ).transform()
     verification_class = item.item["verification_class"]
+
+    if user_lib_folder is not None:
+        if os.path.isdir(user_lib_folder):
+            exec(f"from {user_lib_folder} import *")
+
     cls = globals()[verification_class]
     parameters = (
         item.item["datapoints_source"]["parameters"]
