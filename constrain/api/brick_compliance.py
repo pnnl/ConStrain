@@ -113,7 +113,7 @@ class BrickCompliance:
         }
 
         # load brick schema and instance files
-        self.g = brickschema.Graph(load_brick=True)
+        self.g = brickschema.Graph(load_brick=False)
         self.g.load_file(self.brick_schema_path)
         if perform_reasoning:
             self.g.expand(
