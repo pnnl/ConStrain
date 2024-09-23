@@ -38,5 +38,6 @@ setup(
         "pydash",
         "PyYAML",
         "pre-commit",
+        "jsonschema",
     ],
 )

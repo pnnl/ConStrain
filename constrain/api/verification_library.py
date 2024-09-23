@@ -13,7 +13,7 @@ from constrain.library import *
 library_schema = {
     "library_item_id": (int, str, float),
     "description_brief": str,
-    "description_detail": str,
+    "description_detailed": str,
     "description_index": list,
     "description_datapoints": dict,
     "description_assertions": list,
@@ -144,8 +144,8 @@ class VerificationLibrary:
 
             # verify the library.json file
             for lib_key in library_schema.keys():
-                # check if lib keys exist. "description_detail" key is optional
-                if lib_key not in ["description_detail"] and not self.lib_items[
+                # check if lib keys exist. "description_detailed" key is optional
+                if lib_key not in ["description_detailed"] and not self.lib_items[
                     item
                 ].get(lib_key):
                     logging.error(
@@ -169,7 +169,7 @@ class VerificationLibrary:
                         )
 
                 except KeyError:
-                    # if `description_detail` key doesn't exist, output a warning.
+                    # if `description_detailed` key doesn't exist, output a warning.
                     validity_info[item][lib_key] = None
                     logging.warning(f"{lib_key} doesn't exist.")
 

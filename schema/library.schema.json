@@ -1,0 +1,53 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "library_item_id": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "description_brief": {
+            "type": "string"
+        },
+        "description_detailed": {
+            "type": "string"
+        },
+        "description_index": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "description_datapoints": {
+            "type": "object"
+        },
+        "description_assertions": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "description_verification_type": {
+            "enum": [
+                "rule-based",
+                "procedure-based"
+            ]
+        },
+        "assertions_type": {
+            "enum": [
+                "pass",
+                "fail"
+            ]
+        }
+    },
+    "required": [
+        "library_item_id",
+        "description_brief",
+        "description_detailed",
+        "description_index",
+        "description_datapoints",
+        "description_verification_type",
+        "assertions_type"
+    ],
+    "additionalProperties": false
+}
