@@ -306,10 +306,12 @@
         ],
         "description_datapoints": {
             "o": "Number of occupants",
-            "m_oa": "Air terminal outdoor air volume flow rate",
-            "eco_onoff": "Air system outdoor air economizer status",
+            "m_oa": "System outdoor air volume flow rate",
+            "m_ea": "System exhaust air volume flow rate",
+            "eco_onoff": "System air-side economizer status",
             "tol_o": "Tolerance for the number of occupants",
-            "tol_m_oa": "Tolerance for the air terminal air volume flow rate"
+            "tol_m_oa": "Tolerance for the outdoor air volume flow rate",
+            "tol_m_ea": "Tolerance for the exhaust air volume flow rate"
         },
         "description_assertions": [
             "if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0, then false else pass"
