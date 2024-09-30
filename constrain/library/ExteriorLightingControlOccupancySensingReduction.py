@@ -1,3 +1,39 @@
+"""
+ASHRAE 90.1-2022 
+### Description
+
+Section 9.4.1.4.e Occupancy-sensing light reduction control
+
+- Occupancy-sensing light reduction control: Lighting shall be controlled to automatically reduce the connected lighting power by a minimum of 50% when no activity has been detected in the area illuminated by the controlled luminaires for a time of no longer than 15 minutes. No more than 1500 W of lighting power shall be controlled together.
+
+Verification Item:
+
+- Check if the lighting power is reduced when no occupancy is detected.
+
+### Verification logic
+
+```
+design_total_lighting_power = max(total_lighting_power)
+
+date_diff = current_date - last_reported_occupancy # in min
+If o < tol_o and date_diff > 15
+    If total_lighting_power <= 0.5 * design_total_lighting_power
+        Pass
+    Else
+        Fail
+    Endif
+Else
+    Untested
+Endif
+```
+
+### Data requirements
+- o: number of occupants sensed in the zones served by the system.
+- total_lighting_power: reported total lighting power (not the design total lighting power)
+- tol_o: occupancy threshold; below that value the zones are considered unoccupied.
+
+"""
+
 from constrain.checklib import RuleCheckBase
 import numpy as np
 

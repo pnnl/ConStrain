@@ -52,16 +52,16 @@ class FanStaticPressureResetControl(RuleCheckBase):
 
             return day, daydf
 
-    def all_plot_aio(self, plt_pts):
+    def all_plot_aio(self, plt_pts, fig_size):
         pass
 
-    def all_plot_obo(self, plt_pts):
+    def all_plot_obo(self, plt_pts, fig_size):
         pass
 
-    def day_plot_aio(self, plt_pts):
+    def day_plot_aio(self, plt_pts, fig_size):
         # This method is overwritten because day plot can't be plotted for this verification item
         pass
 
-    def day_plot_obo(self, plt_pts):
+    def day_plot_obo(self, plt_pts, fig_size):
         # This method is overwritten because day plot can't be plotted for this verification item
         pass
