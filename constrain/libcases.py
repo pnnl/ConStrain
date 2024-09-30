@@ -42,8 +42,11 @@ def run_libcase(
     run_idf_path = None
     idd_path = None
     run_path = None
-    if need_injection:
+
+    if need_injection or run_sim:
         original_idf_path = item.item["simulation_IO"]["idf"].strip()
+
+    if need_injection:
         idd_path = item.item["simulation_IO"]["idd"].strip()
         if ".idf" in original_idf_path.lower():
             run_path = f"{original_idf_path[:-4]}"
