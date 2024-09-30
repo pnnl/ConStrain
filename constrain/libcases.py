@@ -11,6 +11,7 @@ import sys, os
 
 def run_libcase(
     item_dict,
+    user_lib_file=None,
     plot_option="all-compact",
     output_path="./",
     fig_size=(6.4, 4.8),
@@ -21,6 +22,7 @@ def run_libcase(
 
     Args:
         item_dict (Dict): verification item dict loaded from json files through `assemble_verification_items`
+        user_lib_file (str, optional): path to user provided library python file. Defaults to "".
         plot_option: result plotting option.
     """
 
@@ -96,13 +98,30 @@ def run_libcase(
             )
         ).transform()
     verification_class = item.item["verification_class"]
-    cls = globals()[verification_class]
+
     parameters = (
         item.item["datapoints_source"]["parameters"]
         if ("parameters" in item.item["datapoints_source"])
         else None
     )
-    verification_obj = cls(df, parameters, f"{run_path}")
+
+    if user_lib_file is not None:
+        if os.path.isfile(user_lib_file):
+            import importlib
+            from pathlib import Path
+
+            file_name = Path(user_lib_file).name
+            spec = importlib.util.spec_from_file_location(
+                file_name.replace(".py", ""), user_lib_file
+            )
+            mods = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mods)
+            verification_obj = eval(
+                f"mods.{verification_class}(df, parameters, '{run_path}')"
+            )
+    else:
+        cls = globals()[verification_class]
+        verification_obj = cls(df, parameters, f"{run_path}")
     if produce_outputs:
         md_content = verification_obj.add_md(
             None, output_path, "./", item_dict, plot_option, fig_size
