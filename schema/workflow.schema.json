@@ -1,0 +1,166 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "workflow_name": {
+            "type": "string"
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string",
+                    "pattern": "^\\d{2}\/\\d{2}\/\\d{4}$"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "author",
+                "date",
+                "version",
+                "description"
+            ],
+            "additionalProperties": false
+        },
+        "imports": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "states": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/$defs/state"
+            },
+            "minProperties": 1
+        }
+    },
+    "required": [
+        "workflow_name",
+        "meta",
+        "imports",
+        "states"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+        "state": {
+            "type": "object",
+            "properties": {
+                "Type": {
+                    "enum": ["MethodCall", "Choice"]
+                },
+                "MethodCall": {
+                    "type": "string"
+                },
+                "Parameters": {
+                    "oneOf": [
+                        {
+                            "type": "object"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                "Payloads": {
+                    "type": "object"
+                },
+                "Choices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/choice"
+                    }
+                },
+                "Default": {
+                    "type": "string"
+                },
+                "Next": {
+                    "type": "string"
+                },
+                "Start": {
+                    "enum": [
+                        "True",
+                        "False"
+                    ]
+                },
+                "End": {
+                    "enum": [
+                        "True",
+                        "False"
+                    ]
+                }
+            },
+            "required": [
+                "Type"
+            ],
+            "if": {
+                "properties": {
+                    "Type": {
+                        "const": "MethodCall"
+                    }
+                }
+            },
+            "then": {
+                "required": [
+                    "Parameters"
+                ],
+                "not": {
+                    "anyOf": [
+                        {
+                            "required": [
+                                "Choices"
+                            ]
+                        },
+                        {
+                            "required": [
+                                "Default"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "else": {
+                "required": [
+                    "Choices",
+                    "Default"
+                ],
+                "not": {
+                    "required": [
+                        "Parameters"
+                    ]
+                }
+            }
+        },
+        "choice": {
+            "type": "object",
+            "properties": {
+                "Value": {
+                    "type": "string"
+                },
+                "Equals": {
+                    "type": "string"
+                },
+                "Next": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "Value",
+                "Equals",
+                "Next"
+            ]
+        }
+    }
+}

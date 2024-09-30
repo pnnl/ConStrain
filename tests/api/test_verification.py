@@ -94,6 +94,93 @@ class TestVerification(unittest.TestCase):
         },
     ]
 
+    custom_cases = [
+        {
+            "no": 1,
+            "run_simulation": False,
+            "simulation_IO": {
+                "idf": "./tests/api/data/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
+                "idd": "./resources/Energy+V9_0_1.idd",
+                "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe",
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "o": {
+                        "subject": "BLDG_OCC_SCH_WO_SB",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep",
+                    },
+                    "m_oa": {
+                        "subject": "CORE_BOTTOM VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep",
+                    },
+                    "m_ea": {
+                        "subject": "CORE_MID VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep",
+                    },
+                    "eco_onoff": {
+                        "subject": "PACU_VAV_BOT",
+                        "variable": "Air System Outdoor Air Economizer Status",
+                        "frequency": "TimeStep",
+                    },
+                },
+                "parameters": {
+                    "tol_o": 0.03,
+                    "tol_m_ea": 50,
+                    "tol_m_oa": 50,
+                },
+            },
+            "verification_class": "UserProvidedVerificationItem1",
+        },
+        {
+            "no": 2,
+            "run_simulation": False,
+            "simulation_IO": {
+                "idf": "./tests/api/data/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
+                "idd": "./resources/Energy+V9_0_1.idd",
+                "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe",
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "o": {
+                        "subject": "BLDG_OCC_SCH_WO_SB",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep",
+                    },
+                    "m_oa": {
+                        "subject": "CORE_MID VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep",
+                    },
+                    "m_ea": {
+                        "subject": "CORE_TOP VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep",
+                    },
+                    "eco_onoff": {
+                        "subject": "PACU_VAV_MID",
+                        "variable": "Air System Outdoor Air Economizer Status",
+                        "frequency": "TimeStep",
+                    },
+                },
+                "parameters": {
+                    "tol_o": 0.03,
+                    "tol_m_ea": 50,
+                    "tol_m_oa": 50,
+                },
+            },
+            "verification_class": "UserProvidedVerificationItem_Beta",
+        },
+    ]
+
     def test_constructor(self):
         with self.assertLogs() as logobs:
             # Empty constructor
@@ -291,6 +378,25 @@ class TestVerification(unittest.TestCase):
         v_obj.run()
         assert os.path.isfile("./tests/api/1_md.json")
         assert os.path.isfile("./tests/api/2_md.json")
+        os.remove("./tests/api/1_md.json")
+        os.remove("./tests/api/2_md.json")
+
+    def test_user_lib(self):
+        vc = VerificationCase(cases=self.custom_cases)
+        v_obj = Verification(verifications=vc)
+        v_obj.configure(
+            output_path="./tests/api",
+            lib_items_path="./tests/api/data/custom_lib.json",
+            lib_classes_py_file="./tests/api/data/custom_lib_aio/custom_lib_all.py",
+            plot_option=None,
+            fig_size=(6, 5),
+            num_threads=2,
+        )
+        v_obj.run()
+        assert os.path.isfile("./tests/api/1_md.json")
+        assert os.path.isfile("./tests/api/2_md.json")
+        os.remove("./tests/api/1_md.json")
+        os.remove("./tests/api/2_md.json")
 
 
 if __name__ == "__main__":

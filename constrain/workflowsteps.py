@@ -157,11 +157,18 @@ def assemble_verification_items(
 
     Args:
         cases_path (str): path to verification cases json file
-        lib_items_path (str): path to library item json file
+        lib_items_path (List): path to user provided library item json file. The default library item json file from ConStrain package is loaded with no need to list here.
+        cases (dict): Verification case dictionary
 
     Returns:
         List: list of assembled verification items
     """
+    lib_items_path_list = ["./schema/library.json"]
+    if (
+        lib_items_path is not None
+    ):  # add user provided verification item list, if the default verification file path is passed in here (as in previous implementation, that is okay too).
+        lib_items_path_list.append(lib_items_path)
+
     if isinstance(cases_path, str):
         with open(cases_path) as cases_file:
             cases_dict = json.load(cases_file)
@@ -172,8 +179,11 @@ def assemble_verification_items(
             logging.error("No item to assemble.")
     else:
         logging.error("No item to assemble.")
-    with open(lib_items_path) as lib_items_file:
-        lib_items_dict = json.load(lib_items_file)
+
+    lib_items_dict = {}
+    for lib_path in lib_items_path_list:
+        with open(lib_path) as lib_items_file:
+            lib_items_dict.update(json.load(lib_items_file))
 
     items = []
     for case in cases_dict["cases"]:
