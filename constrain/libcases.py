@@ -11,7 +11,7 @@ import sys, os
 
 def run_libcase(
     item_dict,
-    user_lib_folder=None,
+    user_lib_file=None,
     plot_option="all-compact",
     output_path="./",
     fig_size=(6.4, 4.8),
@@ -22,7 +22,7 @@ def run_libcase(
 
     Args:
         item_dict (Dict): verification item dict loaded from json files through `assemble_verification_items`
-        user_lib_folder (str, optional): path to user provided library folder (containing Python class files). Defaults to "".
+        user_lib_file (str, optional): path to user provided library python file. Defaults to "".
         plot_option: result plotting option.
     """
 
@@ -105,14 +105,14 @@ def run_libcase(
         else None
     )
 
-    if user_lib_folder is not None:
-        if os.path.isfile(user_lib_folder):
+    if user_lib_file is not None:
+        if os.path.isfile(user_lib_file):
             import importlib
             from pathlib import Path
 
-            file_name = Path(user_lib_folder).name
+            file_name = Path(user_lib_file).name
             spec = importlib.util.spec_from_file_location(
-                file_name.replace(".py", ""), user_lib_folder
+                file_name.replace(".py", ""), user_lib_file
             )
             mods = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mods)

@@ -19,7 +19,7 @@ from constrain.libcases import *
 
 class Verification:
     def __init__(self, verifications: VerificationCase = None):
-        self.lib_classes_folder = None
+        self.lib_classes_py_file = None
         self.preprocessed_data = None
         self.cases = None
         self.output_path = None
@@ -60,7 +60,7 @@ class Verification:
         Args:
             output_path (str): Verification results output path.
             lib_items_path (str, optional): User provided verification item json path (include name of the file with extension).
-            lib_classes_folder (str, optional): User provided verification item python classes folder.
+            lib_classes_py_file (str, optional): User provided verification item python classes file.
             plot_option (str, optional): Type of plots to include. It should either be all-compact, all-expand, day-compact, or day-expand. It can also be None, which will plot all types. Default to None.
             fig_size (tuple, optional): Tuple of integers (length, height) describing the size of the figure to plot. Defaults to (6.4, 4.8).
             num_threads (int, optional): Number of threads to run verifications in parallel. Defaults to 1.
@@ -164,7 +164,7 @@ class Verification:
         )
         results = run_libcase(
             item_dict=items[0],
-            user_lib_folder=self.lib_classes_py_file,
+            user_lib_file=self.lib_classes_py_file,
             plot_option=self.plot_option,
             output_path=self.output_path,
             fig_size=self.fig_size,
