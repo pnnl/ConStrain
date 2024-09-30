@@ -1,3 +1,50 @@
+"""
+### Description
+
+This verification aims to check if the HVAC systems is programmed to come on and turn off under different time schedules.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2016
+- Code Section: 6.4.3 Controls and Diagnostics
+- Code Subsection: 6.4.3.3.1 Off-hour automatic temperature setback and system shutoff with manual override
+
+### Verification Approach
+
+We aim to identify when the system comes on and when it is being turned off every day. The verification passes if we observed different start and end time for the whole simulation period.
+
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): N/A
+- System(s): any
+- Climate Zone(s): any
+- Component(s): air loops and fans
+
+### Verification Algorithm Pseudo Code
+
+The first step is to create data that represents the difference in system status (using `hvac_set`) from timesteps to the previous ones. This can be done by using `pandas.DataFrame.diff`. Then, we need to filter out all values equal to 0 which represent to change in system status (meaning that the system is still off or still on when compared with the previous timestep). Finally, we need retrieve the first and last value for each day, see [here](https://stackoverflow.com/questions/52909610/pandas-getting-first-and-last-value-from-each-day-in-a-datetime-dataframe) for an example, and store the data in a dataframe with two columns: `start_time` and `end_time`. Once this is done, proceed with the following evaluation:
+
+```
+if min(start_time) != max(start_time) and min(end_time) != max(end_time)
+  return true
+else
+  return false
+end
+```
+
+### Data requirements
+
+-  HVAC operation schedule (`hvac_set`)
+  - Data Value Unit: unitless
+  - Data point Description: HVAC system operation status
+  - Data Point Affiliation: HVAC operation schedule
+
+
+"""
+
 from constrain.checklib import RuleCheckBase
 import pandas as pd
 
