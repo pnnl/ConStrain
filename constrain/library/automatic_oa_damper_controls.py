@@ -9,7 +9,8 @@ class AutomaticOADamperControl(RuleCheckBase):
     def automatic_oa_damper_check(self, data):
         if data["o"] < data["tol_o"]:
             if data["eco_onoff"] == 0 and (
-                data["m_oa"] >= data["tol_m_oa"] or data["m_ea"] >= data["tol_m_ea"]
+                float(data["m_oa"]) >= data["tol_m_oa"]
+                or float(data["m_ea"]) >= data["tol_m_ea"]
             ):
                 return False
             else:
