@@ -81,10 +81,6 @@ class Zoom(QGraphicsView):
 
     def contextMenuEvent(self, event):
         menu = QMenu(self)
-        delete_action = menu.addAction("Delete")
-        edit_action = menu.addAction("Edit")
-        action = menu.exec(event.globalPos())
-        # Check if there's an item under the mouse cursor
 
         selected_states = [
             item
@@ -92,14 +88,19 @@ class Zoom(QGraphicsView):
             if item.isSelected() and isinstance(item, CustomItem)
         ]
         if selected_states:
+            if len(selected_states) > 1:
+                delete_action = menu.addAction("Delete")
+            if len(selected_states) == 1:
+                edit_action = menu.addAction("Edit")
+                delete_action = menu.addAction("Delete")
+
+            action = menu.exec(event.globalPos())
+            
             if action == delete_action:
                 delete_action = QAction("Delete", self)
                 self.mass_deleted.emit(selected_states)
-            elif action == edit_action:
-                if len(selected_states) > 1:
-                    utils.send_error("Error Editing States", "Select only 1 state to edit")
-                else:
-                    self.edit.emit(selected_states[0])
+            elif len(selected_states) == 1 and action == edit_action:
+                self.edit.emit(selected_states[0])
 
 
 
