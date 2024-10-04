@@ -31,6 +31,7 @@ from collections import Counter
 class Zoom(QGraphicsView):
     clicked = pyqtSignal()
     mass_deleted = pyqtSignal(list)
+    edit = pyqtSignal(CustomItem)
 
     def __init__(self, scene):
         """QGraphicsView that includes zoom function
@@ -81,18 +82,26 @@ class Zoom(QGraphicsView):
     def contextMenuEvent(self, event):
         menu = QMenu(self)
         delete_action = menu.addAction("Delete")
+        edit_action = menu.addAction("Edit")
         action = menu.exec(event.globalPos())
         # Check if there's an item under the mouse cursor
 
-        if action == delete_action:
-            selected_states = [
-                item
-                for item in self.scene.items()
-                if item.isSelected() and isinstance(item, CustomItem)
-            ]
-            if selected_states:
+        selected_states = [
+            item
+            for item in self.scene.items()
+            if item.isSelected() and isinstance(item, CustomItem)
+        ]
+        if selected_states:
+            if action == delete_action:
                 delete_action = QAction("Delete", self)
                 self.mass_deleted.emit(selected_states)
+            elif action == edit_action:
+                if len(selected_states) > 1:
+                    utils.send_error("Error Editing States", "Select only 1 state to edit")
+                else:
+                    self.edit.emit(selected_states[0])
+
+
 
     def mouseDoubleClickEvent(self, event):
         super().mouseDoubleClickEvent(event)
@@ -211,6 +220,7 @@ class WorkflowDiagram(QWidget):
         self.view = Zoom(self.scene)
 
         self.view.mass_deleted.connect(self.delete_states)
+        self.view.edit.connect(self.edit_item)
         self.view.clicked.connect(self.item_clicked)
 
         # last popup accessed
