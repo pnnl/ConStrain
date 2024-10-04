@@ -95,14 +95,12 @@ class Zoom(QGraphicsView):
                 delete_action = menu.addAction("Delete")
 
             action = menu.exec(event.globalPos())
-            
+
             if action == delete_action:
                 delete_action = QAction("Delete", self)
                 self.mass_deleted.emit(selected_states)
             elif len(selected_states) == 1 and action == edit_action:
                 self.edit.emit(selected_states[0])
-
-
 
     def mouseDoubleClickEvent(self, event):
         super().mouseDoubleClickEvent(event)
