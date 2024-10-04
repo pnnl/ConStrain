@@ -7,7 +7,6 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QVBoxLayout,
     QWidget,
-    QPushButton,
     QHBoxLayout,
     QListWidget,
     QFrame,
@@ -25,6 +24,7 @@ from constrain.app.workflow_diagram import WorkflowDiagram
 from constrain.app.rect_connect import CustomItem
 from constrain.app.submit import Worker, SubmitPopup
 from constrain.app import utils
+from constrain.app.components.button import StandardButton
 
 from constrain.api.workflow import Workflow
 
@@ -76,15 +76,12 @@ class GUI(QMainWindow):
         middle_layout.addWidget(self.states_form)
 
         # validate and submit buttons
-        validate_button = QPushButton("Validate")
+        validate_button = StandardButton("Validate")
         validate_button.setToolTip("Validate workflow")
-        validate_button.setFixedSize(100, 23)
         validate_button.clicked.connect(self.validate_form)
 
-        self.submit_button = QPushButton("Submit")
-        self.submit_button.setToolTip("Submit workflow")
-        # self.submit_button.setEnabled(False)
-        self.submit_button.setFixedSize(100, 23)
+        self.submit_button = StandardButton("Evaluate Workflow")
+        self.submit_button.setFixedSize(150, 30)
         self.submit_button.clicked.connect(self.submit_form)
 
         # group validate and submit buttons
@@ -111,11 +108,11 @@ class GUI(QMainWindow):
 
         file_menu = QMenu("File", self)
 
-        import_action = QAction("Import", self)
+        import_action = QAction("Import Workflow", self)
         import_action.triggered.connect(self.importFile)
         file_menu.addAction(import_action)
 
-        export_menu = QMenu("Export", self)
+        export_menu = QMenu("Export Workflow", self)
         file_menu.addMenu(export_menu)
 
         json_export_action = QAction("JSON", self)

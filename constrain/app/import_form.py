@@ -3,7 +3,6 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QVBoxLayout,
     QWidget,
-    QPushButton,
     QHBoxLayout,
     QListWidget,
     QMenu,
@@ -11,6 +10,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt
 
+from constrain.app.components.button import StandardButton
 
 class ImportForm(QWidget):
     def __init__(self):
@@ -22,7 +22,7 @@ class ImportForm(QWidget):
         import_label = QLabel("Imports:")
         self.import_input = QLineEdit()
 
-        add_button = QPushButton("Add")
+        add_button = StandardButton("Add")
 
         self.import_list = QListWidget()
 

@@ -2,7 +2,6 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QVBoxLayout,
-    QPushButton,
     QComboBox,
     QListWidget,
     QDialog,
@@ -11,6 +10,8 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
+
+from constrain.app.components.button import StandardButton
 
 import os
 import re
@@ -64,7 +65,7 @@ class ListPopup(QDialog):
         self.line_edit = QLineEdit()
         layout.addWidget(self.line_edit)
 
-        add_button = QPushButton("Add")
+        add_button = StandardButton("Add")
         add_button.clicked.connect(self.add_input)
         layout.addWidget(add_button)
 
@@ -223,7 +224,7 @@ class ChoicesPopup(QDialog):
         self.next_input = QLineEdit()
 
         # add
-        add_button = QPushButton("Add")
+        add_button = StandardButton("Add")
         add_button.clicked.connect(self.add_input)
 
         # buttons for accept or reject
