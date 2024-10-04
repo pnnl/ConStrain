@@ -1,0 +1,1062 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "cases": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "no": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "run_simulation": {
+                        "type": "boolean"
+                    },
+                    "simulation_IO": {
+                        "type": "object",
+                        "properties": {
+                            "idf": {
+                                "type": "string",
+                                "pattern": "\\.idf$"
+                            },
+                            "idd": {
+                                "type": "string",
+                                "pattern": "\\.idd$"
+                            },
+                            "weather": {
+                                "type": "string",
+                                "pattern": "\\.epw$"
+                            },
+                            "output": {
+                                "type": "string",
+                                "pattern": "\\.csv$"
+                            },
+                            "ep_path": {
+                                "type": "string",
+                                "pattern": "\\.exe$"
+                            }
+                        },
+                        "required": [
+                            "idf",
+                            "output"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "expected_result": {
+                        "enum": [
+                            "pass",
+                            "fail"
+                        ]
+                    },
+                    "datapoints_source": {
+                        "properties": {
+                            "idf_output_variables": {
+                                "type": "object"
+                            },
+                            "parameters": {
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "idf_output_variables",
+                            "parameters"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "verification_class": {
+                        "type": "string"
+                    }
+                },
+                "$comment": "Case-specific datapoints_source and verification_class fields are in $defs",
+                "oneOf": [
+                    {
+                        "$ref": "#/$defs/SupplyAirTempReset"
+                    },
+                    {
+                        "$ref": "#/$defs/EconomizerHighLimitD"
+                    },
+                    {
+                        "$ref": "#/$defs/IntegratedEconomizerControl"
+                    },
+                    {
+                        "$ref": "#/$defs/HWReset"
+                    },
+                    {
+                        "$ref": "#/$defs/CHWReset"
+                    },
+                    {
+                        "$ref": "#/$defs/NightCycleOperation"
+                    },
+                    {
+                        "$ref": "#/$defs/AutomaticOADamperControl"
+                    },
+                    {
+                        "$ref": "#/$defs/FanStaticPressureResetControl"
+                    },
+                    {
+                        "$ref": "#/$defs/HeatRejectionFanVariableFlowControlsCells"
+                    },
+                    {
+                        "$ref": "#/$defs/ServiceWaterHeatingSystemControl"
+                    },
+                    {
+                        "$ref": "#/$defs/VAVStaticPressureSensorLocation"
+                    },
+                    {
+                        "$ref": "#/$defs/VentilationFanControl"
+                    },
+                    {
+                        "$ref": "#/$defs/WLHPLoopHeatRejectionControl"
+                    },
+                    {
+                        "$ref": "#/$defs/AutomaticShutdown"
+                    },
+                    {
+                        "$ref": "#/$defs/HeatPumpSupplementalHeatLockout"
+                    },
+                    {
+                        "$ref": "#/$defs/HeatRejectionFanVariableFlowControl"
+                    },
+                    {
+                        "$ref": "#/$defs/GuestRoomControlVent"
+                    },
+                    {
+                        "$ref": "#/$defs/GuestRoomControlTemp"
+                    },
+                    {
+                        "$ref": "#/$defs/DemandControlVentilation"
+                    }
+                ],
+                "required": [
+                    "no",
+                    "run_simulation",
+                    "simulation_IO",
+                    "expected_result",
+                    "datapoints_source",
+                    "verification_class"
+                ],
+                "additionalProperties": false,
+                "allOf": [
+                    {
+                        "$comment": "Determine when idd, weather, and ep_path are required",
+                        "if": {
+                            "properties": {
+                                "run_simulation": {
+                                    "const": true
+                                }
+                            }
+                        },
+                        "then": {
+                            "properties": {
+                                "simulation_IO": {
+                                    "required": [
+                                        "idd",
+                                        "weather",
+                                        "ep_path"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "minItems": 1
+        }
+    },
+    "required": [
+        "cases"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+        "SupplyAirTempReset": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "T_sa_set": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "T_sa_set"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "T_z_coo": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "T_z_coo"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "SupplyAirTempReset"
+                }
+            }
+        },
+        "EconomizerHighLimitD": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "oa_flow": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "oa_db": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "ret_a_enth": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "oa_enth": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "oa_flow",
+                                "oa_db",
+                                "ret_a_enth",
+                                "oa_enth"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "oa_threshold": {
+                                    "type": "number"
+                                },
+                                "oa_min_flow": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "oa_threshold",
+                                "oa_min_flow"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "EconomizerHighLimitD"
+                }
+            }
+        },
+        "IntegratedEconomizerControl": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "oa_flow": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "ccoil_out": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "oa_flow",
+                                "ccoil_out"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "oa_min_flow": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "oa_min_flow"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "IntegratedEconomizerControl"
+                }
+            }
+        },
+        "HWReset": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "T_oa_db": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "T_hw": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "m_hw": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "T_oa_db",
+                                "T_hw",
+                                "m_hw"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "T_oa_max": {
+                                    "type": "number"
+                                },
+                                "T_oa_min": {
+                                    "type": "number"
+                                },
+                                "T_hw_max_set": {
+                                    "type": "number"
+                                },
+                                "T_hw_min_set": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "T_oa_max",
+                                "T_oa_min",
+                                "T_hw_max_set",
+                                "T_hw_min_set"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "HWReset"
+                }
+            }
+        },
+        "CHWReset": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "T_oa_db": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "T_chw": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "m_chw": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "T_oa_db",
+                                "T_chw",
+                                "m_chw"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "T_oa_max": {
+                                    "type": "number"
+                                },
+                                "T_oa_min": {
+                                    "type": "number"
+                                },
+                                "T_chw_max_st": {
+                                    "type": "number"
+                                },
+                                "T_chw_min_st": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "T_oa_max",
+                                "T_oa_min",
+                                "T_chw_max_st",
+                                "T_chw_min_st"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "CHWReset"
+                }
+            }
+        },
+        "NightCycleOperation": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "T_zone": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "HVAC_operation_sch": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "T_heat_set": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "T_cool_set": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "Fan_elec_rate": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "T_zone",
+                                "HVAC_operation_sch",
+                                "T_heat_set",
+                                "T_cool_set",
+                                "Fan_elec_rate"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "NightCycleOperation"
+                }
+            }
+        },
+        "AutomaticOADamperControl": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "o": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "m_oa": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "eco_onoff": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "o",
+                                "m_oa",
+                                "eco_onoff"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "tol": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "tol"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "AutomaticOADamperControl"
+                }
+            }
+        },
+        "FanStaticPressureResetControl": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "p_set": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "d_VAV_1": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "d_VAV_2": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "d_VAV_3": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "d_VAV_4": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "d_VAV_5": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "p_set",
+                                "d_VAV_1",
+                                "d_VAV_2",
+                                "d_VAV_3",
+                                "d_VAV_4",
+                                "d_VAV_5"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "p_set_min": {
+                                    "type": "number"
+                                },
+                                "tol": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "p_set_min",
+                                "tol"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "FanStaticPressureResetControl"
+                }
+            }
+        },
+        "HeatRejectionFanVariableFlowControlsCells": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "ct_op_cells": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "ct_m": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "ct_P_fan": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "ct_op_cells",
+                                "ct_m",
+                                "ct_P_fan"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "ct_cells": {
+                                    "type": "number"
+                                },
+                                "ct_m_des": {
+                                    "type": "number"
+                                },
+                                "min_flow_frac_per_cell": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "ct_cells",
+                                "ct_m_des",
+                                "min_flow_frac_per_cell"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "HeatRejectionFanVariableFlowControlsCells"
+                }
+            }
+        },
+        "ServiceWaterHeatingSystemControl": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "T_wh_inlet": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "T_wh_inlet"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "ServiceWaterHeatingSystemControl"
+                }
+            }
+        },
+        "VAVStaticPressureSensorLocation": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "p_fan_set": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "p_fan_set"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "ct_cells": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "ct_cells"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "VAVStaticPressureSensorLocation"
+                }
+            }
+        },
+        "VentilationFanControl": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "no_of_occ": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "Q_load": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "P_fan": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "no_of_occ",
+                                "Q_load",
+                                "P_fan"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "VentilationFanControl"
+                }
+            }
+        },
+        "WLHPLoopHeatRejectionControl": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "T_max_heating_loop": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "T_min_cooling_loop": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "m_pump": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "T_max_heating_loop",
+                                "T_min_cooling_loop",
+                                "m_pump"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "tol": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "tol"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "WLHPLoopHeatRejectionControl"
+                }
+            }
+        },
+        "AutomaticShutdown": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "hvac_set": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "hvac_set"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "AutomaticShutdown"
+                }
+            }
+        },
+        "HeatPumpSupplementalHeatLockout": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "L_op": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "P_supp_ht": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "C_t_mod": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "C_ff_mod": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "L_defrost": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "L_op",
+                                "P_supp_ht",
+                                "C_t_mod",
+                                "C_ff_mod",
+                                "L_defrost"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "C_ref": {
+                                    "type": "number"
+                                },
+                                "tol": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "C_ref",
+                                "tol"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "HeatPumpSupplementalHeatLockout"
+                }
+            }
+        },
+        "HeatRejectionFanVariableFlowControl": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "ct_P_fan": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "ct_m_fan_ratio": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "ct_P_fan",
+                                "ct_m_fan_ratio"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "ct_m_fan_dsgn": {
+                                    "type": "number"
+                                },
+                                "ct_P_fan_dsgn": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "ct_m_fan_dsgn",
+                                "ct_P_fan_dsgn"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "HeatRejectionFanVariableFlowControl"
+                }
+            }
+        },
+        "GuestRoomControlVent": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "m_z_oa": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "O_sch": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "m_z_oa",
+                                "O_sch"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "area_z": {
+                                    "type": "number"
+                                },
+                                "height_z": {
+                                    "type": "number"
+                                },
+                                "v_outdoor_per_zone": {
+                                    "type": "number"
+                                },
+                                "tol_occ": {
+                                    "type": "number"
+                                },
+                                "tol_oa_flow": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "area_z",
+                                "height_z",
+                                "v_outdoor_per_zone",
+                                "tol_occ",
+                                "tol_oa_flow"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "GuestRoomControlVent"
+                }
+            }
+        },
+        "GuestRoomControlTemp": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "T_z_hea_set": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "T_z_coo_set": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "O_sch": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "T_z_hea_set",
+                                "T_z_coo_set",
+                                "O_sch"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "tol_occ": {
+                                    "type": "number"
+                                },
+                                "tol_temp": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "tol_occ",
+                                "tol_temp"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "GuestRoomControlTemp"
+                }
+            }
+        },
+        "DemandControlVentilation": {
+            "type": "object",
+            "properties": {
+                "datapoints_source": {
+                    "type": "object",
+                    "properties": {
+                        "idf_output_variables": {
+                            "type": "object",
+                            "properties": {
+                                "v_oa": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "s_ahu": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "s_eco": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "no_of_occ_core": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "no_of_occ_per1": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "no_of_occ_per2": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "no_of_occ_per3": {
+                                    "$ref": "#/$defs/output_variable"
+                                },
+                                "no_of_occ_per4": {
+                                    "$ref": "#/$defs/output_variable"
+                                }
+                            },
+                            "required": [
+                                "v_oa",
+                                "s_ahu",
+                                "s_eco",
+                                "no_of_occ_core",
+                                "no_of_occ_per1",
+                                "no_of_occ_per2",
+                                "no_of_occ_per3",
+                                "no_of_occ_per4"
+                            ]
+                        },
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "tol_occ": {
+                                    "type": "number"
+                                },
+                                "tol_temp": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "tol_occ",
+                                "tol_temp"
+                            ]
+                        }
+                    }
+                },
+                "verification_class": {
+                    "const": "DemandControlVentilation"
+                }
+            }
+        },
+        "output_variable": {
+            "type": "object",
+            "properties": {
+                "subject": {
+                    "type": "string"
+                },
+                "variable": {
+                    "type": "string"
+                },
+                "frequency": {
+                    "enum": [
+                        "detailed",
+                        "TimeStep"
+                    ]
+                }
+            },
+            "required": [
+                "subject",
+                "variable",
+                "frequency"
+            ],
+            "additionalProperties": false
+        }
+    }
+}

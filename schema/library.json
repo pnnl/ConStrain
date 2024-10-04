@@ -2,7 +2,7 @@
     "SupplyAirTempReset": {
         "library_item_id": 1,
         "description_brief": "Cooling supply air temperature reset scale (25%)",
-        "description_detail": "Multiple zone HVAC systems must include controls that automatically reset the supply air temperature in response to representative building loads, or to outdoor air temperature. The controls shall reset the supply air temperature at least 25% of the difference between the design supply air temperature and the design room air temperature. Controls that adjust the reset based on zone humidity are allowed. Zones that are expected to experience relatively constant loads, such as electronic equipment rooms, shall be designed for the fully reset supply temperature.",
+        "description_detailed": "Multiple zone HVAC systems must include controls that automatically reset the supply air temperature in response to representative building loads, or to outdoor air temperature. The controls shall reset the supply air temperature at least 25% of the difference between the design supply air temperature and the design room air temperature. Controls that adjust the reset based on zone humidity are allowed. Zones that are expected to experience relatively constant loads, such as electronic equipment rooms, shall be designed for the fully reset supply temperature.",
         "description_index": [
             "Section 6.5.3.5 in 90.1-2016"
         ],
@@ -19,7 +19,7 @@
     "EconomizerHighLimitA": {
         "library_item_id": 2,
         "description_brief": "Fixed dry bulb economizer high limit",
-        "description_detail": "Economizer needs to be OFF when High-Limit Condition was satisfied. Y_e_HL =f($Climate Zone, $Toa, $Tra, $hoa, $hra)",
+        "description_detailed": "Economizer needs to be OFF when High-Limit Condition was satisfied. Y_e_HL =f($Climate Zone, $Toa, $Tra, $hoa, $hra)",
         "description_index": [
             "Table 6.5.1.1.3 in 90.1-2016"
         ],
@@ -38,7 +38,7 @@
     "EconomizerHighLimitB": {
         "library_item_id": 3,
         "description_brief": "Differential dry bulb economizer high limit",
-        "description_detail": "Check the 90.1-2016 table",
+        "description_detailed": "Check the 90.1-2016 table",
         "description_index": [
             "Table 6.5.1.1.3 in 90.1-2016"
         ],
@@ -57,7 +57,7 @@
     "EconomizerHighLimitC": {
         "library_item_id": 4,
         "description_brief": "Fixed enthalpy + fixed dry bulb economizer high limit",
-        "description_detail": "N/A",
+        "description_detailed": "N/A",
         "description_index": [
             "Table 6.5.1.1.3 in 90.1-2016"
         ],
@@ -78,7 +78,7 @@
     "EconomizerHighLimitD": {
         "library_item_id": 5,
         "description_brief": "Differential enthalpy + fixed dry bulb economizer high limit (case study)",
-        "description_detail": "N/A",
+        "description_detailed": "N/A",
         "description_index": [
             "Table 6.5.1.1.3 in 90.1-2016"
         ],
@@ -99,7 +99,7 @@
     "IntegratedEconomizerControl": {
         "library_item_id": 6,
         "description_brief": "Economizer shall be integrated with mechanical cooling",
-        "description_detail": "Economizer systems shall be integrated with the mechanical cooling system and be capable of and configured to provide partial cooling even when additional mechanical cooling is required to meet the remainder of the cooling load. Controls shall not false load the mechanical cooling systems by limiting or disabling the economizer or by any other means, such as hot-gas bypass, except at the lowest stage of mechanical cooling. (case study, add non-integrated economizer (check each seprate on, but not both on)",
+        "description_detailed": "Economizer systems shall be integrated with the mechanical cooling system and be capable of and configured to provide partial cooling even when additional mechanical cooling is required to meet the remainder of the cooling load. Controls shall not false load the mechanical cooling systems by limiting or disabling the economizer or by any other means, such as hot-gas bypass, except at the lowest stage of mechanical cooling. (case study, add non-integrated economizer (check each seprate on, but not both on)",
         "description_index": [
             "Section 6.5.1.3 in 90.1-2016"
         ],
@@ -117,7 +117,7 @@
     "ERVRatio": {
         "library_item_id": 7,
         "description_brief": "ERV ratio of at least 50%",
-        "description_detail": "Energy recovery systems required by this section shall result in an enthalpy recovery ratio of at least 50%. A 50% enthalpy recovery ratio shall mean a change in the enthalpy of the outdoor air supply equal to 50% of the difference between the outdoor air and entering exhaust air enthalpies at design conditions.",
+        "description_detailed": "Energy recovery systems required by this section shall result in an enthalpy recovery ratio of at least 50%. A 50% enthalpy recovery ratio shall mean a change in the enthalpy of the outdoor air supply equal to 50% of the difference between the outdoor air and entering exhaust air enthalpies at design conditions.",
         "description_index": [
             "Section 6.5.6.1 in 90.1-2016"
         ],
@@ -135,7 +135,7 @@
     "ZoneTempControl": {
         "library_item_id": 8,
         "description_brief": "Zone temperature setpoint deadband >= 5F (2.77C)",
-        "description_detail": "Where used to control both heating and cooling, zone thermostatic controls shall be capable of and configured to provide a temperature range or dead band of at least 5°F within which the supply of heating and cooling energy to the zone is shut off or reduced to a minimum. (case study for zone temperature reset, not for this one)",
+        "description_detailed": "Where used to control both heating and cooling, zone thermostatic controls shall be capable of and configured to provide a temperature range or dead band of at least 5°F within which the supply of heating and cooling energy to the zone is shut off or reduced to a minimum. (case study for zone temperature reset, not for this one)",
         "description_index": [
             "Section 6.4.3.1.2 in 90.1-2016"
         ],
@@ -152,7 +152,7 @@
     "HWReset": {
         "library_item_id": 9,
         "description_brief": "Hot water supply water temperature reset",
-        "description_detail": "Hot-water systems with a design capacity exceeding 300,000 Btu/h supplying heated water to comfort conditioning systems shall include controls that automatically reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. Where DDC is used to control valves, the set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached. (case study)",
+        "description_detailed": "Hot-water systems with a design capacity exceeding 300,000 Btu/h supplying heated water to comfort conditioning systems shall include controls that automatically reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. Where DDC is used to control valves, the set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached. (case study)",
         "description_index": [
             "Section 6.5.4.4 in 90.1-2016"
         ],
@@ -174,7 +174,7 @@
     "CHWReset": {
         "library_item_id": 10,
         "description_brief": "Chilled water supply water temperature reset",
-        "description_detail": "Chilled-water systems with a design capacity exceeding 300,000 Btu/h supplying chilled water to comfort conditioning systems shall include controls that automatically reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. Where DDC is used to control valves, the set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached. (case study)",
+        "description_detailed": "Chilled-water systems with a design capacity exceeding 300,000 Btu/h supplying chilled water to comfort conditioning systems shall include controls that automatically reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. Where DDC is used to control valves, the set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached. (case study)",
         "description_index": [
             "Section 6.5.4.4 in 90.1-2016"
         ],
@@ -196,7 +196,7 @@
     "ZoneHeatSetpointMinimum": {
         "library_item_id": 11,
         "description_brief": "Zone heating setpoint reset temperature minimum value check",
-        "description_detail": "Heating systems located in climate zones 2-8 shall be equipped with controls that have the capability to automatically restart and temporarily operate the system as required to maintain zone temperatures above a heating setpoint adjustable down to 55°F or lower. (case study)",
+        "description_detailed": "Heating systems located in climate zones 2-8 shall be equipped with controls that have the capability to automatically restart and temporarily operate the system as required to maintain zone temperatures above a heating setpoint adjustable down to 55°F or lower. (case study)",
         "description_index": [
             "Section 6.4.3.2.2 in 90.1-2004"
         ],
@@ -306,10 +306,12 @@
         ],
         "description_datapoints": {
             "o": "Number of occupants",
-            "m_oa": "Air terminal outdoor air volume flow rate",
-            "eco_onoff": "Air system outdoor air economizer status",
+            "m_oa": "System outdoor air volume flow rate",
+            "m_ea": "System exhaust air volume flow rate",
+            "eco_onoff": "System air-side economizer status",
             "tol_o": "Tolerance for the number of occupants",
-            "tol_m_oa": "Tolerance for the air terminal air volume flow rate"
+            "tol_m_oa": "Tolerance for the outdoor air volume flow rate",
+            "tol_m_ea": "Tolerance for the exhaust air volume flow rate"
         },
         "description_assertions": [
             "if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0, then false else pass"
@@ -537,7 +539,7 @@
     "G36SupplyAirTemperatureSetpoint": {
         "library_item_id": 30,
         "description_brief": "Supply air temperature operation following the Guideline 36 recommendations",
-        "description_detail": "Verify that the supply air temperature setpoint of a system follows the Guideline 36 recommendations",
+        "description_detailed": "Verify that the supply air temperature setpoint of a system follows the Guideline 36 recommendations",
         "description_index": [
             "Section 5.16.2.2 in ASHRAE Guideline 36-2021"
         ],
@@ -605,7 +607,7 @@
     "G36ReturnAirDamperPositionForReliefDamperOrFan": {
         "library_item_id": 32,
         "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with relief damper/fan",
-        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_detailed": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
         "description_index": [
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
@@ -649,7 +651,7 @@
     "G36OutdoorAirDamperPositionForReliefDamperOrFan": {
         "library_item_id": 33,
         "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with relief damper/fan",
-        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_detailed": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
         "description_index": [
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
@@ -706,7 +708,7 @@
     "G36ReturnAirDamperPositionForReturnFanAirflowTracking": {
         "library_item_id": 34,
         "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
-        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_detailed": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
         "description_index": [
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
@@ -724,7 +726,7 @@
     "G36OutdoorAirDamperPositionForReturnFanAirflowTracking": {
         "library_item_id": 35,
         "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
-        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_detailed": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
         "description_index": [
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
@@ -746,7 +748,7 @@
     "G36ReliefAirDamperPositionForReturnFanAirflowTracking": {
         "library_item_id": 36,
         "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with airflow tracking",
-        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_detailed": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
         "description_index": [
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
@@ -783,7 +785,7 @@
     "G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure": {
         "library_item_id": 37,
         "description_brief": "Verify that the return air damper operation follows Guideline 36 recommendations for systems with return fan with direct building pressure control",
-        "description_detail": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_detailed": "Verify that the return air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
         "description_index": [
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
@@ -819,7 +821,7 @@
     "G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure": {
         "library_item_id": 38,
         "description_brief": "Verify that the outdoor air damper operation follows Guideline 36 recommendations for systems with return fan with direct building pressure control",
-        "description_detail": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
+        "description_detailed": "Verify that the outdoor air damper operation follows the Guideline 36 recommendations for supply air temperature setpoint operations",
         "description_index": [
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
