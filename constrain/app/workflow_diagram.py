@@ -273,7 +273,7 @@ class WorkflowDiagram(QWidget):
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.setLayout(layout)
 
-    def add_state(self):
+    def check_popup_and_add_state(self):
         """Creates CustomItem based on state described in self.popup if there was no error"""
         if self.popup.error:
             return
@@ -444,11 +444,11 @@ class WorkflowDiagram(QWidget):
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.add_state)
+                self.popup.save_button.clicked.disconnect(self.check_popup_and_add_state)
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
-            self.popup.save_button.clicked.connect(self.add_state)
+            self.popup.save_button.clicked.connect(self.check_popup_and_add_state)
         self.popup.exec()
 
     def call_advanced_popup(self, rect=None, edit=False):
@@ -458,11 +458,11 @@ class WorkflowDiagram(QWidget):
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.add_state)
+                self.popup.save_button.clicked.disconnect(self.check_popup_and_add_state)
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
-            self.popup.save_button.clicked.connect(self.add_state)
+            self.popup.save_button.clicked.connect(self.check_popup_and_add_state)
         self.popup.exec()
 
     def item_clicked(self):
