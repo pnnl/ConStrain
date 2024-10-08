@@ -12,6 +12,7 @@ from PyQt6.QtCore import Qt
 
 from constrain.app.components.button import StandardButton
 
+
 class ImportForm(QWidget):
     def __init__(self):
         """Creates an import form to be displayed when 'Import' is selected from the LHS column frame
