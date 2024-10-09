@@ -52,6 +52,17 @@ class GUI(QMainWindow):
         )
         self.column_list.setCurrentItem(self.column_list.item(0))
 
+        meta_item = self.column_list.item(0)
+        meta_item.setToolTip("Metadata about the workflow")
+
+        import_item = self.column_list.item(1)
+        import_item.setToolTip("Python package import needed to run the workflow")
+
+        state_item = self.column_list.item(2)
+        state_item.setToolTip(
+            "Sequential steps to follow to perform the verification; 'states' can either be 'MethodCall' which represent a method call to one of ConStrain’s APIs or a 'Choice' which can be used to help define alternative steps in a workflow based on the result (referred to as payloads in a workflow)."
+        )
+
         # make and reposition frame containing meta, imports, and state
         self.column_frame = QFrame()
         self.column_frame.setFrameStyle(QFrame.Shape.NoFrame)

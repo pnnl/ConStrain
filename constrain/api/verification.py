@@ -19,6 +19,11 @@ from constrain.libcases import *
 
 class Verification:
     def __init__(self, verifications: VerificationCase = None):
+        """Instantiate a Verification object.
+
+        Args:
+            verficiations (VerificationCase, optional): a VerificationCase
+        """
         self.lib_classes_py_file = None
         self.preprocessed_data = None
         self.cases = None
@@ -147,7 +152,7 @@ class Verification:
         """Run a single verification and generate a json file containing markdown report string and other results info.
 
         Args:
-            case (dict): Verification case dictionary.
+            case (Dict): Verification case dictionary.
         """
         # Input validation
         if case is None:
