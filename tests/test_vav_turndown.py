@@ -15,7 +15,7 @@ class TestVAVTurndown(unittest.TestCase):
             "T_VAV_discharge",
             "V_dot_VAV",
             "V_dot_VAV_max",
-            "box_min_turndown_design",
+            "VAV_min_turndown_design",
             "turndown_tol",
         ]
 
@@ -46,7 +46,7 @@ class TestVAVTurndown(unittest.TestCase):
             "T_VAV_discharge",
             "V_dot_VAV",
             "V_dot_VAV_max",
-            "box_min_turndown_design",
+            "VAV_min_turndown_design",
             "turndown_tol",
         ]
 
@@ -82,7 +82,7 @@ class TestVAVTurndown(unittest.TestCase):
             "T_VAV_discharge",
             "V_dot_VAV",
             "V_dot_VAV_max",
-            "box_min_turndown_design",
+            "VAV_min_turndown_design",
             "turndown_tol",
         ]
 

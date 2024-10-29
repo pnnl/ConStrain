@@ -1,6 +1,6 @@
 from constrain.checklib import RuleCheckBase
 
-REHEAT_DETERMINANT = 5.56  # deg C ~= 10 deg F
+REHEAT_DETERMINANT_TEMP = 5.56  # deg C ~= 10 deg F
 
 
 class VAVTurndown(RuleCheckBase):
@@ -9,19 +9,19 @@ class VAVTurndown(RuleCheckBase):
         "T_VAV_discharge",
         "V_dot_VAV",  # actual VAV volume flow
         "V_dot_VAV_max",  # max VAV volume flow
-        "box_min_turndown_design",
+        "VAV_min_turndown_design",
         "turndown_tol",
     ]
 
     def vav_turndown_check(self, data):
 
         if (
-            data["T_VAV_discharge"] - data["T_AHU_discharge"] >= REHEAT_DETERMINANT
+            data["T_VAV_discharge"] - data["T_AHU_discharge"] >= REHEAT_DETERMINANT_TEMP
         ):  # determine if VAV operation is in reheat mode
             if (
                 data["V_dot_VAV_max"] > 0.0
                 and data["V_dot_VAV"] / data["V_dot_VAV_max"]
-                > data["box_min_turndown_design"] + data["turndown_tol"]
+                > data["VAV_min_turndown_design"] + data["turndown_tol"]
             ):
                 return False
             else:
