@@ -1576,6 +1576,8 @@
         "assertions_type": "pass",
         "description_assertions": [
             "if reheat_coil_flag:",
+            "  if V_dot_VAV_max == 0",
+            "     Untested",
             "  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol",
             "     fail",
             "  else:",
