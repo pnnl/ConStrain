@@ -1568,20 +1568,20 @@
         "description_datapoints": {
             "reheat_coil_flag": "VAV box reaheat coil operation status",
             "V_dot_VAV": "VAV airflow rate",
-			"V_dot_VAV_max": "VAV max airflow rate",
-			"VAV_min_turndown_design": "design VAV box min turndown ratio",
-			"turndown_tol": "VAV turndown tolerance"
+            "V_dot_VAV_max": "VAV max airflow rate",
+            "VAV_min_turndown_design": "design VAV box min turndown ratio",
+            "turndown_tol": "VAV turndown tolerance"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
         "description_assertions": [
             "if reheat_coil_flag:",
-			"  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol",
-			"     fail",
-			"  else:",
-			"     pass",
-			"else",
-			"    Untested",
+            "  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol",
+            "     fail",
+            "  else:",
+            "     pass",
+            "else",
+            "    Untested",
             "end"
         ]
     }
