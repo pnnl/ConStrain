@@ -39,6 +39,36 @@ class TestVAVTurndown(unittest.TestCase):
 
         self.assertEqual(results, expected_results)
 
+    def test_vav_turndown_V_dot_max_zero_untested(self):
+        points = [
+            "reheat_coil_flag",
+            "V_dot_VAV",
+            "V_dot_VAV_max",
+            "VAV_min_turndown_design",
+            "turndown_tol",
+        ]
+
+        timestamp = [
+            datetime(2024, 8, 1, 12, 0, 0),
+            datetime(2024, 8, 1, 13, 0, 0),
+        ]
+
+        data = [
+            [True, 0.005, 0.0, 0.3, 0.01],
+            [True, 0.005, 0.0, 0.3, 0.01],
+        ]
+
+        df = pd.DataFrame(data, columns=points, index=timestamp)
+
+        verification_obj = run_test_verification_with_data("VAVTurndown", df)
+        results = list(verification_obj.result)
+        expected_results = [
+            "Untested",
+            "Untested",
+        ]
+
+        self.assertEqual(results, expected_results)
+
     def test_vav_turndown_pass(self):
         points = [
             "reheat_coil_flag",

@@ -11,11 +11,11 @@ class VAVTurndown(RuleCheckBase):
     ]
 
     def vav_turndown_check(self, data):
-
         if data["reheat_coil_flag"]:
-            if (
-                data["V_dot_VAV_max"] > 0.0
-                and data["V_dot_VAV"] / data["V_dot_VAV_max"]
+            if data["V_dot_VAV_max"] == 0:
+                return "Untested"
+            elif (
+                data["V_dot_VAV"] / data["V_dot_VAV_max"]
                 > data["VAV_min_turndown_design"] + data["turndown_tol"]
             ):
                 return False
