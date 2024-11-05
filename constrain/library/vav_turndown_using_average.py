@@ -1,19 +1,19 @@
 """
 ### Description
+When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should be higher than when it isn't in reheat mode
 
-Section 6.5.2.1 ASHRAE 90.1-2016 interpretation:
+### Code requirement
 
-- When a VAV box is in reheat mode, the average value of the ratio of actual VAV volume flow to max VAV volume flow should be higher than when it isn't in reheat mode
-- When a VAV box is not in reheat mode, the average value of the ratio of actual VAV volume flow to max VAV volume flow should be lower than when it isn't in reheat mode
+- Code Name: ASHRAE 90.1
+- Code Year: 2016
+- Code Section: 6.5.2 Simultaneous Heating and Cooling Limitation
+- Code Subsection: 6.5.2.1 Zone Controls
 
-
-Verification Item 1:
-
-- When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should be higher than when it isn't in reheat mode
+### Verification Approach
+- We aim to identify how VAV airflow rate varies when the VAV box is and isn't in reheat mode.
 
 ### Verification logic
-
-```python
+```
 V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max
 mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
 mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
@@ -23,12 +23,12 @@ if mean_reheat_ratio >= mean_no_reheat_ratio:
 else:
     fail
 ```
-
 ### Data requirements
-
 - reheat_coil_flag: VAV box reheat coil operation status
 - V_dot_VAV: actual VAV volume flow
 - V_dot_VAV_max: max VAV volume flow
+- VAV_min_turndown_design: design VAV box min turndown ratio
+- turndown_tol: VAV turndown tolerance
 
 """
 
