@@ -1558,5 +1558,29 @@
             "        pass",
             "end"
         ]
+    },
+    "VAVTurndown_Using_Average": {
+    "library_item_id": 68,
+    "description_brief": "When a VAV box is in reheat mode, VAV max airflow rate must not be greater than the min design turndown ratio",
+    "description_index": [
+       "Section 6.5.2.1 ASHRAE 90.1-2016"
+    ],
+    "description_datapoints": {
+       "reheat_coil_flag": "VAV box reaheat coil operation status",
+       "V_dot_VAV": "VAV airflow rate",
+       "V_dot_VAV_max": "VAV max airflow rate"
+    },
+    "description_verification_type": "rule-based",
+    "assertions_type": "pass",
+    "description_assertions": [
+       "V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max",
+       "mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+       "mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+       "if mean_reheat_ratio >= mean_no_reheat_ratio:",
+       "    pass",
+       "else: ",
+       "    fail",
+       "end"
+    ]
     }
 }

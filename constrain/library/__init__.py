@@ -9,6 +9,7 @@ from .heat_rejection_fan_var_flow_control import *
 from .heat_rejection_fan_var_flow_controls_cells import *
 from .hot_water_reset import *
 from .vav_static_pressure_sensor_location import *
+from .vav_turndown_using_average import *
 from .ventilation_fan_controls import *
 from .wlhp_loop_heat_rejection_controls import *
 from .supply_air_temp_reset import *
@@ -67,6 +68,7 @@ __all__ = [
     # "optimum_start", # missing
     # "swh_restroom_outlet_maximum_temperature_controls", # missing
     "VAVStaticPressureSensorLocation",
+    "VAVTurndown_Using_Average",
     "VentilationFanControl",
     "WLHPLoopHeatRejectionControl",
     "SupplyAirTempReset",
