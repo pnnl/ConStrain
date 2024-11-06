@@ -1559,7 +1559,7 @@
             "end"
         ]
     },
-    "VAVTurndown_Using_Average": {
+    "VAVTurndownDuringReheat": {
     "library_item_id": 68,
     "description_brief": "When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should be higher than when it isn't in reheat mode",
     "description_index": [

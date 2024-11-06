@@ -35,7 +35,7 @@ else:
 from constrain.checklib import RuleCheckBase
 
 
-class VAVTurndown_Using_Average(RuleCheckBase):
+class VAVTurndownDuringReheat(RuleCheckBase):
     points = [
         "reheat_coil_flag",
         "V_dot_VAV",
@@ -48,16 +48,20 @@ class VAVTurndown_Using_Average(RuleCheckBase):
             self.df["V_dot_VAV_max"] > 0
         ).all(), "Not all `V_dot_VAV_max` values are greater than 0"
 
-        self.df["V_dot_VAV_ratio"] = self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
+        # Check if the `reheat_coil_flag` column has only False values
+        if (self.df["reheat_coil_flag"] == False).all():
+            self.df["result"] = "Untested"
+        else:
+            self.df["V_dot_VAV_ratio"] = self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
 
-        # Calculate the mean ratios for reheat and no reheat conditions
-        mean_reheat_ratio = float(
-            self.df.loc[self.df["reheat_coil_flag"], "V_dot_VAV_ratio"].mean()
-        )
-        mean_no_reheat_ratio = float(
-            self.df.loc[~self.df["reheat_coil_flag"], "V_dot_VAV_ratio"].mean()
-        )
-        self.df["result"] = mean_reheat_ratio <= mean_no_reheat_ratio
+            # Calculate the mean ratios for reheat and no reheat conditions
+            mean_reheat_ratio = float(
+                self.df.loc[self.df["reheat_coil_flag"], "V_dot_VAV_ratio"].mean()
+            )
+            mean_no_reheat_ratio = float(
+                self.df.loc[~self.df["reheat_coil_flag"], "V_dot_VAV_ratio"].mean()
+            )
+            self.df["result"] = mean_reheat_ratio < mean_no_reheat_ratio
 
         self.result = self.df["result"]
 
@@ -65,4 +69,7 @@ class VAVTurndown_Using_Average(RuleCheckBase):
         if len(self.result[self.result == False] > 0):
             return False
         else:
-            return True
+            if len(self.result[self.result == "Untested"] > 0):
+                return
+            else:
+                return True

@@ -9,7 +9,7 @@ from lib_unit_test_runner import *
 
 
 class TestVAVTurndown(unittest.TestCase):
-    def test_vav_turndown_pass(self):
+    def test_vav_turndown_during_reheat_pass(self):
         points = [
             "reheat_coil_flag",
             "V_dot_VAV",
@@ -33,7 +33,7 @@ class TestVAVTurndown(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "VAVTurndown_Using_Average", df
+            "VAVTurndownDuringReheat", df
         )
 
         results = pd.Series(list(verification_obj.result))
@@ -50,7 +50,7 @@ class TestVAVTurndown(unittest.TestCase):
         binary_result = verification_obj.check_bool()
         self.assertTrue(binary_result)
 
-    def test_vav_turndown_fail(self):
+    def test_vav_turndown_during_reheat_fail(self):
         points = [
             "reheat_coil_flag",
             "V_dot_VAV",
@@ -74,7 +74,7 @@ class TestVAVTurndown(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "VAVTurndown_Using_Average", df
+            "VAVTurndownDuringReheat", df
         )
 
         results = pd.Series(list(verification_obj.result))
@@ -90,3 +90,39 @@ class TestVAVTurndown(unittest.TestCase):
 
         binary_result = verification_obj.check_bool()
         self.assertFalse(binary_result)
+
+    def test_vav_turndown_during_reheat_untested(self):
+        points = [
+            "reheat_coil_flag",
+            "V_dot_VAV",
+            "V_dot_VAV_max",
+        ]
+
+        timestamp = [
+            datetime(2024, 8, 1, 12, 0, 0),
+            datetime(2024, 8, 1, 13, 0, 0),
+            datetime(2024, 8, 1, 14, 0, 0),
+            datetime(2024, 8, 1, 15, 0, 0),
+        ]
+
+        data = [
+            [False, 350, 620],
+            [False, 370, 620],
+            [False, 360, 620],
+            [False, 380, 620],
+        ]
+
+        df = pd.DataFrame(data, columns=points, index=timestamp)
+
+        verification_obj = run_test_verification_with_data(
+            "VAVTurndownDuringReheat", df
+        )
+        results = list(verification_obj.result)
+        expected_results = [
+            "Untested",
+            "Untested",
+            "Untested",
+            "Untested",
+        ]
+
+        self.assertEqual(results, expected_results)
