@@ -66,10 +66,9 @@ class VAVTurndownDuringReheat(RuleCheckBase):
         self.result = self.df["result"]
 
     def check_bool(self):
-        if len(self.result[self.result == False] > 0):
+        if len(self.result[self.result == "Untested"] > 0):
+            return "Untested"
+        elif len(self.result[self.result == False] > 0):
             return False
         else:
-            if len(self.result[self.result == "Untested"] > 0):
-                return
-            else:
-                return True
+            return True
