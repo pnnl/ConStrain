@@ -14,14 +14,17 @@ When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should
 
 ### Verification logic
 ```
-V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max
-mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
-mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
-
-if mean_reheat_ratio >= mean_no_reheat_ratio:
-    pass
+if (reheat_coil_flag == False).all():
+    Untested
 else:
-    fail
+    V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max
+    mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
+    mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
+
+    if mean_reheat_ratio < mean_no_reheat_ratio:
+        pass
+    else:
+        fail
 ```
 ### Data requirements
 - reheat_coil_flag: VAV box reheat coil operation status

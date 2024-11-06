@@ -1573,12 +1573,15 @@
     "description_verification_type": "procedure-based",
     "assertions_type": "pass",
     "description_assertions": [
-       "V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max",
-       "mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
-       "mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
-       "if mean_reheat_ratio >= mean_no_reheat_ratio:",
-       "    pass",
+       "if (reheat_coil_flag == False).all():", 
+       "    Untested",
        "else: ",
+       "  V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max",
+       "  mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+       "  mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+       "  if mean_reheat_ratio < mean_no_reheat_ratio:",
+       "    pass",
+       "  else: ",
        "    fail",
        "end"
     ]
