@@ -36,7 +36,7 @@ else
 from constrain.checklib import RuleCheckBase
 
 
-class VAVTurndown(RuleCheckBase):
+class VAVMinimumTurndownDuringReheat(RuleCheckBase):
     points = [
         "reheat_coil_flag",  # boolean
         "V_dot_VAV",  # actual VAV volume flow

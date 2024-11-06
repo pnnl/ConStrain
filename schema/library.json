@@ -1559,7 +1559,7 @@
             "end"
         ]
     },
-    "VAVTurndown": {
+    "VAVMinimumTurndownDuringReheat": {
         "library_item_id": 68,
         "description_brief": "When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio",
         "description_index": [
