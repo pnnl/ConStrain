@@ -30,7 +30,9 @@ class TestVAVTurndown(unittest.TestCase):
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
-        verification_obj = run_test_verification_with_data("VAVMinimumTurndownDuringReheat", df)
+        verification_obj = run_test_verification_with_data(
+            "VAVMinimumTurndownDuringReheat", df
+        )
         results = list(verification_obj.result)
         expected_results = [
             "Untested",
@@ -60,7 +62,9 @@ class TestVAVTurndown(unittest.TestCase):
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
-        verification_obj = run_test_verification_with_data("VAVMinimumTurndownDuringReheat", df)
+        verification_obj = run_test_verification_with_data(
+            "VAVMinimumTurndownDuringReheat", df
+        )
         results = list(verification_obj.result)
         expected_results = [
             "Untested",
@@ -90,7 +94,9 @@ class TestVAVTurndown(unittest.TestCase):
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
-        verification_obj = run_test_verification_with_data("VAVMinimumTurndownDuringReheat", df)
+        verification_obj = run_test_verification_with_data(
+            "VAVMinimumTurndownDuringReheat", df
+        )
 
         results = pd.Series(list(verification_obj.result))
         expected_results = pd.Series(
@@ -125,7 +131,9 @@ class TestVAVTurndown(unittest.TestCase):
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
-        verification_obj = run_test_verification_with_data("VAVMinimumTurndownDuringReheat", df)
+        verification_obj = run_test_verification_with_data(
+            "VAVMinimumTurndownDuringReheat", df
+        )
 
         results = pd.Series(list(verification_obj.result))
         expected_results = pd.Series(
