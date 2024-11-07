@@ -168,7 +168,9 @@ class CheckLibBase(ABC):
 
         # flag
         ax1 = plt.subplot(2, 1, 1)
-        sns.scatterplot(x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1)
+        sns.scatterplot(
+            x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+        )
         plt.xlim([self.df.index[0], self.df.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
@@ -195,7 +197,9 @@ class CheckLibBase(ABC):
 
         # flag
         ax1 = plt.subplot(num_plots, 1, 1)
-        sns.scatterplot(x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1)
+        sns.scatterplot(
+            x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+        )
         plt.xlim([self.df.index[0], self.df.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
