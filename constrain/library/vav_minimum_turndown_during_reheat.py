@@ -50,7 +50,7 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
             if data["V_dot_VAV_max"] == 0:
                 return "Untested"
             elif (
-                data["V_dot_VAV"] / data["V_dot_VAV_max"]
+                float(data["V_dot_VAV"] / data["V_dot_VAV_max"])
                 > data["VAV_min_turndown_design"] + data["turndown_tol"]
             ):
                 return False
@@ -61,9 +61,3 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
 
     def verify(self):
         self.result = self.df.apply(lambda d: self.vav_turndown_check(d), axis=1)
-
-    def check_bool(self):
-        if len(self.result[self.result == False] > 0):
-            return False
-        else:
-            return True
