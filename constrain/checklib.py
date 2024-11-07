@@ -147,7 +147,7 @@ class CheckLibBase(ABC):
 
         plot_option = plot_option.strip().lower()
         plt.subplots()
-        # filter out "Untested" to precent an error when plotting
+        # filter out "Untested" to prevent an error when plotting
         self.result_filtered = self.result[self.result != "Untested"]
         if plot_option == "all-compact":
             self.all_plot_aio(plt_pts, fig_size)
