@@ -147,6 +147,8 @@ class CheckLibBase(ABC):
 
         plot_option = plot_option.strip().lower()
         plt.subplots()
+        # filter out "Untested" to prevent an error when plotting
+        self.result_filtered = self.result[self.result != "Untested"]
         if plot_option == "all-compact":
             self.all_plot_aio(plt_pts, fig_size)
         elif plot_option == "all-expand":
@@ -166,7 +168,9 @@ class CheckLibBase(ABC):
 
         # flag
         ax1 = plt.subplot(2, 1, 1)
-        sns.scatterplot(x=self.result.index, y=self.result, linewidth=0, s=1)
+        sns.scatterplot(
+            x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+        )
         plt.xlim([self.df.index[0], self.df.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
@@ -193,7 +197,9 @@ class CheckLibBase(ABC):
 
         # flag
         ax1 = plt.subplot(num_plots, 1, 1)
-        sns.scatterplot(x=self.result.index, y=self.result, linewidth=0, s=1)
+        sns.scatterplot(
+            x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+        )
         plt.xlim([self.df.index[0], self.df.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
@@ -273,10 +279,11 @@ class CheckLibBase(ABC):
         plt.figure(figsize=fig_size)
 
         plotday, plotdaydf = self.calculate_plot_day()
+        plotday_filtered = plotday[plotday != "Untested"]
 
         # flag
         ax1 = plt.subplot(2, 1, 1)
-        sns.scatterplot(x=plotday.index, y=plotday)
+        sns.scatterplot(x=plotday_filtered.index, y=plotday_filtered)
         plt.xlim([plotday.index[0], plotday.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"Example day Pass / Fail flag - {self.__class__.__name__}")
@@ -302,10 +309,10 @@ class CheckLibBase(ABC):
         plt.figure(figsize=(fig_size[0], fig_size[1] * num_plots))
 
         plotday, plotdaydf = self.calculate_plot_day()
-
+        plotday_filtered = plotday[plotday != "Untested"]
         # flag
         ax1 = plt.subplot(num_plots, 1, 1)
-        sns.scatterplot(x=plotday.index, y=plotday)
+        sns.scatterplot(x=plotday_filtered.index, y=plotday_filtered)
         plt.xlim([plotday.index[0], plotday.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"Example day Pass / Fail flag plot - {self.__class__.__name__}")
@@ -348,6 +355,7 @@ class RuleCheckBase(CheckLibBase):
             "Sample #": len(self.result),
             "Pass #": len(self.result[self.result == True]),
             "Fail #": len(self.result[self.result == False]),
+            "Untested #": len(self.result[self.result == "Untested"]),
             "Verification Passed?": self.check_bool(),
         }
 
