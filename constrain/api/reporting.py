@@ -94,8 +94,8 @@ class Reporting:
         self.md_full_string0 = """
 # Verification Results:
 
-| Case No.               | Data Source                                | Verification Class | Sample # | Pass # | Fail # | Verification Passed? |
-| ---------------------- | ------------------------------------------ | ------------------ | -------- | ------ | ------ | -------------------- |
+| Case No.               | Data Source                                | Verification Class | Sample # | Pass # | Fail # | Untested # |  Verification Passed? |
+| ---------------------- | ------------------------------------------ | ------------------ | -------- | ------ | ------ | ---------- | --------------------- |
 """
 
     def report_multiple_cases(self, item_names: List[str] = []) -> None:
@@ -142,7 +142,7 @@ class Reporting:
         model_file = case_dict["model_file"]
         verification_class = case_dict["verification_class"]
 
-        mdtable_row = f"| [{caseid}](./case-{caseid}.md) | {model_file} | {verification_class} | {outcome['Sample #']} | {outcome['Pass #']} | {outcome['Fail #']} | {outcome['Verification Passed?']} |\n"
+        mdtable_row = f"| [{caseid}](./case-{caseid}.md) | {model_file} | {verification_class} | {outcome['Sample #']} | {outcome['Pass #']} | {outcome['Fail #']} | {outcome['Untested #']} | {outcome['Verification Passed?']} |\n"
         self.md_full_string0 += mdtable_row
 
         md_section = case_dict["md_content"]
