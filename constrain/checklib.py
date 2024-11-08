@@ -213,6 +213,9 @@ class CheckLibBase(ABC):
                 if pt_nan[pt]:
                     self.df[pt].plot(ax=axx, marker=".")
                 else:
+                    # check if values in the series are boolean
+                    if self.df[pt].apply(lambda x: isinstance(x, bool)).all():
+                        self.df[pt] = self.df[pt].astype(int)
                     self.df[pt].plot(ax=axx)
                 plt.title(f"All samples - {pt} - {self.__class__.__name__}")
                 i += 1
@@ -326,6 +329,9 @@ class CheckLibBase(ABC):
                 if pt_nan[pt]:
                     plotdaydf[pt].plot(ax=axx, marker=".")
                 else:
+                    # check if values in the series are boolean
+                    if self.df[pt].apply(lambda x: isinstance(x, bool)).all():
+                        self.df[pt] = self.df[pt].astype(int)
                     plotdaydf[pt].plot(ax=axx)
                 plt.title(f"Example day - {pt} - {self.__class__.__name__}")
                 i += 1
