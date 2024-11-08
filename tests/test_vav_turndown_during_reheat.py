@@ -126,3 +126,4 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         self.assertEqual(results, expected_results)
+        self.assertEqual(verification_obj.check_bool(), "Untested")

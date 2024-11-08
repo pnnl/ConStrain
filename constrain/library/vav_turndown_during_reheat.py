@@ -30,8 +30,6 @@ else:
 - reheat_coil_flag: VAV box reheat coil operation status
 - V_dot_VAV: actual VAV volume flow
 - V_dot_VAV_max: max VAV volume flow
-- VAV_min_turndown_design: design VAV box min turndown ratio
-- turndown_tol: VAV turndown tolerance
 
 """
 
@@ -58,20 +56,12 @@ class VAVTurndownDuringReheat(RuleCheckBase):
             self.df["V_dot_VAV_ratio"] = self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
 
             # Calculate the mean ratios for reheat and no reheat conditions
-            mean_reheat_ratio = float(
-                self.df.loc[self.df["reheat_coil_flag"], "V_dot_VAV_ratio"].mean()
-            )
-            mean_no_reheat_ratio = float(
-                self.df.loc[~self.df["reheat_coil_flag"], "V_dot_VAV_ratio"].mean()
-            )
+            mean_reheat_ratio = self.df.loc[
+                self.df["reheat_coil_flag"], "V_dot_VAV_ratio"
+            ].mean()
+            mean_no_reheat_ratio = self.df.loc[
+                ~self.df["reheat_coil_flag"], "V_dot_VAV_ratio"
+            ].mean()
             self.df["result"] = mean_reheat_ratio < mean_no_reheat_ratio
 
         self.result = self.df["result"]
-
-    def check_bool(self):
-        if len(self.result[self.result == "Untested"] > 0):
-            return "Untested"
-        elif len(self.result[self.result == False] > 0):
-            return False
-        else:
-            return True
