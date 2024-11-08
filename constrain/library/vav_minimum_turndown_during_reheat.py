@@ -61,9 +61,3 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
 
     def verify(self):
         self.result = self.df.apply(lambda d: self.vav_turndown_check(d), axis=1)
-
-    def check_bool(self):
-        if len(self.result[self.result == False] > 0):
-            return False
-        else:
-            return True
