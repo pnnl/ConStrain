@@ -1558,5 +1558,60 @@
             "        pass",
             "end"
         ]
+    },
+    "VAVMinimumTurndownDuringReheat": {
+        "library_item_id": 68,
+        "description_brief": "When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio",
+        "description_index": [
+            "Section 6.5.2.1 ASHRAE 90.1-2016"
+        ],
+        "description_datapoints": {
+            "reheat_coil_flag": "VAV box reheat coil operation status",
+            "V_dot_VAV": "VAV airflow rate",
+            "V_dot_VAV_max": "VAV max airflow rate",
+            "VAV_min_turndown_design": "design VAV box min turndown ratio",
+            "turndown_tol": "VAV turndown tolerance"
+        },
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if reheat_coil_flag:",
+            "  if V_dot_VAV_max == 0",
+            "     Untested",
+            "  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol",
+            "     fail",
+            "  else:",
+            "     pass",
+            "else",
+            "    Untested",
+            "end"
+        ]
+    },
+    "VAVTurndownDuringReheat": {
+        "library_item_id": 69,
+        "description_brief": "When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should be higher than when it isn't in reheat mode",
+        "description_index": [
+            "Section 6.5.2.1 ASHRAE 90.1-2016"
+        ],
+        "description_datapoints": {
+            "reheat_coil_flag": "VAV box reheat coil operation status",
+            "V_dot_VAV": "VAV airflow rate",
+            "V_dot_VAV_max": "VAV max airflow rate"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if (reheat_coil_flag == False).all():",
+            "    Untested",
+            "else: ",
+            "  V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max",
+            "  mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+            "  mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+            "  if mean_reheat_ratio < mean_no_reheat_ratio:",
+            "    pass",
+            "  else: ",
+            "    fail",
+            "end"
+        ]
     }
 }
