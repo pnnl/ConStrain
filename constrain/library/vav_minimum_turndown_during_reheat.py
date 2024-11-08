@@ -50,7 +50,7 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
             if data["V_dot_VAV_max"] == 0:
                 return "Untested"
             elif (
-                float(data["V_dot_VAV"] / data["V_dot_VAV_max"])
+                data["V_dot_VAV"] / data["V_dot_VAV_max"]
                 > data["VAV_min_turndown_design"] + data["turndown_tol"]
             ):
                 return False
