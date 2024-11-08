@@ -40,6 +40,7 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         self.assertEqual(results, expected_results)
+        self.assertEqual(verification_obj.check_bool(), "Untested")
 
     def test_vav_turndown_V_dot_max_zero_untested(self):
         points = [
@@ -72,6 +73,7 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         self.assertEqual(results, expected_results)
+        self.assertEqual(verification_obj.check_bool(), "Untested")
 
     def test_vav_turndown_pass(self):
         points = [
