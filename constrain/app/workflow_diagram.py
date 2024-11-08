@@ -444,7 +444,9 @@ class WorkflowDiagram(QWidget):
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.check_popup_and_add_state)
+                self.popup.save_button.clicked.disconnect(
+                    self.check_popup_and_add_state
+                )
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
@@ -458,7 +460,9 @@ class WorkflowDiagram(QWidget):
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.check_popup_and_add_state)
+                self.popup.save_button.clicked.disconnect(
+                    self.check_popup_and_add_state
+                )
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
