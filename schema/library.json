@@ -1601,7 +1601,7 @@
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if (reheat_coil_flag == False).all():",
+            "if reheat_coil_flag.nunique() == 1:",
             "    Untested",
             "else: ",
             "  V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max",
