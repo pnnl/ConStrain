@@ -55,7 +55,7 @@ class TestDemandControlVentilation(unittest.TestCase):
             "DemandControlVentilation", df
         )
         self.assertTrue(
-            verification_obj.check_bool() is np.nan,
+            verification_obj.check_bool() == "Untested",
             verification_obj.check_detail()["Message"],
         )
 
@@ -81,7 +81,7 @@ class TestDemandControlVentilation(unittest.TestCase):
             "DemandControlVentilation", df
         )
         self.assertTrue(
-            verification_obj.check_bool() is np.nan,
+            verification_obj.check_bool() == "Untested",
             verification_obj.check_detail()["Message"],
         )
 
@@ -107,7 +107,7 @@ class TestDemandControlVentilation(unittest.TestCase):
             "DemandControlVentilation", df
         )
         self.assertTrue(
-            verification_obj.check_bool() is np.nan,
+            verification_obj.check_bool() == "Untested",
             verification_obj.check_detail()["Message"],
         )
 
@@ -133,7 +133,7 @@ class TestDemandControlVentilation(unittest.TestCase):
             "DemandControlVentilation", df
         )
         self.assertTrue(
-            verification_obj.check_bool() is np.nan,
+            verification_obj.check_bool() == "Untested",
             verification_obj.check_detail()["Message"],
         )
 

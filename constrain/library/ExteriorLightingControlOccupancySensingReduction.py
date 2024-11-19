@@ -1,5 +1,5 @@
 """
-ASHRAE 90.1-2022 
+ASHRAE 90.1-2022
 ### Description
 
 Section 9.4.1.4.e Occupancy-sensing light reduction control
@@ -59,7 +59,7 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
             else:
                 check = False
         else:
-            check = np.nan  # untested
+            check = "Untested"
 
         if data["o"] >= data["tol_o"]:
             self.last_reported_occupancy = data.name

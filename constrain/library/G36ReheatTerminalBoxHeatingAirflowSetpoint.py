@@ -98,7 +98,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
         dat_spt,
     ):
         if zone_state.lower().strip() != "heating":
-            return np.nan
+            return "Untested"
 
         match operation_mode.strip().lower():
             case "occupied":
@@ -115,7 +115,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
                 heating_min = v_cool_max
             case _:
                 print("invalid operation mode value")
-                return np.nan
+                return "Untested"
 
         if 0 < heating_loop_output <= 50:
             if (
@@ -130,7 +130,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
             if dat > room_temp + 3 and heating_min <= v_spt <= heating_max:
                 return True
             else:
-                return np.nan
+                return "Untested"
 
     def verify(self):
         self.result = self.df.apply(

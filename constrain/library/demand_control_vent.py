@@ -20,14 +20,14 @@ class DemandControlVentilation(CheckLibBase):
         ]  # filter out data when economizer isn't enabled
 
         if len(df_filtered) == 0:
-            self.bool_result = np.nan
+            self.bool_result = "Untested"
             self.msg = (
                 "There is no samples with economizer off and AHU on, result: untested"
             )
         else:
             corr, p_value = pearsonr(df_filtered["no_of_occ"], df_filtered["v_oa"])
             if p_value > 0.05:
-                self.bool_result = np.nan
+                self.bool_result = "Untested"
                 self.msg = "correlation p value too large, result: untested"
             else:
                 if corr >= 0.3:

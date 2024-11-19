@@ -28,7 +28,7 @@ class TestG36ReheatTerminalBoxHeatingCoilLowerBound(unittest.TestCase):
         ]
 
         expected_results = pd.Series(
-            [True, True, False, True, np.nan, np.nan, np.nan, np.nan]
+            [True, True, False, True, "Untested", "Untested", "Untested", "Untested"]
         )
 
         df = pd.DataFrame(data, columns=points)

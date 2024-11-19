@@ -50,7 +50,7 @@ class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
 
     def setpoint_in_range(self, operation_mode, zone_state, v_cool_max, v_min, v_spt):
         if zone_state.lower().strip() != "cooling":
-            return np.nan
+            return "Untested"
         match operation_mode.strip().lower():
             case "occupied":
                 cooling_maximum = v_cool_max
@@ -63,7 +63,7 @@ class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
                 cooling_minimum = 0
             case _:
                 print("invalid operation mode value")
-                return np.nan
+                return "Untested"
 
         if cooling_minimum <= v_spt <= cooling_maximum:
             return True

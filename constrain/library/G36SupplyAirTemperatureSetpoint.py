@@ -71,7 +71,7 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
                     data["t_max"] - data["min_clg_sa_t_sp"]
                 ) / (data["oa_t_min"] - data["oa_t_max"]) + data["t_max"]
         if sa_t_sp == -999:
-            return np.nan
+            return "Untested"
         if abs(sa_t_sp - data["sa_t_sp_ac"]) < data["sa_sp_tol"]:
             return True
         else:

@@ -42,12 +42,12 @@ class TestG36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
 
         expected_results = pd.Series(
             [
-                np.nan,
-                np.nan,
+                "Untested",
+                "Untested",
                 False,
                 False,
                 False,
-                np.nan,
+                "Untested",
                 False,
                 True,
                 False,

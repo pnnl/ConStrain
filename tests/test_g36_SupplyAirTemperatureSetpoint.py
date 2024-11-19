@@ -69,7 +69,7 @@ class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
                 False,
                 True,
                 False,
-                np.nan,
+                "Untested",
             ]
         )
         self.assertTrue(results.equals(expected_results))
