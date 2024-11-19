@@ -15,6 +15,7 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import seaborn as sns
 import glob, json, os
+import plotly.express as px
 
 # plt.style.use("ggplot")
 import pandas as pd
@@ -167,33 +168,38 @@ class CheckLibBase(ABC):
         plt.close("all")
         return
 
+    # def all_plot_aio(self, plt_pts, fig_size):
+    #     """All in one plot of all samples"""
+    #     plt.figure(figsize=fig_size)
+    #
+    #     # flag
+    #     ax1 = plt.subplot(2, 1, 1)
+    #     sns.scatterplot(
+    #         x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+    #     )
+    #     plt.xlim([self.df.index[0], self.df.index[-1]])
+    #     plt.ylim([-0.2, 1.2])
+    #     plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
+    #
+    #     # datapoints
+    #     ax2 = plt.subplot(2, 1, 2)
+    #     self.df[plt_pts].plot(ax=ax2)
+    #     pt_nan = self.df.isnull().any().to_dict()
+    #     for i, line in enumerate(ax2.get_lines()):
+    #         line_label = line.get_label()
+    #         if pt_nan[line_label]:
+    #             line.set_marker(".")
+    #     ax2.ticklabel_format(useOffset=False, axis="y")
+    #
+    #     plt.title(f"All samples data points plot - {self.__class__.__name__}")
+    #     plt.tight_layout()
+    #     plt.savefig(f"{self.results_folder}/All_plot_aio.png")
+    #     print()
+
     def all_plot_aio(self, plt_pts, fig_size):
-        """All in one plot of all samples"""
-        plt.figure(figsize=fig_size)
-
-        # flag
-        ax1 = plt.subplot(2, 1, 1)
-        sns.scatterplot(
-            x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
-        )
-        plt.xlim([self.df.index[0], self.df.index[-1]])
-        plt.ylim([-0.2, 1.2])
-        plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
-
-        # datapoints
-        ax2 = plt.subplot(2, 1, 2)
-        self.df[plt_pts].plot(ax=ax2)
-        pt_nan = self.df.isnull().any().to_dict()
-        for i, line in enumerate(ax2.get_lines()):
-            line_label = line.get_label()
-            if pt_nan[line_label]:
-                line.set_marker(".")
-        ax2.ticklabel_format(useOffset=False, axis="y")
-
-        plt.title(f"All samples data points plot - {self.__class__.__name__}")
-        plt.tight_layout()
-        plt.savefig(f"{self.results_folder}/All_plot_aio.png")
-        print()
+        """Plotly interactive plots all in one plot"""
+        fig = px.line(self.df[plt_pts].astype(float))
+        fig.write_html(f"{self.results_folder}/plotly_aio.html")
 
     def all_plot_obo(self, plt_pts, fig_size):
         """One by one plot of all samples"""
