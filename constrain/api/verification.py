@@ -80,10 +80,14 @@ class Verification:
             logging.error("The specificed output directory does not exist.")
             return None
 
-        if time_series_csv_export_name is not None:
+        if time_series_csv_export_name is None:
+            self.time_series_csv_export_name = time_series_csv_export_name
+        else:
             if not isinstance(time_series_csv_export_name, str):
                 logging.error("time_series_csv_export_name should be a string.")
                 return None
+            if time_series_csv_export_name[-4:] == ".csv":
+                self.time_series_csv_export_name = time_series_csv_export_name[:-4]
 
         # TODO: lib_items_path now only needed when user provides their own lib items, and the default lib items from
         #  ConStrain will be loaded without user inputs. This is no longer an error to be logged.
@@ -145,11 +149,6 @@ class Verification:
             return None
 
         self.output_path = output_path
-
-        self.time_series_csv_export_name = time_series_csv_export_name
-        if time_series_csv_export_name[-4:] == ".csv":
-            self.time_series_csv_export_name = time_series_csv_export_name[:-4]
-
         self.lib_items_path = lib_items_path
         self.lib_classes_py_file = lib_classes_py_file
         self.plot_option = plot_option
