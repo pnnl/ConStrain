@@ -137,6 +137,10 @@ class CheckLibBase(ABC):
             "verification_class": item_dict["verification_class"],
         }
 
+    def save_data(self, csv_path):
+        self.df.to_csv(csv_path)
+        return
+
     def plot(self, plot_option, plt_pts=None, fig_size=(6.4, 4.8)):
         """default plot function for showing result"""
         if plt_pts is None:
