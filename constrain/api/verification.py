@@ -60,7 +60,7 @@ class Verification:
 
         Args:
             output_path (str): Verification results output path.
-            time_series_archive_name (str, optional): CSV file name for saving a complete data csv file with verification result flags. Defaults to None, which will not save any time series data archives.
+            time_series_csv_export_name (str, optional): CSV file name for saving a complete data csv file with verification result flags. Defaults to None, which will not save any time series data archives.
             lib_items_path (str, optional): User provided verification item json path (include name of the file with extension).
             lib_classes_py_file (str, optional): User provided verification item python classes file.
             plot_option (str, optional): Type of plots to include. It should either be all-compact, all-expand, day-compact, or day-expand. It can also be None, which will plot all types. Default to None.

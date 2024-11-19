@@ -45,6 +45,7 @@ class CheckLibBase(ABC):
         self.results_folder = results_folder
         self.verify()
         self.result.name = ""
+        self.df["Verification Result"] = self.result
 
     @property
     def points_list(self) -> List[str]:
