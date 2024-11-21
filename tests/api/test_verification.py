@@ -398,6 +398,20 @@ class TestVerification(unittest.TestCase):
         os.remove("./tests/api/1_md.json")
         os.remove("./tests/api/2_md.json")
 
+    def test_data_export(self):
+        vc = VerificationCase(cases=self.cases)
+        v_obj = Verification(verifications=vc)
+        v_obj.configure(
+            output_path="./tests/api",
+            time_series_csv_export_name="test_df_dump.csv",
+            lib_items_path="./schema/library.json",
+            plot_option=None,
+            fig_size=(6, 5),
+            num_threads=2,
+        )
+        v_obj.run()
+        assert os.path.isfile("./tests/api/test_df_dump.csv")
+
 
 if __name__ == "__main__":
     unittest.main()

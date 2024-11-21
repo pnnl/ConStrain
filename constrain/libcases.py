@@ -14,6 +14,7 @@ def run_libcase(
     user_lib_file=None,
     plot_option="all-compact",
     output_path="./",
+    time_series_file_name=None,
     fig_size=(6.4, 4.8),
     produce_outputs=False,
     preprocessed_data=None,
@@ -121,7 +122,14 @@ def run_libcase(
             )
     else:
         cls = globals()[verification_class]
-        verification_obj = cls(df, parameters, f"{run_path}")
+        verification_obj = cls(
+            df, parameters, f"{run_path}"
+        )  # verification is executed by CheckLibBase constructor
+
+    if time_series_file_name is not None:
+        csv_path = f"{output_path}/{time_series_file_name}.csv"
+        verification_obj.save_data(csv_path)
+
     if produce_outputs:
         md_content = verification_obj.add_md(
             None, output_path, "./", item_dict, plot_option, fig_size
