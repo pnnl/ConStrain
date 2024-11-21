@@ -10,7 +10,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 # %% import packages
 import datetime
 from datetime import timedelta, date
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Tuple
 from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -196,9 +196,84 @@ class CheckLibBase(ABC):
     #     plt.savefig(f"{self.results_folder}/All_plot_aio.png")
     #     print()
 
+    def get_rec_tuples(self, label) -> List:
+        """
+
+        Args:
+            label:
+
+        Returns: List
+            A list of tuples, with each tuple marking the start and finishing index (timestamp) of a segment of consecutive data samples with the same label in verification result.
+
+        """
+        if label not in [True, False, "Untested"]:
+            raise ValueError("Invalid label!")
+
+        range_list = []
+        in_range = False
+        prev_i = None
+        start_time = None
+
+        for i, v in self.result.items():
+            if prev_i is None:  # the first row
+                if v == label:
+                    in_range = True
+                    start_time = i
+                prev_i = i
+                continue
+
+            if in_range:
+                # previous row is in range
+                if v == label:
+                    # current row is also in range
+                    if i == self.result.index[-1]:  # if last row, then we stop here
+                        range_list.append((start_time, i))  # new ending at the end
+                        break
+                    else:
+                        prev_i = i
+                        continue
+                else:
+                    # current row is not in range
+                    range_list.append((start_time, prev_i))  # new ending
+                    in_range = False
+                    start_time = None
+
+                    prev_i = i
+                    continue
+            else:
+                # previous row not in range
+                if v == label:
+                    # current row in range
+                    if i == self.result.index[-1]:  # if last row, then we stop here
+                        range_list.append((i, i))  # dedicated end point segment
+                        break
+                    else:
+                        # a new start point
+                        in_range = True
+                        start_time = i
+
+                        prev_i = i
+                        continue
+                else:
+                    # current row is also not in range
+                    prev_i = i
+                    continue
+
+        return range_list
+
     def all_plot_aio(self, plt_pts, fig_size):
         """Plotly interactive plots all in one plot"""
-        fig = px.line(self.df[plt_pts].astype(float))
+        df_num = self.df[plt_pts].astype(float)
+        fig = px.line(df_num)
+
+        # add verification results background rectangles
+        for t in self.get_rec_tuples(True):
+            fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="green")
+        for t in self.get_rec_tuples(False):
+            fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="red")
+        for t in self.get_rec_tuples("Untested"):
+            fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="blue")
+
         fig.write_html(f"{self.results_folder}/plotly_aio.html")
 
     def all_plot_obo(self, plt_pts, fig_size):
