@@ -18,6 +18,7 @@ import glob, json, os
 import plotly.express as px
 
 # plt.style.use("ggplot")
+import numpy as np
 import pandas as pd
 from pandas.plotting import register_matplotlib_converters
 
@@ -278,7 +279,8 @@ class CheckLibBase(ABC):
 
     def all_plot_aio(self, plt_pts, fig_size):
         """Plotly interactive plots all in one plot"""
-        df_num = self.df[plt_pts].astype(float)
+        df_sub = self.df[plt_pts].replace("Untested", np.nan)
+        df_num = df_sub.astype(float)
         fig = px.line(df_num)
 
         # add verification results background rectangles
