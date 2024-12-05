@@ -11,6 +11,7 @@ from .hot_water_reset import *
 from .vav_static_pressure_sensor_location import *
 from .vav_minimum_turndown_during_reheat import *
 from .vav_turndown_during_reheat import *
+from .vav_minimum_turndown_during_reheat_pressure_reset import *
 from .ventilation_fan_controls import *
 from .wlhp_loop_heat_rejection_controls import *
 from .supply_air_temp_reset import *
@@ -71,6 +72,7 @@ __all__ = [
     "VAVStaticPressureSensorLocation",
     "VAVMinimumTurndownDuringReheat",
     "VAVTurndownDuringReheat",
+    "VAVMinimumTurndownDuringReheatPressureReset",
     "VentilationFanControl",
     "WLHPLoopHeatRejectionControl",
     "SupplyAirTempReset",
