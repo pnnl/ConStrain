@@ -39,5 +39,6 @@ setup(
         "PyYAML",
         "pre-commit",
         "jsonschema",
+        "plotly",
     ],
 )
