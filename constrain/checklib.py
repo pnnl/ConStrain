@@ -277,19 +277,37 @@ class CheckLibBase(ABC):
 
         return range_list
 
-    def all_plot_aio(self, plt_pts, fig_size):
+    def all_plot_aio(self, plt_pts, fig_size, result_shading=True, max_num_shades=5):
         """Plotly interactive plots all in one plot"""
         df_sub = self.df[plt_pts].replace("Untested", np.nan)
         df_num = df_sub.astype(float)
         fig = px.line(df_num)
 
-        # add verification results background rectangles
-        for t in self.get_rec_tuples(True):
-            fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="green")
-        for t in self.get_rec_tuples(False):
-            fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="red")
-        for t in self.get_rec_tuples("Untested"):
-            fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="blue")
+        if result_shading:
+            # add verification results background rectangles
+            pass_tuples = self.get_rec_tuples(True)
+            i = 0
+            for t in pass_tuples:
+                i += 1
+                fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="green")
+                if i >= max_num_shades:
+                    break
+
+            false_tuple = self.get_rec_tuples(False)
+            i = 0
+            for t in false_tuple:
+                i += 1
+                fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="red")
+                if i >= max_num_shades:
+                    break
+
+            untested_tuple = self.get_rec_tuples("Untested")
+            i = 0
+            for t in untested_tuple:
+                i += 1
+                fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="blue")
+                if i >= max_num_shades:
+                    break
 
         fig.write_html(
             f"{self.results_folder}/plotly_aio.html",
