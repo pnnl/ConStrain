@@ -132,7 +132,7 @@ def run_libcase(
 
     if produce_outputs:
         md_content = verification_obj.add_md(
-            None, output_path, "./", item_dict, plot_option, fig_size
+            None, output_path, ".", item_dict, plot_option, fig_size
         )
         return {int(item_dict["no"]): md_content}
     else:

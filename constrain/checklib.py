@@ -98,6 +98,7 @@ class CheckLibBase(ABC):
         else:
             self.plot(plot_option=plot_option, fig_size=fig_size)
         image_list = glob.glob(f"{img_folder}/*.png")
+        image_list = [x.replace("\\", "/") for x in image_list]
         image_md_path_list = [
             x.replace(img_folder, relative_path_to_img_in_md) for x in image_list
         ]
@@ -109,6 +110,19 @@ class CheckLibBase(ABC):
 ![{img_def_path}]({img_rel_path})
 """
 
+        html_list = glob.glob(f"{img_folder}/*.html")
+        html_list = [x.replace("\\", "/") for x in html_list]
+        html_md_path_list = [
+            x.replace(img_folder, relative_path_to_img_in_md) for x in html_list
+        ]
+        html_md = ""
+        for i in range(len(html_list)):
+            html_def_path = html_list[i]
+            html_rel_path = html_md_path_list[i]
+            html_md += f"""
+[Click here for an interactive plot at {html_def_path}]({html_rel_path})
+"""
+
         md_content = f"""
 ## Results for Verification Case ID {item_dict['no']}
 
@@ -116,6 +130,7 @@ class CheckLibBase(ABC):
 {str(outcome_dict)}
 
 ### Result visualization
+{html_md}
 {img_md}
 
 ### Verification case definition
@@ -274,7 +289,11 @@ class CheckLibBase(ABC):
         for t in self.get_rec_tuples("Untested"):
             fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="blue")
 
-        fig.write_html(f"{self.results_folder}/plotly_aio.html")
+        fig.write_html(
+            f"{self.results_folder}/plotly_aio.html",
+            full_html=False,
+            include_plotlyjs="cdn",
+        )
 
     def all_plot_obo(self, plt_pts, fig_size):
         """One by one plot of all samples"""
