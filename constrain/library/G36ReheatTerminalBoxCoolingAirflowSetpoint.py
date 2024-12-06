@@ -74,7 +74,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
         dat_min_spt,
     ):
         if zone_state.lower().strip() != "cooling":
-            return np.nan
+            return "Untested"
         if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol:
             return False
         match operation_mode.strip().lower():
@@ -89,7 +89,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
                 cooling_minimum = 0
             case _:
                 print("invalid operation mode value")
-                return np.nan
+                return "Untested"
 
         if cooling_minimum <= v_spt <= cooling_maximum:
             return True

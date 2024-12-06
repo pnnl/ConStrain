@@ -87,9 +87,9 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                 else:
                     return False
             else:
-                return np.nan
+                return "Untested"
         else:
-            return np.nan
+            return "Untested"
 
     def add_timers(self):
         low_timer_list = []

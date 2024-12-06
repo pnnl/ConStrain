@@ -45,7 +45,7 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
 
     def setpoint_at_minimum(self, operation_mode, zone_state, v_min, v_spt, v_spt_tol):
         if zone_state.lower().strip() != "deadband":
-            return np.nan
+            return "Untested"
         match operation_mode.strip().lower():
             case "occupied":
                 dbmin = v_min
@@ -53,7 +53,7 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 dbmin = 0
             case _:
                 print("invalid operation mode value")
-                return np.nan
+                return "Untested"
 
         if abs(v_spt - dbmin) <= v_spt_tol:
             return True

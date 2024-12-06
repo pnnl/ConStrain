@@ -34,7 +34,9 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
             [99.5, 1000, 1100, 50],
         ]
 
-        expected_results = pd.Series([True, True, True, np.nan, np.nan, False, True])
+        expected_results = pd.Series(
+            [True, True, True, "Untested", "Untested", False, True]
+        )
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
@@ -72,7 +74,9 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
             [0, 1300, 1100, 50],
         ]
 
-        expected_results = pd.Series([True, True, np.nan, np.nan, np.nan, False, True])
+        expected_results = pd.Series(
+            [True, True, "Untested", "Untested", "Untested", False, True]
+        )
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 

@@ -62,7 +62,7 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
         self.result = pd.Series(index=self.df.index)
         for cur_time, cur in self.df.iterrows():
             if cur["operation_mode"].strip().lower() != "heating":
-                result_flag = np.nan
+                result_flag = "Untested"
                 err_start_time = None
                 err_time = 0
             else:
@@ -80,7 +80,7 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
                 if err_time == 0:
                     result_flag = True
                 elif err_time <= 1:
-                    result_flag = np.nan
+                    result_flag = "Untested"
                 elif err_time > 1:
                     if (
                         cur["dat"] - cur["dat_spt"] >= cur["dat_tracking_tol"]

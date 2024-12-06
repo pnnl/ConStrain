@@ -49,7 +49,7 @@ class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
             [0.05, 300, 0.1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, np.nan, True])
+        expected_results = pd.Series(["Untested", "Untested", True])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlOccupancySensingReduction", df
         )
@@ -75,7 +75,7 @@ class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
             [0.05, 701, 0.1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, np.nan, False])
+        expected_results = pd.Series(["Untested", "Untested", False])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlOccupancySensingReduction", df
         )

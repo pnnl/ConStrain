@@ -60,7 +60,7 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
         self, operation_mode, zone_state, v_cool_max, v_heat_max, v_min, v_spt
     ):
         if zone_state.lower().strip() != "heating":
-            return np.nan
+            return "Untested"
         match operation_mode.strip().lower():
             case "occupied":
                 heating_max = v_heat_max
@@ -73,7 +73,7 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
                 heating_min = 0
             case _:
                 print("invalid operation mode value")
-                return np.nan
+                return "Untested"
 
         if heating_min <= v_spt <= heating_max:
             return True
