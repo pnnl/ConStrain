@@ -285,27 +285,26 @@ class CheckLibBase(ABC):
         plotday_filtered = plotday[plotday != "Untested"]
 
         # flag
-        if plotday_filtered.size != 0:
-            ax1 = plt.subplot(2, 1, 1)
-            sns.scatterplot(x=plotday_filtered.index, y=plotday_filtered)
-            plt.xlim([plotday.index[0], plotday.index[-1]])
-            plt.ylim([-0.2, 1.2])
-            plt.title(f"Example day Pass / Fail flag - {self.__class__.__name__}")
+        ax1 = plt.subplot(2, 1, 1)
+        sns.scatterplot(x=plotday_filtered.index, y=plotday_filtered)
+        plt.xlim([plotday.index[0], plotday.index[-1]])
+        plt.ylim([-0.2, 1.2])
+        plt.title(f"Example day Pass / Fail flag - {self.__class__.__name__}")
 
-            # datapoints
-            ax2 = plt.subplot(2, 1, 2)
-            plotdaydf[plt_pts].plot(ax=ax2)
-            pt_nan = plotdaydf.isnull().any().to_dict()
-            for i, line in enumerate(ax2.get_lines()):
-                line_label = line.get_label()
-                if pt_nan[line_label]:
-                    line.set_marker(".")
-            ax2.ticklabel_format(useOffset=False, axis="y")
+        # datapoints
+        ax2 = plt.subplot(2, 1, 2)
+        plotdaydf[plt_pts].plot(ax=ax2)
+        pt_nan = plotdaydf.isnull().any().to_dict()
+        for i, line in enumerate(ax2.get_lines()):
+            line_label = line.get_label()
+            if pt_nan[line_label]:
+                line.set_marker(".")
+        ax2.ticklabel_format(useOffset=False, axis="y")
 
-            plt.title(f"Example day data points plot - {self.__class__.__name__}")
-            plt.tight_layout()
-            plt.savefig(f"{self.results_folder}/Day_plot_aio.png")
-            print()
+        plt.title(f"Example day data points plot - {self.__class__.__name__}")
+        plt.tight_layout()
+        plt.savefig(f"{self.results_folder}/Day_plot_aio.png")
+        print()
 
     def day_plot_obo(self, plt_pts, fig_size):
         """One by one plot of all samples"""
@@ -315,34 +314,33 @@ class CheckLibBase(ABC):
         plotday, plotdaydf = self.calculate_plot_day()
         plotday_filtered = plotday[plotday != "Untested"]
         # flag
-        if plotday_filtered.size != 0:
-            ax1 = plt.subplot(num_plots, 1, 1)
-            sns.scatterplot(x=plotday_filtered.index, y=plotday_filtered)
-            plt.xlim([plotday.index[0], plotday.index[-1]])
-            plt.ylim([-0.2, 1.2])
-            plt.title(f"Example day Pass / Fail flag plot - {self.__class__.__name__}")
+        ax1 = plt.subplot(num_plots, 1, 1)
+        sns.scatterplot(x=plotday_filtered.index, y=plotday_filtered)
+        plt.xlim([plotday.index[0], plotday.index[-1]])
+        plt.ylim([-0.2, 1.2])
+        plt.title(f"Example day Pass / Fail flag plot - {self.__class__.__name__}")
 
-            # datapoints
-            pt_nan = plotdaydf.isnull().any().to_dict()
-            i = 2
-            for pt in plt_pts:
-                try:
-                    axx = plt.subplot(num_plots, 1, i)
-                    if pt_nan[pt]:
-                        plotdaydf[pt].plot(ax=axx, marker=".")
-                    else:
-                        # check if values in the series are boolean
-                        if self.df[pt].apply(lambda x: isinstance(x, bool)).all():
-                            self.df[pt] = self.df[pt].astype(int)
-                        plotdaydf[pt].plot(ax=axx)
-                    plt.title(f"Example day - {pt} - {self.__class__.__name__}")
-                    i += 1
-                    axx.ticklabel_format(useOffset=False, axis="y")
-                except:
-                    print(f"{pt} cannot be plotted by itself, ignored in the plot.")
-            plt.tight_layout()
-            plt.savefig(f"{self.results_folder}/Day_plot_obo.png")
-            print()
+        # datapoints
+        pt_nan = plotdaydf.isnull().any().to_dict()
+        i = 2
+        for pt in plt_pts:
+            try:
+                axx = plt.subplot(num_plots, 1, i)
+                if pt_nan[pt]:
+                    plotdaydf[pt].plot(ax=axx, marker=".")
+                else:
+                    # check if values in the series are boolean
+                    if self.df[pt].apply(lambda x: isinstance(x, bool)).all():
+                        self.df[pt] = self.df[pt].astype(int)
+                    plotdaydf[pt].plot(ax=axx)
+                plt.title(f"Example day - {pt} - {self.__class__.__name__}")
+                i += 1
+                axx.ticklabel_format(useOffset=False, axis="y")
+            except:
+                print(f"{pt} cannot be plotted by itself, ignored in the plot.")
+        plt.tight_layout()
+        plt.savefig(f"{self.results_folder}/Day_plot_obo.png")
+        print()
 
     def daterange(self, start_date, end_date):
         for n in range(int((end_date - start_date).days)):
