@@ -10,7 +10,7 @@ The set point is reset lower until one zone damper is nearly wide open
 - Code Subsection: 6.5.3.2.3 VAV Set-Point Reset
 
 ### Verification Approach
-We aim to verify whether the static pressure setpoint is reset until one of the VAV boxes is nearly wide open.
+- We aim to verify whether the static pressure setpoint is reset until one of the VAV boxes is nearly wide open.
 
 ### Verification logic
 ```
@@ -25,7 +25,6 @@ for row_num, (index, row) in df.iterrows:
     else:
         Untested
     prev_index = index
-
 ```
 
 ### Data requirements
@@ -33,6 +32,7 @@ for row_num, (index, row) in df.iterrows:
 - d_VAV_x: VAV Damper x Position (includes all VAV dampers served by the system under test
 
 """
+
 from constrain.checklib import RuleCheckBase
 
 
