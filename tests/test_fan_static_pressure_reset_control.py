@@ -97,7 +97,6 @@ class TestFanStaticPressureResetControl(unittest.TestCase):
         binary_result = verification_obj.check_bool()
         self.assertFalse(binary_result)
 
-
     def test_fan_static_pressure_reset_control_untested(self):
         points = [
             "p_set",
