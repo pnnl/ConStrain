@@ -29,8 +29,8 @@ for row_num, (index, row) in df.iterrows:
 ```
 
 ### Data requirements
-- p_set: "Static pressure setpoint",
-- d_VAV_x: "VAV Damper x Position (includes all VAV dampers served by the system under test"
+- p_set: Static pressure setpoint,
+- d_VAV_x: VAV Damper x Position (includes all VAV dampers served by the system under test
 
 """
 from constrain.checklib import RuleCheckBase
