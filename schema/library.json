@@ -327,9 +327,7 @@
         ],
         "description_datapoints": {
             "p_set": "Static pressure setpoint",
-            "d_VAV_x": "VAV Damper x Position (includes all VAV dampers served by the system under test",
-            "tol": "Tolerance for VAV box damper position openings",
-            "p_set_min": ": Minimum static pressure setpoint threshold"
+            "d_VAV_x": "VAV Damper x Position (includes all VAV dampers served by the system under test"
         },
         "description_assertions": [
             "if d_VAV(n) (n=1,2,...,N) < 0.9 and p_set(t) > p_set(t-1), then fail else pass"
