@@ -10,13 +10,15 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 # %% import packages
 import datetime
 from datetime import timedelta, date
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Tuple
 from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import seaborn as sns
 import glob, json, os
+import plotly.express as px
 
 # plt.style.use("ggplot")
+import numpy as np
 import pandas as pd
 from pandas.plotting import register_matplotlib_converters
 
@@ -97,6 +99,7 @@ class CheckLibBase(ABC):
         else:
             self.plot(plot_option=plot_option, fig_size=fig_size)
         image_list = glob.glob(f"{img_folder}/*.png")
+        image_list = [x.replace("\\", "/") for x in image_list]
         image_md_path_list = [
             x.replace(img_folder, relative_path_to_img_in_md) for x in image_list
         ]
@@ -108,6 +111,19 @@ class CheckLibBase(ABC):
 ![{img_def_path}]({img_rel_path})
 """
 
+        html_list = glob.glob(f"{img_folder}/*.html")
+        html_list = [x.replace("\\", "/") for x in html_list]
+        html_md_path_list = [
+            x.replace(img_folder, relative_path_to_img_in_md) for x in html_list
+        ]
+        html_md = ""
+        for i in range(len(html_list)):
+            html_def_path = html_list[i]
+            html_rel_path = html_md_path_list[i]
+            html_md += f"""
+[Click here for an interactive plot at {html_def_path}]({html_rel_path})
+"""
+
         md_content = f"""
 ## Results for Verification Case ID {item_dict['no']}
 
@@ -115,6 +131,7 @@ class CheckLibBase(ABC):
 {str(outcome_dict)}
 
 ### Result visualization
+{html_md}
 {img_md}
 
 ### Verification case definition
@@ -167,33 +184,136 @@ class CheckLibBase(ABC):
         plt.close("all")
         return
 
-    def all_plot_aio(self, plt_pts, fig_size):
-        """All in one plot of all samples"""
-        plt.figure(figsize=fig_size)
+    # def all_plot_aio(self, plt_pts, fig_size):
+    #     """All in one plot of all samples"""
+    #     plt.figure(figsize=fig_size)
+    #
+    #     # flag
+    #     ax1 = plt.subplot(2, 1, 1)
+    #     sns.scatterplot(
+    #         x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+    #     )
+    #     plt.xlim([self.df.index[0], self.df.index[-1]])
+    #     plt.ylim([-0.2, 1.2])
+    #     plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
+    #
+    #     # datapoints
+    #     ax2 = plt.subplot(2, 1, 2)
+    #     self.df[plt_pts].plot(ax=ax2)
+    #     pt_nan = self.df.isnull().any().to_dict()
+    #     for i, line in enumerate(ax2.get_lines()):
+    #         line_label = line.get_label()
+    #         if pt_nan[line_label]:
+    #             line.set_marker(".")
+    #     ax2.ticklabel_format(useOffset=False, axis="y")
+    #
+    #     plt.title(f"All samples data points plot - {self.__class__.__name__}")
+    #     plt.tight_layout()
+    #     plt.savefig(f"{self.results_folder}/All_plot_aio.png")
+    #     print()
 
-        # flag
-        ax1 = plt.subplot(2, 1, 1)
-        sns.scatterplot(
-            x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+    def get_rec_tuples(self, label) -> List:
+        """
+
+        Args:
+            label:
+
+        Returns: List
+            A list of tuples, with each tuple marking the start and finishing index (timestamp) of a segment of consecutive data samples with the same label in verification result.
+
+        """
+        if label not in [True, False, "Untested"]:
+            raise ValueError("Invalid label!")
+
+        range_list = []
+        in_range = False
+        prev_i = None
+        start_time = None
+
+        for i, v in self.result.items():
+            if prev_i is None:  # the first row
+                if v == label:
+                    in_range = True
+                    start_time = i
+                prev_i = i
+                continue
+
+            if in_range:
+                # previous row is in range
+                if v == label:
+                    # current row is also in range
+                    if i == self.result.index[-1]:  # if last row, then we stop here
+                        range_list.append((start_time, i))  # new ending at the end
+                        break
+                    else:
+                        prev_i = i
+                        continue
+                else:
+                    # current row is not in range
+                    range_list.append((start_time, prev_i))  # new ending
+                    in_range = False
+                    start_time = None
+
+                    prev_i = i
+                    continue
+            else:
+                # previous row not in range
+                if v == label:
+                    # current row in range
+                    if i == self.result.index[-1]:  # if last row, then we stop here
+                        range_list.append((i, i))  # dedicated end point segment
+                        break
+                    else:
+                        # a new start point
+                        in_range = True
+                        start_time = i
+
+                        prev_i = i
+                        continue
+                else:
+                    # current row is also not in range
+                    prev_i = i
+                    continue
+
+        return range_list
+
+    def all_plot_aio(self, plt_pts, fig_size, result_shading=True, max_num_shades=5):
+        """Plotly interactive plots all in one plot"""
+        df_sub = self.df[plt_pts].replace("Untested", np.nan)
+        df_num = df_sub.astype(float)
+        fig = px.line(df_num)
+
+        if result_shading:
+            # add verification results background rectangles
+            pass_tuples = self.get_rec_tuples(True)
+            i = 0
+            for t in pass_tuples:
+                i += 1
+                fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="green")
+                if i >= max_num_shades:
+                    break
+
+            false_tuple = self.get_rec_tuples(False)
+            i = 0
+            for t in false_tuple:
+                i += 1
+                fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="red")
+                if i >= max_num_shades:
+                    break
+
+            untested_tuple = self.get_rec_tuples("Untested")
+            i = 0
+            for t in untested_tuple:
+                i += 1
+                fig.add_vrect(x0=t[0], x1=t[1], opacity=0.2, fillcolor="blue")
+                if i >= max_num_shades:
+                    break
+
+        fig.write_html(
+            f"{self.results_folder}/plotly_aio.html",
+            full_html=False,
+            include_plotlyjs="cdn",
         )
-        plt.xlim([self.df.index[0], self.df.index[-1]])
-        plt.ylim([-0.2, 1.2])
-        plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
-
-        # datapoints
-        ax2 = plt.subplot(2, 1, 2)
-        self.df[plt_pts].plot(ax=ax2)
-        pt_nan = self.df.isnull().any().to_dict()
-        for i, line in enumerate(ax2.get_lines()):
-            line_label = line.get_label()
-            if pt_nan[line_label]:
-                line.set_marker(".")
-        ax2.ticklabel_format(useOffset=False, axis="y")
-
-        plt.title(f"All samples data points plot - {self.__class__.__name__}")
-        plt.tight_layout()
-        plt.savefig(f"{self.results_folder}/All_plot_aio.png")
-        print()
 
     def all_plot_obo(self, plt_pts, fig_size):
         """One by one plot of all samples"""
