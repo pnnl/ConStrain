@@ -17,7 +17,7 @@
             "Type": "MethodCall",
             "MethodCall": "DataProcessing",
             "Parameters": {
-                "data_path": "./demo/api_demo/demo_dataset.csv",
+                "data_path": "./constrain/demo/api_demo/demo_dataset.csv",
                 "data_source": "EnergyPlus"
             },
             "Payloads": {
