@@ -22,7 +22,7 @@ Verification Item 1:
 
 ```python
 if not economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':
-  if oudoor_damper_command >= MinOA-P and outdoor_air_flow >= MinOAsp:
+  if outdoor_damper_command >= MinOA-P and outdoor_air_flow >= MinOAsp:
     pass
   else:
     fail
@@ -42,10 +42,11 @@ else:
 
 """
 
+from datetime import datetime
+
+import numpy as np
 import pandas as pd
 from constrain.checklib import RuleCheckBase
-from datetime import datetime
-import numpy as np
 
 
 class G36MinOAwEconomizer(RuleCheckBase):

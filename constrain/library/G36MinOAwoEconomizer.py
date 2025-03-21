@@ -44,12 +44,11 @@ else:
 - return_damper_command: return air damper command
 - outdoor_air_flow: outdoor air flow rate
 - min_oa_sp: minimum outdoor air flow rate setpoint
-- sys_mode: AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']
+- sys_mode: AHU system mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']
 
 """
 
 from constrain.checklib import RuleCheckBase
-import numpy as np
 
 
 class G36MinOAwoEconomizer(RuleCheckBase):

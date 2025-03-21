@@ -1,6 +1,6 @@
-from constrain.checklib import RuleCheckBase
 import matplotlib.pyplot as plt
 import seaborn as sns
+from constrain.checklib import RuleCheckBase
 
 
 class HWReset(RuleCheckBase):

@@ -1,5 +1,6 @@
-from constrain.checklib import RuleCheckBase
 from typing import Dict
+
+from constrain.checklib import RuleCheckBase
 from sklearn.linear_model import LinearRegression
 
 

@@ -23,7 +23,7 @@ If sum(m_oa) == 0
   return None
 Endif
 
-# This assume that the system does provide OA to the space as per the first check
+# This assumes that the system does provide OA to the space as per the first check
 potential_failures_count = 0
 potential_pass_count = 0
 If o

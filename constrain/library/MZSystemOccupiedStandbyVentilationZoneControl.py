@@ -35,7 +35,6 @@ Endif
 """
 
 from constrain.checklib import RuleCheckBase
-import numpy as np
 
 
 class MZSystemOccupiedStandbyVentilationZoneControl(RuleCheckBase):

@@ -1,5 +1,6 @@
-from constrain.checklib import RuleCheckBase
 from datetime import date
+
+from constrain.checklib import RuleCheckBase
 
 
 class VAVStaticPressureSensorLocation(RuleCheckBase):

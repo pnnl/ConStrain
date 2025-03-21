@@ -26,7 +26,6 @@ if not ['on', 'off'] in supply_fan_status:
 
 """
 
-import pandas as pd
 from constrain.checklib import RuleCheckBase
 
 

@@ -32,9 +32,8 @@ end
 
 """
 
-from constrain.checklib import RuleCheckBase
-import numpy as np
 import pandas as pd
+from constrain.checklib import RuleCheckBase
 
 
 class G36TerminalBoxVAVDamperTracking(RuleCheckBase):

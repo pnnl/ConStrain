@@ -1,5 +1,4 @@
 from constrain.checklib import RuleCheckBase
-import numpy as np
 
 
 class HeatPumpSupplementalHeatLockout(RuleCheckBase):

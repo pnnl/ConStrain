@@ -1,7 +1,5 @@
 from constrain.checklib import RuleCheckBase
 
-import numpy as np
-
 
 class AutomaticOADamperControl(RuleCheckBase):
     points = ["o", "eco_onoff", "m_oa", "m_ea", "tol_o", "tol_m_oa", "tol_m_ea"]

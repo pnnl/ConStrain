@@ -28,8 +28,6 @@ end
 """
 
 from constrain.checklib import RuleCheckBase
-import numpy as np
-import pandas as pd
 
 
 class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):

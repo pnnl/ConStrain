@@ -42,7 +42,6 @@ end
 """
 
 from constrain.checklib import RuleCheckBase
-import numpy as np
 
 
 class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
