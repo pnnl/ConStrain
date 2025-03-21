@@ -1,16 +1,28 @@
 """
-G36 2021
 ### Description
 
-Section 5.5.5.2
+This verification aims to check if the cooling-only terminal box airflow control operates correctly when the zone is in deadband mode. The active airflow setpoint should be set to the minimum endpoint based on the system's operation mode.
 
-- When the Zone State is deadband, the active airflow setpoint shall be the minimum endpoint.
+### Code requirement
 
-Verification Item:
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.5.5 Terminal Box Airflow Control
+- Code Subsection: 5.5.5.2 Deadband Airflow Control
 
-- When in deadband stage, check if active airflow setpoint is near the correct minimum value.
+### Verification Approach
 
-### Verification logic
+The verification checks that when the zone is in deadband mode, the active airflow setpoint equals the minimum value within a specified tolerance. The minimum value varies depending on whether the system is in occupied mode or other modes (cooldown/setup/warmup/setback/unoccupied).
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): VAV cooling-only terminal boxes
+- Climate Zone(s): any
+- Component(s): terminal box controllers, airflow sensors
+
+### Verification Algorithm Pseudo Code
 
 ```
 switch operation_mode
@@ -29,10 +41,29 @@ end
 ### Data requirements
 
 - operation_mode: System operation mode
-- zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
-- v_min: Occupied zone minimum airflow setpoint
+  - Data Value Unit: enumeration
+  - Data point Description: Current operation mode of the system
+  - Data Point Affiliation: System control
+
+- zone_state: Zone state
+  - Data Value Unit: enumeration
+  - Data point Description: Current zone state (heating, cooling, or deadband)
+  - Data Point Affiliation: Zone control
+
+- v_min: Minimum airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Occupied zone minimum airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
 - v_spt: Active airflow setpoint
-- v_spt_tol: Airflow setpoint tolerance
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current active airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- v_spt_tol: Airflow tolerance
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Allowable deviation from setpoint
+  - Data Point Affiliation: Zone airflow control
 
 """
 

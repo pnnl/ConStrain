@@ -1,28 +1,55 @@
 """
-G36 2021
-
 ### Description
 
-5.16.8.1. Relief dampers shall be enabled when the associated supply fan is proven ON, and disabled otherwise.
+This verification aims to check if relief dampers are properly interlocked with their associated supply fans. Relief dampers should only be enabled when their corresponding supply fan is proven to be running.
 
-### Verification logic
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.8 Relief Damper Control
+- Code Subsection: 5.16.8.1 Relief Damper Enable/Disable
+
+### Verification Approach
+
+The verification checks two conditions:
+1. When supply fan is ON, relief damper is allowed to modulate open
+2. When supply fan is OFF, relief damper must be fully closed
+The test is considered untested if supply fan status doesn't show both ON and OFF states.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units with relief dampers
+- Climate Zone(s): any
+- Component(s): relief dampers, supply fans
+
+### Verification Algorithm Pseudo Code
 
 ```python
 if relief_damper_command > 0 and supply_fan_status == 'on':
-  pass
+    pass
 elif supply_fan_status == 'off' and relief_damper_command == 0:
-  pass
+    pass
 else:
-  fail
+    fail
 
 if not ['on', 'off'] in supply_fan_status:
-  untested
+    untested
 ```
 
 ### Data requirements
 
-- relief_damper_command: relief damper opening (0-100)
-- supply_fan_status: supply fan status (speed): ['on', 'off'] (can be replaced by binary or numeric variables)
+- relief_damper_command: Relief damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current relief damper position command
+  - Data Point Affiliation: Air handling unit
+
+- supply_fan_status: Supply fan status
+  - Data Value Unit: binary
+  - Data point Description: Operating status of supply fan
+  - Data Point Affiliation: Air handling unit
 
 """
 

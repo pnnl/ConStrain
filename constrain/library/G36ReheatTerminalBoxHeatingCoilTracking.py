@@ -1,36 +1,76 @@
 """
-G36 2021
 ### Description
 
-Section 5.6.5.3.
+This verification aims to check if the terminal box heating coil properly tracks its discharge air temperature setpoint during heating mode. The control should modulate the heating coil to maintain the discharge temperature while the VAV damper maintains airflow.
 
-- When the Zone State is heating, the Heating Loop shall maintain space temperature at the heating setpoint as follows:
-    c.The heating coil shall be modulated to maintain the discharge temperature at setpoint. The VAV damper shall be modulated by a control loop to maintain the measured airflow at the active setpoint.
+### Code requirement
 
-### Verification logic
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.6.5 Terminal Box Airflow Control with Reheat
+- Code Subsection: 5.6.5.3.c Heating Coil Temperature Control
 
-'''
-only check the following if operation_mode is heating
-if abs(dat_spt - dat) >= dat_tracking_tol (less than 1hr):
-    pass
-elif abs(dat_spt - dat) < dat_tracking_tol:
-    pass
-if dat - dat_spt >= dat_tracking_tol (continously) and heating_coil_command <= 1:
-    pass
-elif dat_spt - dat >= dat_tracking_tol (continuously) and vav_damper_command >= 99:
-    pass
+### Verification Approach
+
+The verification monitors discharge air temperature tracking performance:
+1. Brief deviations from setpoint (less than 1 hour) are acceptable
+2. For sustained deviations:
+   - If temperature is too high, heating coil should be at minimum
+   - If temperature is too low, heating coil should be at maximum
+3. When within tolerance, control is considered successful
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): VAV terminal boxes with reheat
+- Climate Zone(s): any
+- Component(s): terminal box controllers, heating coils, temperature sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+# Only check when in heating mode
+if abs(dat_spt - dat) >= dat_tracking_tol:
+    if tracking_error_duration < 1_hour:
+        pass  # Brief deviation acceptable
+    else:
+        if (dat - dat_spt >= dat_tracking_tol) and heating_coil_command <= 1:
+            pass  # Too hot, coil at minimum
+        elif (dat_spt - dat >= dat_tracking_tol) and heating_coil_command >= 99:
+            pass  # Too cold, coil at maximum
+        else:
+            fail  # Sustained deviation without appropriate response
 else:
-    fail
-end
-'''
+    pass  # Within tolerance
+```
 
 ### Data requirements
 
 - operation_mode: System operation mode
+  - Data Value Unit: enumeration
+  - Data point Description: Current operation mode of the system
+  - Data Point Affiliation: System control
+
 - heating_coil_command: Heating coil command
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current heating coil control signal
+  - Data Point Affiliation: Terminal box control
+
 - dat: Discharge air temperature
-- dat_spt: Discharge air temperature setpoint
-- dat_tracking_tol: Temperature tracking tolerance
+  - Data Value Unit: °C
+  - Data point Description: Current discharge air temperature
+  - Data Point Affiliation: Terminal box monitoring
+
+- dat_spt: Temperature setpoint
+  - Data Value Unit: °C
+  - Data point Description: Discharge air temperature setpoint
+  - Data Point Affiliation: Terminal box control
+
+- dat_tracking_tol: Temperature tolerance
+  - Data Value Unit: °C
+  - Data point Description: Allowable deviation from temperature setpoint
+  - Data Point Affiliation: Terminal box control
 
 """
 

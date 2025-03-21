@@ -1,16 +1,28 @@
 """
-G36 2021
 ### Description
 
-Section 5.5.5.3
+This verification aims to check if the cooling-only terminal box airflow control operates correctly when the zone is in heating mode. The active airflow setpoint should be properly mapped between minimum and maximum heating endpoints based on the system's operation mode.
 
-- When the Zone State is heating, the Heating Loop output shall be mapped to the active airflow setpoint from the minimum endpoint to the heating maximum endpoint.
+### Code requirement
 
-Verification Item:
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.5.5 Terminal Box Airflow Control
+- Code Subsection: 5.5.5.3 Heating Airflow Control
 
-- When in heating stage, check if active airflow setpoint is within the correct setpoint boundary values.
+### Verification Approach
 
-### Verification logic
+The verification checks that when the zone is in heating mode, the active airflow setpoint stays within appropriate boundaries based on the current operation mode. The boundaries vary depending on whether the system is in occupied, cooldown/setup/unoccupied, or warmup/setback mode.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): VAV cooling-only terminal boxes
+- Climate Zone(s): any
+- Component(s): terminal box controllers, airflow sensors
+
+### Verification Algorithm Pseudo Code
 
 ```
 switch operation_mode
@@ -34,11 +46,34 @@ end
 ### Data requirements
 
 - operation_mode: System operation mode
-- zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
-- v_cool_max: Zone maximum cooling airflow setpoint
-- v_heat_max: Zone maximum heating airflow setpoint
-- v_min: Occupied zone minimum airflow setpoint
+  - Data Value Unit: enumeration
+  - Data point Description: Current operation mode of the system
+  - Data Point Affiliation: System control
+
+- zone_state: Zone state
+  - Data Value Unit: enumeration
+  - Data point Description: Current zone state (heating, cooling, or deadband)
+  - Data Point Affiliation: Zone control
+
+- v_cool_max: Maximum cooling airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Zone maximum cooling airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- v_heat_max: Maximum heating airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Zone maximum heating airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- v_min: Minimum airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Occupied zone minimum airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
 - v_spt: Active airflow setpoint
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current active airflow setpoint
+  - Data Point Affiliation: Zone airflow control
 
 """
 

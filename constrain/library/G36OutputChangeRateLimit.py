@@ -1,24 +1,51 @@
 """
-G36 2021
-
 ### Description
 
-5.1.9 To avoid abrupt changes in equipment operation, the output of every control loop shall be capable of being limited by a user adjustable maximum rate of change, with a default of 25% per minute.
+This verification aims to check if control loop outputs change at an appropriate rate to avoid abrupt changes in equipment operation. Each control loop output should be limited by a user-adjustable maximum rate of change.
 
-### Verification logic
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.1 General
+- Code Subsection: 5.1.9 Control Loop Output Rate Limiting
+
+### Verification Approach
+
+The verification monitors the rate of change in control loop outputs by comparing consecutive values and their timestamps. It verifies that changes do not exceed the maximum allowed rate (default 25% per minute) when normalized to a per-minute basis.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): any control loops
+- Climate Zone(s): any
+- Component(s): controllers, actuators, control loops
+
+### Verification Algorithm Pseudo Code
 
 ```python
-if abs(command(current_t) - command(prev_t)) > max_rage_of_change_per_min and (current_t - prev_t <= 1 minute):
-  fail
-else:
-  pass
+time_delta = current_time - previous_time
+allowed_change = max_rate_of_change_per_min * (time_delta_in_minutes)
+actual_change = abs(command(current_t) - command(prev_t))
 
+if actual_change > allowed_change:
+    fail
+else:
+    pass
 ```
 
 ### Data requirements
 
-- command: control command to be verified with command range being (0-100)
-- max_rate_of_change_per_min: control loop output maximum rate of change, default to 25.
+- command: Control command
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Control loop output value to be verified
+  - Data Point Affiliation: Control loop
+
+- max_rate_of_change_per_min: Rate limit
+  - Data Value Unit: percent per minute
+  - Data point Description: Maximum allowed rate of change (default 25)
+  - Data Point Affiliation: Control loop configuration
 
 """
 

@@ -1,19 +1,52 @@
 """
-G36 2021
-
 ### Description
 
-Section 5.16.2.3
+This verification aims to check if the outdoor air damper operates correctly in systems with return fan direct building pressure control. The damper should maintain a position that supports proper building pressurization control.
 
-### Verification Logic
+### Code requirement
 
-```
-if abs(oa_p - max_oa_p) < oa_p_tol
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Subsection: 5.16.2.3 Outdoor Air Damper Control with Return Fan Direct Building Pressure
+
+### Verification Approach
+
+The verification checks that the outdoor air damper maintains its maximum position within an acceptable tolerance. This position allows the return fan to directly control building pressure through its speed modulation.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units with return fans using direct building pressure control
+- Climate Zone(s): any
+- Component(s): outdoor air dampers, return fans, building pressure sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if abs(oa_p - max_oa_p) < oa_p_tol:
     pass
-else
+else:
     fail
-end
 ```
+
+### Data requirements
+
+- oa_p: Outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current outdoor air damper position
+  - Data Point Affiliation: Air handling unit
+
+- max_oa_p: Maximum outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Maximum allowed outdoor air damper position
+  - Data Point Affiliation: Air handling unit
+
+- oa_p_tol: Outdoor air damper position tolerance
+  - Data Value Unit: percent
+  - Data point Description: Allowable deviation from setpoint
+  - Data Point Affiliation: Air handling unit
 
 """
 

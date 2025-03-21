@@ -1,3 +1,82 @@
+"""
+### Description
+
+This verification aims to check if guest room temperature setpoints are properly adjusted based on occupancy status. The system should implement temperature setback during unrented periods and when guests leave the room to save energy while maintaining comfort.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2019
+- Code Section: 6.4.3.3.5 Automatic Control of HVAC in Hotel/Motel Guest Rooms
+- Code Subsection: Temperature Setpoint Control
+
+### Verification Approach
+
+The verification checks two scenarios:
+1. For unrented rooms (daily occupancy ≈ 0):
+   - Heating setpoint should be below 15.6°C (60°F)
+   - Cooling setpoint should be above 26.7°C (80°F)
+2. For rented rooms with temporary vacancy:
+   - Heating setpoint should decrease by at least 2.22°C (4°F)
+   - Cooling setpoint should increase by at least 2.22°C (4°F)
+
+### Verification Applicability
+
+- Building Type(s): hotels, motels
+- Space Type(s): guest rooms
+- System(s): room HVAC units
+- Climate Zone(s): any
+- Component(s): thermostats, occupancy sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+for each day:
+    if room_not_rented (occupancy ≈ 0 all day):
+        if heating_setpoint < 15.6°C and cooling_setpoint > 26.7°C:
+            pass  # Proper setback for unrented room
+        else:
+            fail  # Setback not implemented
+    else:  # room is rented
+        occupied_heating_sp = max(heating_setpoint during occupied periods)
+        occupied_cooling_sp = min(cooling_setpoint during occupied periods)
+        
+        if heating_setpoint < (occupied_heating_sp - 2.22°C) or
+           cooling_setpoint > (occupied_cooling_sp + 2.22°C):
+            pass  # Proper setback when guests leave
+        else:
+            fail  # Insufficient setback
+```
+
+### Data requirements
+
+- T_z_heat_sp: Heating setpoint
+  - Data Value Unit: °C
+  - Data point Description: Zone heating temperature setpoint
+  - Data Point Affiliation: Room temperature control
+
+- T_z_cool_sp: Cooling setpoint
+  - Data Value Unit: °C
+  - Data point Description: Zone cooling temperature setpoint
+  - Data Point Affiliation: Room temperature control
+
+- O_sch: Occupancy schedule
+  - Data Value Unit: fraction (0-1)
+  - Data point Description: Room occupancy status
+  - Data Point Affiliation: Room monitoring
+
+- tol_occ: Occupancy tolerance
+  - Data Value Unit: fraction
+  - Data point Description: Threshold for considering room unoccupied
+  - Data Point Affiliation: System configuration
+
+- tol_temp: Temperature tolerance
+  - Data Value Unit: °C
+  - Data point Description: Allowable deviation from temperature limits
+  - Data Point Affiliation: System configuration
+
+"""
+
 import pandas as pd
 from constrain.checklib import RuleCheckBase
 

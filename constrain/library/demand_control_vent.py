@@ -1,3 +1,73 @@
+"""
+### Description
+
+This verification aims to check demand control ventilation functionality for high-occupancy areas. The system should adjust outdoor air ventilation based on actual occupancy levels.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2016
+- Code Section: 6.4.3 Controls and Diagnostics
+- Code Subsection: 6.4.3.8 Demand Control Ventilation
+
+### Verification Approach
+
+The verification analyzes the correlation between outdoor air ventilation rates and occupancy levels when the economizer is not active. A positive correlation indicates that the ventilation rate is being adjusted based on occupancy as required.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): high-occupancy areas
+- System(s): HVAC systems with outdoor air ventilation
+- Climate Zone(s): any
+- Component(s): ventilation controls, outdoor air dampers
+
+### Verification Algorithm Pseudo Code
+
+```
+# Filter data for when economizer is off and AHU is on
+df_filtered = df.loc[(df["s_eco"] == 0.0) & (df["s_ahu"] != 0.0)]
+
+if len(df_filtered) == 0:
+    return "Untested"  # No valid samples
+
+# Calculate correlation between occupancy and outdoor air flow
+correlation, p_value = pearsonr(df_filtered["no_of_occ"], df_filtered["v_oa"])
+
+if p_value > 0.05:
+    return "Untested"  # Correlation not statistically significant
+elif correlation >= 0.3:
+    return True  # Strong positive correlation
+elif 0 < correlation < 0.3:
+    return False  # Weak positive correlation
+else:
+    return False  # Negative correlation
+```
+
+### Data requirements
+
+- v_oa: Zone Air Terminal Outdoor Air Volume Flow Rate
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Outdoor air flow rate to the zone
+  - Data Point Affiliation: Zone ventilation
+
+- s_ahu: HVAC System Operation Status
+  - Data Value Unit: binary (0/1)
+  - Data point Description: Indicates if AHU is operating
+  - Data Point Affiliation: System operation
+
+- s_eco: Air System Outdoor Air Economizer Status
+  - Data Value Unit: binary (0/1)
+  - Data point Description: Indicates if economizer is active
+  - Data Point Affiliation: System operation
+
+- no_of_occ: People Occupant Count
+  - Data Value Unit: count
+  - Data point Description: Number of occupants in the zone
+  - Data Point Affiliation: Zone occupancy
+
+"""
+
 import pandas as pd
 from constrain.checklib import CheckLibBase
 from scipy.stats import pearsonr

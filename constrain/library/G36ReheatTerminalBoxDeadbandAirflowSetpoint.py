@@ -1,40 +1,93 @@
 """
-G36 2021
 ### Description
 
-Section 5.6.5.2
+This verification aims to check if the terminal box with reheat operates correctly when the zone is in deadband mode. The airflow setpoint should be at minimum endpoint, and the heating coil should remain disabled unless discharge air temperature falls below minimum.
 
-- When the Zone State is deadband, the active airflow setpoint shall be the minimum endpoint. Heating coil is disabled unless the DAT is below the minimum setpoint
+### Code requirement
 
-### Verification logic
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.6.5 Terminal Box Airflow Control with Reheat
+- Code Subsection: 5.6.5.2 Deadband Airflow Control
 
-```
-if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol
+### Verification Approach
+
+The verification checks two conditions:
+1. When discharge air temperature is above minimum setpoint, heating coil should remain off
+2. Active airflow setpoint should equal the minimum value (which varies by operation mode) within tolerance
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): VAV terminal boxes with reheat
+- Climate Zone(s): any
+- Component(s): terminal box controllers, airflow sensors, heating coils
+
+### Verification Algorithm Pseudo Code
+
+```python
+if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol:
     fail
-else
-   switch operation_mode
-   case 'occupied'
-       minimum = v_min
-   case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
-       minimum = 0
-   if abs(v_spt - minimum) <= v_spt_tol
-       pass
-   else
-       fail
-end
+else:
+    switch operation_mode:
+        case 'occupied':
+            minimum = v_min
+        case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied':
+            minimum = 0
+
+    if abs(v_spt - minimum) <= v_spt_tol:
+        pass
+    else:
+        fail
 ```
 
 ### Data requirements
 
 - operation_mode: System operation mode
-- zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
-- v_min: Occupied zone minimum airflow setpoint
+  - Data Value Unit: enumeration
+  - Data point Description: Current operation mode of the system
+  - Data Point Affiliation: System control
+
+- zone_state: Zone state
+  - Data Value Unit: enumeration
+  - Data point Description: Current zone state (heating, cooling, or deadband)
+  - Data Point Affiliation: Zone control
+
+- v_min: Minimum airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Occupied zone minimum airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
 - v_spt: Active airflow setpoint
-- v_spt_tol: Airflow setpoint tolerance
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current active airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- v_spt_tol: Airflow tolerance
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Allowable deviation from setpoint
+  - Data Point Affiliation: Zone airflow control
+
 - heating_coil_command: Heating coil command
-- heating_coil_command_tol: Heating coil command saturation tolerance
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current heating coil control signal
+  - Data Point Affiliation: Terminal box control
+
+- heating_coil_command_tol: Command tolerance
+  - Data Value Unit: percent
+  - Data point Description: Tolerance for considering heating coil active
+  - Data Point Affiliation: Terminal box control
+
 - dat: Discharge air temperature
-- dat_min_spt: Minimum discharge air temperature setpoint
+  - Data Value Unit: °C
+  - Data point Description: Current discharge air temperature
+  - Data Point Affiliation: Terminal box monitoring
+
+- dat_min_spt: Minimum discharge temperature
+  - Data Value Unit: °C
+  - Data point Description: Minimum allowed discharge air temperature
+  - Data Point Affiliation: Terminal box control
 
 """
 

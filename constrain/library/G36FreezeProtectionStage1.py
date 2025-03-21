@@ -1,29 +1,57 @@
 """
-G36 2021
-
 ### Description
 
-5.16.12.1.	If the supply air temperature drops below 4.4°C (40°F) for 5 minutes, send two (or more, as required to ensure that heating plant is active) heating hot-water plant requests, override the outdoor air damper to the minimum position, and modulate the heating coil to maintain a supply air temperature of at least 6°C (42°F). Disable this function when supply air temperature rises above 7°C (45°F) for 5 minutes.
+This verification aims to check if the first stage of freeze protection control operates correctly. When supply air temperature drops below a critical threshold, the system should override outdoor air damper position and activate heating to prevent freezing conditions.
 
-### Verification logic
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.12 Freeze Protection
+- Code Subsection: 5.16.12.1 Stage 1
+
+### Verification Approach
+
+The verification monitors supply air temperature and outdoor air damper position. When temperature drops below 4.4°C (40°F) for 5 minutes, it verifies that the outdoor air damper moves to minimum position. The protection should remain active until temperature rises above 7°C (45°F) for 5 minutes.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units
+- Climate Zone(s): any
+- Component(s): supply air temperature sensors, outdoor air dampers
+
+### Verification Algorithm Pseudo Code
 
 ```python
 if supply_air_temp < 4.4 (continuously 5 minutes) and outdoor_damper_command > outdoor_damper_minimum:
-  fail
+    fail
 elif outdoor_damper_command > outdoor_damper_minimum and not (supply_air_temp > 7 (continuously 5 minutes)):
-  fail
+    fail
 else:
-  pass
+    pass
 
 if never (supply_air_temp < 4.4 (continuously 5 minutes)):
-  untested
+    untested
 ```
 
 ### Data requirements
 
-- supply_air_temp: supply air temperature
-- outdoor_damper_command: outdoor air damper
-- outdoor_damper_minimum: outdoor air damper minimum position
+- supply_air_temp: Supply air temperature
+  - Data Value Unit: °C
+  - Data point Description: Temperature of supply air downstream of cooling coil
+  - Data Point Affiliation: Air handling unit
+
+- outdoor_damper_command: Outdoor air damper position
+  - Data Value Unit: fraction (0-1)
+  - Data point Description: Current position command to outdoor air damper
+  - Data Point Affiliation: Air handling unit
+
+- outdoor_damper_minimum: Minimum damper position
+  - Data Value Unit: fraction (0-1)
+  - Data point Description: Minimum allowed position for outdoor air damper
+  - Data Point Affiliation: Air handling unit
 
 """
 

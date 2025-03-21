@@ -1,3 +1,74 @@
+"""
+### Description
+
+This verification aims to check if water-loop heat pump (WLHP) systems maintain proper temperature differential between heating and cooling loops. The system should maintain at least 20°F (11.11°C) difference between maximum heating loop temperature and minimum cooling loop temperature.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2019
+- Code Section: 6.5.2.2 Hydronic System Controls
+- Code Subsection: Water-Loop Heat Pump Controls
+
+### Verification Approach
+
+The verification analyzes loop temperature separation:
+1. During pump operation periods:
+   - Track maximum heating loop temperature
+   - Track minimum cooling loop temperature
+2. Calculate temperature differential
+3. Compare to minimum requirement:
+   - Must exceed 20°F (11.11°C)
+   - Allow small measurement tolerance
+4. Pass if differential meets requirement
+
+### Verification Applicability
+
+- Building Type(s): any with WLHP systems
+- Space Type(s): any
+- System(s): water-loop heat pump systems
+- Climate Zone(s): any
+- Component(s): heat pumps, loop temperature sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if pump_flow > 0:  # Only check during system operation
+    max_heating_temp = max(heating_loop_temperature)
+    min_cooling_temp = min(cooling_loop_temperature)
+    
+    temp_differential = max_heating_temp - min_cooling_temp
+    
+    if temp_differential > 11.11 + tolerance:  # 20°F = 11.11°C
+        pass  # Proper temperature separation
+    else:
+        fail  # Insufficient separation
+```
+
+### Data requirements
+
+- T_max_heating_loop: Heating loop temperature
+  - Data Value Unit: °C
+  - Data point Description: Maximum heating loop temperature
+  - Data Point Affiliation: System monitoring
+
+- T_min_cooling_loop: Cooling loop temperature
+  - Data Value Unit: °C
+  - Data point Description: Minimum cooling loop temperature
+  - Data Point Affiliation: System monitoring
+
+- m_pump: Pump flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Loop water flow rate
+  - Data Point Affiliation: System monitoring
+
+- tol: Temperature tolerance
+  - Data Value Unit: °C
+  - Data point Description: Allowable measurement deviation
+  - Data Point Affiliation: System configuration
+
+"""
+
 from constrain.checklib import RuleCheckBase
 
 

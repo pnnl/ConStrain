@@ -1,36 +1,63 @@
 """
-ASHRAE 90.1-2022
 ### Description
 
-Section 9.4.1.4.e Occupancy-sensing light reduction control
+This verification aims to check if exterior lighting control operates correctly based on occupancy sensing. The system should automatically reduce lighting power when no activity is detected in the illuminated area.
 
-- Occupancy-sensing light reduction control: Lighting shall be controlled to automatically reduce the connected lighting power by a minimum of 50% when no activity has been detected in the area illuminated by the controlled luminaires for a time of no longer than 15 minutes. No more than 1500 W of lighting power shall be controlled together.
+### Code requirement
 
-Verification Item:
+- Code Name: ASHRAE 90.1
+- Code Year: 2022
+- Code Section: 9.4.1.4 Exterior Lighting Control
+- Code Subsection: 9.4.1.4.e Occupancy-sensing light reduction control
 
-- Check if the lighting power is reduced when no occupancy is detected.
+### Verification Approach
 
-### Verification logic
+The verification checks that when no activity is detected for more than 15 minutes, the lighting power is reduced by at least 50% of the maximum observed power. Additionally, it verifies that no more than 1500W of lighting power is controlled together.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): exterior spaces
+- System(s): exterior lighting systems
+- Climate Zone(s): any
+- Component(s): lighting controls, occupancy sensors
+
+### Verification Algorithm Pseudo Code
 
 ```
 design_total_lighting_power = max(total_lighting_power)
 
+# First check maximum power limit
+if design_total_lighting_power >= 1500:
+    return False
+
+# Then check power reduction on no occupancy
 date_diff = current_date - last_reported_occupancy # in min
-If o < tol_o and date_diff > 15
-    If total_lighting_power <= 0.5 * design_total_lighting_power
-        Pass
-    Else
-        Fail
-    Endif
-Else
-    Untested
-Endif
+if o < tol_o and date_diff > 15:
+    if total_lighting_power <= 0.5 * design_total_lighting_power:
+        return True
+    else:
+        return False
+else:
+    return "Untested"
 ```
 
 ### Data requirements
-- o: number of occupants sensed in the zones served by the system.
-- total_lighting_power: reported total lighting power (not the design total lighting power)
-- tol_o: occupancy threshold; below that value the zones are considered unoccupied.
+
+- o: Number of occupants
+  - Data Value Unit: count
+  - Data point Description: Number of occupants sensed in the illuminated area
+  - Data Point Affiliation: Zone occupancy
+
+- total_lighting_power: Lighting power
+  - Data Value Unit: watts
+  - Data point Description: Total exterior lighting power consumption
+  - Data Point Affiliation: Lighting system
+
+- tol_o: Occupancy threshold
+  - Data Value Unit: count
+  - Data point Description: Below this value the area is considered unoccupied
+  - Data Point Affiliation: Zone occupancy
 
 """
 

@@ -1,44 +1,75 @@
 """
-ASHRAE 90.1-2022
 ### Description
 
-Section 9.4.1.1.h Automatic full OFF control
+This verification aims to check if interior lighting systems automatically turn off when spaces are unoccupied. The system should shut off all non-exempt lighting within 20 minutes of occupants leaving, while respecting area limitations and exceptions.
 
-- All lighting in the space, including lighting connected to emergency circuits,shall be automatically shut off within 20 minutes of all occupants leaving the space. A control device meeting this requirement shall control no more than 5000 ft2.
-- Exceptions:
-  - The following lighting is not required to be automatically shut off:
-    1. Lighting required for 24/7 continuous operation.
-    2. Lighting in spaces where patient care is rendered.
-    3. General lighting and task lighting in spaces where automatic shutoff would endanger the safety or security of the room or building occupants.
-    4. Lighting load not exceeding 0.02 W/ft2 multiplied by the gross lighted floor area of the building.
+### Code requirement
 
-Verification Item:
+- Code Name: ASHRAE 90.1
+- Code Year: 2022
+- Code Section: 9.4.1.1 Interior Lighting Controls
+- Code Subsection: 9.4.1.1.h Automatic Full OFF Control
 
-- Check if the lighting power is reduced when no occupancy is detected.
+### Verification Approach
 
-### Verification logic
+The verification checks three main criteria:
+1. Control area limitation: Each device must control ≤ 5000 ft²
+2. Shutoff timing: Lights must turn off within 20 minutes of vacancy
+3. Power density exceptions: Allows minimal lighting (≤ 0.02 W/ft²) to remain on
 
-```
-If lighted_floor_area >= 5000:
-    return False
+Exceptions not verified:
+- 24/7 operation areas
+- Patient care spaces
+- Safety/security critical areas
 
-date_diff = current_date - last_reported_occupancy # in min
-If o < tol_o and date_diff > 20
-    If total_lighting_power / lighted_floor_area <= 0.02
-        Pass
-    Else
-        Fail
-    Endif
-Else
-    Untested
-Endif
+### Verification Applicability
+
+- Building Type(s): any except healthcare
+- Space Type(s): all except safety-critical
+- System(s): interior lighting
+- Climate Zone(s): any
+- Component(s): occupancy sensors, lighting controls
+
+### Verification Algorithm Pseudo Code
+
+```python
+# Check control area limitation
+if lighted_floor_area >= 5000:
+    fail  # Exceeds maximum area per control device
+
+# Check shutoff timing and power
+time_since_occupancy = current_time - last_occupancy_time
+
+if occupancy < occupancy_threshold and time_since_occupancy > 20_minutes:
+    if lighting_power / floor_area <= 0.02:
+        pass  # Proper shutoff or within exemption
+    else:
+        fail  # Lights still on above exemption threshold
+else:
+    untested  # Cannot verify without vacancy period
 ```
 
 ### Data requirements
-- o: number of occupants sensed in the zones served by the system.
-- total_lighting_power: reported total lighting power (not the design total lighting power)
-- lighted_floor_area: area lit by the device/system considered
-- tol_o: occupancy threshold; below that value the zones are considered unoccupied.
+
+- o: Occupancy count
+  - Data Value Unit: count
+  - Data point Description: Number of occupants detected in controlled space
+  - Data Point Affiliation: Space monitoring
+
+- total_lighting_power: Lighting power
+  - Data Value Unit: watts
+  - Data point Description: Current total lighting power in controlled space
+  - Data Point Affiliation: Lighting system monitoring
+
+- lighted_floor_area: Floor area
+  - Data Value Unit: square feet
+  - Data point Description: Total floor area served by control device
+  - Data Point Affiliation: Space configuration
+
+- tol_o: Occupancy threshold
+  - Data Value Unit: count
+  - Data point Description: Threshold below which space is considered vacant
+  - Data Point Affiliation: System configuration
 
 """
 

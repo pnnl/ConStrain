@@ -1,47 +1,115 @@
 """
-G36 2021
-
 ### Description
 
-Section 5.16.2.3
+This verification aims to check if the outdoor air damper operates correctly in systems with relief dampers or fans. The damper position should respond appropriately to heating/cooling modes and economizer status while coordinating with return air damper position.
 
-### Verification Logic
+### Code requirement
 
-```
-if heating_output > 0
-    if abs(oa_p - min_oa_p) < oa_p_tol
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Subsection: 5.16.2.3 Outdoor Air Damper Control with Relief Damper/Fan
+
+### Verification Approach
+
+The verification checks outdoor air damper position under various operating conditions:
+1. During heating: damper should be at minimum position
+2. During cooling: damper position depends on economizer status
+3. When return air damper is not at maximum: outdoor air damper should be at maximum
+4. When return air damper is at maximum: outdoor air damper should be between min and max
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units with relief dampers or fans
+- Climate Zone(s): any
+- Component(s): outdoor air dampers, return air dampers, economizer controls
+
+### Verification Algorithm Pseudo Code
+
+```python
+if heating_output > 0:
+    if abs(oa_p - min_oa_p) < oa_p_tol:
         pass
-    else
+    else:
         fail
-    end
-else if cooling_output > 0
-    if economizer_high_limit_reached
-        if abs(oa_p - min_oa_p) < oa_p_tol
+elif cooling_output > 0:
+    if economizer_high_limit_reached:
+        if abs(oa_p - min_oa_p) < oa_p_tol:
             pass
-        else
+        else:
             fail
-        end
-    else
-        if abs(oa_p - max_oa_p) < oa_p_tol
+    else:
+        if abs(oa_p - max_oa_p) < oa_p_tol:
             pass
-        else
+        else:
             fail
-        end
-    end
-else if ra_p < max_ra_p
-    if abs(oa_p - max_oa_p) < ra_p_tol
+elif ra_p < max_ra_p:
+    if abs(oa_p - max_oa_p) < ra_p_tol:
         pass
-    else
+    else:
         fail
-    end
-else if abs(ra_p - max_ra_p) < ra_p_tol
-    if min_oa_p < oa_p < max_oa_p
+elif abs(ra_p - max_ra_p) < ra_p_tol:
+    if min_oa_p < oa_p < max_oa_p:
         pass
-    else
+    else:
         fail
-    end
-end
+else:
+    untested
 ```
+
+### Data requirements
+
+- heating_output: Heating coil output
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current heating coil output
+  - Data Point Affiliation: Air handling unit
+
+- cooling_output: Cooling coil output
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current cooling coil output
+  - Data Point Affiliation: Air handling unit
+
+- ra_p: Return air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current return air damper position
+  - Data Point Affiliation: Air handling unit
+
+- max_ra_p: Maximum return air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Maximum allowed return air damper position
+  - Data Point Affiliation: Air handling unit
+
+- ra_p_tol: Return air damper position tolerance
+  - Data Value Unit: percent
+  - Data point Description: Allowable deviation from setpoint
+  - Data Point Affiliation: Air handling unit
+
+- oa_p: Outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current outdoor air damper position
+  - Data Point Affiliation: Air handling unit
+
+- min_oa_p: Minimum outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Minimum allowed outdoor air damper position
+  - Data Point Affiliation: Air handling unit
+
+- max_oa_p: Maximum outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Maximum allowed outdoor air damper position
+  - Data Point Affiliation: Air handling unit
+
+- oa_p_tol: Outdoor air damper position tolerance
+  - Data Value Unit: percent
+  - Data point Description: Allowable deviation from setpoint
+  - Data Point Affiliation: Air handling unit
+
+- economizer_high_limit_reached: Economizer status
+  - Data Value Unit: binary
+  - Data point Description: Indicates if economizer high limit is reached
+  - Data Point Affiliation: Economizer control
 
 """
 

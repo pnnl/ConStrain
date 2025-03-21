@@ -1,27 +1,51 @@
 """
-G36 2021
-
 ### Description
 
-5.16.12.2.	If the supply air temperature drops below 3.3°C (38°F) for 5 minutes, fully close both the economizer damper and the minimum outdoor air damper for 1 hour and set a Level 3 alarm noting that minimum ventilation was interrupted. After 1 hour, the unit shall resume minimum outdoor air ventilation and enter the previous stage of freeze protection.
+This verification aims to check if the second stage of freeze protection control operates correctly. When supply air temperature drops below a more critical threshold, the system should completely close outdoor air dampers for a specified duration to prevent freezing conditions.
 
-### Verification logic
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.12 Freeze Protection
+- Code Subsection: 5.16.12.2 Stage 2
+
+### Verification Approach
+
+The verification monitors supply air temperature and outdoor air damper position. When temperature drops below 3.3°C (38°F) for 5 minutes, it verifies that both economizer and minimum outdoor air dampers are fully closed for 1 hour. After this period, the system should resume minimum ventilation.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units
+- Climate Zone(s): any
+- Component(s): supply air temperature sensors, outdoor air dampers
+
+### Verification Algorithm Pseudo Code
 
 ```python
 if supply_air_temp < 3.3 (continuously 5 minutes) and outdoor_damper_command > 0 (ever in the following hour):
-  fail
+    fail
 else:
-  pass
+    pass
 
 if never (supply_air_temp < 3.3 (continuously 5 minutes)):
-  untested
-
+    untested
 ```
 
 ### Data requirements
 
-- supply_air_temp: supply air temperature
-- outdoor_damper_command: outdoor air damper
+- supply_air_temp: Supply air temperature
+  - Data Value Unit: °C
+  - Data point Description: Temperature of supply air downstream of cooling coil
+  - Data Point Affiliation: Air handling unit
+
+- outdoor_damper_command: Outdoor air damper position
+  - Data Value Unit: fraction (0-1)
+  - Data point Description: Current position command to outdoor air damper
+  - Data Point Affiliation: Air handling unit
+
 """
 
 from constrain.checklib import RuleCheckBase

@@ -1,31 +1,80 @@
 """
-G36 2021
-
 ### Description
 
-Section 5.16.2.3
+This verification aims to check if the relief air damper operates correctly in systems with return fan airflow tracking. The damper position should respond appropriately to heating/cooling modes and coordinate with return air damper position to maintain proper building pressure.
 
-### Verification Logic
+### Code requirement
 
-```
-if heating_output > 0
-    if abs(rea_p - 0) < rea_p_tol
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Subsection: 5.16.2.3 Relief Air Damper Control with Return Fan Airflow Tracking
+
+### Verification Approach
+
+The verification checks relief air damper position under three conditions:
+1. During heating: damper should be fully closed
+2. During cooling: damper should be at maximum position
+3. Otherwise: damper position should complement return air damper position
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units with return fans using airflow tracking
+- Climate Zone(s): any
+- Component(s): relief air dampers, return fans, airflow sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if heating_output > 0:
+    if abs(rea_p - 0) < rea_p_tol:
         pass
-    else
+    else:
         fail
-    end
-else if cooling_output > 0
-    if abs(rea_p - max_rea_p) < rea_p_tol
+elif cooling_output > 0:
+    if abs(rea_p - max_rea_p) < rea_p_tol:
         pass
-    else
+    else:
         fail
-    end
-else if abs(rea_p - (1 - ra_p) * max_rea_p) < rea_p_tol
+elif abs(rea_p - (1 - ra_p) * max_rea_p) < rea_p_tol:
     pass
-else
+else:
     fail
-end
 ```
+
+### Data requirements
+
+- heating_output: Heating output
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current heating system output
+  - Data Point Affiliation: System control
+
+- cooling_output: Cooling output
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current cooling system output
+  - Data Point Affiliation: System control
+
+- rea_p: Relief air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current relief air damper position
+  - Data Point Affiliation: Air handling unit
+
+- max_rea_p: Maximum relief air position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Maximum allowed relief air damper position
+  - Data Point Affiliation: Air handling unit
+
+- rea_p_tol: Relief air position tolerance
+  - Data Value Unit: percent
+  - Data point Description: Allowable deviation from setpoint
+  - Data Point Affiliation: Air handling unit
+
+- ra_p: Return air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current return air damper position
+  - Data Point Affiliation: Air handling unit
 
 """
 

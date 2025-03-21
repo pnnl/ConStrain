@@ -1,20 +1,28 @@
 """
-ASHRAE 90.1-2022
 ### Description
 
-Section G3.1.4 HVAC System Fan Schedules
+This verification aims to verify HVAC system fan operation as per ASHRAE 90.1 Appendix G rules. The system fan must run continuously during occupied periods and cycle on/off to meet heating and cooling loads during unoccupied hours.
 
-- Schedules for HVAC system fans that provide outdoor air for ventilation shall run continuously whenever spaces are occupied and shall be cycled ON and OFF to meet heating and cooling loads during unoccupied hours.
+### Code requirement
 
-Note: exceptions to this requirement are not capture since they depend on system design which is not related to system control.
+- Code Name: ASHRAE 90.1
+- Code Year: 2022
+- Code Section: G3.1.4 HVAC System Fan Schedules
+- Code Subsection: N/A
 
-Verification Item:
+### Verification Approach
 
-- Check that when a zone is occupied and served by a system that provides outdoor air the system runs continuously and cycles when the zone is occupied.
+The verification checks if the system provides outdoor air and then verifies that when a zone is occupied and served by a system that provides outdoor air, the system runs continuously. During unoccupied periods, the system should cycle on/off rather than run continuously.
 
-### Verification logic
+### Verification Applicability
 
-In the following pseudo code `None` means that the verification is not verifiable, `True` means that it is verifiable and that the verification passes, and `False` that it fails.
+- Building Type(s): any
+- Space Type(s): any
+- System(s): HVAC systems with outdoor air ventilation
+- Climate Zone(s): any
+- Component(s): system fans
+
+### Verification Algorithm Pseudo Code
 
 ```
 # Check that the system provide OA
@@ -51,10 +59,26 @@ Endif
 ```
 
 ### Data requirements
-- o: number of occupants sensed in the zones served by the system.
-- fan_runtime_fraction: system fan runtime fraction (between 0 and 1).
-- m_oa: system outdoor air flow rate.
-- tol_o: occupancy threshold; below that value the zones are considered unoccupied.
+
+- o: Number of occupants
+  - Data Value Unit: count
+  - Data point Description: Number of occupants sensed in the zones served by the system
+  - Data Point Affiliation: Zone occupancy
+
+- fan_runtime_fraction: Fan runtime fraction
+  - Data Value Unit: fraction (0-1)
+  - Data point Description: System fan runtime fraction
+  - Data Point Affiliation: System operation
+
+- m_oa: Outdoor air flow rate
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: System outdoor air flow rate
+  - Data Point Affiliation: System ventilation
+
+- tol_o: Occupancy threshold
+  - Data Value Unit: count
+  - Data point Description: Below this value the zones are considered unoccupied
+  - Data Point Affiliation: Zone occupancy
 
 """
 

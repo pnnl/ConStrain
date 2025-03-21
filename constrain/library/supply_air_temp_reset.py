@@ -1,3 +1,60 @@
+"""
+### Description
+
+This verification aims to check if the supply air temperature reset strategy provides adequate range of adjustment. The system should reset supply air temperature based on building loads to improve energy efficiency while maintaining comfort.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2019
+- Code Section: 6.5.3.5 Supply Air Temperature Reset Controls
+- Code Subsection: Reset Range Requirements
+
+### Verification Approach
+
+The verification analyzes supply air temperature setpoint variation:
+1. Calculate total reset range (max - min setpoint)
+2. Calculate minimum required range:
+   - 25% of difference between zone cooling setpoint and minimum SAT
+   - Allow 1% tolerance in calculation
+3. Pass if actual range meets or exceeds required range
+4. Generate distribution plot to visualize setpoint variation
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): air handling units with supply air temperature control
+- Climate Zone(s): any
+- Component(s): supply air temperature sensors, zone temperature sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+sat_range = max(supply_air_temp_setpoint) - min(supply_air_temp_setpoint)
+min_sat = min(supply_air_temp_setpoint)
+required_range = (zone_cooling_setpoint - min_sat) * 0.25 * 0.99
+
+if sat_range >= required_range:
+    pass  # Adequate reset range
+else:
+    fail  # Insufficient reset range
+```
+
+### Data requirements
+
+- T_sa_sp: Supply air temperature setpoint
+  - Data Value Unit: °C
+  - Data point Description: Current supply air temperature setpoint
+  - Data Point Affiliation: System control
+
+- T_z_cool: Zone cooling setpoint
+  - Data Value Unit: °C
+  - Data point Description: Zone cooling temperature setpoint
+  - Data Point Affiliation: Zone control
+
+"""
+
 from datetime import date
 
 import matplotlib.pyplot as plt

@@ -1,36 +1,63 @@
 """
-ASHRAE 90.1-2022
 ### Description
 
-Section 6.5.3.9.1 Occupied-Standby Control of Multiple-Zone Systems
+This verification aims to check if multiple-zone systems properly adjust their outdoor air setpoints when zones enter standby mode. The system should reduce outdoor air flow by at least the amount that would have been required for zones now in standby.
 
-- Multi-zone systems with ventilation optimization shall reset their outdoor air setpoint assuming that all zones in standby mode don't require any outdoor air.
+### Code requirement
 
-Verification Item:
+- Code Name: ASHRAE 90.1
+- Code Year: 2022
+- Code Section: 6.5.3.9 Multiple-Zone System Ventilation Optimization Control
+- Code Subsection: 6.5.3.9.1 Occupied-Standby Control
 
-- Check that the requested outdoor air flow rate setpoint is at least reduced by the amount of outdoor air that would be required for the zone in standby mode.
+### Verification Approach
 
-### Verification logic
+The verification monitors outdoor air setpoint adjustments:
+1. Track system outdoor air setpoint before and during standby
+2. Calculate minimum required reduction based on zone requirements
+3. When zone enters standby:
+   - Compare actual reduction to required reduction
+   - Pass if reduction meets or exceeds requirement
+4. Mark as untested when zone is not in standby
 
-In the following pseudo code `None` means that the verification is not verifiable, `True` means that it is verifiable and that the verification passes, and `False` that it fails.
+### Verification Applicability
 
-```
-If (zone_is_standby_mode)
-  If (m_oa_requested_system[t_last_standby] - m_oa_requested_system[t]) >= m_oa_zone_requirement
-    return True
-  Else
-    return False
-  Endif
-  t_last_standby = t
-Else
-  return None
-Endif
+- Building Type(s): any with multiple zones
+- Space Type(s): any with variable occupancy
+- System(s): multiple-zone air handling units
+- Climate Zone(s): any
+- Component(s): outdoor air dampers, occupancy sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if zone_is_standby_mode:
+    oa_reduction = last_active_oa_setpoint - current_oa_setpoint
+    if oa_reduction >= zone_oa_requirement:
+        pass  # Proper setpoint reduction
+    else:
+        fail  # Insufficient reduction
+else:
+    last_active_oa_setpoint = current_oa_setpoint
+    untested  # Cannot verify without standby condition
 ```
 
 ### Data requirements
-- zone_is_standby_mode: flag indicating whether the zone is in 'active' occupied standby mode; data can be either a boolean (True or False), or numeric boolean (0 or 1)
-- m_oa_requested_by_system: system outdoor air setpoint, i.e., outdoor air required by the system for the reported period
-- m_oa_zone_requirement: required zone outdoor air flow rate for the reported period
+
+- zone_is_standby_mode: Standby status
+  - Data Value Unit: boolean
+  - Data point Description: Indicates if zone is in standby mode
+  - Data Point Affiliation: Zone control
+
+- m_oa_requested_by_system: System OA setpoint
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current system outdoor air flow setpoint
+  - Data Point Affiliation: System control
+
+- m_oa_zone_requirement: Zone OA requirement
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Required outdoor air flow for zone
+  - Data Point Affiliation: Zone ventilation
 
 """
 

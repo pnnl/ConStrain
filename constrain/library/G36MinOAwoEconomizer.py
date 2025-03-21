@@ -1,50 +1,83 @@
 """
-G36 2021
-
 ### Description
 
-Section 5.16 interpretation:
+This verification aims to check if the minimum outdoor air control operates correctly when the economizer is in lockout. The system should modulate dampers to maintain minimum outdoor air requirements without attempting free cooling.
 
-- With Relief damper or relief fan
-  - when economizer control is not in lockout, and actual damper positions are controlled by the SAT control loop. Above only set the lower limit for OA damper. Track MinOAsp with a reverse-acting loop and map output to
-    - OA (economizer) damper minimum position MinOA-P
-    - return air damper maximum position MaxRA-P
-  - when economizer is in lockout for more than 10 minutes (exceeding economizer high limit conditions in Section 5.1.17), the dampers are controlled to meet minimum OA requirements
-    - fully open RA damper
-    - set MaxOA-P = MinOA-P, control OA damper to meet MinOAsp
-    - modulate RA damper to maintain MinOAsp (return air damper position equals to MaxRA-P)
+### Code requirement
 
-Verification Item 2:
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16 Air Handling Unit and Relief Fan Control Sequences
+- Code Subsection: Minimum Outdoor Air Control without Economizer
 
-- when economizer condition is not okay and occupied, control dampers to maintain outdoor air flow setpoint
+### Verification Approach
 
-### Verification logic
+The verification checks that during occupied periods when economizer is in lockout, the dampers are controlled to maintain minimum outdoor air flow. When flow is below setpoint for an hour, outdoor air damper should be fully open and return damper closed. When flow is above setpoint for an hour, the opposite should occur.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units with economizers
+- Climate Zone(s): any
+- Component(s): outdoor air dampers, return air dampers, airflow sensors
+
+### Verification Algorithm Pseudo Code
 
 ```python
 if economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':
-  if outdoor_air_flow < MinOAsp (continuously (e.g. fall below the sp for a consecutive 1 hr)):
-    if outdoor_damper_command == 100 and return_damper_command == 0:
-      pass
+    if outdoor_air_flow < MinOAsp (continuously for 1 hour):
+        if outdoor_damper_command == 100 and return_damper_command == 0:
+            pass
+        else:
+            fail
+    elif outdoor_air_flow > MinOAsp (continuously for 1 hour):
+        if outdoor_damper_command == 0 and return_damper_command == 100:
+            pass
+        else:
+            fail
     else:
-      fail
-  elif outdoor_air_flow > MinOAsp (continuously):
-    if outdoor_damper_command == 0 and return_damper_command == 100:
-      pass
-    else:
-      fail
-  else:
-    pass (essentially untested yet)
+        pass  # not enough continuous time above/below setpoint
 else:
-  untested
+    untested
 ```
 
-- outdoor_air_temp: outdoor air temperature
-- economizer_high_limit_sp: economizer lockout high limit set point
-- outdoor_damper_command: outdoor air damper command
-- return_damper_command: return air damper command
-- outdoor_air_flow: outdoor air flow rate
-- min_oa_sp: minimum outdoor air flow rate setpoint
-- sys_mode: AHU system mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']
+### Data requirements
+
+- outdoor_air_temp: Outdoor air temperature
+  - Data Value Unit: °C
+  - Data point Description: Current outdoor air temperature
+  - Data Point Affiliation: Environmental conditions
+
+- economizer_high_limit_sp: Economizer high limit
+  - Data Value Unit: °C
+  - Data point Description: Temperature above which economizer is locked out
+  - Data Point Affiliation: Economizer control
+
+- outdoor_damper_command: Outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current position command to outdoor air damper
+  - Data Point Affiliation: Air handling unit
+
+- return_damper_command: Return air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current position command to return air damper
+  - Data Point Affiliation: Air handling unit
+
+- outdoor_air_flow: Outdoor airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current outdoor air flow rate
+  - Data Point Affiliation: Air handling unit
+
+- min_oa_sp: Minimum outdoor airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Minimum outdoor air flow rate setpoint
+  - Data Point Affiliation: Air handling unit
+
+- sys_mode: System mode
+  - Data Value Unit: enumeration
+  - Data point Description: Current AHU operation mode
+  - Data Point Affiliation: System control
 
 """
 

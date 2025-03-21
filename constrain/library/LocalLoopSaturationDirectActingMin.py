@@ -1,20 +1,69 @@
 """
-## Local Loop Performance Verification - Direct Acting Loop Actuator Minimum Saturation
-
 ### Description
 
-This verification checks that a direct acting control loop would saturate its actuator to minimum when the error is consistently below the set point.
+This verification aims to check if a direct-acting control loop properly saturates its actuator to minimum position when the controlled variable remains consistently below setpoint. This behavior is essential for maintaining proper control response and system stability.
 
-### Verification logic
+### Code requirement
 
-If the sensed data values are consistently below its set point, and after a default of 1 hour, the control command is still not saturated to minimum, then the verification fails; Otherwise, it passes.
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.1.12 Control Loops
+- Code Subsection: Loop Saturation Requirements
+
+### Verification Approach
+
+The verification monitors control loop behavior when error persists:
+1. Track duration of negative control error (feedback < setpoint)
+2. After 1 hour of continuous error:
+   - Verify actuator command reaches minimum position
+   - Allow small tolerance (1%) from minimum
+3. Pass if actuator saturates, fail if it doesn't respond properly
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): any control loop with direct-acting response
+- Climate Zone(s): any
+- Component(s): actuators, sensors, controllers
+
+### Verification Algorithm Pseudo Code
+
+```python
+error_duration = 0
+for each timestep:
+    if feedback_sensor < setpoint:  # Negative error
+        error_duration += timestep_size
+        if error_duration >= 1_hour:
+            if cmd - cmd_min <= 0.01:  # Within 1% of minimum
+                pass  # Proper saturation
+            else:
+                fail  # Should be at minimum
+    else:
+        error_duration = 0  # Reset duration when error clears
+```
 
 ### Data requirements
 
-- feedback_sensor: feedback sensor reading of the subject to be controlled towards a set point
-- set_point: set point value
-- cmd: control command
-- cmd_min: control command range minimum value
+- feedback_sensor: Process variable
+  - Data Value Unit: varies by application
+  - Data point Description: Measured value being controlled
+  - Data Point Affiliation: Control loop input
+
+- set_point: Control setpoint
+  - Data Value Unit: same as feedback_sensor
+  - Data point Description: Desired value for process variable
+  - Data Point Affiliation: Control loop configuration
+
+- cmd: Actuator command
+  - Data Value Unit: percent or engineering units
+  - Data point Description: Current control output to actuator
+  - Data Point Affiliation: Control loop output
+
+- cmd_min: Minimum command
+  - Data Value Unit: same as cmd
+  - Data point Description: Minimum allowable control output
+  - Data Point Affiliation: Control loop configuration
 
 """
 

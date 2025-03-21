@@ -1,3 +1,79 @@
+"""
+### Description
+
+This verification aims to check if heat rejection fan power varies appropriately with flow rate in variable flow systems. The fan power should follow a cubic relationship with flow rate to achieve energy savings at part-load conditions.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2019
+- Code Section: 6.5.5.2 Fan Control
+- Code Subsection: Heat Rejection Fan Variable Flow Control
+
+### Verification Approach
+
+The verification analyzes the relationship between normalized fan power and normalized airflow:
+1. Filter out zero power points and flows below 50% of design
+2. Perform linear regression on transformed data (power-1 vs flow-1)
+3. Check if power reduction coefficient is at least 1.4
+   - This ensures fan power drops faster than flow rate
+   - Approximates cubic relationship between power and flow
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): cooling towers, fluid coolers
+- Climate Zone(s): any
+- Component(s): heat rejection fans, VFDs
+
+### Verification Algorithm Pseudo Code
+
+```python
+# Normalize data
+normalized_flow = fan_flow / design_flow
+normalized_power = fan_power / design_power
+
+# Transform data for analysis
+transformed_flow = normalized_flow - 1
+transformed_power = normalized_power - 1
+
+# Filter data
+valid_points = transformed_flow > -0.5  # flow > 50% of design
+
+# Linear regression
+coefficient = linear_regression(transformed_flow, transformed_power)
+
+if coefficient >= 1.4:
+    pass  # Power reduction meets requirements
+else:
+    fail  # Insufficient power reduction at part load
+```
+
+### Data requirements
+
+- ct_P_fan: Fan power
+  - Data Value Unit: watts
+  - Data point Description: Current heat rejection fan power
+  - Data Point Affiliation: Fan monitoring
+
+- ct_m_fan_ratio: Flow ratio
+  - Data Value Unit: fraction
+  - Data point Description: Current to design flow ratio
+  - Data Point Affiliation: Fan control
+
+- ct_P_fan_dsgn: Design power
+  - Data Value Unit: watts
+  - Data point Description: Fan power at design conditions
+  - Data Point Affiliation: Equipment specifications
+
+- ct_m_fan_dsgn: Design flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Fan flow rate at design conditions
+  - Data Point Affiliation: Equipment specifications
+
+"""
+
 from typing import Dict
 
 from constrain.checklib import RuleCheckBase

@@ -1,18 +1,64 @@
 """
-## Local Loop Performance Verification - Set Point Tracking
-
 ### Description
 
-This verification checks the set point tracking ability of local control loops.
+This verification aims to check if control loops maintain adequate setpoint tracking performance. The system should keep the controlled variable within an acceptable error band around setpoint for the majority of operation.
 
-### Verification logic
+### Code requirement
 
-With a threshold of 5% of abs(set_point) (if the set point is 0, then the threshold is default to be 0.01), if the number of samples of which the error is larger than this threshold is beyond 5% of number of all samples, then this verification fails; Otherwise, it passes.
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.1.12 Control Loops
+- Code Subsection: Loop Performance Requirements
+
+### Verification Approach
+
+The verification analyzes control error magnitude and frequency:
+1. Calculate error threshold:
+   - 5% of absolute setpoint value
+   - Default 0.01 if setpoint is zero
+2. For each sample, check if error exceeds threshold
+3. Pass if less than 5% of samples have excessive error
+   - Allows for occasional deviations
+   - Ensures good tracking most of the time
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): any control loop
+- Climate Zone(s): any
+- Component(s): sensors, actuators, controllers
+
+### Verification Algorithm Pseudo Code
+
+```python
+error_threshold = max(0.01, abs(setpoint) * 0.05)
+excessive_error_count = 0
+total_samples = 0
+
+for each sample:
+    error = abs(feedback - setpoint)
+    if error > error_threshold:
+        excessive_error_count += 1
+    total_samples += 1
+
+if excessive_error_count / total_samples > 0.05:
+    fail  # Poor tracking performance
+else:
+    pass  # Acceptable tracking
+```
 
 ### Data requirements
 
-- feedback_sensor: feedback sensor reading of the subject to be controlled towards a set point
-- set_point: set point value
+- feedback_sensor: Process variable
+  - Data Value Unit: varies by application
+  - Data point Description: Measured value being controlled
+  - Data Point Affiliation: Control loop input
+
+- set_point: Control setpoint
+  - Data Value Unit: same as feedback_sensor
+  - Data point Description: Desired value for process variable
+  - Data Point Affiliation: Control loop configuration
 
 """
 

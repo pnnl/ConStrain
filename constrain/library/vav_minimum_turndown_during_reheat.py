@@ -1,6 +1,7 @@
 """
 ### Description
-When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio
+
+This verification aims to check if VAV boxes maintain proper minimum turndown ratios during reheat operation. The system should limit airflow to prevent excessive simultaneous heating and cooling while ensuring adequate ventilation.
 
 ### Code requirement
 
@@ -10,26 +11,64 @@ When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airfl
 - Code Subsection: 6.5.2.1 Zone Controls
 
 ### Verification Approach
-- We aim to identify how VAV airflow rate varies when the VAV box is and isn't in reheat mode.
 
-### Verification logic
+The verification monitors airflow during reheat operation:
+1. Calculate actual turndown ratio:
+   - Current flow divided by maximum flow
+2. Compare to minimum design requirement:
+   - Allow small tolerance in comparison
+   - Pass if ratio stays below limit
+   - Fail if ratio exceeds limit
+3. Mark as untested when not in reheat mode
+
+### Verification Applicability
+
+- Building Type(s): any with VAV systems
+- Space Type(s): any with reheat capability
+- System(s): VAV terminal units
+- Climate Zone(s): any
+- Component(s): VAV boxes, reheat coils, airflow sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if reheat_coil_active:
+    if max_flow == 0:
+        untested  # Cannot calculate ratio
+    elif current_flow / max_flow > min_turndown + tolerance:
+        fail  # Excessive flow during reheat
+    else:
+        pass  # Proper turndown maintained
+else:
+    untested  # Not in reheat mode
 ```
-if reheat_coil_flag:
-  if V_dot_VAV_max == 0
-     Untested
-  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol
-     fail
-  else:
-     pass
-else
-    Untested
-```
+
 ### Data requirements
-- reheat_coil_flag: VAV box reheat coil operation status
-- V_dot_VAV: actual VAV volume flow
-- V_dot_VAV_max: max VAV volume flow
-- VAV_min_turndown_design: design VAV box min turndown ratio
-- turndown_tol: VAV turndown tolerance
+
+- reheat_coil_flag: Reheat status
+  - Data Value Unit: boolean
+  - Data point Description: Indicates if reheat coil is active
+  - Data Point Affiliation: Terminal unit control
+
+- V_dot_VAV: Current flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current VAV box airflow rate
+  - Data Point Affiliation: Terminal unit monitoring
+
+- V_dot_VAV_max: Maximum flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Maximum VAV box airflow setpoint
+  - Data Point Affiliation: Terminal unit configuration
+
+- VAV_min_turndown_design: Minimum turndown
+  - Data Value Unit: fraction
+  - Data point Description: Minimum allowable flow ratio
+  - Data Point Affiliation: Terminal unit configuration
+
+- turndown_tol: Flow tolerance
+  - Data Value Unit: fraction
+  - Data point Description: Allowable deviation from turndown ratio
+  - Data Point Affiliation: System configuration
 
 """
 

@@ -1,31 +1,75 @@
 """
-G36 2021
-
 ### Description
 
-Section 5.16.2.3
+This verification aims to check if the return air damper operates correctly in systems with return fan direct building pressure control. The damper position should respond appropriately to heating/cooling modes while allowing the return fan to maintain building pressure through speed control.
 
-### Verification Logic
+### Code requirement
 
-```
-if heating_output > 0
-    if abs(ra_p - max_ra_p) < ra_p_tol
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Subsection: 5.16.2.3 Return Air Damper Control with Return Fan Direct Building Pressure
+
+### Verification Approach
+
+The verification checks return air damper position under three conditions:
+1. During heating: damper should be at maximum position
+2. During cooling: damper should be fully closed
+3. Otherwise: damper should modulate between minimum and maximum positions
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units with return fans using direct building pressure control
+- Climate Zone(s): any
+- Component(s): return air dampers, return fans, building pressure sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if heating_output > 0:
+    if abs(ra_p - max_ra_p) < ra_p_tol:
         pass
-    else
+    else:
         fail
-    end
-else if cooling_output > 0
-    if abs(ra_p - 0) < ra_p_tol
+elif cooling_output > 0:
+    if abs(ra_p - 0) < ra_p_tol:
         pass
-    else
+    else:
         fail
-    end
-else 0 < ra_p < max_ra_p
+elif 0 < ra_p < max_ra_p:
     pass
-else
+else:
     fail
-end
 ```
+
+### Data requirements
+
+- heating_output: Heating output
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current heating system output
+  - Data Point Affiliation: System control
+
+- cooling_output: Cooling output
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current cooling system output
+  - Data Point Affiliation: System control
+
+- ra_p: Return air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Current return air damper position
+  - Data Point Affiliation: Air handling unit
+
+- max_ra_p: Maximum return air position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Maximum allowed return air damper position
+  - Data Point Affiliation: Air handling unit
+
+- ra_p_tol: Return air position tolerance
+  - Data Value Unit: percent
+  - Data point Description: Allowable deviation from setpoint
+  - Data Point Affiliation: Air handling unit
 
 """
 

@@ -1,6 +1,7 @@
 """
 ### Description
-When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio and the pressure setpoint must remain the same
+
+This verification aims to check if VAV boxes maintain proper minimum turndown ratios during reheat operation while ensuring stable duct pressure setpoints. The system should limit airflow and maintain consistent pressure control to prevent energy waste.
 
 ### Code requirement
 
@@ -10,31 +11,80 @@ When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airfl
 - Code Subsection: 6.5.2.1 Zone Controls
 
 ### Verification Approach
-- We aim to identify how VAV airflow rate varies when the VAV box is and isn't in reheat mode.
 
-### Verification logic
-```
-if reheat_coil_flag:
-  if V_dot_VAV_max == 0
-     Untested
-  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol
-     if P_set_prev is None:
-        return Untested
-    elif abs(P_set - P_set_prev) > P_set_tol:
-        return Untested
+The verification checks two conditions during reheat operation:
+1. Airflow turndown ratio:
+   - Calculate actual ratio (current flow / maximum flow)
+   - Compare to minimum design turndown requirement
+   - Allow small tolerance in comparison
+2. Pressure setpoint stability:
+   - Track changes in duct pressure setpoint
+   - Verify setpoint remains constant during reheat
+   - Allow small tolerance for measurement noise
+
+### Verification Applicability
+
+- Building Type(s): any with VAV systems
+- Space Type(s): any with reheat capability
+- System(s): VAV terminal units
+- Climate Zone(s): any
+- Component(s): VAV boxes, reheat coils, pressure sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if reheat_coil_active:
+    if max_flow == 0:
+        untested  # Cannot calculate ratio
+    elif current_flow / max_flow > min_turndown + tolerance:
+        if previous_pressure is None:
+            untested  # Need pressure history
+        elif abs(current_pressure - previous_pressure) > pressure_tolerance:
+            untested  # Pressure not stable
+        else:
+            fail  # Excessive flow during reheat
     else:
-        return False
-else
-    Untested
+        pass  # Proper turndown maintained
+else:
+    untested  # Not in reheat mode
 ```
+
 ### Data requirements
-- reheat_coil_flag: VAV box reheat coil operation status
-- V_dot_VAV: actual VAV volume flow
-- V_dot_VAV_max: max VAV volume flow
-- VAV_min_turndown_design: design VAV box min turndown ratio
-- P_set: duct pressure setpoint
-- turndown_tol: VAV turndown tolerance
-- P_set_tol: pressure setpoint tolerance
+
+- reheat_coil_flag: Reheat status
+  - Data Value Unit: boolean
+  - Data point Description: Indicates if reheat coil is active
+  - Data Point Affiliation: Terminal unit control
+
+- V_dot_VAV: Current flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current VAV box airflow rate
+  - Data Point Affiliation: Terminal unit monitoring
+
+- V_dot_VAV_max: Maximum flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Maximum VAV box airflow setpoint
+  - Data Point Affiliation: Terminal unit configuration
+
+- VAV_min_turndown_design: Minimum turndown
+  - Data Value Unit: fraction
+  - Data point Description: Minimum allowable flow ratio
+  - Data Point Affiliation: Terminal unit configuration
+
+- P_set: Pressure setpoint
+  - Data Value Unit: pressure
+  - Data point Description: Current duct static pressure setpoint
+  - Data Point Affiliation: System control
+
+- turndown_tol: Flow tolerance
+  - Data Value Unit: fraction
+  - Data point Description: Allowable deviation from turndown ratio
+  - Data Point Affiliation: System configuration
+
+- P_set_tol: Pressure tolerance
+  - Data Value Unit: pressure
+  - Data point Description: Allowable pressure setpoint variation
+  - Data Point Affiliation: System configuration
 
 """
 

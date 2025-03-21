@@ -1,3 +1,75 @@
+"""
+### Description
+
+This verification aims to check if the outdoor air damper control operates correctly based on occupancy. The system should close outdoor air dampers when spaces are not occupied, except during economizer operation.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2016
+- Code Section: 6.4.3 Controls and Diagnostics
+- Code Subsection: 6.4.3.4.2 Automatic Outdoor Air Damper Control
+
+### Verification Approach
+
+The verification checks that when a space is unoccupied and the economizer is not active, the outdoor air and exhaust air dampers should be closed (flow rates near zero). The verification passes if this condition is met.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): HVAC systems with outdoor air dampers
+- Climate Zone(s): any
+- Component(s): outdoor air dampers, exhaust air dampers
+
+### Verification Algorithm Pseudo Code
+
+```
+if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0
+    return false
+else
+    return pass
+```
+
+### Data requirements
+
+- o: Number of occupants
+  - Data Value Unit: count
+  - Data point Description: Number of occupants in the space
+  - Data Point Affiliation: Zone occupancy
+
+- m_oa: System outdoor air volume flow rate
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Outdoor air flow rate through damper
+  - Data Point Affiliation: System ventilation
+
+- m_ea: System exhaust air volume flow rate
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Exhaust air flow rate through damper
+  - Data Point Affiliation: System ventilation
+
+- eco_onoff: System air-side economizer status
+  - Data Value Unit: binary (0/1)
+  - Data point Description: Indicates if economizer is active
+  - Data Point Affiliation: System operation
+
+- tol_o: Tolerance for occupancy
+  - Data Value Unit: count
+  - Data point Description: Threshold for considering space unoccupied
+  - Data Point Affiliation: Zone occupancy
+
+- tol_m_oa: Tolerance for outdoor air flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Threshold for considering OA damper closed
+  - Data Point Affiliation: System ventilation
+
+- tol_m_ea: Tolerance for exhaust air flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Threshold for considering EA damper closed
+  - Data Point Affiliation: System ventilation
+
+"""
+
 from constrain.checklib import RuleCheckBase
 
 

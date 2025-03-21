@@ -1,47 +1,95 @@
 """
-G36 2021
-
 ### Description
 
-5.16.12.3.	Upon signal from the freeze-stat (if installed), or if supply air temperature drops below 3.3°C (38°F) for 15 minutes or below 1°C (34°F) for 5 minutes, shut down supply and return/relief fan(s), close outdoor air damper, open the cooling-coil valve to 100%, and energize the CHW pump system. Also send two (or more, as required to ensure that heating plant is active) heating hot-water plant requests, modulate the heating coil to maintain the higher of the supply air temperature or the mixed air temperature at 27°C (80°F), and set a Level 2 alarm indicating the unit is shut down by freeze protection.
+This verification aims to check if the third (highest) stage of freeze protection control operates correctly. When severe freezing conditions are detected, the system should shut down fans, close outdoor air dampers, and adjust coil valves to prevent damage.
 
-### Verification logic
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.12 Freeze Protection
+- Code Subsection: 5.16.12.3 Stage 3 (Highest)
+
+### Verification Approach
+
+The verification monitors multiple conditions that can trigger stage 3 protection: freeze-stat signal, sustained low temperatures, or critically low temperatures. When triggered, it verifies that fans are stopped, dampers are closed, and coils are properly positioned to prevent freezing damage.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units
+- Climate Zone(s): any
+- Component(s): supply air temperature sensors, freeze-stats, fans, dampers, coils
+
+### Verification Algorithm Pseudo Code
 
 ```python
 if supply_air_temp < 3.3 (continuously 15 minutes) or
   supply_air_temp < 1 (continuously 5 minutes) or
-  freeze_stat == True
-  if not (
-    outdoor_damper_command == 0 and
-    supply_fan_status == 'off' and
-    return_fan_status == 'off' and
-    relief_fan_status == 'off' and
-    cooling_coil_command == 100 and
-    heating_coil_command > 0
-  ):
-    fail
-  else:
-    pass
+  freeze_stat == True:
+    if not (
+        outdoor_damper_command == 0 and
+        supply_fan_status == 'off' and
+        return_fan_status == 'off' and
+        relief_fan_status == 'off' and
+        cooling_coil_command == 100 and
+        heating_coil_command > 0
+    ):
+        fail
+    else:
+        pass
 
 if never (
-  supply_air_temp < 3.3 (continuously 15 minutes) or
-  supply_air_temp < 1 (continuously 5 minutes) or
-  freeze_stat == True
+    supply_air_temp < 3.3 (continuously 15 minutes) or
+    supply_air_temp < 1 (continuously 5 minutes) or
+    freeze_stat == True
 ):
-  untested
-
+    untested
 ```
 
 ### Data requirements
 
-- freeze_stat: (optional, set to False if system does not have it) binary freeze-stat
-- supply_air_temp: supply air temperature
-- outdoor_damper_command: outdoor air damper
-- supply_fan_status: supply fan status (speed): [1, 0] (can be replaced by binary or numeric variables)
-- return_fan_status: (optional, set to False if system does not have it) return fan status (speed)
-- relief_fan_status: (optional, set to False if system does not have it) relief fan status (speed)
-- cooling_coil_command: cooling coil command
-- heating_coil_command: heating coil command
+- freeze_stat: Freeze-stat status
+  - Data Value Unit: binary
+  - Data point Description: Status of freeze protection thermostat (optional)
+  - Data Point Affiliation: Air handling unit
+
+- supply_air_temp: Supply air temperature
+  - Data Value Unit: °C
+  - Data point Description: Temperature of supply air downstream of cooling coil
+  - Data Point Affiliation: Air handling unit
+
+- outdoor_damper_command: Outdoor air damper position
+  - Data Value Unit: fraction (0-1)
+  - Data point Description: Current position command to outdoor air damper
+  - Data Point Affiliation: Air handling unit
+
+- supply_fan_status: Supply fan status
+  - Data Value Unit: binary
+  - Data point Description: Operating status of supply fan
+  - Data Point Affiliation: Air handling unit
+
+- return_fan_status: Return fan status
+  - Data Value Unit: binary
+  - Data point Description: Operating status of return fan (optional)
+  - Data Point Affiliation: Air handling unit
+
+- relief_fan_status: Relief fan status
+  - Data Value Unit: binary
+  - Data point Description: Operating status of relief fan (optional)
+  - Data Point Affiliation: Air handling unit
+
+- cooling_coil_command: Cooling coil valve position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Position command to cooling coil valve
+  - Data Point Affiliation: Air handling unit
+
+- heating_coil_command: Heating coil valve position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Position command to heating coil valve
+  - Data Point Affiliation: Air handling unit
+
 """
 
 from constrain.checklib import RuleCheckBase

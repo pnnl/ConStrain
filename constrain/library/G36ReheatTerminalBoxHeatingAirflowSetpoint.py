@@ -1,60 +1,133 @@
 """
-G36 2021
 ### Description
 
-Section 5.6.5.3
+This verification aims to check if the terminal box with reheat operates correctly when the zone is in heating mode. The control sequence involves two stages based on heating loop output: first adjusting discharge temperature while maintaining minimum airflow, then increasing airflow if more heating is needed.
 
-- When the Zone State is heating, the Heating Loop shall maintain space temperature at the heating setpoint as follows:
+### Code requirement
 
-    - a. From 0% to 50%, the heating-loop output shall reset the discharge temperature setpoint from the current AHU SAT setpoint to a maximum of Max Delta T above space temperature setpoint. The active airflow setpoint shall be the heating minimum endpoint.
-    - b. From 51% to 100%, if the DAT is greater than room temperature plus 3°C (5°F), the heating-loop output shall reset the active airflow setpoint from the heating minimum endpoint to the heating maximum endpoint.
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.6.5 Terminal Box Airflow Control with Reheat
+- Code Subsection: 5.6.5.3 Heating Airflow Control
 
-### Verification logic
+### Verification Approach
 
-```
-switch operation_mode
-    case 'occupied'
+The verification checks the control sequence in two stages:
+1. For heating loop output 0-50%:
+   - Airflow should be at heating minimum
+   - Discharge temperature setpoint should be within limits
+2. For heating loop output 51-100%:
+   - If discharge air is warm enough, airflow should modulate between min and max
+   - Airflow limits vary by operation mode
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): VAV terminal boxes with reheat
+- Climate Zone(s): any
+- Component(s): terminal box controllers, airflow sensors, heating coils
+
+### Verification Algorithm Pseudo Code
+
+```python
+switch operation_mode:
+    case 'occupied':
         heating_maximum = max(v_heat_min, v_min)
         heating_minimum = max(v_heat_min, v_min)
-    case 'cooldown'
+    case 'cooldown':
         heating_maximum = v_heat_max
         heating_minimum = v_heat_min
-    case 'setup', 'unoccupied'
+    case 'setup', 'unoccupied':
         heating_maximum = 0
         heating_minimum = 0
-    case 'warmup', 'setback'
+    case 'warmup', 'setback':
         heating_maximum = v_heat_max
         heating_minimum = v_cool_max
 
-    if 0 < heating_loop_output <= 50:
-        if abs(v_spt - heating_minimum) <= tolerance and ahu_sat_spt <= dat_spt <= 11 + space_temp_spt:
-            pass
-        else:
-            fail
-    if 50 < heating_loop_output <= 100:
-        if dat > room_temp + 3 and heating_minimum <= v_spt <= heating_maximum:
-            pass
-        else:
-            untested
-    end
+if 0 < heating_loop_output <= 50:
+    if abs(v_spt - heating_minimum) <= tolerance and ahu_sat_spt <= dat_spt <= 11 + space_temp_spt:
+        pass
+    else:
+        fail
+elif 50 < heating_loop_output <= 100:
+    if dat > room_temp + 3 and heating_minimum <= v_spt <= heating_maximum:
+        pass
+    else:
+        untested
 ```
 
 ### Data requirements
 
 - operation_mode: System operation mode
-- zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
-- v_cool_max: Zone maximum cooling airflow setpoint
-- v_heat_max: Zone maximum heating airflow setpoint
-- v_heat_min: "Zone minimum heating airflow setpoint
-- v_min: Occupied zone minimum airflow setpoint
+  - Data Value Unit: enumeration
+  - Data point Description: Current operation mode of the system
+  - Data Point Affiliation: System control
+
+- zone_state: Zone state
+  - Data Value Unit: enumeration
+  - Data point Description: Current zone state (heating, cooling, or deadband)
+  - Data Point Affiliation: Zone control
+
+- v_cool_max: Maximum cooling airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Zone maximum cooling airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- v_heat_max: Maximum heating airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Zone maximum heating airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- v_heat_min: Minimum heating airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Zone minimum heating airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- v_min: Minimum airflow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Occupied zone minimum airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
 - v_spt: Active airflow setpoint
-- v_spt_tol: Airflow setpoint tolerance
-- heating_loop_output: Zone heating loop signal (from 0 to 100)
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current active airflow setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- v_spt_tol: Airflow tolerance
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Allowable deviation from setpoint
+  - Data Point Affiliation: Zone airflow control
+
+- heating_loop_output: Heating loop signal
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Zone heating control loop output
+  - Data Point Affiliation: Zone temperature control
+
 - room_temp: Room temperature
+  - Data Value Unit: °C
+  - Data point Description: Current zone air temperature
+  - Data Point Affiliation: Zone monitoring
+
 - space_temp_spt: Space temperature setpoint
-- ahu_sat_spt: AHU supply air temperature setpoint
+  - Data Value Unit: °C
+  - Data point Description: Zone temperature setpoint
+  - Data Point Affiliation: Zone control
+
+- ahu_sat_spt: Supply air temperature setpoint
+  - Data Value Unit: °C
+  - Data point Description: AHU supply air temperature setpoint
+  - Data Point Affiliation: AHU control
+
 - dat: Discharge air temperature
-- dat_spt: Discharge air temperature setpoint
+  - Data Value Unit: °C
+  - Data point Description: Terminal box discharge air temperature
+  - Data Point Affiliation: Terminal box monitoring
+
+- dat_spt: Discharge temperature setpoint
+  - Data Value Unit: °C
+  - Data point Description: Terminal box discharge air temperature setpoint
+  - Data Point Affiliation: Terminal box control
 
 """
 

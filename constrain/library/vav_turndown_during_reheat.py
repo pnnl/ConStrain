@@ -1,6 +1,7 @@
 """
 ### Description
-When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should be higher than when it isn't in reheat mode
+
+This verification aims to check if VAV boxes properly reduce airflow during reheat operation compared to normal cooling operation. The system should maintain lower airflow rates during reheat to minimize simultaneous heating and cooling.
 
 ### Code requirement
 
@@ -10,26 +11,57 @@ When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should
 - Code Subsection: 6.5.2.1 Zone Controls
 
 ### Verification Approach
-- We aim to identify how VAV airflow rate varies when the VAV box is and isn't in reheat mode.
 
-### Verification logic
-```
-if (reheat_coil_flag == False).all():
-    Untested
+The verification compares average airflow ratios:
+1. Calculate flow ratios (actual/maximum) for all periods
+2. Separate data into reheat and non-reheat periods
+3. Compare average ratios:
+   - Calculate mean ratio during reheat
+   - Calculate mean ratio during normal operation
+   - Pass if reheat ratio is lower
+4. Mark as untested if no reheat operation observed
+
+### Verification Applicability
+
+- Building Type(s): any with VAV systems
+- Space Type(s): any with reheat capability
+- System(s): VAV terminal units
+- Climate Zone(s): any
+- Component(s): VAV boxes, reheat coils, airflow sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if no_reheat_periods_exist:
+    untested  # Cannot verify without reheat operation
 else:
-    V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max
-    mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
-    mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
-
-    if mean_reheat_ratio < mean_no_reheat_ratio:
-        pass
+    flow_ratio = current_flow / maximum_flow
+    
+    reheat_avg = mean(flow_ratio[reheat_active])
+    normal_avg = mean(flow_ratio[not_reheat_active])
+    
+    if reheat_avg < normal_avg:
+        pass  # Proper turndown during reheat
     else:
-        fail
+        fail  # Insufficient turndown
 ```
+
 ### Data requirements
-- reheat_coil_flag: VAV box reheat coil operation status
-- V_dot_VAV: actual VAV volume flow
-- V_dot_VAV_max: max VAV volume flow
+
+- reheat_coil_flag: Reheat status
+  - Data Value Unit: boolean
+  - Data point Description: Indicates if reheat coil is active
+  - Data Point Affiliation: Terminal unit control
+
+- V_dot_VAV: Current flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Current VAV box airflow rate
+  - Data Point Affiliation: Terminal unit monitoring
+
+- V_dot_VAV_max: Maximum flow
+  - Data Value Unit: volumetric flow rate
+  - Data point Description: Maximum VAV box airflow setpoint
+  - Data Point Affiliation: Terminal unit configuration
 
 """
 

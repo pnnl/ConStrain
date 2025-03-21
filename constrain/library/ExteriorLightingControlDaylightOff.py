@@ -1,20 +1,31 @@
 """
-ASHRAE 90.1-2022
 ### Description
 
-Section 9.4.1.4.b Daylight OFF control
+This verification aims to check if exterior lighting control operates correctly based on daylight availability. The system should automatically turn off exterior lighting when sufficient daylight is available or within 30 minutes of sunrise.
 
-- [Exterior] Lighting shall automatically turn off when sufficient daylight is available or within 30 minutes of sunrise.
+### Code requirement
 
-Verification Item:
+- Code Name: ASHRAE 90.1
+- Code Year: 2022
+- Code Section: 9.4.1.4 Exterior Lighting Control
+- Code Subsection: 9.4.1.4.b Daylight OFF control
 
-- Check if the lighting power is turned off when enough daylight is available.
+### Verification Approach
 
-### Verification logic
+The verification checks if the exterior lighting is turned off when either sufficient daylight is detected by sensors or within 30 minutes after sunrise. The verification passes if the lighting power is zero under these conditions.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): exterior spaces
+- System(s): exterior lighting systems
+- Climate Zone(s): any
+- Component(s): lighting controls, daylight sensors
+
+### Verification Algorithm Pseudo Code
 
 ```
 daylight_setpoint_met = data["daylight_sensed"] / data["daylight_setpoint"]
-
 
 If daylight_setpoint_met >= 1 or time_since_last_sun_up >= 30: # min
     If total_lighting_power == 0:
@@ -28,10 +39,26 @@ Endif
 ```
 
 ### Data requirements
-- is_sun_up: flag indicating whether the sun is up; data can be either a boolean (True or False), or numeric boolean (0 or 1)
-- daylight_sensed: Amount of daylight sensed by a photocell type sensor; unit should be consistent with `daylight_setpoint`
-- daylight_setpoint: Setpoint or threshold below which daylight is not sufficient and exterior lighting is required
-- total_lighting_power: reported total lighting power (not the design total lighting power)
+
+- is_sun_up: Sun position flag
+  - Data Value Unit: boolean or binary (0/1)
+  - Data point Description: Flag indicating whether the sun is up
+  - Data Point Affiliation: Environmental conditions
+
+- daylight_sensed: Measured daylight level
+  - Data Value Unit: consistent with daylight_setpoint
+  - Data point Description: Amount of daylight sensed by photocell sensor
+  - Data Point Affiliation: Lighting control
+
+- daylight_setpoint: Daylight threshold
+  - Data Value Unit: consistent with daylight_sensed
+  - Data point Description: Threshold below which daylight is insufficient
+  - Data Point Affiliation: Lighting control
+
+- total_lighting_power: Lighting power
+  - Data Value Unit: power
+  - Data point Description: Total exterior lighting power consumption
+  - Data Point Affiliation: Lighting system
 
 """
 
