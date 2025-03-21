@@ -179,12 +179,12 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_sa_set": {
+                                "T_sa_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "T_sa_set"
+                                "T_sa_sp"
                             ]
                         },
                         "parameters": {

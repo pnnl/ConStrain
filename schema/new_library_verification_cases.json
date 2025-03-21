@@ -13,7 +13,7 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "T_sa_sp": {
                         "subject": "VAV_1 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
@@ -38,7 +38,7 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "T_sa_sp": {
                         "subject": "VAV_1 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
@@ -63,7 +63,7 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "T_sa_sp": {
                         "subject": "VAV_2 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
@@ -88,7 +88,7 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "T_sa_sp": {
                         "subject": "VAV_2 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"

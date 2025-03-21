@@ -71,7 +71,7 @@ Running Verifications using **ConStrain**
 .. sourcecode:: JSON
 
   "idf_output_variables": {
-    "T_sa_set": {
+    "T_sa_sp": {
       "subject": "VAV_1 Supply Equipment Outlet Node",
       "variable": "System Node Setpoint Temperature",
       "frequency": "detailed"

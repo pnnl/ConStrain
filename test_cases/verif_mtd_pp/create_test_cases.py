@@ -217,7 +217,7 @@ def sat_reset(idf, idf_f, id, cases):
             sat_case["verification_class"] = "SupplyAirTempReset"
             sat_case["datapoints_source"] = {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "T_sa_sp": {
                         "subject": f"{sat_node}",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed",

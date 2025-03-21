@@ -14,7 +14,7 @@
             "verification_class": "SupplyAirTempReset",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "T_sa_sp": {
                         "subject": "Node 85",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
@@ -39,7 +39,7 @@
             "verification_class": "SupplyAirTempReset",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "T_sa_sp": {
                         "subject": "Node 85",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
