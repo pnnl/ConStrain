@@ -1,5 +1,5 @@
 """
-Contained is the class for PopupWindow, the popup displayed when 'Add Basic' is chosen in the states tab.
+Contained is the class for BasicPopup, the popup displayed when 'Add Basic' is chosen in the states tab.
 """
 
 import json
@@ -36,7 +36,7 @@ with open(api_to_method_path) as f:
     api_to_method = json.load(f)
 
 
-class PopupWindow(QDialog):
+class BasicPopup(QDialog):
     def __init__(self, payloads=[], state_names=[], rect=None, load=False):
         """Form to be displayed for user to edit or add a basic state
 

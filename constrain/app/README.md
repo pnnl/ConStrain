@@ -2,7 +2,7 @@
 
 ## Background
 This tool builds workflows following the ConStrain API schema. The GUI provides the following:
-- a graphical representation of their workflow 
+- a graphical representation of their workflow
 - a layer of abstraction over the process of creating a workflow
 - validation and submission of workflows
 
@@ -30,7 +30,7 @@ The basic form is meant to guide the user in the creation of a state. It is trig
 The advanced form offers no guidance in the creation of a state. It is triggered by navigating to the 'State' tab and pressing the 'Add Advanced' button, and also triggered by clicking a state in the Workflow Diagram while using Advanced Settings. It is a text box where the user inputs a state. The state should be in the following format:
 
 ```json
- { 
+ {
     "name of state": {
         ...
     }
@@ -89,7 +89,7 @@ The application contains 9 Python source files:
 - `submit`
 
 #### app
-This file runs the GUI. It is responsible for piecing together the main components of the app, like the meta form, the import form, and the workflow diagram. It also handles validate, import, and export functionalities. It contains 2 classes: 
+This file runs the GUI. It is responsible for piecing together the main components of the app, like the meta form, the import form, and the workflow diagram. It also handles validate, import, and export functionalities. It contains 2 classes:
 - `GUI(QMainWindow)`: pieces classes together
 - `UserSetting(QDialog)`: dialog to configure basic or advanced setting
 
@@ -108,7 +108,7 @@ This file is based on classes for organizing the UI of workflow visualization. I
 - `WorkflowDiagram(QWidget)`: node manager
 
 #### popup_window
-This file contains the `PopupWindow(QDialog)` class. This class handles the Basic Popup, which is a form that describes a state. It is responsible for handling the creation of a state and the import of a state.
+This file contains the `BasicPopup(QDialog)` class. This class handles the Basic Popup, which is a form that describes a state. It is responsible for handling the creation of a state and the import of a state.
 
 #### advanced_popup
 This file contains the `AdvancedPopup(QDialog)` class. This class handles the Advanced Popup, which is a text box that describes a state in JSON format. It is responsible for handling the creation of a state and the import of a state. The following is an example entry to this text box:

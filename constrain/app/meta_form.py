@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
 )
 from PyQt6.QtCore import QDate
+from constrain.app import utils
 
 
 class MetaForm(QWidget):
@@ -58,42 +59,32 @@ class MetaForm(QWidget):
         }
 
     def read_import(self, workflow_name=None, meta=None):
-        def isStr(input):
+        try:
+            self.verify_import(workflow_name=workflow_name, meta=meta)
+        except AssertionError:
+            utils.send_error("Error in Import", "Invalid meta form")
+            return
+
+        self.name_input.setText(workflow_name)
+        self.author_input.setText(meta.get("author"))
+        d = QDate.fromString(meta.get("date"), self.date_format)
+        self.date_input.setDate(d)
+        self.version_input.setText(meta.get("version"))
+        self.description_input.setText(meta.get("description"))
+
+        self.update()
+
+    def verify_import(self, workflow_name=None, meta=None):
+        def is_str(input):
             return isinstance(input, str)
 
         if workflow_name:
-            if isStr(workflow_name):
-                self.name_input.setText(workflow_name)
-            else:
-                print("error")
+            assert is_str(workflow_name)
 
         if isinstance(meta, dict):
-            if "author" in meta.keys():
-                author = meta["author"]
-                if isStr(author):
-                    self.author_input.setText(author)
-                else:
-                    print("invalid author")
-            if "date" in meta.keys():
-                date = meta["date"]
-                if isStr(date):
-                    d = QDate.fromString(date, self.date_format)
-                    self.date_input.setDate(d)
-                else:
-                    print("invalid date")
-            if "version" in meta.keys():
-                version = meta["version"]
-                if isStr(version):
-                    self.version_input.setText(version)
-                else:
-                    print("invalid version")
-            if "description" in meta.keys():
-                description = meta["description"]
-                if isStr(description):
-                    self.description_input.setText(description)
-                else:
-                    print("invalid description")
-        self.update()
+            for k in ["author", "date", "version", "description"]:
+                if v := meta.get(k):
+                    assert is_str(v)
 
     def get_workflow_name(self):
         return self.name_input.text()
