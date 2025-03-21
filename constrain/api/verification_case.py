@@ -375,7 +375,6 @@ class VerificationCase:
         self, case: {}, ignored_keys=["case_id_in_suite"]
     ) -> bool:
         for k, v in self.case_suite.items():
-            print(v)
             if self.same_case(case, v, ignored_keys=ignored_keys):
                 return True
         return False
