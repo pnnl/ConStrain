@@ -3,7 +3,7 @@ import pandas as pd
 
 
 class GuestRoomControlTemp(RuleCheckBase):
-    points = ["T_z_hea_set", "T_z_coo_set", "O_sch", "tol_occ", "tol_temp"]
+    points = ["T_z_heat_sp", "T_z_cool_sp", "O_sch", "tol_occ", "tol_temp"]
 
     def verify(self):
         tol_occ = self.df["tol_occ"][0]
@@ -23,8 +23,8 @@ class GuestRoomControlTemp(RuleCheckBase):
                 if (
                     day["O_sch"] <= tol_occ
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["T_z_hea_set"] < 15.6 + tol_temp).all() and (
-                        day["T_z_coo_set"] > 26.7 - tol_temp
+                    if (day["T_z_heat_sp"] < 15.6 + tol_temp).all() and (
+                        day["T_z_cool_sp"] > 26.7 - tol_temp
                     ).all():
                         result_repo.append(
                             1
@@ -34,13 +34,13 @@ class GuestRoomControlTemp(RuleCheckBase):
                             0
                         )  # fail, zone temperature setpoint was not reset correctly
                 else:  # room is rented out
-                    T_z_hea_occ_set = day.query("O_sch > 0.0")["T_z_hea_set"].max()
-                    T_z_coo_occ_set = day.query("O_sch > 0.0")["T_z_coo_set"].min()
+                    T_z_heat_occ_sp = day.query("O_sch > 0.0")["T_z_heat_sp"].max()
+                    T_z_cool_occ_sp = day.query("O_sch > 0.0")["T_z_cool_sp"].min()
 
                     if (
-                        day["T_z_hea_set"] < T_z_hea_occ_set - 2.22 + tol_temp
+                        day["T_z_heat_sp"] < T_z_heat_occ_sp - 2.22 + tol_temp
                     ).all() or (
-                        day["T_z_coo_set"] > T_z_coo_occ_set + 2.22 - tol_temp
+                        day["T_z_cool_sp"] > T_z_cool_occ_sp + 2.22 - tol_temp
                     ).all():
                         result_repo.append(
                             1

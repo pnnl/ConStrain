@@ -223,7 +223,7 @@ def sat_reset(idf, idf_f, id, cases):
                         "frequency": "detailed",
                     }
                 },
-                "parameters": {"T_z_coo": tz_coo},
+                "parameters": {"T_z_cool": tz_coo},
             }
             cases["cases"].append(sat_case)
             id += 1
@@ -293,7 +293,7 @@ def zone_temp_ctrl_depth_htg(idf, idf_f, id, cases):
         zone_temp_ctrl_depth_htg["verification_class"] = "ZoneHeatingResetDepth"
         zone_temp_ctrl_depth_htg["datapoints_source"] = {
             "idf_output_variables": {
-                "T_heat_set": {
+                "T_z_heat_sp": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Heating Setpoint Temperature",
                     "frequency": "detailed",
@@ -328,7 +328,7 @@ def zone_temp_ctrl_depth_clg(idf, idf_f, id, cases):
         zone_temp_ctrl_depth_clg["verification_class"] = "ZoneCoolingResetDepth"
         zone_temp_ctrl_depth_clg["datapoints_source"] = {
             "idf_output_variables": {
-                "T_cool_set": {
+                "T_z_cool_sp": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Cooling Setpoint Temperature",
                     "frequency": "detailed",
@@ -363,7 +363,7 @@ def zone_temp_ctrl_min(idf, idf_f, id, cases):
         zone_temp_ctrl_min["verification_class"] = "ZoneHeatSetpointMinimum"
         zone_temp_ctrl_min["datapoints_source"] = {
             "idf_output_variables": {
-                "T_heat_set": {
+                "T_z_heat_sp": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Heating Setpoint Temperature",
                     "frequency": "detailed",
@@ -398,7 +398,7 @@ def zone_temp_ctrl_max(idf, idf_f, id, cases):
         zone_temp_ctrl_max["verification_class"] = "ZoneCoolingSetpointMaximum"
         zone_temp_ctrl_max["datapoints_source"] = {
             "idf_output_variables": {
-                "T_cool_set": {
+                "T_z_cool_sp": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Cooling Setpoint Temperature",
                     "frequency": "detailed",

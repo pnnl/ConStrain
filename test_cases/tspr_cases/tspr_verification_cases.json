@@ -21,7 +21,7 @@
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24
+                    "T_z_cool": 24
                 }
             }
         },
@@ -46,7 +46,7 @@
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24
+                    "T_z_cool": 24
                 }
             }
         },

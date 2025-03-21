@@ -9,23 +9,23 @@ import glob, json, os
 
 
 class SupplyAirTempReset(RuleCheckBase):
-    points = ["T_sa_set", "T_z_coo"]
+    points = ["T_sa_sp", "T_z_cool"]
 
     def verify(self):
-        t_sa_set_max = max(self.df["T_sa_set"])
-        t_sa_set_min = min(self.df["T_sa_set"])
+        t_sa_sp_max = max(self.df["T_sa_sp"])
+        t_sa_sp_min = min(self.df["T_sa_sp"])
 
-        self.result = (t_sa_set_max - t_sa_set_min) >= (
-            self.df["T_z_coo"] - t_sa_set_min
+        self.result = (t_sa_sp_max - t_sa_sp_min) >= (
+            self.df["T_z_cool"] - t_sa_sp_min
         ) * 0.25 * 0.99  # 0.99 being the numeric threshold
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
         print(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
-        sns.histplot(self.df["T_sa_set"])
-        plt.title("All samples distribution of T_sa_set")
-        plt.savefig(f"{self.results_folder}/All_samples_distribution_of_T_sa_set.png")
+        sns.histplot(self.df["T_sa_sp"])
+        plt.title("All samples distribution of T_sa_sp")
+        plt.savefig(f"{self.results_folder}/All_samples_distribution_of_T_sa_sp.png")
 
         super().plot(plot_option, plt_pts, fig_size)
 
@@ -35,6 +35,6 @@ class SupplyAirTempReset(RuleCheckBase):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
             daydf = self.df.loc[daystr]
             day = self.result[daystr]
-            if daydf["T_sa_set"].max() - daydf["T_sa_set"].min() > 0:
+            if daydf["T_sa_sp"].max() - daydf["T_sa_sp"].min() > 0:
                 return day, daydf
             return day, daydf

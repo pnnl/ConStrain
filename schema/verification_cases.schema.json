@@ -190,12 +190,12 @@
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "T_z_coo": {
+                                "T_z_cool": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "T_z_coo"
+                                "T_z_cool"
                             ]
                         }
                     }
@@ -420,10 +420,10 @@
                                 "HVAC_operation_sch": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_heat_set": {
+                                "T_z_heat_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_cool_set": {
+                                "T_z_cool_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "Fan_elec_rate": {
@@ -433,8 +433,8 @@
                             "required": [
                                 "T_zone",
                                 "HVAC_operation_sch",
-                                "T_heat_set",
-                                "T_cool_set",
+                                "T_z_heat_sp",
+                                "T_z_cool_sp",
                                 "Fan_elec_rate"
                             ]
                         },
@@ -930,10 +930,10 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_z_hea_set": {
+                                "T_z_heat_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_z_coo_set": {
+                                "T_z_cool_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "O_sch": {
@@ -941,8 +941,8 @@
                                 }
                             },
                             "required": [
-                                "T_z_hea_set",
-                                "T_z_coo_set",
+                                "T_z_heat_sp",
+                                "T_z_cool_sp",
                                 "O_sch"
                             ]
                         },

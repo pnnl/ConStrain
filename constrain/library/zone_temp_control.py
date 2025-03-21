@@ -2,7 +2,7 @@ from constrain.checklib import RuleCheckBase
 
 
 class ZoneTempControl(RuleCheckBase):
-    points = ["T_set_cool", "T_set_heat"]
+    points = ["T_z_cool_sp", "T_z_heat_sp"]
 
     def verify(self):
-        self.result = (self.df["T_set_cool"] - self.df["T_set_heat"]) > 2.77
+        self.result = (self.df["T_z_cool_sp"] - self.df["T_z_heat_sp"]) > 2.77

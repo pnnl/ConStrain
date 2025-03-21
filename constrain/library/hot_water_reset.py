@@ -10,8 +10,8 @@ class HWReset(RuleCheckBase):
         "T_oa_min",
         "T_hw",
         "m_hw",
-        "T_hw_max_set",
-        "T_hw_min_set",
+        "T_hw_max_sp",
+        "T_hw_min_sp",
     ]
 
     def verify(self):
@@ -21,11 +21,11 @@ class HWReset(RuleCheckBase):
             )  # add boundary relaxation in the rules for this one and chwreset
             | (
                 (self.df["T_oa_db"] <= self.df["T_oa_min"])
-                & (self.df["T_hw"] >= self.df["T_hw_max_set"] * 0.99)
+                & (self.df["T_hw"] >= self.df["T_hw_max_sp"] * 0.99)
             )
             | (
                 (self.df["T_oa_db"] >= (self.df["T_oa_max"]))
-                & (self.df["T_hw"] <= self.df["T_hw_min_set"] * 1.01)
+                & (self.df["T_hw"] <= self.df["T_hw_min_sp"] * 1.01)
             )
             | (
                 (
@@ -33,8 +33,8 @@ class HWReset(RuleCheckBase):
                     & (self.df["T_oa_db"] <= self.df["T_oa_max"])
                 )
                 & (
-                    (self.df["T_hw"] >= self.df["T_hw_min_set"] * 0.99)
-                    & (self.df["T_hw"] <= self.df["T_hw_max_set"] * 1.01)
+                    (self.df["T_hw"] >= self.df["T_hw_min_sp"] * 0.99)
+                    & (self.df["T_hw"] <= self.df["T_hw_max_sp"] * 1.01)
                 )
             )
         )

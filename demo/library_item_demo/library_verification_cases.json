@@ -76,10 +76,10 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
+                    "T_sa_sp": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "T_z_cool": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -112,7 +112,7 @@
                 "idf_output_variables": {
                     "oa_flow": "PSZ-AC:1_OAInlet Node:System Node Standard Density Volume Flow Rate [m3/s](TimeStep)",
                     "oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
-                    "ret_a_temp": "PSZ-AC:1 Supply Equipment Inlet Node:System Node Temperature [C](TimeStep)"
+                    "T_ra": "PSZ-AC:1 Supply Equipment Inlet Node:System Node Temperature [C](TimeStep)"
                 },
                 "parameters": {
                     "oa_min_flow": 0.23157
@@ -168,8 +168,8 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_z_set_cool": "CORE_RETAIL:Zone Thermostat Cooling Setpoint Temperature [C](Each Call)",
-                    "T_z_set_heat": "CORE_RETAIL:Zone Thermostat Heating Setpoint Temperature [C](Each Call)"
+                    "T_z_cool_sp": "CORE_RETAIL:Zone Thermostat Cooling Setpoint Temperature [C](Each Call)",
+                    "T_z_heat_sp": "CORE_RETAIL:Zone Thermostat Heating Setpoint Temperature [C](Each Call)"
                 }
             },
             "verification_class": "ZoneTempControl"
@@ -258,10 +258,10 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
+                    "T_sa_sp": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "T_z_cool": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"

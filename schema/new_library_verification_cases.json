@@ -20,7 +20,7 @@
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "T_z_cool": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -45,7 +45,7 @@
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "T_z_cool": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -70,7 +70,7 @@
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "T_z_cool": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -95,7 +95,7 @@
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "T_z_cool": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -417,12 +417,12 @@
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "T_heat_set": {
+                    "T_z_heat_sp": {
                         "subject": "HTGSETP_SCH_NO_OPTIMUM",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "T_cool_set": {
+                    "T_z_cool_sp": {
                         "subject": "CLGSETP_SCH_NO_OPTIMUM",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
@@ -820,12 +820,12 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_z_hea_set": {
+                    "T_z_heat_sp": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Heating Setpoint Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_z_coo_set": {
+                    "T_z_cool_sp": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Cooling Setpoint Temperature",
                         "frequency": "TimeStep"

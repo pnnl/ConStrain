@@ -7,7 +7,7 @@ sys.path.append("./constrain")
 from api import VerificationCase
 
 
-class TestVerificaqtionCase(unittest.TestCase):
+class TestVerificationCase(unittest.TestCase):
     case = {
         "no": 1,
         "run_simulation": True,
@@ -21,13 +21,13 @@ class TestVerificaqtionCase(unittest.TestCase):
         "expected_result": "pass",
         "datapoints_source": {
             "idf_output_variables": {
-                "T_sa_set": {
+                "T_sa_sp": {
                     "subject": "VAV_1 Supply Equipment Outlet Node",
                     "variable": "System Node Setpoint Temperature",
                     "frequency": "detailed",
                 }
             },
-            "parameters": {"T_z_coo": 24.0},
+            "parameters": {"T_z_cool": 24.0},
         },
         "verification_class": "SupplyAirTempReset",
     }
@@ -370,7 +370,7 @@ class TestVerificaqtionCase(unittest.TestCase):
 
     def test_validate_verification_case_structure_datapoints_test_valid(self):
         case = copy.deepcopy(self.case)
-        case["datapoints_source"]["idf_output_variables"]["T_ra_set"] = {
+        case["datapoints_source"]["idf_output_variables"]["T_ra_sp"] = {
             "subject": "VAV_1 Return Equipment Outlet Node",
             "variable": "System Node Setpoint Temperature",
             "frequency": "detailed",
