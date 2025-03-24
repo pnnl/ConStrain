@@ -329,18 +329,18 @@
                                 "T_oa_min": {
                                     "type": "number"
                                 },
-                                "T_hw_max_sp": {
+                                "T_hw_max_set": {
                                     "type": "number"
                                 },
-                                "T_hw_min_sp": {
+                                "T_hw_min_set": {
                                     "type": "number"
                                 }
                             },
                             "required": [
                                 "T_oa_max",
                                 "T_oa_min",
-                                "T_hw_max_sp",
-                                "T_hw_min_sp"
+                                "T_hw_max_set",
+                                "T_hw_min_set"
                             ]
                         }
                     }
@@ -420,10 +420,10 @@
                                 "HVAC_operation_sch": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_z_hea_set": {
+                                "T_set_heat": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_z_coo_set": {
+                                "T_set_cool": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "Fan_elec_rate": {
@@ -433,8 +433,8 @@
                             "required": [
                                 "T_zone",
                                 "HVAC_operation_sch",
-                                "T_z_hea_set",
-                                "T_z_coo_set",
+                                "T_set_heat",
+                                "T_set_cool",
                                 "Fan_elec_rate"
                             ]
                         },
@@ -930,10 +930,10 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_z_hea_set": {
+                                "T_set_heat": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_z_coo_set": {
+                                "T_set_cool": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "O_sch": {
@@ -941,8 +941,8 @@
                                 }
                             },
                             "required": [
-                                "T_z_hea_set",
-                                "T_z_coo_set",
+                                "T_set_heat",
+                                "T_set_cool",
                                 "O_sch"
                             ]
                         },

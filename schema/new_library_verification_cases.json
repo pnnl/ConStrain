@@ -274,8 +274,8 @@
                 "parameters": {
                     "T_oa_max": 10,
                     "T_oa_min": -6.7,
-                    "T_hw_max_sp": 60.0,
-                    "T_hw_min_sp": 48.89
+                    "T_hw_max_set": 60.0,
+                    "T_hw_min_set": 48.89
                 }
             },
             "verification_class": "HWReset"
@@ -312,8 +312,8 @@
                 "parameters": {
                     "T_oa_max": 10,
                     "T_oa_min": -6.7,
-                    "T_hw_max_sp": 60.0,
-                    "T_hw_min_sp": 48.89
+                    "T_hw_max_set": 60.0,
+                    "T_hw_min_set": 48.89
                 }
             },
             "verification_class": "HWReset"
@@ -417,12 +417,12 @@
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "T_z_hea_set": {
+                    "T_set_heat": {
                         "subject": "HTGSETP_SCH_NO_OPTIMUM",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "T_z_coo_set": {
+                    "T_set_cool": {
                         "subject": "CLGSETP_SCH_NO_OPTIMUM",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
@@ -820,12 +820,12 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_z_hea_set": {
+                    "T_set_heat": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Heating Setpoint Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_z_coo_set": {
+                    "T_set_cool": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Cooling Setpoint Temperature",
                         "frequency": "TimeStep"

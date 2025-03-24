@@ -49,13 +49,21 @@
             "fan": 20
         }
     },
+    "load":{
+        "unit": "W",
+        "general": 100,
+        "types": {
+            "zone": 100
+        }
+    },
     "ratio": {
         "unit": "%",
         "general": 0.05,
         "types": {
             "flow": 0.05,
             "efficiency": 0.02,
-            "occupancy": 0.05
+            "occupancy": 0.05,
+            "operation": 0.0
         }
     }
 }

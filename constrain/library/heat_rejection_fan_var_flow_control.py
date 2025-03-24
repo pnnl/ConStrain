@@ -28,9 +28,9 @@ class HeatRejectionFanVariableFlowControl(RuleCheckBase):
         reg = LinearRegression(fit_intercept=False).fit(
             self.df["normalized_m_ct_fan"].values.reshape(-1, 1),
             self.df["normalized_P_ct_fan"],
-        )
+        )  # fit_intercept=False is for set the intercept to 0
 
-        if reg.coef_[0] >= (1.4 * (1 - self.get_tolerance("ratio", "efficiency"))):
+        if reg.coef_[0] >= 1.4:
             self.df["result"] = True
         else:
             self.df["result"] = False

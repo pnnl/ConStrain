@@ -12,15 +12,15 @@ class SupplyAirTempReset(RuleCheckBase):
     points = ["T_sa_set", "T_z_coo"]
 
     def verify(self):
-        T_sa_set_max = max(self.df["T_sa_set"])
-        T_sa_set_min = min(self.df["T_sa_set"])
+        t_sa_set_max = max(self.df["T_sa_set"])
+        t_sa_set_min = min(self.df["T_sa_set"])
 
         min_reseret_a_tempnge = (
-            (self.df["T_z_coo"] - T_sa_set_min)
+            (self.df["T_z_coo"] - t_sa_set_min)
             * 0.25
             * (1 - self.get_tolerance("ratio", "tracking"))
         )
-        actual_reseret_a_tempnge = (T_sa_set_max - T_sa_set_min) + self.get_tolerance(
+        actual_reseret_a_tempnge = (t_sa_set_max - t_sa_set_min) + self.get_tolerance(
             "temperature", "supply_air"
         )
 

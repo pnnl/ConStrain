@@ -140,11 +140,11 @@
             "Section 6.4.3.1.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_z_coo_set": "Zone cooling temperature setpoint",
-            "T_z_hea_set": "Zone heating temperature setpoint"
+            "T_set_cool": "Zone cooling temperature setpoint",
+            "T_set_heat": "Zone heating temperature setpoint"
         },
         "description_assertions": [
-            "T_z_coo_set - T_z_hea_set > 5F (2.77C)"
+            "T_set_cool - T_set_heat > 5F (2.77C)"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -162,11 +162,11 @@
             "T_oa_min": "OA dry-bulb lower threshold",
             "T_hw": "Hot water temp observed from the system node",
             "m_hw": "Hot water flow rate",
-            "T_hw_max_sp": "Hot water maximum temp setpoint",
-            "T_hw_min_sp": "Hot water minimum temp setpoint"
+            "T_hw_max_set": "Hot water maximum temp setpoint",
+            "T_hw_min_set": "Hot water minimum temp setpoint"
         },
         "description_assertions": [
-            "When m_hw > 0, T_hw <= T_hw_max_sp and T_hw >= T_hw_min_sp; When m_hw < 0, always pass"
+            "When m_hw > 0, T_hw <= T_hw_max_set and T_hw >= T_hw_min_set; When m_hw < 0, always pass"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -201,10 +201,10 @@
             "Section 6.4.3.2.2 in 90.1-2004"
         ],
         "description_datapoints": {
-            "T_z_hea_set": "Zone Thermostat Heating Setpoint Temperature"
+            "T_set_heat": "Zone Thermostat Heating Setpoint Temperature"
         },
         "description_assertions": [
-            "if min(T_z_hea_set) <= 55°F, then pass"
+            "if min(T_set_heat) <= 55°F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -216,10 +216,10 @@
             "Section 6.4.3.2.2 in 90.1-2004"
         ],
         "description_datapoints": {
-            "T_z_coo_set": "Zone Thermostat Cooling Setpoint Temperature"
+            "T_set_cool": "Zone Thermostat Cooling Setpoint Temperature"
         },
         "description_assertions": [
-            "if max(T_z_coo_set) >= 90F, then pass"
+            "if max(T_set_cool) >= 90F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -231,10 +231,10 @@
             "Section 6.4.3.3.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_z_hea_set": "Zone Thermostat Heating Setpoint Temperature"
+            "T_set_heat": "Zone Thermostat Heating Setpoint Temperature"
         },
         "description_assertions": [
-            "if max(T_z_hea_set) - min(T_z_hea_set) >= 10F, then pass"
+            "if max(T_set_heat) - min(T_set_heat) >= 10F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -246,10 +246,10 @@
             "Section 6.4.3.3.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_z_coo_set": "Zone Thermostat Cooling Setpoint Temperature"
+            "T_set_cool": "Zone Thermostat Cooling Setpoint Temperature"
         },
         "description_assertions": [
-            "if max(T_z_coo_set) - min(T_z_coo_set) >= 5F, then pass"
+            "if max(T_set_cool) - min(T_set_cool) >= 5F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -263,12 +263,12 @@
         "description_datapoints": {
             "T_zone": "Zone Air Temperature",
             "HVAC_operation_sch": "HVAC Operation Schedule",
-            "T_z_hea_set": "Zone Thermostat Heating Setpoint Temperature",
-            "T_z_coo_set": "Zone Thermostat Cooling Setpoint Temperature",
+            "T_set_heat": "Zone Thermostat Heating Setpoint Temperature",
+            "T_set_cool": "Zone Thermostat Cooling Setpoint Temperature",
             "Fan_elec_rate": "Fan Electricity Rate"
         },
         "description_assertions": [
-            "if T_z_hea_set <= T_zone <= T_z_coo_set and Fan_elec_rate ==0 then x1=0 else x1=1, if (T_zone > T_z_coo_set and Fan_elec_rate >= 0) and (T_zone < T_z_hea_set and Fan_elec_rate>0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
+            "if T_set_heat <= T_zone <= T_set_cool and Fan_elec_rate ==0 then x1=0 else x1=1, if (T_zone > T_set_cool and Fan_elec_rate >= 0) and (T_zone < T_set_heat and Fan_elec_rate>0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -494,8 +494,8 @@
             "Section 6.4.3.3.5 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_z_hea_set": "Zone Thermostat Heating Setpoint Temperature",
-            "T_z_coo_set": "Zone Thermostat Cooling Setpoint Temperature",
+            "T_set_heat": "Zone Thermostat Heating Setpoint Temperature",
+            "T_set_cool": "Zone Thermostat Cooling Setpoint Temperature",
             "O_sch": "Occupant Schedule"
         },
         "description_assertions": [
@@ -1606,9 +1606,9 @@
             "    Untested",
             "else: ",
             "  V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max",
-            "  mean_rehearet_a_temptio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
-            "  mean_no_rehearet_a_temptio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
-            "  if mean_rehearet_a_temptio < mean_no_rehearet_a_temptio:",
+            "  mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+            "  mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+            "  if mean_reheat_ratio < mean_no_reheat_ratio:",
             "    pass",
             "  else: ",
             "    fail",

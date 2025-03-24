@@ -45,10 +45,10 @@ class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
         if dat >= (10 - self.get_tolerance("temperature", "discharge_air")):
             return True
         else:
-            if heating_coil_command < 100:
+            if heating_coil_command < 100 - self.get_tolerance("damper", "command") * 100:
                 return False
             else:
-                return True
+                return True  # heating coil tried its best
 
     def verify(self):
         self.result = self.df.apply(

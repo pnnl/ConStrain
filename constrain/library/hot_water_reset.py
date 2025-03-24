@@ -10,8 +10,8 @@ class HWReset(RuleCheckBase):
         "T_oa_min",
         "T_hw",
         "m_hw",
-        "T_hw_max_sp",
-        "T_hw_min_sp",
+        "T_hw_max_set",
+        "T_hw_min_set",
     ]
 
     def verify(self):
@@ -25,7 +25,7 @@ class HWReset(RuleCheckBase):
                 )
                 & (
                     self.df["T_hw"]
-                    >= self.df["T_hw_max_sp"]
+                    >= self.df["T_hw_max_set"]
                     * (1 - self.get_tolerance("temperature", "general"))
                 )
             )
@@ -39,7 +39,7 @@ class HWReset(RuleCheckBase):
                 )
                 & (
                     self.df["T_hw"]
-                    <= self.df["T_hw_min_sp"]
+                    <= self.df["T_hw_min_set"]
                     * (1 + self.get_tolerance("temperature", "general"))
                 )
             )
@@ -59,12 +59,12 @@ class HWReset(RuleCheckBase):
                 & (
                     (
                         self.df["T_hw"]
-                        >= self.df["T_hw_min_sp"]
+                        >= self.df["T_hw_min_set"]
                         * (1 - self.get_tolerance("temperature", "general"))
                     )
                     & (
                         self.df["T_hw"]
-                        <= self.df["T_hw_max_sp"]
+                        <= self.df["T_hw_max_set"]
                         * (1 + self.get_tolerance("temperature", "general"))
                     )
                 )

@@ -7,7 +7,7 @@ class VentilationFanControl(RuleCheckBase):
 
     def verify(self):
         self.result = ~(
-            (abs(self.df["Q_load"]) < self.get_tolerance("ratio", "minimum"))
+            (abs(self.df["Q_load"]) < self.get_tolerance("load", "zone"))
             & (self.df["no_of_occ"] == 0)
             & (abs(self.df["P_fan"]) > self.get_tolerance("power", "fan"))
         )
