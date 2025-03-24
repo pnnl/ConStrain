@@ -420,10 +420,10 @@
                                 "HVAC_operation_sch": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_set_heat": {
+                                "T_heat_set": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_set_cool": {
+                                "T_cool_set": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "Fan_elec_rate": {
@@ -433,8 +433,8 @@
                             "required": [
                                 "T_zone",
                                 "HVAC_operation_sch",
-                                "T_set_heat",
-                                "T_set_cool",
+                                "T_heat_set",
+                                "T_cool_set",
                                 "Fan_elec_rate"
                             ]
                         },
@@ -930,10 +930,10 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_set_heat": {
+                                "T_z_hea_set": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_set_cool": {
+                                "T_z_coo_set": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "O_sch": {
@@ -941,8 +941,8 @@
                                 }
                             },
                             "required": [
-                                "T_set_heat",
-                                "T_set_cool",
+                                "T_z_hea_set",
+                                "T_z_coo_set",
                                 "O_sch"
                             ]
                         },
