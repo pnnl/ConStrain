@@ -34,14 +34,14 @@ Exceptions not verified:
 
 ```python
 # Check control area limitation
-if lighted_floor_area >= 5000:
+if area_floor_lit >= 5000:
     fail  # Exceeds maximum area per control device
 
 # Check shutoff timing and power
 time_since_occupancy = current_time - last_occupancy_time
 
 if occupancy < occupancy_threshold and time_since_occupancy > 20_minutes:
-    if lighting_power / floor_area <= 0.02:
+    if p_light_total / area_floor_lit <= 0.02:
         pass  # Proper shutoff or within exemption
     else:
         fail  # Lights still on above exemption threshold
@@ -51,25 +51,25 @@ else:
 
 ### Data requirements
 
-- o: Occupancy count
+- n_occ: Occupancy count
   - Data Value Unit: count
-  - Data point Description: Number of occupants detected in controlled space
-  - Data Point Affiliation: Space monitoring
+  - Data point Description: Number of occupants
+  - Data Point Affiliation: Zone occupancy
 
-- total_lighting_power: Lighting power
-  - Data Value Unit: watts
-  - Data point Description: Current total lighting power in controlled space
-  - Data Point Affiliation: Lighting system monitoring
+- p_light_total: Lighting power
+  - Data Value Unit: power
+  - Data point Description: Total lighting power
+  - Data Point Affiliation: Lighting system
 
-- lighted_floor_area: Floor area
-  - Data Value Unit: square feet
-  - Data point Description: Total floor area served by control device
+- area_floor_lit: Floor area
+  - Data Value Unit: area
+  - Data point Description: Lighted floor area
   - Data Point Affiliation: Space configuration
 
-- tol_o: Occupancy threshold
+- tol_n_occ: Occupancy threshold
   - Data Value Unit: count
-  - Data point Description: Threshold below which space is considered vacant
-  - Data Point Affiliation: System configuration
+  - Data point Description: Occupancy tolerance
+  - Data Point Affiliation: Zone occupancy
 
 """
 

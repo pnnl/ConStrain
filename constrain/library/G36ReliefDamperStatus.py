@@ -28,27 +28,27 @@ The test is considered untested if supply fan status doesn't show both ON and OF
 ### Verification Algorithm Pseudo Code
 
 ```python
-if relief_damper_command > 0 and supply_fan_status == 'on':
+if pos_damper_rea > 0 and flag_fan_sa == 'on':
     pass
-elif supply_fan_status == 'off' and relief_damper_command == 0:
+elif flag_fan_sa == 'off' and pos_damper_rea == 0:
     pass
 else:
     fail
 
-if not ['on', 'off'] in supply_fan_status:
+if not ['on', 'off'] in flag_fan_sa:
     untested
 ```
 
 ### Data requirements
 
-- relief_damper_command: Relief damper position
+- pos_damper_rea: Relief damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current relief damper position command
+  - Data point Description: Relief damper position
   - Data Point Affiliation: Air handling unit
 
-- supply_fan_status: Supply fan status
+- flag_fan_sa: Supply fan status
   - Data Value Unit: binary
-  - Data point Description: Operating status of supply fan
+  - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
 
 """

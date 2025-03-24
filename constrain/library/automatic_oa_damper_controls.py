@@ -25,7 +25,7 @@ The verification checks that when a space is unoccupied and the economizer is no
 ### Verification Algorithm Pseudo Code
 
 ```
-if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0
+if n_occ <= 0 + tol and v_ea + v_oa > 0 and flag_econ = 0
     return false
 else
     return pass
@@ -33,39 +33,39 @@ else
 
 ### Data requirements
 
-- o: Number of occupants
+- n_occ: Number of occupants
   - Data Value Unit: count
-  - Data point Description: Number of occupants in the space
+  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- m_oa: System outdoor air volume flow rate
+- v_oa: System outdoor air volume flow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor air flow rate through damper
+  - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: System ventilation
 
-- m_ea: System exhaust air volume flow rate
+- v_ea: System exhaust air volume flow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Exhaust air flow rate through damper
+  - Data point Description: Exhaust air volume flow rate
   - Data Point Affiliation: System ventilation
 
-- eco_onoff: System air-side economizer status
+- flag_econ: System air-side economizer status
   - Data Value Unit: binary (0/1)
-  - Data point Description: Indicates if economizer is active
+  - Data point Description: Economizer flag
   - Data Point Affiliation: System operation
 
-- tol_o: Tolerance for occupancy
+- tol_n_occ: Tolerance for occupancy
   - Data Value Unit: count
-  - Data point Description: Threshold for considering space unoccupied
+  - Data point Description: Occupancy tolerance
   - Data Point Affiliation: Zone occupancy
 
-- tol_m_oa: Tolerance for outdoor air flow
+- tol_v_oa: Tolerance for outdoor air flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Threshold for considering OA damper closed
+  - Data point Description: Outdoor air volume flow rate tolerance
   - Data Point Affiliation: System ventilation
 
-- tol_m_ea: Tolerance for exhaust air flow
+- tol_v_ea: Tolerance for exhaust air flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Threshold for considering EA damper closed
+  - Data point Description: Exhaust air volume flow rate tolerance
   - Data Point Affiliation: System ventilation
 
 """

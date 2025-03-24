@@ -33,8 +33,8 @@ if design_total_lighting_power >= 1500:
 
 # Then check power reduction on no occupancy
 date_diff = current_date - last_reported_occupancy # in min
-if o < tol_o and date_diff > 15:
-    if total_lighting_power <= 0.5 * design_total_lighting_power:
+if n_occ < tol_n_occ and date_diff > 15:
+    if p_light_total <= 0.5 * design_total_lighting_power:
         return True
     else:
         return False
@@ -44,19 +44,19 @@ else:
 
 ### Data requirements
 
-- o: Number of occupants
+- n_occ: Number of occupants
   - Data Value Unit: count
-  - Data point Description: Number of occupants sensed in the illuminated area
+  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- total_lighting_power: Lighting power
-  - Data Value Unit: watts
-  - Data point Description: Total exterior lighting power consumption
+- p_light_total: Lighting power
+  - Data Value Unit: power
+  - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system
 
-- tol_o: Occupancy threshold
+- tol_n_occ: Occupancy threshold
   - Data Value Unit: count
-  - Data point Description: Below this value the area is considered unoccupied
+  - Data point Description: Occupancy tolerance
   - Data Point Affiliation: Zone occupancy
 
 """

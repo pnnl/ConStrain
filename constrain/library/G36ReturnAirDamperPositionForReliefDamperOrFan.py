@@ -29,23 +29,23 @@ The verification checks return air damper position under four conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if heating_output > 0:
-    if abs(ra_p - max_ra_p) < ra_p_tol:
+if out_htg > 0:
+    if abs(pos_damper_ra - pos_damper_ra_max) < tol_pos_damper_ra:
         pass
     else:
         fail
-elif cooling_output > 0:
-    if abs(ra_p - 0) < ra_p_tol:
+elif out_clg > 0:
+    if abs(pos_damper_ra - 0) < tol_pos_damper_ra:
         pass
     else:
         fail
-elif oa_p < max_oa_p:
-    if abs(ra_p - max_ra_p) < ra_p_tol:
+elif pos_damper_oa < pos_damper_oa_max:
+    if abs(pos_damper_ra - pos_damper_ra_max) < tol_pos_damper_ra:
         pass
     else:
         fail
-elif abs(oa_p - max_oa_p) < oa_p_tol:
-    if ra_p < max_ra_p:
+elif abs(pos_damper_oa - pos_damper_oa_max) < tol_pos_damper_oa:
+    if pos_damper_ra < pos_damper_ra_max:
         pass
     else:
         fail
@@ -53,44 +53,44 @@ elif abs(oa_p - max_oa_p) < oa_p_tol:
 
 ### Data requirements
 
-- heating_output: Heating output
+- out_htg: Heating output
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current heating system output
+  - Data point Description: Heating output
   - Data Point Affiliation: System control
 
-- cooling_output: Cooling output
+- out_clg: Cooling output
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current cooling system output
+  - Data point Description: Cooling output
   - Data Point Affiliation: System control
 
-- ra_p: Return air damper position
+- pos_damper_ra: Return air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current return air damper position
+  - Data point Description: Return air damper position
   - Data Point Affiliation: Air handling unit
 
-- max_ra_p: Maximum return air position
+- pos_damper_ra_max: Maximum return air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum allowed return air damper position
+  - Data point Description: Maximum return air damper position
   - Data Point Affiliation: Air handling unit
 
-- ra_p_tol: Return air position tolerance
+- tol_pos_damper_ra: Return air damper position tolerance
   - Data Value Unit: percent
-  - Data point Description: Allowable deviation from setpoint
+  - Data point Description: Return air damper position tolerance
   - Data Point Affiliation: Air handling unit
 
-- oa_p: Outdoor air damper position
+- pos_damper_oa: Outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current outdoor air damper position
+  - Data point Description: Outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- max_oa_p: Maximum outdoor air position
+- pos_damper_oa_max: Maximum outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum allowed outdoor air damper position
+  - Data point Description: Maximum outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- oa_p_tol: Outdoor air position tolerance
+- tol_pos_damper_oa: Outdoor air damper position tolerance
   - Data Value Unit: percent
-  - Data point Description: Allowable deviation from setpoint
+  - Data point Description: Outdoor air damper position tolerance
   - Data Point Affiliation: Air handling unit
 
 """

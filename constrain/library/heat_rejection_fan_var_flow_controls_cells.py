@@ -44,34 +44,34 @@ if fan_power > 0:  # System is running
 
 ### Data requirements
 
-- ct_op_cells: Operating cells
+- n_cells_ct_op: Operating cells
   - Data Value Unit: count
-  - Data point Description: Number of currently operating cells
+  - Data point Description: Number of operating cooling tower cells
   - Data Point Affiliation: System control
 
-- ct_cells: Total cells
+- n_cells_ct: Total cells
   - Data Value Unit: count
-  - Data point Description: Total number of available cells
+  - Data point Description: Number of cooling tower cells
   - Data Point Affiliation: Equipment configuration
 
-- ct_m: Current flow
+- v_ct: Current flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current total system flow rate
+  - Data point Description: Cooling tower volume flow rate
   - Data Point Affiliation: System monitoring
 
-- ct_P_fan: Fan power
-  - Data Value Unit: watts
-  - Data point Description: Current total fan power
-  - Data Point Affiliation: System monitoring
+- p_fan_ct: Fan power
+  - Data Value Unit: power
+  - Data point Description: Cooling tower fan power
+  - Data Point Affiliation: Fan monitoring
 
-- ct_m_des: Design flow
+- v_ct_dsgn: Design flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Design total system flow rate
+  - Data point Description: Cooling tower design flow rate
   - Data Point Affiliation: Equipment specifications
 
-- min_flow_frac_per_cell: Minimum flow fraction
+- ratio_v_cell_min: Minimum flow fraction
   - Data Value Unit: fraction
-  - Data point Description: Minimum allowable flow per cell as fraction of design
+  - Data point Description: Minimum cell flow ratio
   - Data Point Affiliation: Equipment specifications
 
 """

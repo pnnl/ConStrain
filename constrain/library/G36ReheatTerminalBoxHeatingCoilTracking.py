@@ -31,13 +31,13 @@ The verification monitors discharge air temperature tracking performance:
 
 ```python
 # Only check when in heating mode
-if abs(dat_spt - dat) >= dat_tracking_tol:
+if abs(t_vav_dis_sp - t_vav_dis) >= tol_t_vav_dis:
     if tracking_error_duration < 1_hour:
         pass  # Brief deviation acceptable
     else:
-        if (dat - dat_spt >= dat_tracking_tol) and heating_coil_command <= 1:
+        if (t_vav_dis - t_vav_dis_sp >= tol_t_vav_dis) and cmd_htg_coil <= 1:
             pass  # Too hot, coil at minimum
-        elif (dat_spt - dat >= dat_tracking_tol) and heating_coil_command >= 99:
+        elif (t_vav_dis_sp - t_vav_dis >= tol_t_vav_dis) and cmd_htg_coil >= 99:
             pass  # Too cold, coil at maximum
         else:
             fail  # Sustained deviation without appropriate response
@@ -47,29 +47,29 @@ else:
 
 ### Data requirements
 
-- operation_mode: System operation mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current operation mode of the system
+  - Data point Description: System operation mode
   - Data Point Affiliation: System control
 
-- heating_coil_command: Heating coil command
+- cmd_htg_coil: Heating coil command
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current heating coil control signal
+  - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- dat: Discharge air temperature
+- t_vav_dis: VAV discharge air temperature
   - Data Value Unit: °C
-  - Data point Description: Current discharge air temperature
+  - Data point Description: VAV discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
-- dat_spt: Temperature setpoint
+- t_vav_dis_sp: VAV discharge air temperature setpoint
   - Data Value Unit: °C
-  - Data point Description: Discharge air temperature setpoint
+  - Data point Description: VAV discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control
 
-- dat_tracking_tol: Temperature tolerance
+- tol_t_vav_dis: VAV discharge air temperature tolerance
   - Data Value Unit: °C
-  - Data point Description: Allowable deviation from temperature setpoint
+  - Data point Description: VAV discharge air temperature tolerance
   - Data Point Affiliation: Terminal box control
 
 """

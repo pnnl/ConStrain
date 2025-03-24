@@ -28,16 +28,16 @@ The test is considered untested if supply air temperature is not above room temp
 ### Verification Algorithm Pseudo Code
 
 ```python
-if ahu_sat_spt <= room_temp:
+if t_sa_sp <= t_zone:
     untested
 else:
-    match operation_mode:
+    match mode_sys:
         case 'occupied':
-            minimum = v_min
+            minimum = v_vav_min
         case 'cooldown' | 'setup' | 'warmup' | 'setback' | 'unoccupied':
             minimum = 0
 
-    if v_spt - v_spt_tol > minimum:
+    if v_vav_sp - tol_v_vav > minimum:
         fail
     else:
         pass
@@ -45,39 +45,39 @@ else:
 
 ### Data requirements
 
-- operation_mode: System operation mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current system operation mode
+  - Data point Description: System operation mode
   - Data Point Affiliation: System control
 
-- zone_state: Zone state
+- state_zone: Zone state
   - Data Value Unit: enumeration
-  - Data point Description: Current zone state (heating, cooling, or deadband)
+  - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_min: Minimum airflow
+- v_vav_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Occupied zone minimum airflow setpoint
+  - Data point Description: Minimum airflow
   - Data Point Affiliation: Zone airflow control
 
-- ahu_sat_spt: Supply air temperature setpoint
+- t_sa_sp: Supply air temperature setpoint
   - Data Value Unit: °C
-  - Data point Description: AHU supply air temperature setpoint
+  - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: AHU control
 
-- v_spt: Active airflow setpoint
+- v_vav_sp: Airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current active airflow setpoint
+  - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_spt_tol: Airflow tolerance
+- tol_v_vav: Airflow tolerance
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Allowable deviation from setpoint
+  - Data point Description: Airflow tolerance
   - Data Point Affiliation: Zone airflow control
 
-- room_temp: Room temperature
+- t_zone: Zone temperature
   - Data Value Unit: °C
-  - Data point Description: Current zone air temperature
+  - Data point Description: Zone temperature
   - Data Point Affiliation: Zone monitoring
 
 """

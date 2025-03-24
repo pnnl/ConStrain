@@ -60,24 +60,24 @@ Endif
 
 ### Data requirements
 
-- o: Number of occupants
+- n_occ: Number of occupants
   - Data Value Unit: count
-  - Data point Description: Number of occupants sensed in the zones served by the system
+  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- fan_runtime_fraction: Fan runtime fraction
-  - Data Value Unit: fraction (0-1)
-  - Data point Description: System fan runtime fraction
+- fan_runtime: Fan runtime fraction
+  - Data Value Unit: fraction
+  - Data point Description: Fan runtime fraction
   - Data Point Affiliation: System operation
 
-- m_oa: Outdoor air flow rate
+- v_oa: Outdoor air flow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: System outdoor air flow rate
+  - Data point Description: Outdoor air flow rate
   - Data Point Affiliation: System ventilation
 
-- tol_o: Occupancy threshold
+- tol_occ: Occupancy threshold
   - Data Value Unit: count
-  - Data point Description: Below this value the zones are considered unoccupied
+  - Data point Description: Occupancy tolerance
   - Data Point Affiliation: Zone occupancy
 
 """

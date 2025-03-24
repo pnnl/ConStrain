@@ -44,19 +44,19 @@ else:
 
 ### Data requirements
 
-- zone_is_standby_mode: Standby status
-  - Data Value Unit: boolean
-  - Data point Description: Indicates if zone is in standby mode
+- flag_standby: Standby status
+  - Data Value Unit: binary
+  - Data point Description: Standby mode flag
   - Data Point Affiliation: Zone control
 
-- m_oa_requested_by_system: System OA setpoint
+- v_oa_sys: System OA setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current system outdoor air flow setpoint
+  - Data point Description: System outdoor air flow setpoint
   - Data Point Affiliation: System control
 
-- m_oa_zone_requirement: Zone OA requirement
+- v_oa_zone: Zone OA requirement
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Required outdoor air flow for zone
+  - Data point Description: Zone outdoor air flow requirement
   - Data Point Affiliation: Zone ventilation
 
 """

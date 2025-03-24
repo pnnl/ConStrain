@@ -25,10 +25,10 @@ The verification checks if the exterior lighting is turned off when either suffi
 ### Verification Algorithm Pseudo Code
 
 ```
-daylight_setpoint_met = data["daylight_sensed"] / data["daylight_setpoint"]
+daylight_setpoint_met = data["v_daylight_sensed"] / data["sp_daylight"]
 
 If daylight_setpoint_met >= 1 or time_since_last_sun_up >= 30: # min
-    If total_lighting_power == 0:
+    If p_light_total == 0:
         Pass
     Else
         Fail
@@ -40,24 +40,24 @@ Endif
 
 ### Data requirements
 
-- is_sun_up: Sun position flag
-  - Data Value Unit: boolean or binary (0/1)
-  - Data point Description: Flag indicating whether the sun is up
+- flag_sun_up: Sun position flag
+  - Data Value Unit: binary
+  - Data point Description: Sun position flag
   - Data Point Affiliation: Environmental conditions
 
-- daylight_sensed: Measured daylight level
-  - Data Value Unit: consistent with daylight_setpoint
-  - Data point Description: Amount of daylight sensed by photocell sensor
+- v_daylight_sensed: Measured daylight level
+  - Data Value Unit: illuminance
+  - Data point Description: Measured daylight level
   - Data Point Affiliation: Lighting control
 
-- daylight_setpoint: Daylight threshold
-  - Data Value Unit: consistent with daylight_sensed
-  - Data point Description: Threshold below which daylight is insufficient
+- sp_daylight: Daylight threshold
+  - Data Value Unit: illuminance
+  - Data point Description: Daylight setpoint
   - Data Point Affiliation: Lighting control
 
-- total_lighting_power: Lighting power
+- p_light_total: Lighting power
   - Data Value Unit: power
-  - Data point Description: Total exterior lighting power consumption
+  - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system
 
 """

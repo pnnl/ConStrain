@@ -50,30 +50,30 @@ for each day:
 
 ### Data requirements
 
-- T_z_heat_sp: Heating setpoint
+- sp_t_htg: Heating setpoint
   - Data Value Unit: °C
   - Data point Description: Zone heating temperature setpoint
-  - Data Point Affiliation: Room temperature control
+  - Data Point Affiliation: Zone temperature control
 
-- T_z_cool_sp: Cooling setpoint
+- sp_t_clg: Cooling setpoint
   - Data Value Unit: °C
   - Data point Description: Zone cooling temperature setpoint
-  - Data Point Affiliation: Room temperature control
+  - Data Point Affiliation: Zone temperature control
 
-- O_sch: Occupancy schedule
+- sch_occ: Occupancy schedule
   - Data Value Unit: fraction (0-1)
-  - Data point Description: Room occupancy status
-  - Data Point Affiliation: Room monitoring
+  - Data point Description: Occupancy schedule
+  - Data Point Affiliation: Zone occupancy
 
-- tol_occ: Occupancy tolerance
+- tol_sch_occ: Occupancy tolerance
   - Data Value Unit: fraction
-  - Data point Description: Threshold for considering room unoccupied
-  - Data Point Affiliation: System configuration
+  - Data point Description: Occupancy schedule tolerance
+  - Data Point Affiliation: Zone occupancy
 
-- tol_temp: Temperature tolerance
+- tol_t: Temperature tolerance
   - Data Value Unit: °C
-  - Data point Description: Allowable deviation from temperature limits
-  - Data Point Affiliation: System configuration
+  - Data point Description: Temperature tolerance
+  - Data Point Affiliation: Zone temperature control
 
 """
 

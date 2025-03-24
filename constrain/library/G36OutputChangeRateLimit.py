@@ -26,8 +26,8 @@ The verification monitors the rate of change in control loop outputs by comparin
 
 ```python
 time_delta = current_time - previous_time
-allowed_change = max_rate_of_change_per_min * (time_delta_in_minutes)
-actual_change = abs(command(current_t) - command(prev_t))
+allowed_change = rate_change_max * (time_delta_in_minutes)
+actual_change = abs(cmd_loop(current_t) - cmd_loop(prev_t))
 
 if actual_change > allowed_change:
     fail
@@ -37,14 +37,14 @@ else:
 
 ### Data requirements
 
-- command: Control command
+- cmd_loop: Control loop command
   - Data Value Unit: percent (0-100)
-  - Data point Description: Control loop output value to be verified
+  - Data point Description: Control loop command
   - Data Point Affiliation: Control loop
 
-- max_rate_of_change_per_min: Rate limit
+- rate_change_max: Maximum rate of change
   - Data Value Unit: percent per minute
-  - Data point Description: Maximum allowed rate of change (default 25)
+  - Data point Description: Maximum rate of change
   - Data Point Affiliation: Control loop configuration
 
 """

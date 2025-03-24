@@ -45,24 +45,24 @@ for each timestep:
 
 ### Data requirements
 
-- feedback_sensor: Process variable
+- v_fb: Process variable
   - Data Value Unit: varies by application
-  - Data point Description: Measured value being controlled
+  - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
-- set_point: Control setpoint
-  - Data Value Unit: same as feedback_sensor
-  - Data point Description: Desired value for process variable
+- sp: Control setpoint
+  - Data Value Unit: same as v_fb
+  - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 
-- cmd: Actuator command
-  - Data Value Unit: percent or engineering units
-  - Data point Description: Current control output to actuator
+- out: Actuator command
+  - Data Value Unit: percent
+  - Data point Description: Control output
   - Data Point Affiliation: Control loop output
 
-- cmd_min: Minimum command
-  - Data Value Unit: same as cmd
-  - Data point Description: Minimum allowable control output
+- out_min: Minimum command
+  - Data Value Unit: percent
+  - Data point Description: Minimum output
   - Data Point Affiliation: Control loop configuration
 
 """

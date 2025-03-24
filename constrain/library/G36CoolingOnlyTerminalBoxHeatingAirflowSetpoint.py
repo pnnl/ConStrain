@@ -25,18 +25,18 @@ The verification checks that when the zone is in heating mode, the active airflo
 ### Verification Algorithm Pseudo Code
 
 ```
-switch operation_mode
+switch mode_sys
 case 'occupied'
-    heating_maximum = v_heat_max
-    minimum = v_min
+    heating_maximum = v_vav_heat_max
+    minimum = v_vav_min
 case 'cooldown', 'setup', 'unoccupied'
     heating_maximum = 0
     minimum = 0
 case 'warmup', 'setback'
-    heating_maximum = v_cool_max
+    heating_maximum = v_vav_cool_max
     minimum = 0
 
-if minimum <= v_spt <= heating_maximum
+if minimum <= v_vav_sp <= heating_maximum
     pass
 else
     fail
@@ -45,34 +45,34 @@ end
 
 ### Data requirements
 
-- operation_mode: System operation mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current operation mode of the system
+  - Data point Description: System operation mode
   - Data Point Affiliation: System control
 
-- zone_state: Zone state
+- state_zone: Zone state
   - Data Value Unit: enumeration
-  - Data point Description: Current zone state (heating, cooling, or deadband)
+  - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_cool_max: Maximum cooling airflow
+- v_vav_cool_max: Maximum cooling airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Zone maximum cooling airflow setpoint
+  - Data point Description: Maximum cooling airflow
   - Data Point Affiliation: Zone airflow control
 
-- v_heat_max: Maximum heating airflow
+- v_vav_heat_max: Maximum heating airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Zone maximum heating airflow setpoint
+  - Data point Description: Maximum heating airflow
   - Data Point Affiliation: Zone airflow control
 
-- v_min: Minimum airflow
+- v_vav_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Occupied zone minimum airflow setpoint
+  - Data point Description: Minimum airflow
   - Data Point Affiliation: Zone airflow control
 
-- v_spt: Active airflow setpoint
+- v_vav_sp: Airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current active airflow setpoint
+  - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
 """

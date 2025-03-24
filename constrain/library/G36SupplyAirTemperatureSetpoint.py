@@ -32,26 +32,26 @@ The verification checks supply air temperature setpoint calculation in multiple 
 
 ```python
 # First check maximum temperature limit
-if t_max > max_clg_sa_t_sp:
+if t_sa_max > t_sa_clg_max:
     fail
 
 # Calculate setpoint based on mode
-match operation_mode:
+match mode_sys:
     case "cooldown":
-        sa_t_sp = min_clg_sa_t_sp
+        t_sa_sp_calc = t_sa_clg_min
     case "warmup" | "setback":
-        sa_t_sp = 35.0  # 95°F
+        t_sa_sp_calc = 35.0  # 95°F
     case "occupied" | "setup":
-        if oa_t <= oa_t_min:
-            sa_t_sp = t_max
-        elif oa_t >= oa_t_max:
-            sa_t_sp = min_clg_sa_t_sp
+        if t_oa <= t_oa_min:
+            t_sa_sp_calc = t_sa_max
+        elif t_oa >= t_oa_max:
+            t_sa_sp_calc = t_sa_clg_min
         else:
             # Linear interpolation
-            sa_t_sp = (oa_t - oa_t_min) * (t_max - min_clg_sa_t_sp) / (oa_t_min - oa_t_max) + t_max
+            t_sa_sp_calc = (t_oa - t_oa_min) * (t_sa_max - t_sa_clg_min) / (t_oa_min - t_oa_max) + t_sa_max
 
 # Verify setpoint matches calculated value
-if abs(sa_t_sp - sa_t_sp_ac) < sa_sp_tol:
+if abs(t_sa_sp_calc - sp_t_sa) < tol_t_sa:
     pass
 else:
     fail
@@ -59,49 +59,49 @@ else:
 
 ### Data requirements
 
-- operation_mode: System operation mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current system operation mode
+  - Data point Description: System mode
   - Data Point Affiliation: System control
 
-- t_max: Maximum temperature
-  - Data Value Unit: °C
-  - Data point Description: Maximum allowable supply air temperature
+- t_sa_max: Maximum supply air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Maximum supply air temperature
   - Data Point Affiliation: System configuration
 
-- max_clg_sa_t_sp: Maximum cooling setpoint
-  - Data Value Unit: °C
-  - Data point Description: Maximum cooling supply air temperature setpoint
+- t_sa_clg_max: Maximum cooling supply air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Maximum cooling supply air temperature
   - Data Point Affiliation: System configuration
 
-- min_clg_sa_t_sp: Minimum cooling setpoint
-  - Data Value Unit: °C
-  - Data point Description: Minimum cooling supply air temperature setpoint
+- t_sa_clg_min: Minimum cooling supply air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Minimum cooling supply air temperature
   - Data Point Affiliation: System configuration
 
-- oa_t: Outdoor air temperature
-  - Data Value Unit: °C
-  - Data point Description: Current outdoor air temperature
+- t_oa: Outdoor air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
-- oa_t_min: Minimum outdoor temperature
-  - Data Value Unit: °C
-  - Data point Description: Lower bound for outdoor air reset
+- t_oa_min: Minimum outdoor air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Minimum outdoor air temperature
   - Data Point Affiliation: System configuration
 
-- oa_t_max: Maximum outdoor temperature
-  - Data Value Unit: °C
-  - Data point Description: Upper bound for outdoor air reset
+- t_oa_max: Maximum outdoor air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Maximum outdoor air temperature
   - Data Point Affiliation: System configuration
 
-- sa_t_sp_ac: Actual setpoint
-  - Data Value Unit: °C
-  - Data point Description: Current active supply air temperature setpoint
+- sp_t_sa: Supply air temperature setpoint
+  - Data Value Unit: temperature
+  - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: System control
 
-- sa_sp_tol: Setpoint tolerance
-  - Data Value Unit: °C
-  - Data point Description: Allowable deviation from calculated setpoint
+- tol_t_sa: Supply air temperature tolerance
+  - Data Value Unit: temperature
+  - Data point Description: Supply air temperature tolerance
   - Data Point Affiliation: System configuration
 
 """

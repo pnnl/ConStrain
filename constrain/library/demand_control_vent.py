@@ -26,13 +26,13 @@ The verification analyzes the correlation between outdoor air ventilation rates 
 
 ```
 # Filter data for when economizer is off and AHU is on
-df_filtered = df.loc[(df["s_eco"] == 0.0) & (df["s_ahu"] != 0.0)]
+df_filtered = df.loc[(df["flag_econ"] == 0.0) & (df["flag_hvac"] != 0.0)]
 
 if len(df_filtered) == 0:
     return "Untested"  # No valid samples
 
 # Calculate correlation between occupancy and outdoor air flow
-correlation, p_value = pearsonr(df_filtered["no_of_occ"], df_filtered["v_oa"])
+correlation, p_value = pearsonr(df_filtered["n_occ"], df_filtered["v_oa"])
 
 if p_value > 0.05:
     return "Untested"  # Correlation not statistically significant
@@ -48,22 +48,22 @@ else:
 
 - v_oa: Zone Air Terminal Outdoor Air Volume Flow Rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor air flow rate to the zone
+  - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: Zone ventilation
 
-- s_ahu: HVAC System Operation Status
-  - Data Value Unit: binary (0/1)
-  - Data point Description: Indicates if AHU is operating
+- flag_hvac: HVAC System Operation Status
+  - Data Value Unit: binary
+  - Data point Description: HVAC system status
   - Data Point Affiliation: System operation
 
-- s_eco: Air System Outdoor Air Economizer Status
-  - Data Value Unit: binary (0/1)
-  - Data point Description: Indicates if economizer is active
+- flag_econ: Air System Outdoor Air Economizer Status
+  - Data Value Unit: binary
+  - Data point Description: Economizer flag
   - Data Point Affiliation: System operation
 
-- no_of_occ: People Occupant Count
+- n_occ: People Occupant Count
   - Data Value Unit: count
-  - Data point Description: Number of occupants in the zone
+  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
 """

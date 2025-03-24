@@ -47,24 +47,24 @@ if pump_flow > 0:  # Only check during system operation
 
 ### Data requirements
 
-- T_max_heating_loop: Heating loop temperature
-  - Data Value Unit: °C
+- t_htg_max: Heating loop temperature
+  - Data Value Unit: temperature
   - Data point Description: Maximum heating loop temperature
   - Data Point Affiliation: System monitoring
 
-- T_min_cooling_loop: Cooling loop temperature
-  - Data Value Unit: °C
+- t_clg_min: Cooling loop temperature
+  - Data Value Unit: temperature
   - Data point Description: Minimum cooling loop temperature
   - Data Point Affiliation: System monitoring
 
-- m_pump: Pump flow
+- v_pump: Pump flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Loop water flow rate
+  - Data point Description: Pump flow rate
   - Data Point Affiliation: System monitoring
 
-- tol: Temperature tolerance
-  - Data Value Unit: °C
-  - Data point Description: Allowable measurement deviation
+- tol_t: Temperature tolerance
+  - Data Value Unit: temperature
+  - Data point Description: Temperature tolerance
   - Data Point Affiliation: System configuration
 
 """

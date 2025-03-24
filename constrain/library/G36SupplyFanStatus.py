@@ -30,36 +30,36 @@ The test is considered untested if both occupied and unoccupied modes haven't be
 ### Verification Algorithm Pseudo Code
 
 ```python
-if has_reheat_box_on_perimeter_zones:
-    if sys_mode != 'unoccupied' and supply_fan_status == 'off':
+if flag_vav_reheat_perimeter:
+    if mode_sys != 'unoccupied' and flag_fan_sa == 'off':
         fail
     else:
         pass
 else:
-    if sys_mode in ['occupied', 'setup', 'cooldown'] and supply_fan_status == 'off':
+    if mode_sys in ['occupied', 'setup', 'cooldown'] and flag_fan_sa == 'off':
         fail
     else:
         pass
 
-if not ('occupied' in sys_mode and 'unoccupied' in sys_mode):
+if not ('occupied' in mode_sys and 'unoccupied' in mode_sys):
     untested
 ```
 
 ### Data requirements
 
-- sys_mode: System operation mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current system mode (occupied, unoccupied, cooldown, warmup, setback, setup)
+  - Data point Description: System operation mode
   - Data Point Affiliation: System control
 
-- has_reheat_box_on_perimeter_zones: Zone configuration
+- flag_vav_reheat_perimeter: Zone configuration
   - Data Value Unit: binary
-  - Data point Description: Indicates presence of VAV reheat boxes in perimeter zones
+  - Data point Description: VAV reheat perimeter flag
   - Data Point Affiliation: System configuration
 
-- supply_fan_status: Supply fan status
+- flag_fan_sa: Supply fan status
   - Data Value Unit: binary
-  - Data point Description: Operating status of supply fan
+  - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
 
 """

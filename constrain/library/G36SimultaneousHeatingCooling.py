@@ -25,7 +25,7 @@ The verification monitors heating and cooling outputs to ensure they are not act
 ### Verification Algorithm Pseudo Code
 
 ```python
-if heating_output > 0 and cooling_output > 0:
+if out_htg > 0 and out_clg > 0:
     fail  # Simultaneous heating and cooling detected
 else:
     pass  # Normal operation
@@ -33,14 +33,14 @@ else:
 
 ### Data requirements
 
-- heating_output: Heating output
+- out_htg: Heating output
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current heating system output
+  - Data point Description: Heating output
   - Data Point Affiliation: System control
 
-- cooling_output: Cooling output
+- out_clg: Cooling output
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current cooling system output
+  - Data point Description: Cooling output
   - Data Point Affiliation: System control
 
 """

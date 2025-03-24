@@ -51,40 +51,40 @@ for each day:
 
 ### Data requirements
 
-- m_z_oa: Outdoor air flow rate
+- v_oa: Outdoor air flow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Zone outdoor air ventilation rate
-  - Data Point Affiliation: Room ventilation control
+  - Data point Description: Outdoor air volume flow rate
+  - Data Point Affiliation: Zone ventilation
 
-- O_sch: Occupancy schedule
+- sch_occ: Occupancy schedule
   - Data Value Unit: fraction (0-1)
-  - Data point Description: Room occupancy status
-  - Data Point Affiliation: Room monitoring
+  - Data point Description: Occupancy schedule
+  - Data Point Affiliation: Zone occupancy
 
-- area_z: Zone area
-  - Data Value Unit: square meters
-  - Data point Description: Floor area of the guest room
-  - Data Point Affiliation: Room configuration
+- area_zone: Zone area
+  - Data Value Unit: area
+  - Data point Description: Zone floor area
+  - Data Point Affiliation: Zone configuration
 
-- height_z: Zone height
-  - Data Value Unit: meters
-  - Data point Description: Floor-to-ceiling height of the guest room
-  - Data Point Affiliation: Room configuration
+- height_zone: Zone height
+  - Data Value Unit: length
+  - Data point Description: Zone height
+  - Data Point Affiliation: Zone configuration
 
-- v_outdoor_per_zone: Outdoor air requirement
+- v_oa_per_zone: Outdoor air requirement
   - Data Value Unit: volumetric flow rate per area
-  - Data point Description: Required outdoor air flow rate per unit area
-  - Data Point Affiliation: System configuration
+  - Data point Description: Zone outdoor air requirement
+  - Data Point Affiliation: Zone ventilation
 
-- tol_occ: Occupancy tolerance
+- tol_sch_occ: Occupancy tolerance
   - Data Value Unit: fraction
-  - Data point Description: Threshold for considering room unoccupied
-  - Data Point Affiliation: System configuration
+  - Data point Description: Occupancy schedule tolerance
+  - Data Point Affiliation: Zone occupancy
 
-- tol_oa_flow: Flow tolerance
+- tol_v_oa: Flow tolerance
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Allowable deviation from required flow rates
-  - Data Point Affiliation: System configuration
+  - Data point Description: Outdoor air volume flow rate tolerance
+  - Data Point Affiliation: Zone ventilation
 
 """
 

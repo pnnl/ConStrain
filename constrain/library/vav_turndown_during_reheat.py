@@ -35,10 +35,10 @@ The verification compares average airflow ratios:
 if no_reheat_periods_exist:
     untested  # Cannot verify without reheat operation
 else:
-    flow_ratio = current_flow / maximum_flow
+    flow_ratio = v_box / v_box_max
     
-    reheat_avg = mean(flow_ratio[reheat_active])
-    normal_avg = mean(flow_ratio[not_reheat_active])
+    reheat_avg = mean(flow_ratio[flag_coil_htg])
+    normal_avg = mean(flow_ratio[not flag_coil_htg])
     
     if reheat_avg < normal_avg:
         pass  # Proper turndown during reheat
@@ -48,19 +48,19 @@ else:
 
 ### Data requirements
 
-- reheat_coil_flag: Reheat status
-  - Data Value Unit: boolean
-  - Data point Description: Indicates if reheat coil is active
+- flag_htg_coil: VAV box reheat coil operation status
+  - Data Value Unit: binary
+  - Data point Description: Heating coil flag
   - Data Point Affiliation: Terminal unit control
 
-- V_dot_VAV: Current flow
+- v_box: VAV airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current VAV box airflow rate
+  - Data point Description: Box volume flow rate
   - Data Point Affiliation: Terminal unit monitoring
 
-- V_dot_VAV_max: Maximum flow
+- v_box_max: VAV maximum airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Maximum VAV box airflow setpoint
+  - Data point Description: Box maximum volume flow rate
   - Data Point Affiliation: Terminal unit configuration
 
 """

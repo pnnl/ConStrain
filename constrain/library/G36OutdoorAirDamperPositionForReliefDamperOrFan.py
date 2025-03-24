@@ -29,29 +29,29 @@ The verification checks outdoor air damper position under various operating cond
 ### Verification Algorithm Pseudo Code
 
 ```python
-if heating_output > 0:
-    if abs(oa_p - min_oa_p) < oa_p_tol:
+if out_htg > 0:
+    if abs(pos_damper_oa - pos_damper_oa_min) < tol_pos_damper_oa:
         pass
     else:
         fail
-elif cooling_output > 0:
-    if economizer_high_limit_reached:
-        if abs(oa_p - min_oa_p) < oa_p_tol:
+elif out_clg > 0:
+    if flag_econ_hl:
+        if abs(pos_damper_oa - pos_damper_oa_min) < tol_pos_damper_oa:
             pass
         else:
             fail
     else:
-        if abs(oa_p - max_oa_p) < oa_p_tol:
+        if abs(pos_damper_oa - pos_damper_oa_max) < tol_pos_damper_oa:
             pass
         else:
             fail
-elif ra_p < max_ra_p:
-    if abs(oa_p - max_oa_p) < ra_p_tol:
+elif pos_damper_ra < pos_damper_ra_max:
+    if abs(pos_damper_oa - pos_damper_oa_max) < tol_pos_damper_ra:
         pass
     else:
         fail
-elif abs(ra_p - max_ra_p) < ra_p_tol:
-    if min_oa_p < oa_p < max_oa_p:
+elif abs(pos_damper_ra - pos_damper_ra_max) < tol_pos_damper_ra:
+    if pos_damper_oa_min < pos_damper_oa < pos_damper_oa_max:
         pass
     else:
         fail
@@ -61,54 +61,54 @@ else:
 
 ### Data requirements
 
-- heating_output: Heating coil output
+- out_htg: Heating output
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current heating coil output
+  - Data point Description: Heating output
   - Data Point Affiliation: Air handling unit
 
-- cooling_output: Cooling coil output
+- out_clg: Cooling output
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current cooling coil output
+  - Data point Description: Cooling output
   - Data Point Affiliation: Air handling unit
 
-- ra_p: Return air damper position
+- pos_damper_ra: Return air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current return air damper position
+  - Data point Description: Return air damper position
   - Data Point Affiliation: Air handling unit
 
-- max_ra_p: Maximum return air damper position
+- pos_damper_ra_max: Maximum return air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum allowed return air damper position
+  - Data point Description: Maximum return air damper position
   - Data Point Affiliation: Air handling unit
 
-- ra_p_tol: Return air damper position tolerance
+- tol_pos_damper_ra: Return air damper position tolerance
   - Data Value Unit: percent
-  - Data point Description: Allowable deviation from setpoint
+  - Data point Description: Return air damper position tolerance
   - Data Point Affiliation: Air handling unit
 
-- oa_p: Outdoor air damper position
+- pos_damper_oa: Outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current outdoor air damper position
+  - Data point Description: Outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- min_oa_p: Minimum outdoor air damper position
+- pos_damper_oa_min: Minimum outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Minimum allowed outdoor air damper position
+  - Data point Description: Minimum outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- max_oa_p: Maximum outdoor air damper position
+- pos_damper_oa_max: Maximum outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum allowed outdoor air damper position
+  - Data point Description: Maximum outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- oa_p_tol: Outdoor air damper position tolerance
+- tol_pos_damper_oa: Outdoor air damper position tolerance
   - Data Value Unit: percent
-  - Data point Description: Allowable deviation from setpoint
+  - Data point Description: Outdoor air damper position tolerance
   - Data Point Affiliation: Air handling unit
 
-- economizer_high_limit_reached: Economizer status
+- flag_econ_hl: Economizer high limit flag
   - Data Value Unit: binary
-  - Data point Description: Indicates if economizer high limit is reached
+  - Data point Description: Economizer high limit flag
   - Data Point Affiliation: Economizer control
 
 """

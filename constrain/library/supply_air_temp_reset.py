@@ -43,13 +43,13 @@ else:
 
 ### Data requirements
 
-- T_sa_sp: Supply air temperature setpoint
-  - Data Value Unit: °C
-  - Data point Description: Current supply air temperature setpoint
+- sp_t_sa: Supply air temperature setpoint
+  - Data Value Unit: temperature
+  - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: System control
 
-- T_z_cool: Zone cooling setpoint
-  - Data Value Unit: °C
+- sp_t_z_clg: Zone cooling setpoint
+  - Data Value Unit: temperature
   - Data point Description: Zone cooling temperature setpoint
   - Data Point Affiliation: Zone control
 

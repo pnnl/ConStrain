@@ -25,10 +25,10 @@ The verification checks that during occupied mode, if the discharge air temperat
 ### Verification Algorithm Pseudo Code
 
 ```python
-if operation_mode != 'occupied':
+if mode_sys != 'occupied':
     untested
 else:
-    if dat < 10 and heating_coil_command < 99:
+    if t_vav_dis < 10 and cmd_htg_coil < 99:
         fail
     else:
         pass
@@ -36,19 +36,19 @@ else:
 
 ### Data requirements
 
-- operation_mode: System operation mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current operation mode of the system
+  - Data point Description: System operation mode
   - Data Point Affiliation: System control
 
-- heating_coil_command: Heating coil command
+- cmd_htg_coil: Heating coil command
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current heating coil control signal
+  - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- dat: Discharge air temperature
+- t_vav_dis: VAV discharge air temperature
   - Data Value Unit: °C
-  - Data point Description: Current discharge air temperature
+  - Data point Description: VAV discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
 """

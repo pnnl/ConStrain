@@ -25,69 +25,69 @@ The verification monitors multiple conditions that can trigger stage 3 protectio
 ### Verification Algorithm Pseudo Code
 
 ```python
-if supply_air_temp < 3.3 (continuously 15 minutes) or
-  supply_air_temp < 1 (continuously 5 minutes) or
-  freeze_stat == True:
+if t_sa < 3.3 (continuously 15 minutes) or
+  t_sa < 1 (continuously 5 minutes) or
+  flag_freeze == True:
     if not (
-        outdoor_damper_command == 0 and
-        supply_fan_status == 'off' and
-        return_fan_status == 'off' and
-        relief_fan_status == 'off' and
-        cooling_coil_command == 100 and
-        heating_coil_command > 0
+        pos_damper_oa == 0 and
+        flag_fan_sa == 'off' and
+        flag_fan_ra == 'off' and
+        flag_fan_rea == 'off' and
+        cmd_vlv_clg == 100 and
+        cmd_vlv_htg > 0
     ):
         fail
     else:
         pass
 
 if never (
-    supply_air_temp < 3.3 (continuously 15 minutes) or
-    supply_air_temp < 1 (continuously 5 minutes) or
-    freeze_stat == True
+    t_sa < 3.3 (continuously 15 minutes) or
+    t_sa < 1 (continuously 5 minutes) or
+    flag_freeze == True
 ):
     untested
 ```
 
 ### Data requirements
 
-- freeze_stat: Freeze-stat status
+- flag_freeze: Freeze protection flag
   - Data Value Unit: binary
-  - Data point Description: Status of freeze protection thermostat (optional)
+  - Data point Description: Freeze protection flag
   - Data Point Affiliation: Air handling unit
 
-- supply_air_temp: Supply air temperature
+- t_sa: Supply air temperature
   - Data Value Unit: °C
-  - Data point Description: Temperature of supply air downstream of cooling coil
+  - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
-- outdoor_damper_command: Outdoor air damper position
-  - Data Value Unit: fraction (0-1)
-  - Data point Description: Current position command to outdoor air damper
-  - Data Point Affiliation: Air handling unit
-
-- supply_fan_status: Supply fan status
-  - Data Value Unit: binary
-  - Data point Description: Operating status of supply fan
-  - Data Point Affiliation: Air handling unit
-
-- return_fan_status: Return fan status
-  - Data Value Unit: binary
-  - Data point Description: Operating status of return fan (optional)
-  - Data Point Affiliation: Air handling unit
-
-- relief_fan_status: Relief fan status
-  - Data Value Unit: binary
-  - Data point Description: Operating status of relief fan (optional)
-  - Data Point Affiliation: Air handling unit
-
-- cooling_coil_command: Cooling coil valve position
+- pos_damper_oa: Outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Position command to cooling coil valve
+  - Data point Description: Outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- heating_coil_command: Heating coil valve position
+- flag_fan_sa: Supply fan status
+  - Data Value Unit: binary
+  - Data point Description: Supply fan status
+  - Data Point Affiliation: Air handling unit
+
+- flag_fan_ra: Return fan status
+  - Data Value Unit: binary
+  - Data point Description: Return fan status
+  - Data Point Affiliation: Air handling unit
+
+- flag_fan_rea: Relief fan status
+  - Data Value Unit: binary
+  - Data point Description: Relief fan status
+  - Data Point Affiliation: Air handling unit
+
+- cmd_vlv_clg: Cooling valve command
   - Data Value Unit: percent (0-100)
-  - Data point Description: Position command to heating coil valve
+  - Data point Description: Cooling valve command
+  - Data Point Affiliation: Air handling unit
+
+- cmd_vlv_htg: Heating valve command
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Heating valve command
   - Data Point Affiliation: Air handling unit
 
 """

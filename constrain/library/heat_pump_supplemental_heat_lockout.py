@@ -43,39 +43,39 @@ else:
 
 ### Data requirements
 
-- C_ref: Reference capacity
-  - Data Value Unit: watts
-  - Data point Description: Heat pump rated heating capacity
+- cap_ref: Reference capacity
+  - Data Value Unit: power
+  - Data point Description: Reference capacity
   - Data Point Affiliation: Equipment specifications
 
-- L_op: Operating load
-  - Data Value Unit: watts
-  - Data point Description: Current heating load
+- load_op: Operating load
+  - Data Value Unit: power
+  - Data point Description: Operating load
   - Data Point Affiliation: System monitoring
 
-- P_supp_ht: Supplemental heat
-  - Data Value Unit: watts
+- p_htg_supp: Supplemental heat
+  - Data Value Unit: power
   - Data point Description: Supplemental heating power
   - Data Point Affiliation: System monitoring
 
-- C_t_mod: Temperature modifier
+- mod_cap_t: Temperature modifier
   - Data Value Unit: fraction
-  - Data point Description: Capacity adjustment for current temperatures
-  - Data Point Affiliation: Equipment performance curves
+  - Data point Description: Temperature capacity modifier
+  - Data Point Affiliation: Equipment performance
 
-- C_ff_mod: Flow modifier
+- mod_cap_ff: Flow modifier
   - Data Value Unit: fraction
-  - Data point Description: Capacity adjustment for current flow rates
-  - Data Point Affiliation: Equipment performance curves
+  - Data point Description: Flow capacity modifier
+  - Data Point Affiliation: Equipment performance
 
-- L_defrost: Defrost status
+- flag_defrost: Defrost status
   - Data Value Unit: binary
-  - Data point Description: Indicates active defrost cycle
-  - Data Point Affiliation: System control
+  - Data point Description: Defrost flag
+  - Data Point Affiliation: System operation
 
-- tol: Capacity tolerance
-  - Data Value Unit: watts
-  - Data point Description: Allowable margin for capacity comparison
+- tol_cap: Capacity tolerance
+  - Data Value Unit: power
+  - Data point Description: Capacity tolerance
   - Data Point Affiliation: System configuration
 
 """

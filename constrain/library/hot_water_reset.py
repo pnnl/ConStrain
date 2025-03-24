@@ -53,39 +53,39 @@ elif outdoor_min < outdoor_temp < outdoor_max:
 
 ### Data requirements
 
-- T_oa_db: Outdoor temperature
+- t_oa: Outdoor temperature
   - Data Value Unit: °C
-  - Data point Description: Current outdoor air dry-bulb temperature
+  - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
-- T_oa_max: Maximum outdoor temperature
+- t_oa_max: Maximum outdoor temperature
   - Data Value Unit: °C
-  - Data point Description: Upper threshold for temperature reset
+  - Data point Description: Maximum outdoor air temperature
   - Data Point Affiliation: System configuration
 
-- T_oa_min: Minimum outdoor temperature
+- t_oa_min: Minimum outdoor temperature
   - Data Value Unit: °C
-  - Data point Description: Lower threshold for temperature reset
+  - Data point Description: Minimum outdoor air temperature
   - Data Point Affiliation: System configuration
 
-- T_hw: Hot water temperature
+- t_hw: Hot water temperature
   - Data Value Unit: °C
-  - Data point Description: Current hot water supply temperature
+  - Data point Description: Hot water temperature
   - Data Point Affiliation: System monitoring
 
-- m_hw: Hot water flow
+- v_hw: Hot water flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current hot water flow rate
+  - Data point Description: Hot water volume flow rate
   - Data Point Affiliation: System monitoring
 
-- T_hw_max_sp: Maximum temperature setpoint
+- sp_t_hw_max: Maximum temperature setpoint
   - Data Value Unit: °C
-  - Data point Description: Maximum hot water temperature setpoint
+  - Data point Description: Hot water maximum temperature setpoint
   - Data Point Affiliation: System control
 
-- T_hw_min_sp: Minimum temperature setpoint
+- sp_t_hw_min: Minimum temperature setpoint
   - Data Value Unit: °C
-  - Data point Description: Minimum hot water temperature setpoint
+  - Data point Description: Hot water minimum temperature setpoint
   - Data Point Affiliation: System control
 
 """

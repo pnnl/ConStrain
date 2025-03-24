@@ -25,8 +25,8 @@ The verification checks that during occupied periods when economizer is not in l
 ### Verification Algorithm Pseudo Code
 
 ```python
-if not economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':
-    if outdoor_damper_command >= MinOA-P and outdoor_air_flow >= MinOAsp:
+if not economizer_lockout(t_oa, t_oa_econ_hl) and mode_sys == 'occupied':
+    if pos_damper_oa >= pos_damper_oa_min and v_oa >= v_oa_min:
         pass
     else:
         fail
@@ -36,39 +36,39 @@ else:
 
 ### Data requirements
 
-- outdoor_air_temp: Outdoor air temperature
+- t_oa: Outdoor air temperature
   - Data Value Unit: °C
-  - Data point Description: Current outdoor air temperature
+  - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
-- economizer_high_limit_sp: Economizer high limit
+- t_oa_econ_hl: Economizer high limit temperature
   - Data Value Unit: °C
-  - Data point Description: Temperature above which economizer is locked out
+  - Data point Description: Economizer high limit temperature
   - Data Point Affiliation: Economizer control
 
-- outdoor_damper_command: Outdoor air damper position
-  - Data Value Unit: fraction (0-1)
-  - Data point Description: Current position command to outdoor air damper
+- pos_damper_oa: Outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- min_oa_p: Minimum damper position
-  - Data Value Unit: fraction (0-1)
-  - Data point Description: Minimum outdoor air damper position setpoint
+- pos_damper_oa_min: Minimum outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Minimum outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- min_oa_sp: Minimum outdoor airflow
+- v_oa_min: Minimum outdoor airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum outdoor air flow rate setpoint
+  - Data point Description: Minimum outdoor airflow
   - Data Point Affiliation: Air handling unit
 
-- outdoor_air_flow: Outdoor airflow
+- v_oa: Outdoor airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current outdoor air flow rate
+  - Data point Description: Outdoor airflow
   - Data Point Affiliation: Air handling unit
 
-- sys_mode: System mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current AHU operation mode
+  - Data point Description: System operation mode
   - Data Point Affiliation: System control
 
 """

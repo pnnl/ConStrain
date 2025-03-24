@@ -33,57 +33,57 @@ The verification checks two conditions during reheat operation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if reheat_coil_active:
-    if max_flow == 0:
-        untested  # Cannot calculate ratio
-    elif current_flow / max_flow > min_turndown + tolerance:
-        if previous_pressure is None:
-            untested  # Need pressure history
-        elif abs(current_pressure - previous_pressure) > pressure_tolerance:
-            untested  # Pressure not stable
-        else:
-            fail  # Excessive flow during reheat
+if flag_coil_htg:
+  if v_box_max == 0:
+     Untested
+  if v_box_max > 0.0 and v_box / v_box_max > ratio_turndown_min + tol_turndown:
+    if sp_p_press_duct_prev is None:
+        Untested
+    elif abs(sp_p_press_duct - sp_p_press_duct_prev) > tol_p_press:
+        Untested
     else:
-        pass  # Proper turndown maintained
-else:
-    untested  # Not in reheat mode
+        fail
+  else:
+     pass
+else: 
+    Untested
 ```
 
 ### Data requirements
 
-- reheat_coil_flag: Reheat status
-  - Data Value Unit: boolean
-  - Data point Description: Indicates if reheat coil is active
+- flag_htg_coil: VAV box reheat coil operation status
+  - Data Value Unit: binary
+  - Data point Description: Heating coil flag
   - Data Point Affiliation: Terminal unit control
 
-- V_dot_VAV: Current flow
+- v_box: VAV airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current VAV box airflow rate
+  - Data point Description: Box volume flow rate
   - Data Point Affiliation: Terminal unit monitoring
 
-- V_dot_VAV_max: Maximum flow
+- v_box_max: VAV maximum airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Maximum VAV box airflow setpoint
+  - Data point Description: Box maximum volume flow rate
   - Data Point Affiliation: Terminal unit configuration
 
-- VAV_min_turndown_design: Minimum turndown
+- ratio_turndown_min: Minimum VAV turndown ratio
   - Data Value Unit: fraction
-  - Data point Description: Minimum allowable flow ratio
+  - Data point Description: Minimum turndown ratio
   - Data Point Affiliation: Terminal unit configuration
 
-- P_set: Pressure setpoint
+- sp_p_duct: Duct static pressure setpoint
   - Data Value Unit: pressure
-  - Data point Description: Current duct static pressure setpoint
+  - Data point Description: Duct pressure setpoint
   - Data Point Affiliation: System control
 
-- turndown_tol: Flow tolerance
+- tol_turndown: Turndown tolerance
   - Data Value Unit: fraction
-  - Data point Description: Allowable deviation from turndown ratio
+  - Data point Description: Turndown tolerance
   - Data Point Affiliation: System configuration
 
-- P_set_tol: Pressure tolerance
+- tol_p_duct: Pressure tolerance
   - Data Value Unit: pressure
-  - Data point Description: Allowable pressure setpoint variation
+  - Data point Description: Duct pressure tolerance
   - Data Point Affiliation: System configuration
 
 """

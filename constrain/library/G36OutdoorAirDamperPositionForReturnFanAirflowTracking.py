@@ -25,7 +25,7 @@ The verification checks that the outdoor air damper maintains its maximum positi
 ### Verification Algorithm Pseudo Code
 
 ```python
-if abs(oa_p - max_oa_p) < oa_p_tol:
+if abs(pos_damper_oa - pos_damper_oa_max) < tol_pos_damper_oa:
     pass
 else:
     fail
@@ -33,19 +33,19 @@ else:
 
 ### Data requirements
 
-- oa_p: Outdoor air damper position
+- pos_damper_oa: Outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current outdoor air damper position
+  - Data point Description: Outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- max_oa_p: Maximum outdoor air damper position
+- pos_damper_oa_max: Maximum outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum allowed outdoor air damper position
+  - Data point Description: Maximum outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- oa_p_tol: Outdoor air damper position tolerance
+- tol_pos_damper_oa: Outdoor air damper position tolerance
   - Data Value Unit: percent
-  - Data point Description: Allowable deviation from setpoint
+  - Data point Description: Outdoor air damper position tolerance
   - Data Point Affiliation: Air handling unit
 
 """

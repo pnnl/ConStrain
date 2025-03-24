@@ -42,13 +42,13 @@ else:
 
 ### Data requirements
 
-- T_z_cool_sp: Cooling setpoint
-  - Data Value Unit: °C
+- sp_t_z_clg: Cooling setpoint
+  - Data Value Unit: temperature
   - Data point Description: Zone cooling temperature setpoint
   - Data Point Affiliation: Zone control
 
-- T_z_heat_sp: Heating setpoint
-  - Data Value Unit: °C
+- sp_t_z_htg: Heating setpoint
+  - Data Value Unit: temperature
   - Data point Description: Zone heating temperature setpoint
   - Data Point Affiliation: Zone control
 

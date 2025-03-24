@@ -29,10 +29,10 @@ for each timestep:
     if first timestep:
         return "Untested"
     else:
-        if current_pressure_setpoint < previous_pressure_setpoint:
+        if current_sp_p_press_duct < previous_sp_p_press_duct:
             # Setpoint is being reduced
             return True
-        elif any VAV damper position > 90%:
+        elif any pos_damper_vav > 90%:
             # At least one damper is nearly wide open
             return True
         else:
@@ -43,14 +43,14 @@ for each timestep:
 
 ### Data requirements
 
-- p_set: Static pressure setpoint
+- sp_p_press_duct: Duct static pressure setpoint
   - Data Value Unit: pressure
-  - Data point Description: Supply air duct static pressure setpoint
+  - Data point Description: Duct static pressure setpoint
   - Data Point Affiliation: Fan control
 
-- d_VAV_x: VAV Damper Position
-  - Data Value Unit: fraction (0-1)
-  - Data point Description: Position of each VAV box damper served by the system
+- pos_damper_vav: VAV damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: VAV damper position
   - Data Point Affiliation: Zone control
 
 """

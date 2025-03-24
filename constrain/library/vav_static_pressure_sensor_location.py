@@ -40,14 +40,14 @@ else:
 
 ### Data requirements
 
-- p_fan_set: Pressure setpoint
-  - Data Value Unit: pascals
-  - Data point Description: Duct static pressure setpoint
+- sp_p_fan: Pressure setpoint
+  - Data Value Unit: pressure
+  - Data point Description: Fan pressure setpoint
   - Data Point Affiliation: System control
 
-- tol_P_fan: Pressure tolerance
-  - Data Value Unit: pascals
-  - Data point Description: Allowable deviation from pressure limit
+- tol_p_fan: Pressure tolerance
+  - Data Value Unit: pressure
+  - Data point Description: Fan pressure tolerance
   - Data Point Affiliation: System configuration
 
 """

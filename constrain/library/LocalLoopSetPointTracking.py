@@ -50,14 +50,14 @@ else:
 
 ### Data requirements
 
-- feedback_sensor: Process variable
+- v_fb: Process variable
   - Data Value Unit: varies by application
-  - Data point Description: Measured value being controlled
+  - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
-- set_point: Control setpoint
-  - Data Value Unit: same as feedback_sensor
-  - Data point Description: Desired value for process variable
+- sp: Control setpoint
+  - Data Value Unit: same as v_fb
+  - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 
 """

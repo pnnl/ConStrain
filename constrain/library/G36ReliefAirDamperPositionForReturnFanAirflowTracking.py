@@ -28,17 +28,17 @@ The verification checks relief air damper position under three conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if heating_output > 0:
-    if abs(rea_p - 0) < rea_p_tol:
+if out_htg > 0:
+    if abs(pos_damper_rea - 0) < tol_pos_damper_rea:
         pass
     else:
         fail
-elif cooling_output > 0:
-    if abs(rea_p - max_rea_p) < rea_p_tol:
+elif out_clg > 0:
+    if abs(pos_damper_rea - pos_damper_rea_max) < tol_pos_damper_rea:
         pass
     else:
         fail
-elif abs(rea_p - (1 - ra_p) * max_rea_p) < rea_p_tol:
+elif abs(pos_damper_rea - (1 - pos_damper_ra) * pos_damper_rea_max) < tol_pos_damper_rea:
     pass
 else:
     fail
@@ -46,34 +46,34 @@ else:
 
 ### Data requirements
 
-- heating_output: Heating output
+- out_htg: Heating output
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current heating system output
+  - Data point Description: Heating output
   - Data Point Affiliation: System control
 
-- cooling_output: Cooling output
+- out_clg: Cooling output
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current cooling system output
+  - Data point Description: Cooling output
   - Data Point Affiliation: System control
 
-- rea_p: Relief air damper position
+- pos_damper_rea: Relief air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current relief air damper position
+  - Data point Description: Relief air damper position
   - Data Point Affiliation: Air handling unit
 
-- max_rea_p: Maximum relief air position
+- pos_damper_rea_max: Maximum relief air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum allowed relief air damper position
+  - Data point Description: Maximum relief air damper position
   - Data Point Affiliation: Air handling unit
 
-- rea_p_tol: Relief air position tolerance
+- tol_pos_damper_rea: Relief air damper position tolerance
   - Data Value Unit: percent
-  - Data point Description: Allowable deviation from setpoint
+  - Data point Description: Relief air damper position tolerance
   - Data Point Affiliation: Air handling unit
 
-- ra_p: Return air damper position
+- pos_damper_ra: Return air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current return air damper position
+  - Data point Description: Return air damper position
   - Data Point Affiliation: Air handling unit
 
 """

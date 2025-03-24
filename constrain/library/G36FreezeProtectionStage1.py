@@ -25,32 +25,32 @@ The verification monitors supply air temperature and outdoor air damper position
 ### Verification Algorithm Pseudo Code
 
 ```python
-if supply_air_temp < 4.4 (continuously 5 minutes) and outdoor_damper_command > outdoor_damper_minimum:
+if t_sa < 4.4 (continuously 5 minutes) and pos_damper_oa > pos_damper_oa_min:
     fail
-elif outdoor_damper_command > outdoor_damper_minimum and not (supply_air_temp > 7 (continuously 5 minutes)):
+elif pos_damper_oa > pos_damper_oa_min and not (t_sa > 7 (continuously 5 minutes)):
     fail
 else:
     pass
 
-if never (supply_air_temp < 4.4 (continuously 5 minutes)):
+if never (t_sa < 4.4 (continuously 5 minutes)):
     untested
 ```
 
 ### Data requirements
 
-- supply_air_temp: Supply air temperature
+- t_sa: Supply air temperature
   - Data Value Unit: °C
-  - Data point Description: Temperature of supply air downstream of cooling coil
+  - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
-- outdoor_damper_command: Outdoor air damper position
-  - Data Value Unit: fraction (0-1)
-  - Data point Description: Current position command to outdoor air damper
+- pos_damper_oa: Outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- outdoor_damper_minimum: Minimum damper position
-  - Data Value Unit: fraction (0-1)
-  - Data point Description: Minimum allowed position for outdoor air damper
+- pos_damper_oa_min: Minimum outdoor air damper position
+  - Data Value Unit: percent (0-100)
+  - Data point Description: Minimum outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
 """

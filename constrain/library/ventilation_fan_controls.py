@@ -43,19 +43,19 @@ else:
 
 ### Data requirements
 
-- Q_load: Space load
-  - Data Value Unit: watts
-  - Data point Description: Current space heating/cooling load
+- q_load: Space load
+  - Data Value Unit: power
+  - Data point Description: Space load
   - Data Point Affiliation: Space monitoring
 
-- no_of_occ: Occupancy count
+- n_occ: Occupancy count
   - Data Value Unit: count
-  - Data point Description: Number of occupants in space
+  - Data point Description: Number of occupants
   - Data Point Affiliation: Space monitoring
 
-- P_fan: Fan power
-  - Data Value Unit: watts
-  - Data point Description: Ventilation fan power consumption
+- p_fan: Fan power
+  - Data Value Unit: power
+  - Data point Description: Fan power
   - Data Point Affiliation: Equipment monitoring
 
 """

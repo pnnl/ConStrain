@@ -27,16 +27,16 @@ The verification checks two conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol:
+if t_vav_dis > t_vav_dis_min and cmd_htg_coil > tol_cmd_htg_coil:
     fail
 else:
-    switch operation_mode:
+    switch mode_sys:
         case 'occupied':
-            minimum = v_min
+            minimum = v_vav_min
         case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied':
             minimum = 0
 
-    if abs(v_spt - minimum) <= v_spt_tol:
+    if abs(v_vav_sp - minimum) <= tol_v_vav:
         pass
     else:
         fail
@@ -44,49 +44,49 @@ else:
 
 ### Data requirements
 
-- operation_mode: System operation mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current operation mode of the system
+  - Data point Description: System operation mode
   - Data Point Affiliation: System control
 
-- zone_state: Zone state
+- state_zone: Zone state
   - Data Value Unit: enumeration
-  - Data point Description: Current zone state (heating, cooling, or deadband)
+  - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_min: Minimum airflow
+- v_vav_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Occupied zone minimum airflow setpoint
+  - Data point Description: Minimum airflow
   - Data Point Affiliation: Zone airflow control
 
-- v_spt: Active airflow setpoint
+- v_vav_sp: Airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current active airflow setpoint
+  - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_spt_tol: Airflow tolerance
+- tol_v_vav: Airflow tolerance
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Allowable deviation from setpoint
+  - Data point Description: Airflow tolerance
   - Data Point Affiliation: Zone airflow control
 
-- heating_coil_command: Heating coil command
+- cmd_htg_coil: Heating coil command
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current heating coil control signal
+  - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- heating_coil_command_tol: Command tolerance
+- tol_cmd_htg_coil: Heating coil command tolerance
   - Data Value Unit: percent
-  - Data point Description: Tolerance for considering heating coil active
+  - Data point Description: Heating coil command tolerance
   - Data Point Affiliation: Terminal box control
 
-- dat: Discharge air temperature
+- t_vav_dis: VAV discharge air temperature
   - Data Value Unit: °C
-  - Data point Description: Current discharge air temperature
+  - Data point Description: VAV discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
-- dat_min_spt: Minimum discharge temperature
+- t_vav_dis_min: Minimum VAV discharge air temperature
   - Data Value Unit: °C
-  - Data point Description: Minimum allowed discharge air temperature
+  - Data point Description: Minimum VAV discharge air temperature
   - Data Point Affiliation: Terminal box control
 
 """

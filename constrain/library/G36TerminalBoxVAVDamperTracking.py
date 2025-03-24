@@ -30,13 +30,13 @@ The verification monitors airflow tracking performance:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if abs(v_spt - v) >= v_tracking_tol:
+if abs(v_vav_sp - v_vav) >= tol_v_vav:
     if tracking_error_duration < 1_hour:
         pass  # Brief deviation acceptable
     else:
-        if (v - v_spt >= v_tracking_tol) and vav_damper_command <= 1:
+        if (v_vav - v_vav_sp >= tol_v_vav) and pos_damper_vav <= 1:
             pass  # Flow too high, damper at minimum
-        elif (v_spt - v >= v_tracking_tol) and vav_damper_command >= 99:
+        elif (v_vav_sp - v_vav >= tol_v_vav) and pos_damper_vav >= 99:
             pass  # Flow too low, damper at maximum
         else:
             fail  # Sustained deviation without appropriate response
@@ -46,24 +46,24 @@ else:
 
 ### Data requirements
 
-- vav_damper_command: Damper position
+- pos_damper_vav: VAV damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current VAV damper position command
+  - Data point Description: VAV damper position
   - Data Point Affiliation: Terminal box control
 
-- v: Airflow rate
+- v_vav: VAV airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Measured terminal box discharge airflow
+  - Data point Description: VAV airflow rate
   - Data Point Affiliation: Terminal box monitoring
 
-- v_spt: Airflow setpoint
+- v_vav_sp: VAV airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current active airflow setpoint
+  - Data point Description: VAV airflow setpoint
   - Data Point Affiliation: Terminal box control
 
-- v_tracking_tol: Airflow tolerance
+- tol_v_vav: VAV airflow tolerance
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Allowable deviation from airflow setpoint
+  - Data point Description: VAV airflow tolerance
   - Data Point Affiliation: Terminal box control
 
 """

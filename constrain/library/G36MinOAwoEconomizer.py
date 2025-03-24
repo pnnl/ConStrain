@@ -25,14 +25,14 @@ The verification checks that during occupied periods when economizer is in locko
 ### Verification Algorithm Pseudo Code
 
 ```python
-if economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':
-    if outdoor_air_flow < MinOAsp (continuously for 1 hour):
-        if outdoor_damper_command == 100 and return_damper_command == 0:
+if economizer_lockout(t_oa, t_oa_econ_hl) and mode_sys == 'occupied':
+    if v_oa < v_oa_min (continuously for 1 hour):
+        if pos_damper_oa == 100 and pos_damper_ra == 0:
             pass
         else:
             fail
-    elif outdoor_air_flow > MinOAsp (continuously for 1 hour):
-        if outdoor_damper_command == 0 and return_damper_command == 100:
+    elif v_oa > v_oa_min (continuously for 1 hour):
+        if pos_damper_oa == 0 and pos_damper_ra == 100:
             pass
         else:
             fail
@@ -44,39 +44,39 @@ else:
 
 ### Data requirements
 
-- outdoor_air_temp: Outdoor air temperature
+- t_oa: Outdoor air temperature
   - Data Value Unit: °C
-  - Data point Description: Current outdoor air temperature
+  - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
-- economizer_high_limit_sp: Economizer high limit
+- t_oa_econ_hl: Economizer high limit temperature
   - Data Value Unit: °C
-  - Data point Description: Temperature above which economizer is locked out
+  - Data point Description: Economizer high limit temperature
   - Data Point Affiliation: Economizer control
 
-- outdoor_damper_command: Outdoor air damper position
+- pos_damper_oa: Outdoor air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current position command to outdoor air damper
+  - Data point Description: Outdoor air damper position
   - Data Point Affiliation: Air handling unit
 
-- return_damper_command: Return air damper position
+- pos_damper_ra: Return air damper position
   - Data Value Unit: percent (0-100)
-  - Data point Description: Current position command to return air damper
+  - Data point Description: Return air damper position
   - Data Point Affiliation: Air handling unit
 
-- outdoor_air_flow: Outdoor airflow
+- v_oa: Outdoor airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Current outdoor air flow rate
+  - Data point Description: Outdoor airflow
   - Data Point Affiliation: Air handling unit
 
-- min_oa_sp: Minimum outdoor airflow
+- v_oa_min: Minimum outdoor airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum outdoor air flow rate setpoint
+  - Data point Description: Minimum outdoor airflow
   - Data Point Affiliation: Air handling unit
 
-- sys_mode: System mode
+- mode_sys: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: Current AHU operation mode
+  - Data point Description: System operation mode
   - Data Point Affiliation: System control
 
 """

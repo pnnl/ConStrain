@@ -52,24 +52,24 @@ else:
 
 ### Data requirements
 
-- ct_P_fan: Fan power
-  - Data Value Unit: watts
-  - Data point Description: Current heat rejection fan power
+- p_fan_ct: Fan power
+  - Data Value Unit: power
+  - Data point Description: Cooling tower fan power
   - Data Point Affiliation: Fan monitoring
 
-- ct_m_fan_ratio: Flow ratio
+- ratio_v_fan_ct: Flow ratio
   - Data Value Unit: fraction
-  - Data point Description: Current to design flow ratio
+  - Data point Description: Cooling tower fan flow ratio
   - Data Point Affiliation: Fan control
 
-- ct_P_fan_dsgn: Design power
-  - Data Value Unit: watts
-  - Data point Description: Fan power at design conditions
+- p_fan_ct_dsgn: Design power
+  - Data Value Unit: power
+  - Data point Description: Cooling tower fan design power
   - Data Point Affiliation: Equipment specifications
 
-- ct_m_fan_dsgn: Design flow
+- v_fan_ct_dsgn: Design flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Fan flow rate at design conditions
+  - Data point Description: Cooling tower fan design flow rate
   - Data Point Affiliation: Equipment specifications
 
 """
