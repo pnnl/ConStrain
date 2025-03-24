@@ -73,7 +73,7 @@ class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
         # Copy the previous row's value in 'P_set' column to the current row
         self.df["P_set_prev"] = self.df["P_set"].shift(1).replace({np.nan: None})
         if (self.df["V_dot_VAV_max"] != 0).all():
-            self.df["V_doret_a_temptio"] = (
+            self.df["V_dot_ratio"] = (
                 self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
             )  # for plotting
         self.result = self.df.apply(lambda d: self.vav_turndown_check(d), axis=1)
