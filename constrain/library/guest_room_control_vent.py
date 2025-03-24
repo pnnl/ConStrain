@@ -1,4 +1,4 @@
-from constrain.checklib import CheckLibBase
+from constrain.checklib import RuleCheckBase
 import pandas as pd
 
 
