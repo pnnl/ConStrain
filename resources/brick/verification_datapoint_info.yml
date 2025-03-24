@@ -3,68 +3,68 @@
 ZoneTempControl:
   default:
     cooling_setpoint:
-      point: T_z_cool_sp
+      point: T_set_cool
       subject: hvac_zone
       variable: cooling_setpoint
     heating_setpoint:
-      point: T_z_heat_sp
+      point: T_set_heat
       subject: hvac_zone
       variable: heating_setpoint
   EnergyPlus:
     cooling_setpoint:
-      point: T_z_cool_sp
+      point: T_set_cool
       subject: hvac_zone
       variable: Zone Thermostat Cooling Setpoint Temperature
     heating_setpoint:
-      point: T_z_heat_sp
+      point: T_set_heat
       subject: hvac_zone
       variable: Zone Thermostat Heating Setpoint Temperature
 
 ZoneHeatSetpointMinimum:
   default:
     heating_setpoint:
-      point: T_z_heat_sp
+      point: T_heat_set
       subject: hvac_zone  
       variable: heating_setpoint
   EnergyPlus:
     heating_setpoint:
-      point: T_z_heat_sp
+      point: T_heat_set
       subject: hvac_zone
       variable: Zone Thermostat Heating Setpoint Temperature
 
 ZoneHeatingResetDepth:
   default:
     heating_setpoint:
-      point: T_z_heat_sp
+      point: T_heat_set
       subject: hvac_zone
       variable: heating_setpoint
   EnergyPlus:
     heating_setpoint:
-      point: T_z_heat_sp
+      point: T_heat_set
       subject: hvac_zone
       variable: Zone Thermostat Heating Setpoint Temperature
 
 ZoneCoolingSetpointMaximum:
   default:
     cooling_setpoint:
-      point: T_z_cool_sp
+      point: T_cool_set
       subject: hvac_zone
       variable: cooling_setpoint
   EnergyPlus:
     cooling_setpoint:
-      point: T_z_cool_sp
+      point: T_cool_set
       subject: hvac_zone
       variable: Zone Thermostat Cooling Setpoint Temperature
 
 ZoneCoolingResetDepth:
   default:
     cooling_setpoint:
-      point: T_z_cool_sp
+      point: T_cool_set
       subject: hvac_zone
       variable: cooling_setpoint
   EnergyPlus:
     cooling_setpoint:
-      point: T_z_cool_sp
+      point: T_cool_set
       subject: hvac_zone
       variable: Zone Thermostat Cooling Setpoint Temperature
 
@@ -79,11 +79,11 @@ NightCycleOperation:
       subject: Null
       variable: ahu_fan_on_off_status
     heating_setpoint:
-      point: T_z_heat_sp
+      point: T_heat_set
       subject: hvac_zone
       variable: heating_setpoint
     cooling_setpoint:
-      point: T_z_cool_sp
+      point: T_cool_set
       subject: hvac_zone
       variable: cooling_setpoint  
     ahu_fan_electrical_meeter:
@@ -100,11 +100,11 @@ NightCycleOperation:
       subject: ahu
       variable: Schedule Value
     heating_setpoint:
-      point: T_z_heat_sp
+      point: T_heat_set
       subject: hvac_zone
       variable: Zone Thermostat Heating Setpoint Temperature
     cooling_setpoint:
-      point: T_z_cool_sp
+      point: T_cool_set
       subject: hvac_zone
       variable: Zone Thermostat Cooling Setpoint Temperature
     ahu_fan_electrical_meeter:
@@ -163,12 +163,12 @@ VAVStaticPressureSensorLocation:
 SupplyAirTempReset: 
   default:
     ahu_discharge_air_temperature_setpoint:
-      point: T_sa_sp
+      point: T_sa_set
       subject: Null
       variable: ahu_discharge_air_temperature_setpoint
   EnergyPlus:
     ahu_discharge_air_temperature_setpoint:
-      point: T_sa_sp
+      point: T_sa_set
       subject: Null
       variable: System Node Setpoint Temperature
 

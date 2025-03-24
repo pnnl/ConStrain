@@ -820,12 +820,12 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_heat_set": {
+                    "T_z_hea_set": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Heating Setpoint Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_cool_set": {
+                    "T_z_coo_set": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Cooling Setpoint Temperature",
                         "frequency": "TimeStep"

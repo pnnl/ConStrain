@@ -370,7 +370,7 @@ class TestVerificationCase(unittest.TestCase):
 
     def test_validate_verification_case_structure_datapoints_test_valid(self):
         case = copy.deepcopy(self.case)
-        case["datapoints_source"]["idf_output_variables"]["ret_a_temp_sp"] = {
+        case["datapoints_source"]["idf_output_variables"]["T_ra_set"] = {
             "subject": "VAV_1 Return Equipment Outlet Node",
             "variable": "System Node Setpoint Temperature",
             "frequency": "detailed",
