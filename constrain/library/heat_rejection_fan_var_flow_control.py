@@ -7,27 +7,30 @@ class HeatRejectionFanVariableFlowControl(RuleCheckBase):
     points = ["ct_P_fan", "ct_m_fan_ratio", "ct_P_fan_dsgn", "ct_m_fan_dsgn"]
 
     def verify(self):
-        self.df["m_ct_fan"] = self.df["ct_m_fan_ratio"] * self.df["ct_m_fan_dsgn"]
+        self.df["m_ct_fan"] = (
+            self.df["ct_m_fan_ratio"]
+            * self.df["ct_m_fan_dsgn"]
+            * (1 + self.get_tolerance("ratio", "flow"))
+        )
         self.df["normalized_m_ct_fan"] = self.df["m_ct_fan"] / self.df["ct_m_fan_dsgn"]
-        self.df["normalized_P_ct_fan"] = self.df["ct_P_fan"] / self.df["ct_P_fan_dsgn"]
+        self.df["normalized_P_ct_fan"] = (
+            self.df["ct_P_fan"] * (1 + self.get_tolerance("power", "fan"))
+        ) / self.df["ct_P_fan_dsgn"]
 
-        self.df = self.df.loc[
-            self.df["normalized_P_ct_fan"] > 0.0
-        ]  # filter out 0 values
-        self.df["normalized_m_ct_fan"] -= 1  # minus 1 to transform the data
+        self.df = self.df.loc[self.df["normalized_P_ct_fan"] > 0.0]
+
+        self.df["normalized_m_ct_fan"] -= 1
         self.df["normalized_P_ct_fan"] -= 1
 
-        self.df = self.df.loc[
-            self.df["normalized_m_ct_fan"] > -0.5
-        ]  # filter out airflow points > -0.5, since the code requirement is at this point
+        self.df = self.df.loc[self.df["normalized_m_ct_fan"] > -0.5]
 
-        # linear regression
+        # Linear regression
         reg = LinearRegression(fit_intercept=False).fit(
             self.df["normalized_m_ct_fan"].values.reshape(-1, 1),
             self.df["normalized_P_ct_fan"],
-        )  # fit_intercept=False is for set the intercept to 0
+        )
 
-        if reg.coef_[0] >= 1.4:
+        if reg.coef_[0] >= (1.4 * (1 - self.get_tolerance("ratio", "efficiency"))):
             self.df["result"] = True
         else:
             self.df["result"] = False

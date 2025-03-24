@@ -29,7 +29,6 @@ else
 - V_dot_VAV: actual VAV volume flow
 - V_dot_VAV_max: max VAV volume flow
 - VAV_min_turndown_design: design VAV box min turndown ratio
-- turndown_tol: VAV turndown tolerance
 
 """
 
@@ -42,17 +41,15 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
         "V_dot_VAV",  # actual VAV volume flow
         "V_dot_VAV_max",  # max VAV volume flow
         "VAV_min_turndown_design",
-        "turndown_tol",
     ]
 
     def vav_turndown_check(self, data):
         if data["reheat_coil_flag"]:
             if data["V_dot_VAV_max"] == 0:
                 return "Untested"
-            elif (
-                data["V_dot_VAV"] / data["V_dot_VAV_max"]
-                > data["VAV_min_turndown_design"] + data["turndown_tol"]
-            ):
+            elif data["V_dot_VAV"] / data["V_dot_VAV_max"] > data[
+                "VAV_min_turndown_design"
+            ] + self.get_tolerance("ratio", "flow"):
                 return False
             else:
                 return True

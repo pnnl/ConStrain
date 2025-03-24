@@ -30,9 +30,7 @@ end
 - zone_state: Zone state (heating, cooling, or deadband (not in either heating or cooling))
 - v_min: Occupied zone minimum airflow setpoint
 - v_spt: Active airflow setpoint
-- v_spt_tol: Airflow setpoint tolerance
 - heating_coil_command: Heating coil command
-- heating_coil_command_tol: Heating coil command saturation tolerance
 - dat: Discharge air temperature
 - dat_min_spt: Minimum discharge air temperature setpoint
 
@@ -48,9 +46,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
         "zone_state",
         "v_min",
         "v_spt",
-        "v_spt_tol",
         "heating_coil_command",
-        "heating_coil_command_tol",
         "dat",
         "dat_min_spt",
     ]
@@ -61,15 +57,16 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
         zone_state,
         v_min,
         v_spt,
-        v_spt_tol,
         heating_coil_command,
-        heating_coil_command_tol,
         dat,
         dat_min_spt,
     ):
         if zone_state.lower().strip() != "deadband":
             return "Untested"
-        if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol:
+        if (
+            dat > dat_min_spt
+            and heating_coil_command > self.get_tolerance("damper", "command") * 100
+        ):
             return False
         match operation_mode.strip().lower():
             case "occupied":
@@ -80,7 +77,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 print("invalid operation mode value")
                 return "Untested"
 
-        if abs(v_spt - dbmin) <= v_spt_tol:
+        if abs(v_spt - dbmin) <= self.get_tolerance("airflow", "general"):
             return True
         else:
             return False
@@ -92,9 +89,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 t["zone_state"],
                 t["v_min"],
                 t["v_spt"],
-                t["v_spt_tol"],
                 t["heating_coil_command"],
-                t["heating_coil_command_tol"],
                 t["dat"],
                 t["dat_min_spt"],
             ),

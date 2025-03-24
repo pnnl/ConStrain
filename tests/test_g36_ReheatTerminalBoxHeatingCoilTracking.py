@@ -10,6 +10,20 @@ import numpy as np
 
 
 class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
+    tolerances = {
+        "temperature": {
+            "unit": "deg. C",
+            "general": 1.5,
+            "types": {
+                "discharge_air": 1.5,
+            },
+        },
+        "damper": {
+            "unit": "%",
+            "general": 0.0,
+            "types": {"position": 0.0, "command": 0.01},
+        },
+    }
 
     def test_g36_reheat_terminal_box_heating_coil_tracking0(self):
 
@@ -18,7 +32,6 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
             "heating_coil_command",
             "dat",
             "dat_spt",
-            "dat_tracking_tol",
         ]
 
         timestamp = [
@@ -34,15 +47,15 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
         ]
 
         data = [
-            ["heating", 90, 22, 22, 1.5],
-            ["heating", 90, 21, 22, 1.5],
-            ["heating", 95, 20, 22, 1.5],
-            ["heating", 95, 20, 22, 1.5],
-            ["heating", 95, 19, 22, 1.5],
-            ["heating", 95, 20, 22, 1.5],
-            ["heating", 99.5, 20, 22, 1.5],
-            ["cooling", 95, 19, 22, 1.5],
-            ["deadband", 95, 20, 22, 1.5],
+            ["heating", 90, 22, 22],
+            ["heating", 90, 21, 22],
+            ["heating", 95, 20, 22],
+            ["heating", 95, 20, 22],
+            ["heating", 95, 19, 22],
+            ["heating", 95, 20, 22],
+            ["heating", 99.5, 20, 22],
+            ["cooling", 95, 19, 22],
+            ["deadband", 95, 20, 22],
         ]
 
         expected_results = pd.Series(
@@ -64,11 +77,12 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
         results = pd.Series(
             list(
                 run_test_verification_with_data(
-                    "G36ReheatTerminalBoxHeatingCoilTracking", df
+                    "G36ReheatTerminalBoxHeatingCoilTracking",
+                    df,
+                    tolerances=self.tolerances,
                 ).result
             )
         )
-        print(results)
 
         self.assertTrue(results.equals(expected_results))
 
@@ -78,7 +92,6 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
             "heating_coil_command",
             "dat",
             "dat_spt",
-            "dat_tracking_tol",
         ]
 
         timestamp = [
@@ -94,15 +107,15 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
         ]
 
         data = [
-            ["heating", 90, 22, 22, 1.5],
-            ["heating", 90, 24, 22, 1.5],
-            ["heating", 95, 24, 22, 1.5],
-            ["heating", 95, 24, 22, 1.5],
-            ["heating", 90, 24, 22, 1.5],
-            ["heating", 5, 24, 22, 1.5],
-            ["heating", 0.5, 24, 22, 1.5],
-            ["cooling", 95, 19, 22, 1.5],
-            ["deadband", 95, 20, 22, 1.5],
+            ["heating", 90, 22, 22],
+            ["heating", 90, 24, 22],
+            ["heating", 95, 24, 22],
+            ["heating", 95, 24, 22],
+            ["heating", 90, 24, 22],
+            ["heating", 5, 24, 22],
+            ["heating", 0.5, 24, 22],
+            ["cooling", 95, 19, 22],
+            ["deadband", 95, 20, 22],
         ]
 
         expected_results = pd.Series(
@@ -124,11 +137,12 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
         results = pd.Series(
             list(
                 run_test_verification_with_data(
-                    "G36ReheatTerminalBoxHeatingCoilTracking", df
+                    "G36ReheatTerminalBoxHeatingCoilTracking",
+                    df,
+                    tolerances=self.tolerances,
                 ).result
             )
         )
-        print(results)
 
         self.assertTrue(results.equals(expected_results))
 

@@ -1,11 +1,10 @@
 import numpy as np
 import pandas as pd
-
-from constrain.checklib import CheckLibBase
+from constrain.checklib import RuleCheckBase
 from scipy.stats import pearsonr
 
 
-class DemandControlVentilation(CheckLibBase):
+class DemandControlVentilation(RuleCheckBase):
     points = [
         "v_oa",
         "s_ahu",

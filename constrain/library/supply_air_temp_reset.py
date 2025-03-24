@@ -15,9 +15,16 @@ class SupplyAirTempReset(RuleCheckBase):
         t_sa_sp_max = max(self.df["T_sa_sp"])
         t_sa_sp_min = min(self.df["T_sa_sp"])
 
-        self.result = (t_sa_sp_max - t_sa_sp_min) >= (
-            self.df["T_z_cool"] - t_sa_sp_min
-        ) * 0.25 * 0.99  # 0.99 being the numeric threshold
+        min_reset_range = (
+            (self.df["T_z_cool"] - t_sa_sp_min)
+            * 0.25
+            * (1 - self.get_tolerance("ratio", "tracking"))
+        )
+        actual_reset_range = (t_sa_sp_max - t_sa_sp_min) + self.get_tolerance(
+            "temperature", "supply_air"
+        )
+
+        self.result = actual_reset_range >= min_reset_range
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
         print(
@@ -35,6 +42,8 @@ class SupplyAirTempReset(RuleCheckBase):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
             daydf = self.df.loc[daystr]
             day = self.result[daystr]
-            if daydf["T_sa_sp"].max() - daydf["T_sa_sp"].min() > 0:
+            if daydf["T_sa_sp"].max() - daydf["T_sa_sp"].min() > self.get_tolerance(
+                "temperature", "supply_air"
+            ):
                 return day, daydf
             return day, daydf

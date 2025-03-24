@@ -11,6 +11,21 @@ import numpy as np
 
 
 class TestG36FreezeProtectionStage2(unittest.TestCase):
+    tolerances = {
+        "damper": {
+            "unit": "%",
+            "general": 0.0,
+            "types": {"position": 0.0, "command": 0.01},
+        },
+        "temperature": {
+            "unit": "deg. C",
+            "general": 0.0,
+            "types": {
+                "supply_air": 0.0,
+            },
+        },
+    }
+
     def test_freeze_protection_2_pass(self):
         points = ["supply_air_temp", "outdoor_damper_command"]
 
@@ -29,7 +44,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         expected_results = pd.Series([True, True, True, True, True, True])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage2", df
+            "G36FreezeProtectionStage2", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -56,7 +71,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         expected_results = pd.Series([True, False, False, True, True, True, False])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage2", df
+            "G36FreezeProtectionStage2", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -82,14 +97,10 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         expected_results = pd.Series([True, True, True, True, True, True])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage2", df
+            "G36FreezeProtectionStage2", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
 
         self.assertTrue(results.equals(expected_results))
         self.assertTrue(binaryflag == "Untested")
-
-
-if __name__ == "__main__":
-    unittest.main()

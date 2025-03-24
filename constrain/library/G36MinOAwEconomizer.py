@@ -71,8 +71,14 @@ class G36MinOAwEconomizer(RuleCheckBase):
                 t["outdoor_air_temp"], t["economizer_high_limit_sp"]
             )
         ) and (t["sys_mode"].strip().lower() == "occupied"):
-            if (t["outdoor_damper_command"] >= t["min_oa_p"]) and (
-                t["outdoor_air_flow"] >= t["min_oa_sp"]
+            if (
+                abs(t["outdoor_damper_command"] - t["min_oa_p"])
+                <= self.get_tolerance("damper", "position")
+                or t["outdoor_damper_command"] > t["min_oa_p"]
+            ) and (
+                abs(t["outdoor_air_flow"] - t["min_oa_sp"])
+                <= self.get_tolerance("airflow", "outdoor_air")
+                or t["outdoor_air_flow"] > t["min_oa_sp"]
             ):
                 return True
             else:

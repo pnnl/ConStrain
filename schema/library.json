@@ -308,10 +308,7 @@
             "o": "Number of occupants",
             "m_oa": "System outdoor air volume flow rate",
             "m_ea": "System exhaust air volume flow rate",
-            "eco_onoff": "System air-side economizer status",
-            "tol_o": "Tolerance for the number of occupants",
-            "tol_m_oa": "Tolerance for the outdoor air volume flow rate",
-            "tol_m_ea": "Tolerance for the exhaust air volume flow rate"
+            "eco_onoff": "System air-side economizer status"
         },
         "description_assertions": [
             "if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0, then false else pass"
@@ -377,8 +374,7 @@
             "Section 6.5.3.2.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "p_fan_set": "Static pressure setpoint",
-            "tol_P_fan": "Tolerance for VAV box static pressure sensor"
+            "p_fan_set": "Static pressure setpoint"
         },
         "description_assertions": [
             "if static pressure setpoint is no greater than 1.2 in of water (298.608 Pa) then pass else fail"
@@ -412,8 +408,7 @@
         "description_datapoints": {
             "T_max_heating_loop": "maximum temperature of heating loop",
             "T_min_cooling_loop": "minimum temperature of cooling loop",
-            "m_pump": "Pump Mass Flow Rate",
-            "tol": "Tolerance for water-loop temperature difference"
+            "m_pump": "Pump Mass Flow Rate"
         },
         "description_assertions": [
             "If the temperature difference between the maximum heating loop and minimum heating loop when the pump runs is greater than 11.11 °C, then pass else fail"
@@ -501,9 +496,7 @@
         "description_datapoints": {
             "T_z_heat_sp": "Zone Thermostat Heating Setpoint Temperature",
             "T_z_cool_sp": "Zone Thermostat Cooling Setpoint Temperature",
-            "O_sch": "Occupant Schedule",
-            "tol_occ": "Tolerence for Occupant Schedule",
-            "tol_temp": "Tolerance for Temperature"
+            "O_sch": "Occupant Schedule"
         },
         "description_assertions": [
             "Check the two different temperature control logics when the room is/isn't rented out"
@@ -524,9 +517,7 @@
             "m_oa_heat_design": "Design Heating Air Flow Rate",
             "m_oa_cool_design": "Design Cooling Air Flow Rate",
             "volume": "Zone Volume",
-            "v_outdoor_per_zone": "Outdoor Air Flow per Zone Floor Area",
-            "tol_occ": "Tolerence for occupant Schedule",
-            "tol_oa_flow": "Tolerance for Outdoor Airflow"
+            "v_outdoor_per_zone": "Outdoor Air Flow per Zone Floor Area"
         },
         "description_assertions": [
             "Check the two different airflow control logics when the room is/isn't rented out"
@@ -549,8 +540,7 @@
             "oa_t_min": "Minimum outdoor air temperature for linear SAT reset",
             "oa_t_max": "Maximum outdoor air temperature for linear SAT reset",
             "min_clg_sa_t_sp": "Minimum cooling supply air temperature setpoint",
-            "max_clg_sa_t_sp": "Maximum cooling supply air temperature setpoint",
-            "sa_sp_tol": "supply air temperature tolerance"
+            "max_clg_sa_t_sp": "Maximum cooling supply air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -611,7 +601,6 @@
         ],
         "description_datapoints": {
             "max_ra_p": "Maximum return air damper position",
-            "ra_p_tol": "Return air damper position tolerance",
             "ra_p": "Return air damper position",
             "oa_p": "Outdoor air damper position",
             "max_oa_p": "Maximum outdoor air damper position"
@@ -660,8 +649,6 @@
             "oa_p": "Outdoor air damper position",
             "min_oa_p": "Minimum outdoor air damper position",
             "max_oa_p": "Maximum outdoor air damper position",
-            "oa_p_tol": "Outdoor air damper position tolerance",
-            "ra_p_tol": "Return air damper position tolerance",
             "ra_p": "Return air damper position",
             "max_ra_p": "Maximum return air damper position"
         },
@@ -714,7 +701,6 @@
             "heating_output": "AHU heating coil output",
             "cooling_output": "AHU cooling coil output",
             "max_ra_p": "Maximum return air damper position",
-            "ra_p_tol": "Return air damper position tolerance",
             "ra_p": "Return air damper position",
             "rea_p": "Relief air damper position"
         },
@@ -730,8 +716,7 @@
         ],
         "description_datapoints": {
             "oa_p": "Outdoor air damper position",
-            "max_oa_p": "Maximum outdoor air damper position",
-            "oa_p_tol": "Outdoor air damper position tolerance"
+            "max_oa_p": "Maximum outdoor air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -754,7 +739,6 @@
             "heating_output": "AHU heating coil output",
             "cooling_output": "AHU cooling coil output",
             "max_rea_p": "Maximum return air damper position",
-            "rea_p_tol": "Return air damper position tolerance",
             "rea_p": "Return air damper position",
             "ra_p": "Relief air damper position"
         },
@@ -791,7 +775,6 @@
             "heating_output": "AHU heating coil output",
             "cooling_output": "AHU cooling coil output",
             "max_ra_p": "Maximum return air damper position",
-            "ra_p_tol": "Return air damper position tolerance",
             "ra_p": "Return air damper position"
         },
         "description_verification_type": "procedure-based",
@@ -825,8 +808,7 @@
         ],
         "description_datapoints": {
             "oa_p": "Outdoor air damper position",
-            "max_oa_p": "Maximum outdoor air damper position",
-            "oa_p_tol": "Outdoor air damper position tolerance"
+            "max_oa_p": "Maximum outdoor air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -1163,8 +1145,7 @@
         "description_datapoints": {
             "o": "Number of occupants",
             "fan_runtime_fraction": "Fan runtime fraction (fraction of time the fan ran for the reported period)",
-            "m_oa": "System outdoor air flow rate",
-            "tol_o": "Tolerance or threshold for the number of occupants below which the system is serving an unoccupied space"
+            "m_oa": "System outdoor air flow rate"
         },
         "description_assertions": [
             "If the system never provides outdoor air the verification is untested. The verification fails if the system fan is not continuously running during an occupied period, it passes if it does. The verification fails if the system is always operating continuously during occupied periods, it passes otherwise."
@@ -1178,8 +1159,7 @@
         "description_datapoints": {
             "o": "Number of occupants",
             "total_lighting_power": "Reported total lighting power (not the design total lighting power)",
-            "lighted_floor_area": "Area lit by the device/system considered",
-            "tol_o": "Tolerance or threshold for the number of occupants below which the system is serving an unoccupied space"
+            "lighted_floor_area": "Area lit by the device/system considered"
         },
         "description_assertions": [
             "The algorithm verifies that the device/system doesn't serves more than 5,000 ft2 and that if it doesn't, if occupants are not present for at least 20 minutes, the lighting power of the device/system should be less or equal to 0.02 W/ft2, otherwise, the verification fails."
@@ -1207,8 +1187,7 @@
         "description_brief": "Exterior lighting control occupancy sensing reduction",
         "description_datapoints": {
             "o": "Number of occupants",
-            "total_lighting_power": "Reported total lighting power (not the design total lighting power)",
-            "tol_o": "Tolerance or threshold for the number of occupants below which the system is serving an unoccupied space"
+            "total_lighting_power": "Reported total lighting power (not the design total lighting power)"
         },
         "description_assertions": [
             "The algorithm verifies that the exterior lighting is controlled based on occupancy. It fails if the maximum reported total lighting power is greater than 1500 W and if the total mnaximum lighting power is not reduced by half when occupancy has not been detected for 15 mins. Otherwise, it passes."
@@ -1260,8 +1239,7 @@
             "operation_mode": "System operation mode",
             "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
             "v_min": "Occupied zone minimum airflow setpoint",
-            "v_spt": "Active airflow setpoint",
-            "v_spt_tol": "Airflow setpoint tolerance"
+            "v_spt": "Active airflow setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -1323,8 +1301,7 @@
         "description_datapoints": {
             "vav_damper_command": "Terminal box VAV damper command",
             "v": "Terminal box discharge airflow rate",
-            "v_spt": "Active airflow setpoint",
-            "v_tracking_tol": "Airflow tracking tolerance"
+            "v_spt": "Active airflow setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -1355,7 +1332,6 @@
             "v_min": "Occupied zone minimum airflow setpoint",
             "ahu_sat_spt": "AHU supply air temperature setpoint",
             "v_spt": "Active airflow setpoint",
-            "v_spt_tol": "Airflow setpoint tolerance",
             "room_temp": "Room temperature"
         },
         "description_verification_type": "procedure-based",
@@ -1388,7 +1364,6 @@
             "v_min": "Occupied zone minimum airflow setpoint",
             "v_spt": "Active airflow setpoint",
             "heating_coil_command": "Heating coil command",
-            "heating_coil_command_tol": "Heating coil command saturation tolerance",
             "dat": "Discharge air temperature",
             "dat_min_spt": "Minimum discharge air temperature setpoint"
         },
@@ -1427,9 +1402,7 @@
             "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
             "v_min": "Occupied zone minimum airflow setpoint",
             "v_spt": "Active airflow setpoint",
-            "v_spt_tol": "Airflow setpoint tolerance",
             "heating_coil_command": "Heating coil command",
-            "heating_coil_command_tol": "Heating coil command saturation tolerance",
             "dat": "Discharge air temperature",
             "dat_min_spt": "Minimum discharge air temperature setpoint"
         },
@@ -1465,7 +1438,6 @@
             "v_heat_min": "Zone minimum heating airflow setpoint",
             "v_min": "Occupied zone minimum airflow setpoint",
             "v_spt": "Active airflow setpoint",
-            "v_spt_tol": "Airflow setpoint tolerance",
             "heating_loop_output": "Zone heating loop signal (from 0 to 100)",
             "room_temp": "Room temperature",
             "space_temp_spt": "Space temperature setpoint",
@@ -1513,8 +1485,7 @@
             "operation_mode": "System operation mode",
             "heating_coil_command": "Heating coil command",
             "dat": "Discharge air temperature",
-            "dat_spt": "Discharge air temperature setpoint",
-            "dat_tracking_tol": "Temperature tracking tolerance"
+            "dat_spt": "Discharge air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -1567,8 +1538,7 @@
             "reheat_coil_flag": "VAV box reheat coil operation status",
             "V_dot_VAV": "VAV airflow rate",
             "V_dot_VAV_max": "VAV max airflow rate",
-            "VAV_min_turndown_design": "design VAV box min turndown ratio",
-            "turndown_tol": "VAV turndown tolerance"
+            "VAV_min_turndown_design": "design VAV box min turndown ratio"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
@@ -1596,9 +1566,7 @@
             "V_dot_VAV": "VAV airflow rate",
             "V_dot_VAV_max": "VAV max airflow rate",
             "VAV_min_turndown_design": "design VAV box min turndown ratio",
-			"P_set": "duct pressure setpoint",
-            "turndown_tol": "VAV turndown tolerance",
-			"P_set_tol": "pressure setpoint tolerance"
+			"P_set": "duct pressure setpoint"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",

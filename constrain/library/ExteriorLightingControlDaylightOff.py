@@ -59,12 +59,10 @@ class ExteriorLightingControlDaylightOff(RuleCheckBase):
         time_since_last_sun_up = diff_since_last_sun_up.total_seconds() / 60
         self.was_sun_up = data["is_sun_up"]
 
-        # determine if enough daylight is sensed
         daylight_setpoint_met = data["daylight_sensed"] / data["daylight_setpoint"]
 
-        # perform verification
         if daylight_setpoint_met >= 1 or time_since_last_sun_up >= 30:
-            if data["total_lighting_power"] == 0:
+            if data["total_lighting_power"] <= 0:
                 return True
             else:
                 return False

@@ -11,6 +11,16 @@ import numpy as np
 
 
 class TestG36ReliefDamperStatus(unittest.TestCase):
+    tolerances = {
+        "damper": {
+            "unit": "%",
+            "general": 0.0,
+            "types": {
+                "position": 0.0,
+            },
+        }
+    }
+
     def test_relief_damper_status_pass_fail(self):
         points = ["relief_damper_command", "supply_fan_status"]
         data = [[20, 1], [0, 0], [0, 1]]
@@ -33,7 +43,7 @@ class TestG36ReliefDamperStatus(unittest.TestCase):
         df = pd.DataFrame(data, columns=points)
 
         result = run_test_verification_with_data(
-            "G36ReliefDamperStatus", df
+            "G36ReliefDamperStatus", df, tolerances=self.tolerances
         ).check_bool()
 
         self.assertTrue(result)

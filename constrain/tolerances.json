@@ -1,0 +1,61 @@
+{
+    "temperature": {
+        "unit": "deg. C",
+        "general": 0.5,
+        "types": {
+            "supply_air": 0.5,
+            "zone": 0.5,
+            "outdoor_air": 0.5,
+            "discharge_air": 0.5,
+            "return_air": 0.5
+        }
+    },
+    "airflow": {
+        "unit": "m3/s",
+        "general": 0.0235973725,
+        "types": {
+            "supply": 0.0235973725,
+            "outdoor_air": 0.0235973725,
+            "exhaust_air": 0.0235973725
+        }
+    },
+    "waterflow": {
+        "unit": "m3/s",
+        "general": 0.0,
+        "types": {
+            "hot": 0.0
+        }
+    },
+    "damper": {
+        "unit": "%",
+        "general": 0.02,
+        "types": {
+            "position": 0.02,
+            "command": 0.02
+        }
+    },
+    "pressure": {
+        "unit": "Pa",
+        "general": 2.5,
+        "types": {
+            "static": 2.5,
+            "building": 2.5
+        }
+    },
+    "power": {
+        "unit": "W",
+        "general": 20,
+        "types": {
+            "fan": 20
+        }
+    },
+    "ratio": {
+        "unit": "%",
+        "general": 0.05,
+        "types": {
+            "flow": 0.05,
+            "efficiency": 0.02,
+            "occupancy": 0.05
+        }
+    }
+}
