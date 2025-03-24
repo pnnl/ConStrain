@@ -37,7 +37,7 @@ end
 
 ### Data requirements
 
--  HVAC operation schedule (`hvac_set`)
+-  hvac_set: HVAC operation schedule
   - Data Value Unit: unitless
   - Data point Description: HVAC system operation status
   - Data Point Affiliation: HVAC operation schedule
