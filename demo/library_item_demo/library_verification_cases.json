@@ -168,8 +168,8 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_cool_set": "CORE_RETAIL:Zone Thermostat Cooling Setpoint Temperature [C](Each Call)",
-                    "T_heat_set": "CORE_RETAIL:Zone Thermostat Heating Setpoint Temperature [C](Each Call)"
+                    "T_set_cool": "CORE_RETAIL:Zone Thermostat Cooling Setpoint Temperature [C](Each Call)",
+                    "T_set_heat": "CORE_RETAIL:Zone Thermostat Heating Setpoint Temperature [C](Each Call)"
                 }
             },
             "verification_class": "ZoneTempControl"
