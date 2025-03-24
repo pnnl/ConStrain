@@ -417,12 +417,12 @@
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "T_set_heat": {
+                    "T_heat_set": {
                         "subject": "HTGSETP_SCH_NO_OPTIMUM",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "T_set_cool": {
+                    "T_cool_set": {
                         "subject": "CLGSETP_SCH_NO_OPTIMUM",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
@@ -820,12 +820,12 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_set_heat": {
+                    "T_heat_set": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Heating Setpoint Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_set_cool": {
+                    "T_cool_set": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Cooling Setpoint Temperature",
                         "frequency": "TimeStep"

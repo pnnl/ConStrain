@@ -140,11 +140,11 @@
             "Section 6.4.3.1.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_set_cool": "Zone cooling temperature setpoint",
-            "T_set_heat": "Zone heating temperature setpoint"
+            "T_cool_set": "Zone cooling temperature setpoint",
+            "T_heat_set": "Zone heating temperature setpoint"
         },
         "description_assertions": [
-            "T_set_cool - T_set_heat > 5F (2.77C)"
+            "T_cool_set - T_heat_set > 5F (2.77C)"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -201,10 +201,10 @@
             "Section 6.4.3.2.2 in 90.1-2004"
         ],
         "description_datapoints": {
-            "T_set_heat": "Zone Thermostat Heating Setpoint Temperature"
+            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature"
         },
         "description_assertions": [
-            "if min(T_set_heat) <= 55°F, then pass"
+            "if min(T_heat_set) <= 55°F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -216,10 +216,10 @@
             "Section 6.4.3.2.2 in 90.1-2004"
         ],
         "description_datapoints": {
-            "T_set_cool": "Zone Thermostat Cooling Setpoint Temperature"
+            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature"
         },
         "description_assertions": [
-            "if max(T_set_cool) >= 90F, then pass"
+            "if max(T_cool_set) >= 90F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -231,10 +231,10 @@
             "Section 6.4.3.3.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_set_heat": "Zone Thermostat Heating Setpoint Temperature"
+            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature"
         },
         "description_assertions": [
-            "if max(T_set_heat) - min(T_set_heat) >= 10F, then pass"
+            "if max(T_heat_set) - min(T_heat_set) >= 10F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -246,10 +246,10 @@
             "Section 6.4.3.3.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_set_cool": "Zone Thermostat Cooling Setpoint Temperature"
+            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature"
         },
         "description_assertions": [
-            "if max(T_set_cool) - min(T_set_cool) >= 5F, then pass"
+            "if max(T_cool_set) - min(T_cool_set) >= 5F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -263,12 +263,12 @@
         "description_datapoints": {
             "T_zone": "Zone Air Temperature",
             "HVAC_operation_sch": "HVAC Operation Schedule",
-            "T_set_heat": "Zone Thermostat Heating Setpoint Temperature",
-            "T_set_cool": "Zone Thermostat Cooling Setpoint Temperature",
+            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature",
+            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature",
             "Fan_elec_rate": "Fan Electricity Rate"
         },
         "description_assertions": [
-            "if T_set_heat <= T_zone <= T_set_cool and Fan_elec_rate ==0 then x1=0 else x1=1, if (T_zone > T_set_cool and Fan_elec_rate >= 0) and (T_zone < T_set_heat and Fan_elec_rate>0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
+            "if T_heat_set <= T_zone <= T_cool_set and Fan_elec_rate ==0 then x1=0 else x1=1, if (T_zone > T_cool_set and Fan_elec_rate >= 0) and (T_zone < T_heat_set and Fan_elec_rate>0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -494,8 +494,8 @@
             "Section 6.4.3.3.5 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_set_heat": "Zone Thermostat Heating Setpoint Temperature",
-            "T_set_cool": "Zone Thermostat Cooling Setpoint Temperature",
+            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature",
+            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature",
             "O_sch": "Occupant Schedule"
         },
         "description_assertions": [
