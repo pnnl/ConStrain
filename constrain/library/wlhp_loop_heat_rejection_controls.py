@@ -17,4 +17,4 @@ class WLHPLoopHeatRejectionControl(RuleCheckBase):
         ).min()
         self.result = (
             self.df["T_max_heating_loop_max"] - self.df["T_min_cooling_loop_min"]
-        ) > (11.11 - self.get_tolerance("temperature", "general"))
+        ) > (11.11 + self.get_tolerance("temperature", "general"))
