@@ -58,7 +58,7 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
 
     def verify(self):
         if (self.df["V_dot_VAV_max"] != 0).all():
-            self.df["V_dot_ratio"] = (
+            self.df["V_doret_a_temptio"] = (
                 self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
             )  # for plotting
         self.result = self.df.apply(lambda d: self.vav_turndown_check(d), axis=1)

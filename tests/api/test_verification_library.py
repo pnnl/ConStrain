@@ -137,7 +137,7 @@ class TestVerificationLibrary(unittest.TestCase):
     def test_get_applicable_library_items_by_datapoints(self):
         vl_obj = VerificationLibrary(lib_path)
         applicable_lib_items = vl_obj.get_applicable_library_items_by_datapoints(
-            ["T_sa_sp", "T_z_cool", "v_oa", "s_ahu", "s_eco", "no_of_occ"]
+            ["T_sa_set", "T_z_coo", "v_oa", "s_ahu", "s_eco", "no_of_occ"]
         )  # datapoints for `SupplyAirTempReset` and `DemandControlVentilation`
         self.assertEqual(
             applicable_lib_items["SupplyAirTempReset"],
@@ -158,7 +158,7 @@ class TestVerificationLibrary(unittest.TestCase):
         vl_obj = VerificationLibrary(lib_path)
 
         with self.assertLogs() as logobs:
-            vl_obj.get_applicable_library_items_by_datapoints({"T_sa_sp", "T_z_cool"})
+            vl_obj.get_applicable_library_items_by_datapoints({"T_sa_set", "T_z_coo"})
             self.assertEqual(
                 "ERROR:root:datapoints' type must be List. It can't be <class 'set'>.",
                 logobs.output[0],
@@ -172,7 +172,7 @@ class TestVerificationLibrary(unittest.TestCase):
             )
 
         with self.assertLogs() as logobs:
-            vl_obj.get_applicable_library_items_by_datapoints(["T_sa_sp", {"T_z_cool"}])
+            vl_obj.get_applicable_library_items_by_datapoints(["T_sa_set", {"T_z_coo"}])
             self.assertEqual(
                 "ERROR:root:element's type in the datapoints argument must be str. It can't be <class 'set'>.",
                 logobs.output[0],

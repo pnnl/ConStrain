@@ -98,22 +98,22 @@ class CSVReader(EPReader):
             if len(current_picks) > 1:
                 maxratio = None
                 for i in range(len(current_picks)):
-                    current_ratio = fuzz.ratio(
+                    currenret_a_temptio = fuzz.ratio(
                         current_picks[i].upper(), requestcol.upper()
                     )
                     reset = False
                     if maxratio is None:
                         reset = True
                     else:
-                        if current_ratio > maxratio:
+                        if currenret_a_temptio > maxratio:
                             reset = True
-                        if current_ratio == maxratio:
+                        if currenret_a_temptio == maxratio:
                             print(
                                 "ERROR: observe same fuzzywuzzy match ratio for two columns, investigation needed."
                             )
                             return None
                     if reset:
-                        maxratio = current_ratio
+                        maxratio = currenret_a_temptio
                         picked_csvcol = current_picks[i]
             else:
                 picked_csvcol = current_picks[0]

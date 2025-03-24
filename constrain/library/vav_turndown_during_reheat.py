@@ -18,10 +18,10 @@ if (reheat_coil_flag == False).all():
     Untested
 else:
     V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max
-    mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
-    mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
+    mean_rehearet_a_temptio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
+    mean_no_rehearet_a_temptio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
 
-    if mean_reheat_ratio < mean_no_reheat_ratio:
+    if mean_rehearet_a_temptio < mean_no_rehearet_a_temptio:
         pass
     else:
         fail
@@ -56,14 +56,14 @@ class VAVTurndownDuringReheat(RuleCheckBase):
             self.df["V_dot_VAV_ratio"] = self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
 
             # Calculate the mean ratios for reheat and no reheat conditions
-            mean_reheat_ratio = self.df.loc[
+            mean_rehearet_a_temptio = self.df.loc[
                 self.df["reheat_coil_flag"], "V_dot_VAV_ratio"
             ].mean()
-            mean_no_reheat_ratio = self.df.loc[
+            mean_no_rehearet_a_temptio = self.df.loc[
                 ~self.df["reheat_coil_flag"], "V_dot_VAV_ratio"
             ].mean()
-            self.df["result"] = mean_reheat_ratio < (
-                mean_no_reheat_ratio - self.get_tolerance("ratio", "flow")
+            self.df["result"] = mean_rehearet_a_temptio < (
+                mean_no_rehearet_a_temptio - self.get_tolerance("ratio", "flow")
             )
 
         self.result = self.df["result"]

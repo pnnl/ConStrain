@@ -21,13 +21,13 @@ class TestVerificationCase(unittest.TestCase):
         "expected_result": "pass",
         "datapoints_source": {
             "idf_output_variables": {
-                "T_sa_sp": {
+                "T_sa_set": {
                     "subject": "VAV_1 Supply Equipment Outlet Node",
                     "variable": "System Node Setpoint Temperature",
                     "frequency": "detailed",
                 }
             },
-            "parameters": {"T_z_cool": 24.0},
+            "parameters": {"T_z_coo": 24.0},
         },
         "verification_class": "SupplyAirTempReset",
     }
@@ -370,7 +370,7 @@ class TestVerificationCase(unittest.TestCase):
 
     def test_validate_verification_case_structure_datapoints_test_valid(self):
         case = copy.deepcopy(self.case)
-        case["datapoints_source"]["idf_output_variables"]["T_ra_sp"] = {
+        case["datapoints_source"]["idf_output_variables"]["ret_a_temp_sp"] = {
             "subject": "VAV_1 Return Equipment Outlet Node",
             "variable": "System Node Setpoint Temperature",
             "frequency": "detailed",

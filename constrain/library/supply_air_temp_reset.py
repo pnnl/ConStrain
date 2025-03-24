@@ -9,30 +9,30 @@ import glob, json, os
 
 
 class SupplyAirTempReset(RuleCheckBase):
-    points = ["T_sa_sp", "T_z_cool"]
+    points = ["T_sa_set", "T_z_coo"]
 
     def verify(self):
-        t_sa_sp_max = max(self.df["T_sa_sp"])
-        t_sa_sp_min = min(self.df["T_sa_sp"])
+        T_sa_set_max = max(self.df["T_sa_set"])
+        T_sa_set_min = min(self.df["T_sa_set"])
 
-        min_reset_range = (
-            (self.df["T_z_cool"] - t_sa_sp_min)
+        min_reseret_a_tempnge = (
+            (self.df["T_z_coo"] - T_sa_set_min)
             * 0.25
             * (1 - self.get_tolerance("ratio", "tracking"))
         )
-        actual_reset_range = (t_sa_sp_max - t_sa_sp_min) + self.get_tolerance(
+        actual_reseret_a_tempnge = (T_sa_set_max - T_sa_set_min) + self.get_tolerance(
             "temperature", "supply_air"
         )
 
-        self.result = actual_reset_range >= min_reset_range
+        self.result = actual_reseret_a_tempnge >= min_reseret_a_tempnge
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
         print(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
-        sns.histplot(self.df["T_sa_sp"])
-        plt.title("All samples distribution of T_sa_sp")
-        plt.savefig(f"{self.results_folder}/All_samples_distribution_of_T_sa_sp.png")
+        sns.histplot(self.df["T_sa_set"])
+        plt.title("All samples distribution of T_sa_set")
+        plt.savefig(f"{self.results_folder}/All_samples_distribution_of_T_sa_set.png")
 
         super().plot(plot_option, plt_pts, fig_size)
 
@@ -42,7 +42,7 @@ class SupplyAirTempReset(RuleCheckBase):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
             daydf = self.df.loc[daystr]
             day = self.result[daystr]
-            if daydf["T_sa_sp"].max() - daydf["T_sa_sp"].min() > self.get_tolerance(
+            if daydf["T_sa_set"].max() - daydf["T_sa_set"].min() > self.get_tolerance(
                 "temperature", "supply_air"
             ):
                 return day, daydf

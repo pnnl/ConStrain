@@ -42,23 +42,23 @@ class IntegratedEconomizerControl(CheckLibBase):
 
 
 class SupplyAirTempReset(RuleCheckBase):
-    points = ["T_sa_sp", "T_z_cool"]
+    points = ["T_sa_set", "T_z_coo"]
 
     def verify(self):
-        T_sa_sp_max = max(self.df["T_sa_sp"])
-        T_sa_sp_min = min(self.df["T_sa_sp"])
+        T_sa_set_max = max(self.df["T_sa_set"])
+        T_sa_set_min = min(self.df["T_sa_set"])
 
-        self.result = (T_sa_sp_max - T_sa_sp_min) >= (
-            self.df["T_z_cool"] - T_sa_sp_min
+        self.result = (T_sa_set_max - T_sa_set_min) >= (
+            self.df["T_z_coo"] - T_sa_set_min
         ) * 0.25 * 0.99  # 0.99 being the numeric threshold
 
     def plot(self, plot_option, plt_pts=None):
         print(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
-        sns.distplot(self.df["T_sa_sp"])
-        plt.title("All samples distribution of T_sa_sp")
-        plt.savefig(f"{self.results_folder}/All_samples_distribution_of_T_sa_sp.png")
+        sns.distplot(self.df["T_sa_set"])
+        plt.title("All samples distribution of T_sa_set")
+        plt.savefig(f"{self.results_folder}/All_samples_distribution_of_T_sa_set.png")
 
         super().plot(plot_option, plt_pts)
 
@@ -68,7 +68,7 @@ class SupplyAirTempReset(RuleCheckBase):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
             daydf = self.df[daystr]
             day = self.result[daystr]
-            if daydf["T_sa_sp"].max() - daydf["T_sa_sp"].min() > 0:
+            if daydf["T_sa_set"].max() - daydf["T_sa_set"].min() > 0:
                 return day, daydf
             return day, daydf
 
@@ -84,12 +84,12 @@ class EconomizerHighLimitA(RuleCheckBase):
 
 
 class EconomizerHighLimitB(RuleCheckBase):
-    points = ["oa_flow", "T_oa_db", "T_ra", "oa_min_flow"]
+    points = ["oa_flow", "T_oa_db", "ret_a_temp", "oa_min_flow"]
 
     def verify(self):
         self.result = ~(
             (self.df["oa_flow"] > self.df["oa_min_flow"])
-            & (self.df["T_ra"] < self.df["T_oa_db"])
+            & (self.df["ret_a_temp"] < self.df["T_oa_db"])
         )
 
 
@@ -134,10 +134,10 @@ class EconomizerHighLimitD(RuleCheckBase):
 
 
 class ZoneTempControl(RuleCheckBase):
-    points = ["T_z_cool_sp", "T_z_heat_sp"]
+    points = ["T_z_coo_set", "T_z_hea_set"]
 
     def verify(self):
-        self.result = (self.df["T_z_cool_sp"] - self.df["T_z_heat_sp"]) > 2.77
+        self.result = (self.df["T_z_coo_set"] - self.df["T_z_hea_set"]) > 2.77
 
 
 class HWReset(RuleCheckBase):
@@ -147,8 +147,8 @@ class HWReset(RuleCheckBase):
         "T_oa_min",
         "T_hw",
         "m_hw",
-        "T_hw_max_set",
-        "T_hw_min_set",
+        "T_hw_max_sp",
+        "T_hw_min_sp",
     ]
 
     def verify(self):
@@ -158,11 +158,11 @@ class HWReset(RuleCheckBase):
             )  # add boundary relaxation in the rules for this one and chwreset
             | (
                 (self.df["T_oa_db"] <= self.df["T_oa_min"])
-                & (self.df["T_hw"] >= self.df["T_hw_max_set"] * 0.99)
+                & (self.df["T_hw"] >= self.df["T_hw_max_sp"] * 0.99)
             )
             | (
                 (self.df["T_oa_db"] >= (self.df["T_oa_max"]))
-                & (self.df["T_hw"] <= self.df["T_hw_min_set"] * 1.01)
+                & (self.df["T_hw"] <= self.df["T_hw_min_sp"] * 1.01)
             )
             | (
                 (
@@ -170,8 +170,8 @@ class HWReset(RuleCheckBase):
                     & (self.df["T_oa_db"] <= self.df["T_oa_max"])
                 )
                 & (
-                    (self.df["T_hw"] >= self.df["T_hw_min_set"] * 0.99)
-                    & (self.df["T_hw"] <= self.df["T_hw_max_set"] * 1.01)
+                    (self.df["T_hw"] >= self.df["T_hw_min_sp"] * 0.99)
+                    & (self.df["T_hw"] <= self.df["T_hw_max_sp"] * 1.01)
                 )
             )
         )
@@ -235,10 +235,10 @@ class CHWReset(RuleCheckBase):
 
 
 class ZoneHeatSetpointMinimum(CheckLibBase):
-    points = ["T_z_heat_sp"]
+    points = ["T_z_hea_set"]
 
     def verify(self):
-        self.result = self.df["T_z_heat_sp"] <= 12.78
+        self.result = self.df["T_z_hea_set"] <= 12.78
 
     def check_bool(self) -> bool:
         if len(self.result[self.result == True] > 0):
@@ -260,10 +260,10 @@ class ZoneHeatSetpointMinimum(CheckLibBase):
 
 
 class ZoneCoolingSetpointMaximum(CheckLibBase):
-    points = ["T_z_cool_sp"]
+    points = ["T_z_coo_set"]
 
     def verify(self):
-        self.result = self.df["T_z_cool_sp"] >= 32.22
+        self.result = self.df["T_z_coo_set"] >= 32.22
 
     def check_bool(self) -> bool:
         if len(self.result[self.result == True] > 0):
@@ -285,13 +285,13 @@ class ZoneCoolingSetpointMaximum(CheckLibBase):
 
 
 class ZoneHeatingResetDepth(CheckLibBase):
-    points = ["T_z_heat_sp"]
+    points = ["T_z_hea_set"]
 
     def verify(self):
-        self.df["T_z_heat_sp_min"] = min(self.df["T_z_heat_sp"])
-        self.df["T_z_heat_sp_max"] = max(self.df["T_z_heat_sp"])
+        self.df["T_z_hea_set_min"] = min(self.df["T_z_hea_set"])
+        self.df["T_z_hea_set_max"] = max(self.df["T_z_hea_set"])
 
-        self.result = (self.df["T_z_heat_sp_max"] - self.df["T_z_heat_sp_min"]) >= 5.55
+        self.result = (self.df["T_z_hea_set_max"] - self.df["T_z_hea_set_min"]) >= 5.55
 
     def check_bool(self) -> bool:
         if len(self.result[self.result == True] > 0):
@@ -305,8 +305,8 @@ class ZoneHeatingResetDepth(CheckLibBase):
             "Pass #": len(self.result[self.result == True]),
             "Fail #": len(self.result[self.result == False]),
             "Verification Passed?": self.check_bool(),
-            "max(T_z_heat_sp)": self.df["T_z_heat_sp_max"][0],
-            "min(T_z_heat_sp)": self.df["T_z_heat_sp_min"][0],
+            "max(T_z_hea_set)": self.df["T_z_hea_set_max"][0],
+            "min(T_z_hea_set)": self.df["T_z_hea_set_min"][0],
         }
 
         print("Verification results dict: ")
@@ -315,13 +315,13 @@ class ZoneHeatingResetDepth(CheckLibBase):
 
 
 class ZoneCoolingResetDepth(CheckLibBase):
-    points = ["T_z_cool_sp"]
+    points = ["T_z_coo_set"]
 
     def verify(self):
-        self.df["T_z_cool_sp_min"] = min(self.df["T_z_cool_sp"])
-        self.df["T_z_cool_sp_max"] = max(self.df["T_z_cool_sp"])
+        self.df["T_z_coo_set_min"] = min(self.df["T_z_coo_set"])
+        self.df["T_z_coo_set_max"] = max(self.df["T_z_coo_set"])
 
-        self.result = (self.df["T_z_cool_sp_max"] - self.df["T_z_cool_sp_min"]) >= 2.77
+        self.result = (self.df["T_z_coo_set_max"] - self.df["T_z_coo_set_min"]) >= 2.77
 
     def check_bool(self) -> bool:
         if len(self.result[self.result == True] > 0):
@@ -335,8 +335,8 @@ class ZoneCoolingResetDepth(CheckLibBase):
             "Pass #": len(self.result[self.result == True]),
             "Fail #": len(self.result[self.result == False]),
             "Verification Passed?": self.check_bool(),
-            "max(T_z_cool_sp)": self.df["T_z_cool_sp_max"][0],
-            "min(T_z_cool_sp)": self.df["T_z_cool_sp_min"][0],
+            "max(T_z_coo_set)": self.df["T_z_coo_set_max"][0],
+            "min(T_z_coo_set)": self.df["T_z_coo_set_min"][0],
         }
 
         print("Verification results dict: ")
@@ -348,8 +348,8 @@ class NightCycleOperation(CheckLibBase):
     points = [
         "T_zone",
         "HVAC_operation_sch",
-        "T_z_heat_sp",
-        "T_z_cool_sp",
+        "T_z_hea_set",
+        "T_z_coo_set",
         "Fan_elec_rate",
     ]
 
@@ -357,8 +357,8 @@ class NightCycleOperation(CheckLibBase):
         tol = 0.5
         if data["HVAC_operation_sch"] == 0:
             if data["Fan_elec_rate"] == 0:
-                if (data["T_z_heat_sp"] - tol >= data["T_zone"]) or (
-                    data["T_zone"] >= data["T_z_cool_sp"] + tol
+                if (data["T_z_hea_set"] - tol >= data["T_zone"]) or (
+                    data["T_zone"] >= data["T_z_coo_set"] + tol
                 ):
                     data["night_cycle_observed"] = -1  # Fail, NC should be running
                 else:
@@ -892,7 +892,7 @@ class DemandControlVentilation(CheckLibBase):
 
 
 class GuestRoomControlTemp(RuleCheckBase):
-    points = ["T_z_heat_sp", "T_z_cool_sp", "O_sch", "tol_occ", "tol_temp"]
+    points = ["T_z_hea_set", "T_z_coo_set", "O_sch", "tol_occ", "tol_temp"]
 
     def verify(self):
         tol_occ = self.df["tol_occ"][0]
@@ -912,8 +912,8 @@ class GuestRoomControlTemp(RuleCheckBase):
                 if (
                     day["O_sch"] <= tol_occ
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["T_z_heat_sp"] < 15.6 + tol_temp).all() and (
-                        day["T_z_cool_sp"] > 26.7 - tol_temp
+                    if (day["T_z_hea_set"] < 15.6 + tol_temp).all() and (
+                        day["T_z_coo_set"] > 26.7 - tol_temp
                     ).all():
                         result_repo.append(
                             1
@@ -923,13 +923,13 @@ class GuestRoomControlTemp(RuleCheckBase):
                             0
                         )  # fail, zone temperature setpoint was not reset correctly
                 else:  # room is rented out
-                    T_z_hea_occ_set = day.query("O_sch > 0.0")["T_z_heat_sp"].max()
-                    T_z_coo_occ_set = day.query("O_sch > 0.0")["T_z_cool_sp"].min()
+                    T_z_hea_occ_set = day.query("O_sch > 0.0")["T_z_hea_set"].max()
+                    T_z_coo_occ_set = day.query("O_sch > 0.0")["T_z_coo_set"].min()
 
                     if (
-                        day["T_z_heat_sp"] < T_z_hea_occ_set - 2.22 + tol_temp
+                        day["T_z_hea_set"] < T_z_hea_occ_set - 2.22 + tol_temp
                     ).all() or (
-                        day["T_z_cool_sp"] > T_z_coo_occ_set + 2.22 - tol_temp
+                        day["T_z_coo_set"] > T_z_coo_occ_set + 2.22 - tol_temp
                     ).all():
                         result_repo.append(
                             1

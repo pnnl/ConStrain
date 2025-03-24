@@ -3,7 +3,7 @@ import pandas as pd
 
 
 class GuestRoomControlTemp(RuleCheckBase):
-    points = ["T_z_heat_sp", "T_z_cool_sp", "O_sch"]
+    points = ["T_z_hea_set", "T_z_coo_set", "O_sch"]
 
     def verify(self):
         year_info = 2000
@@ -22,10 +22,10 @@ class GuestRoomControlTemp(RuleCheckBase):
                     day["O_sch"] <= self.get_tolerance("ratio", "occupancy")
                 ).all():  # confirmed this room is NOT rented out
                     if (
-                        day["T_z_heat_sp"]
+                        day["T_z_hea_set"]
                         < 15.6 + self.get_tolerance("temperature", "zone")
                     ).all() and (
-                        day["T_z_cool_sp"]
+                        day["T_z_coo_set"]
                         > 26.7 - self.get_tolerance("temperature", "zone")
                     ).all():
                         result_repo.append(
@@ -36,17 +36,17 @@ class GuestRoomControlTemp(RuleCheckBase):
                             0
                         )  # fail, zone temperature setpoint was not reset correctly
                 else:  # room is rented out
-                    T_z_heat_occ_sp = day.query("O_sch > 0.0")["T_z_heat_sp"].max()
-                    T_z_cool_occ_sp = day.query("O_sch > 0.0")["T_z_cool_sp"].min()
+                    T_z_heat_occ_sp = day.query("O_sch > 0.0")["T_z_hea_set"].max()
+                    T_z_coo_occ_sp = day.query("O_sch > 0.0")["T_z_coo_set"].min()
 
                     if (
-                        day["T_z_heat_sp"]
+                        day["T_z_hea_set"]
                         < T_z_heat_occ_sp
                         - 2.22
                         + self.get_tolerance("temperature", "zone")
                     ).all() or (
-                        day["T_z_cool_sp"]
-                        > T_z_cool_occ_sp
+                        day["T_z_coo_set"]
+                        > T_z_coo_occ_sp
                         + 2.22
                         - self.get_tolerance("temperature", "zone")
                     ).all():

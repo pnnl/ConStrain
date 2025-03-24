@@ -16589,8 +16589,8 @@
             "condenser_outlet_node_name": "Node 80",
             "condenser_type": "WaterCooled",
             "cooling_capacity_function_of_temperature_curve_name": "Curve Biquadratic 1",
-            "electric_input_to_cooling_output_ratio_function_of_part_load_ratio_curve_name": "Curve Quadratic 1",
-            "electric_input_to_cooling_output_ratio_function_of_temperature_curve_name": "Curve Biquadratic 2",
+            "electric_input_to_cooling_outpuret_a_temptio_function_of_part_load_ratio_curve_name": "Curve Quadratic 1",
+            "electric_input_to_cooling_outpuret_a_temptio_function_of_temperature_curve_name": "Curve Biquadratic 2",
             "end_use_subcategory": "General",
             "fraction_of_compressor_electric_consumption_rejected_by_condenser": 1,
             "leaving_chilled_water_lower_temperature_limit": 2,
@@ -18677,7 +18677,7 @@
             "discounting_convention": "EndOfYear",
             "inflation_approach": "ConstantDollar",
             "length_of_study_period_in_years": 25,
-            "real_discount_rate": 0.03,
+            "real_discounret_a_tempte": 0.03,
             "service_date_year": 2011
         }
     },
