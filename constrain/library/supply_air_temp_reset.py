@@ -15,16 +15,9 @@ class SupplyAirTempReset(RuleCheckBase):
         t_sa_set_max = max(self.df["T_sa_set"])
         t_sa_set_min = min(self.df["T_sa_set"])
 
-        min_reseret_a_tempnge = (
-            (self.df["T_z_coo"] - t_sa_set_min)
-            * 0.25
-            * (1 - self.get_tolerance("ratio", "tracking"))
-        )
-        actual_reseret_a_tempnge = (t_sa_set_max - t_sa_set_min) + self.get_tolerance(
-            "temperature", "supply_air"
-        )
-
-        self.result = actual_reseret_a_tempnge >= min_reseret_a_tempnge
+        self.result = (t_sa_set_max - t_sa_set_min) >= (
+            self.df["T_z_coo"] - t_sa_set_min
+        ) * 0.25 * (100 - self.get_tolerance("ratio", "temperature") * 100)
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
         print(
