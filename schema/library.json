@@ -438,11 +438,11 @@
             "Section 6.4.3.5 Heat Pump Auxiliary Heat Control and 6.3.2.h Criteria in 90.1-2016"
         ],
         "description_datapoints": {
-            "C_ref": "Heating Coil Reference Capacity",
-            "L_op": "Heating Coil Runtime Fraction",
-            "C_t_mod": "Heating Coil Heating Rate",
-            "P_supp_ht": "Heating Coil Gas Rate",
-            "C_ff_mod": "Heating Capacity Function of Flow Fraction Curve",
+            "C_ref": "DX heating coil reference capacity",
+            "L_op": "DX heating coil load",
+            "C_t_mod": "DX heating coil reference capacity modifier as a function of temperature",
+            "P_supp_ht": "HP Supplemental heating coil heating rate",
+            "C_ff_mod": "DX heating coil reference capacity modifier as a function of flow ratio",
             "L_defrost": "Defrost load on the heating coil"
         },
         "description_assertions": [

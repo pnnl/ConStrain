@@ -12,8 +12,8 @@ class HeatPumpSupplementalHeatLockout(RuleCheckBase):
             if data["L_defrost"] > 0:
                 data["result"] = 1
             else:
-                if data["C_op"] > data["L_op"] + (
-                    data["L_op"] * self.get_tolerance("ratio", "operation")
+                if data["C_op"] > (
+                    data["L_op"] + self.get_tolerance("load", "general")
                 ):
                     data["result"] = 0  # False
                 else:
