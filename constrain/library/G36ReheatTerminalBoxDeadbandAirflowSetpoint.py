@@ -64,7 +64,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
         if zone_state.lower().strip() != "deadband":
             return "Untested"
         if (
-            dat > dat_min_spt
+            dat > dat_min_spt - self.get_tolerance("temperature", "discharge_air")
             and heating_coil_command > self.get_tolerance("damper", "command") * 100
         ):
             return False
