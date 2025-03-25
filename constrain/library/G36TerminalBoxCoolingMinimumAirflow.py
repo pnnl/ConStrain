@@ -61,9 +61,9 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
         room_temp,
     ):
         if zone_state.lower().strip() != "cooling":
-            return np.nan
+            return "Untested"
         if ahu_sat_spt <= room_temp:
-            return np.nan
+            return "Untested"
         match operation_mode.strip().lower():
             case "occupied":
                 airflowmin = v_min
@@ -71,7 +71,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
                 airflowmin = 0
             case _:
                 print("invalid operation mode value")
-                return np.nan
+                return "Untested"
 
         if v_spt - v_spt_tol > airflowmin:
             return False

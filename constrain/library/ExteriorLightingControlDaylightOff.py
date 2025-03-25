@@ -1,5 +1,5 @@
 """
-ASHRAE 90.1-2022 
+ASHRAE 90.1-2022
 ### Description
 
 Section 9.4.1.4.b Daylight OFF control
@@ -69,7 +69,7 @@ class ExteriorLightingControlDaylightOff(RuleCheckBase):
             else:
                 return False
         else:
-            return np.nan
+            return "Untested"
 
     def verify(self):
         self.result = self.df.apply(lambda d: self.daylight_off(d), axis=1)

@@ -516,10 +516,7 @@
                         "frequency": "detailed"
                     }
                 },
-                "parameters": {
-                    "p_set_min": 50.0,
-                    "tol": 1.0
-                }
+                "parameters": {}
             },
             "verification_class": "FanStaticPressureResetControl"
         },

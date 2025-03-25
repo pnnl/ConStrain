@@ -27,7 +27,16 @@ class TestAutomaticOADamperControl(unittest.TestCase):
         results = list(
             run_test_verification_with_data("AutomaticOADamperControl", df).result
         )
-        expected_results = [np.nan, True, False, False, False, np.nan, np.nan, np.nan]
+        expected_results = [
+            "Untested",
+            True,
+            False,
+            False,
+            False,
+            "Untested",
+            "Untested",
+            "Untested",
+        ]
 
         # Perform verification
         for i in range(len(data[0])):

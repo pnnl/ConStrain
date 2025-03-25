@@ -29,7 +29,7 @@ class TestG36OutputChangeRateLimit(unittest.TestCase):
             list(run_test_verification_with_data("G36OutputChangeRateLimit", df).result)
         )
 
-        expected_results = pd.Series([np.nan, True, True, True, True, True])
+        expected_results = pd.Series(["Untested", True, True, True, True, True])
 
         self.assertTrue(results.equals(expected_results))
 
@@ -51,7 +51,7 @@ class TestG36OutputChangeRateLimit(unittest.TestCase):
             list(run_test_verification_with_data("G36OutputChangeRateLimit", df).result)
         )
 
-        expected_results = pd.Series([np.nan, True, True, True, True, False])
+        expected_results = pd.Series(["Untested", True, True, True, True, False])
 
         self.assertTrue(results.equals(expected_results))
 

@@ -78,7 +78,7 @@ class G36MinOAwEconomizer(RuleCheckBase):
             else:
                 return False
         else:
-            return np.nan
+            return "Untested"
 
     def verify(self):
         self.result = self.df.apply(lambda t: self.ts_verify_logic(t), axis=1)

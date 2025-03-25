@@ -20,6 +20,6 @@ class HeatPumpSupplementalHeatLockout(RuleCheckBase):
 
     def verify(self):
         self.df["C_op"] = self.df["C_ref"] * self.df["C_t_mod"] * self.df["C_ff_mod"]
-        self.df["result"] = np.nan
+        self.df["result"] = "Untested"
         self.df = self.df.apply(lambda r: self.heating_coil_verification(r), axis=1)
         self.result = self.df["result"]

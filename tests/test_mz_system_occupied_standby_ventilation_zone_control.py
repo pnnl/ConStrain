@@ -26,7 +26,7 @@ class TestMZSystemOccupiedStandbyVentilationZoneControl(unittest.TestCase):
             [True, 0.5, 0.5],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, False, True])
+        expected_results = pd.Series(["Untested", False, True])
         verification_obj = run_test_verification_with_data(
             "MZSystemOccupiedStandbyVentilationZoneControl", df
         )
@@ -52,7 +52,7 @@ class TestMZSystemOccupiedStandbyVentilationZoneControl(unittest.TestCase):
             [True, 0.5, 0.25],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, True, True])
+        expected_results = pd.Series(["Untested", True, True])
         verification_obj = run_test_verification_with_data(
             "MZSystemOccupiedStandbyVentilationZoneControl", df
         )

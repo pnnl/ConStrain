@@ -24,7 +24,7 @@ class TestG36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(unittest.TestCase):
         ]
 
         expected_results = pd.Series(
-            [np.nan, True, False, False, True, True, False, True]
+            ["Untested", True, False, False, True, True, False, True]
         )
 
         df = pd.DataFrame(data, columns=points)

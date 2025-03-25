@@ -27,7 +27,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
             [True, 0.1, 1, 1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, np.nan, False])
+        expected_results = pd.Series(["Untested", "Untested", False])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlDaylightOff", df
         )
@@ -54,7 +54,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
             [True, 0.1, 1, 0],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, np.nan, True])
+        expected_results = pd.Series(["Untested", "Untested", True])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlDaylightOff", df
         )
@@ -81,7 +81,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
             [False, 1, 1, 0.1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, np.nan, False])
+        expected_results = pd.Series(["Untested", "Untested", False])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlDaylightOff", df
         )
@@ -108,7 +108,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
             [False, 1, 1, 0],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, np.nan, True])
+        expected_results = pd.Series(["Untested", "Untested", True])
         verification_obj = run_test_verification_with_data(
             "ExteriorLightingControlDaylightOff", df
         )

@@ -37,7 +37,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             [20, 24, 100, 0, 1600, 2000, "occupied"],
         ]
 
-        expected_results = pd.Series([np.nan, np.nan, True, True, np.nan])
+        expected_results = pd.Series(["Untested", "Untested", True, True, "Untested"])
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
@@ -73,7 +73,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             [20, 24, 0, 20, 1600, 2000, "occupied"],
         ]
 
-        expected_results = pd.Series([np.nan, np.nan, False, False, np.nan])
+        expected_results = pd.Series(["Untested", "Untested", False, False, "Untested"])
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
@@ -109,7 +109,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             [20, 24, 100, 0, 2600, 2000, "occupied"],
         ]
 
-        expected_results = pd.Series([np.nan, np.nan, True, True, np.nan])
+        expected_results = pd.Series(["Untested", "Untested", True, True, "Untested"])
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
@@ -145,7 +145,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             [20, 24, 0, 20, 2600, 2000, "occupied"],
         ]
 
-        expected_results = pd.Series([np.nan, np.nan, True, False, np.nan])
+        expected_results = pd.Series(["Untested", "Untested", True, False, "Untested"])
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 

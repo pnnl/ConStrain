@@ -68,7 +68,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
         dat_min_spt,
     ):
         if zone_state.lower().strip() != "deadband":
-            return np.nan
+            return "Untested"
         if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol:
             return False
         match operation_mode.strip().lower():
@@ -78,7 +78,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 dbmin = 0
             case _:
                 print("invalid operation mode value")
-                return np.nan
+                return "Untested"
 
         if abs(v_spt - dbmin) <= v_spt_tol:
             return True
