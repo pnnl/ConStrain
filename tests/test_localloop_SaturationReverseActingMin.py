@@ -9,7 +9,7 @@ import pandas as pd
 
 class TestLocalLoopSaturationReverseActingMin(unittest.TestCase):
     def test_saturation_ramin_pass(self):
-        points = ["feedback_sensor", "set_point", "cmd", "cmd_min"]
+        points = ["val_sensor", "val_setpoint", "cmd_control", "cmd_min"]
         timestamp = [
             datetime(2023, 5, 1, 0, 5, 0),
             datetime(2023, 5, 1, 1, 5, 10),
@@ -67,7 +67,7 @@ class TestLocalLoopSaturationReverseActingMin(unittest.TestCase):
         self.assertTrue(binaryflag)
 
     def test_saturation_ramin_fail(self):
-        points = ["feedback_sensor", "set_point", "cmd", "cmd_min"]
+        points = ["val_sensor", "val_setpoint", "cmd_control", "cmd_min"]
         timestamp = [
             datetime(2023, 5, 1, 0, 5, 0),
             datetime(2023, 5, 1, 1, 5, 10),

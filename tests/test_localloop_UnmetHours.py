@@ -9,7 +9,7 @@ import pandas as pd
 
 class TestLocalLoopUnmetHours(unittest.TestCase):
     def test_unmet_hours_pass(self):
-        points = ["feedback_sensor", "set_point"]
+        points = ["val_sensor", "val_setpoint"]
         timestamp = [
             datetime(2023, 5, 1, 0, 5, 0),
             datetime(2023, 5, 1, 1, 5, 10),
@@ -95,7 +95,7 @@ class TestLocalLoopUnmetHours(unittest.TestCase):
         self.assertTrue(binaryflag)
 
     def test_unmet_hours_pass(self):
-        points = ["feedback_sensor", "set_point"]
+        points = ["val_sensor", "val_setpoint"]
         timestamp = [
             datetime(2023, 5, 1, 0, 5, 0),
             datetime(2023, 5, 1, 1, 5, 10),

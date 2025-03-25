@@ -8,7 +8,7 @@ import pandas as pd
 
 class TestG36SimultaneousHeatingCooling(unittest.TestCase):
     def test_heating_cooling(self):
-        points = ["heating_output", "cooling_output"]
+        points = ["q_heat", "q_cool"]
         data = [[1000, 0], [1000, 1000], [0, 1000]]
 
         df = pd.DataFrame(data, columns=points)

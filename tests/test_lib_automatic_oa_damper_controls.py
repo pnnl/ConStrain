@@ -11,7 +11,15 @@ import numpy as np
 
 class TestAutomaticOADamperControl(unittest.TestCase):
     def test_automatic_oa_damper_control(self):
-        points = ["o", "eco_onoff", "m_oa", "m_ea", "tol_o", "tol_m_oa", "tol_m_ea"]
+        points = [
+            "n_occupants",
+            "status_economizer",
+            "v_oa",
+            "v_ea",
+            "tol_occupants",
+            "tol_v_oa",
+            "tol_v_ea",
+        ]
         data = [
             [1, 0, 0, 0, 0.001, 50, 50],
             [0, 1, 0, 0, 0.001, 50, 50],

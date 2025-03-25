@@ -11,10 +11,10 @@ import numpy as np
 class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
     def test_interior_lighting_control_automatic_full_off_area_fail(self):
         points = [
-            "o",
-            "total_lighting_power",
-            "lighted_floor_area",
-            "tol_o",
+            "n_occupants",
+            "p_power_light_total",
+            "area_lit",
+            "tol_occupants",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -34,10 +34,10 @@ class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
 
     def test_interior_lighting_control_automatic_full_off_fail(self):
         points = [
-            "o",
-            "total_lighting_power",
-            "lighted_floor_area",
-            "tol_o",
+            "n_occupants",
+            "p_power_light_total",
+            "area_lit",
+            "tol_occupants",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -61,10 +61,10 @@ class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
 
     def test_interior_lighting_control_automatic_full_off_pass(self):
         points = [
-            "o",
-            "total_lighting_power",
-            "lighted_floor_area",
-            "tol_o",
+            "n_occupants",
+            "p_power_light_total",
+            "area_lit",
+            "tol_occupants",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),

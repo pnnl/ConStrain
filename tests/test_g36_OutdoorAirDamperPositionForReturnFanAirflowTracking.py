@@ -6,12 +6,12 @@ from lib_unit_test_runner import *
 import pandas as pd
 
 
-class TestG36OutdoorAirDamperPositionForReliefDamperOrFan(unittest.TestCase):
-    def test_return_air_damper_position(self):
+class TestG36OutdoorAirDamperPositionForReturnFanAirflowTracking(unittest.TestCase):
+    def test_outdoor_air_damper_position(self):
         points = [
-            "oa_p",
-            "max_oa_p",
-            "oa_p_tol",
+            "cmd_damper_oa",
+            "cmd_damper_oa_max",
+            "tol_cmd_damper_oa",
         ]
         data = [
             [0.1, 1, 0.05],  # False

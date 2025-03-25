@@ -11,12 +11,12 @@ import numpy as np
 class TestG36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
     def test_cooling_only_terminal_box_heating_airflow_setpoint(self):
         points = [
-            "operation_mode",
-            "zone_state",
+            "mode_system",
+            "state_zone",
             "v_cool_max",
             "v_heat_max",
             "v_min",
-            "v_spt",
+            "v_sp",
         ]
 
         data = [

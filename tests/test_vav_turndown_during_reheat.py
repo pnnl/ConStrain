@@ -11,9 +11,9 @@ from lib_unit_test_runner import *
 class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_during_reheat_pass(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
+            "flag_coil_reheat",
+            "v_vav",
+            "v_vav_max",
         ]
 
         timestamp = [
@@ -52,9 +52,9 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_during_reheat_fail(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
+            "flag_coil_reheat",
+            "v_vav",
+            "v_vav_max",
         ]
 
         timestamp = [
@@ -93,9 +93,9 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_during_reheat_untested(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
+            "flag_coil_reheat",
+            "v_vav",
+            "v_vav_max",
         ]
 
         timestamp = [

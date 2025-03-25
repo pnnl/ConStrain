@@ -11,10 +11,10 @@ import numpy as np
 class TestExteriorLightingControlDaylightOff(unittest.TestCase):
     def test_exterior_lighting_control_occupancy_sensing_reduction_fail(self):
         points = [
-            "is_sun_up",
-            "daylight_sensed",
-            "daylight_setpoint",
-            "total_lighting_power",
+            "flag_sun_up",
+            "val_daylight",
+            "val_daylight_sp",
+            "p_power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -38,10 +38,10 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_pass(self):
         points = [
-            "is_sun_up",
-            "daylight_sensed",
-            "daylight_setpoint",
-            "total_lighting_power",
+            "flag_sun_up",
+            "val_daylight",
+            "val_daylight_sp",
+            "p_power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -65,10 +65,10 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_fail_daylight(self):
         points = [
-            "is_sun_up",
-            "daylight_sensed",
-            "daylight_setpoint",
-            "total_lighting_power",
+            "flag_sun_up",
+            "val_daylight",
+            "val_daylight_sp",
+            "p_power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -92,10 +92,10 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_pass_daylight(self):
         points = [
-            "is_sun_up",
-            "daylight_sensed",
-            "daylight_setpoint",
-            "total_lighting_power",
+            "flag_sun_up",
+            "val_daylight",
+            "val_daylight_sp",
+            "p_power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),

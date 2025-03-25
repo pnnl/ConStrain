@@ -13,13 +13,13 @@ import numpy as np
 class TestG36MinOAwEconomizer(unittest.TestCase):
     def test_minoa_wo_economizer_pass_untested_low(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "return_damper_command",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "t_oa",
+            "t_oa_economizer_high_limit",
+            "pos_damper_oa",
+            "pos_damper_ra",
+            "v_oa",
+            "v_oa_min_sp",
+            "mode_system",
         ]
 
         timestamp = [
@@ -49,13 +49,13 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_fail_untested_low(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "return_damper_command",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "t_oa",
+            "t_oa_economizer_high_limit",
+            "pos_damper_oa",
+            "pos_damper_ra",
+            "v_oa",
+            "v_oa_min_sp",
+            "mode_system",
         ]
 
         timestamp = [
@@ -85,13 +85,13 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_pass_untested_high(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "return_damper_command",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "t_oa",
+            "t_oa_economizer_high_limit",
+            "pos_damper_oa",
+            "pos_damper_ra",
+            "v_oa",
+            "v_oa_min_sp",
+            "mode_system",
         ]
 
         timestamp = [
@@ -121,13 +121,13 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_fail_untested_high(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "return_damper_command",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "t_oa",
+            "t_oa_economizer_high_limit",
+            "pos_damper_oa",
+            "pos_damper_ra",
+            "v_oa",
+            "v_oa_min_sp",
+            "mode_system",
         ]
 
         timestamp = [

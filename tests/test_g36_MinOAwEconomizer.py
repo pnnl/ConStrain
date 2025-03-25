@@ -13,13 +13,13 @@ import numpy as np
 class TestG36MinOAwEconomizer(unittest.TestCase):
     def test_minoa_economizer_pass_untest_fail(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "min_oa_p",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "t_oa",
+            "t_economizer_limit",
+            "pos_damper_oa",
+            "pos_damper_oa_min",
+            "v_oa",
+            "v_oa_min_sp",
+            "mode_system",
         ]
 
         data = [

@@ -12,7 +12,7 @@ import numpy as np
 
 class TestG36ReliefDamperStatus(unittest.TestCase):
     def test_relief_damper_status_pass_fail(self):
-        points = ["relief_damper_command", "supply_fan_status"]
+        points = ["cmd_damper_relief", "status_fan_supply"]
         data = [[20, 1], [0, 0], [0, 1]]
 
         expected_results = pd.Series([True, True, False])
@@ -27,7 +27,7 @@ class TestG36ReliefDamperStatus(unittest.TestCase):
         self.assertFalse(binaryflag)
 
     def test_relief_damper_status_finalflag_pass(self):
-        points = ["relief_damper_command", "supply_fan_status"]
+        points = ["cmd_damper_relief", "status_fan_supply"]
         data = [[20, 1], [0, 0]]
 
         df = pd.DataFrame(data, columns=points)
@@ -39,7 +39,7 @@ class TestG36ReliefDamperStatus(unittest.TestCase):
         self.assertTrue(result)
 
     def test_relief_damper_status_finalflag_untested(self):
-        points = ["relief_damper_command", "supply_fan_status"]
+        points = ["cmd_damper_relief", "status_fan_supply"]
         data = [[20, 1], [30, 1]]
 
         df = pd.DataFrame(data, columns=points)

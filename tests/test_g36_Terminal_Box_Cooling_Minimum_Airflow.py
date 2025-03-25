@@ -11,13 +11,13 @@ import numpy as np
 class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
     def test_g36_terminal_box_cooling_minimum_airflow(self):
         points = [
-            "operation_mode",
-            "zone_state",
+            "mode_system",
+            "state_zone",
             "v_min",
-            "ahu_sat_spt",
-            "v_spt",
-            "v_spt_tol",
-            "room_temp",
+            "t_sa_sp",
+            "v_sp",
+            "tol_v",
+            "t_room",
         ]
 
         data = [

@@ -10,9 +10,8 @@ import numpy as np
 
 
 class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
-
     def test_g36_terminal_box_vav_damper_tracking0(self):
-        points = ["vav_damper_command", "v", "v_spt", "v_tracking_tol"]
+        points = ["cmd_damper_vav", "v", "v_sp", "tol_v_tracking"]
 
         timestamp = [
             datetime(2024, 2, 1, 0, 5, 0),
@@ -52,7 +51,7 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
         self.assertTrue(results.equals(expected_results))
 
     def test_g36_terminal_box_vav_damper_tracking1(self):
-        points = ["vav_damper_command", "v", "v_spt", "v_tracking_tol"]
+        points = ["cmd_damper_vav", "v", "v_sp", "tol_v_tracking"]
 
         timestamp = [
             datetime(2024, 2, 1, 0, 5, 0),

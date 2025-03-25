@@ -10,15 +10,14 @@ import numpy as np
 
 
 class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
-
     def test_g36_reheat_terminal_box_heating_coil_tracking0(self):
 
         points = [
-            "operation_mode",
-            "heating_coil_command",
-            "dat",
-            "dat_spt",
-            "dat_tracking_tol",
+            "mode_system",
+            "cmd_coil_heat",
+            "t_discharge",
+            "t_discharge_sp",
+            "tol_t_tracking",
         ]
 
         timestamp = [
@@ -74,11 +73,11 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
 
     def test_g36_reheat_terminal_box_heating_coil_tracking1(self):
         points = [
-            "operation_mode",
-            "heating_coil_command",
-            "dat",
-            "dat_spt",
-            "dat_tracking_tol",
+            "mode_system",
+            "cmd_coil_heat",
+            "t_discharge",
+            "t_discharge_sp",
+            "tol_t_tracking",
         ]
 
         timestamp = [

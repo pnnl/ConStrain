@@ -6,7 +6,6 @@ import json
 
 
 class JSONSchemaTest(unittest.TestCase):
-
     def setUp(self):
         workflow_schema_path = "./schema/workflow.schema.json"
         library_item_schema_path = "./schema/library.schema.json"

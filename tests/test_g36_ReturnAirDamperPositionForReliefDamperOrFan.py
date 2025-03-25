@@ -9,14 +9,14 @@ import pandas as pd
 class TestG36ReturnAirDamperPositionForReliefDamperOrFan(unittest.TestCase):
     def test_return_air_damper_position(self):
         points = [
-            "heating_output",
-            "cooling_output",
-            "ra_p",
-            "max_ra_p",
-            "ra_p_tol",
-            "oa_p",
-            "max_oa_p",
-            "oa_p_tol",
+            "q_heat",
+            "q_cool",
+            "pos_damper_ra",
+            "pos_damper_ra_max",
+            "tol_pos_damper_ra",
+            "pos_damper_oa",
+            "pos_damper_oa_max",
+            "tol_pos_damper_oa",
         ]
         data = [
             [1000, 0, 0.5, 1.0, 0.05, 0.2, 1.0, 0.05],  # False

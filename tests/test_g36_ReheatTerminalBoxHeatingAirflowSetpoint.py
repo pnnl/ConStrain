@@ -8,23 +8,23 @@ import pandas as pd
 import numpy as np
 
 
-class TestG36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
-    def test_cooling_only_terminal_box_heating_airflow_setpoint(self):
+class TestG36ReheatTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
+    def test_reheat_terminal_box_heating_airflow_setpoint(self):
         points = [
-            "operation_mode",
-            "zone_state",
+            "mode_system",
+            "state_zone",
             "v_cool_max",
             "v_heat_max",
             "v_heat_min",
             "v_min",
-            "v_spt",
-            "v_spt_tol",
-            "heating_loop_output",
-            "room_temp",
-            "space_temp_spt",
-            "ahu_sat_spt",
-            "dat",
-            "dat_spt",
+            "v_sp",
+            "tol_v",
+            "signal_heat",
+            "t_room",
+            "t_space_sp",
+            "t_sa_sp",
+            "t_discharge",
+            "t_discharge_sp",
         ]
 
         data = [

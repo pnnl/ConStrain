@@ -32,7 +32,7 @@ The verification analyzes supply air temperature setpoint variation:
 ```python
 sat_range = max(t_sa_sp) - min(t_sa_sp)
 min_sat = min(t_sa_sp)
-required_range = (t_d_z_cool - min_sat) * 0.25 * 0.99
+required_range = (t_z_design_cool - min_sat) * 0.25 * 0.99
 
 if sat_range >= required_range:
     pass  # Adequate reset range
@@ -47,7 +47,7 @@ else:
   - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: System control
 
-- t_d_z_cool: Design zone cooling temperature setpoint
+- t_z_design_cool: Design zone cooling temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Design zone cooling temperature setpoint
   - Data Point Affiliation: Zone control
@@ -62,14 +62,14 @@ from constrain.checklib import RuleCheckBase
 
 
 class SupplyAirTempReset(RuleCheckBase):
-    points = ["t_sa_sp", "t_d_z_cool"]
+    points = ["t_sa_sp", "t_z_design_cool"]
 
     def verify(self):
         t_sa_sp_max = max(self.df["t_sa_sp"])
         t_sa_sp_min = min(self.df["t_sa_sp"])
 
         self.result = (t_sa_sp_max - t_sa_sp_min) >= (
-            self.df["t_d_z_cool"] - t_sa_sp_min
+            self.df["t_z_design_cool"] - t_sa_sp_min
         ) * 0.25 * 0.99  # 0.99 being the numeric threshold
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):

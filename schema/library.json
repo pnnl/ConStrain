@@ -8,7 +8,7 @@
         ],
         "description_datapoints": {
             "t_sa_sp": "Supply air temperature setpoint",
-            "t_z_cool": "Zone cooling temperature setpoint"
+            "t_z_design_cool": "Design zone cooling temperature setpoint"
         },
         "description_assertions": [
             "Max(t_sa_sp) - Min(t_sa_sp) >= (t_z_cool - Min(t_sa_sp)) * 0.25"

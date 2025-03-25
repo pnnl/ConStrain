@@ -7,18 +7,18 @@ import pandas as pd
 import numpy as np
 
 
-class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
+class TestG36SupplyAirTemperatureSetpoint(unittest.TestCase):
     def test_heating_cooling(self):
         points = [
-            "operation_mode",
-            "t_max",
-            "max_clg_sa_t_sp",
-            "min_clg_sa_t_sp",
-            "oa_t",
-            "oa_t_min",
-            "oa_t_max",
-            "sa_t_sp_ac",
-            "sa_sp_tol",
+            "mode_operation",
+            "t_sa_max",
+            "t_sa_cool_max",
+            "t_sa_cool_min",
+            "t_oa",
+            "t_oa_min",
+            "t_oa_max",
+            "t_sa_sp",
+            "tol_t_sa",
         ]
         data = [
             ["cooldown", 14, 13, 12, 9, 10, 21, 12, 0.2],  # False

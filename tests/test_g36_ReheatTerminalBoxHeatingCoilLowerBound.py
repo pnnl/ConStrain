@@ -11,9 +11,9 @@ import numpy as np
 class TestG36ReheatTerminalBoxHeatingCoilLowerBound(unittest.TestCase):
     def test_g36_reheat_terminal_box_heating_coil_lower_bound(self):
         points = [
-            "operation_mode",
-            "heating_coil_command",
-            "dat",
+            "mode_system",
+            "cmd_coil_heat",
+            "t_discharge",
         ]
 
         data = [

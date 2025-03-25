@@ -11,7 +11,7 @@ from lib_unit_test_runner import *
 class AutomaticShutdown(unittest.TestCase):
     def test_Automatic_Shutdown_pass(self):
         points = [
-            "hvac_set",
+            "schedule_hvac",
         ]
 
         timestamp = [
@@ -48,7 +48,7 @@ class AutomaticShutdown(unittest.TestCase):
 
     def test_Automatic_Shutdown_fail(self):
         points = [
-            "hvac_set",
+            "schedule_hvac",
         ]
 
         timestamp = [

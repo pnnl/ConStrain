@@ -11,11 +11,11 @@ from lib_unit_test_runner import *
 class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_untested(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "turndown_tol",
+            "flag_coil_reheat",
+            "v_vav",
+            "v_vav_max",
+            "ratio_turndown_min",
+            "tol_turndown",
         ]
 
         timestamp = [
@@ -44,11 +44,11 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_V_dot_max_zero_untested(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "turndown_tol",
+            "flag_coil_reheat",
+            "v_vav",
+            "v_vav_max",
+            "ratio_turndown_min",
+            "tol_turndown",
         ]
 
         timestamp = [
@@ -77,11 +77,11 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_pass(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "turndown_tol",
+            "flag_coil_reheat",
+            "v_vav",
+            "v_vav_max",
+            "ratio_turndown_min",
+            "tol_turndown",
         ]
 
         timestamp = [
@@ -114,11 +114,11 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_fail(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "turndown_tol",
+            "flag_coil_reheat",
+            "v_vav",
+            "v_vav_max",
+            "ratio_turndown_min",
+            "tol_turndown",
         ]
 
         timestamp = [
