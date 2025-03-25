@@ -46,7 +46,8 @@
         "unit": "W",
         "general": 20,
         "types": {
-            "fan": 20
+            "fan": 20,
+            "lighting_exterior": 100
         }
     },
     "load":{
