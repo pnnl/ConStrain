@@ -81,7 +81,7 @@ class LocalLoopSaturationDirectActingMin(RuleCheckBase):
             return False
 
     def err_flag(self, t):
-        if t["val_sensor"] < t["sp"]:
+        if t["val_sensor"] < t["val_setpoint"]:
             return True
         else:
             return False
