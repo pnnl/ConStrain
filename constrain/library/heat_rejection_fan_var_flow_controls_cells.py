@@ -13,7 +13,7 @@ class HeatRejectionFanVariableFlowControlsCells(RuleCheckBase):
 
     def verify(self):
         self.df["ct_cells_op_theo_intermediate"] = (
-            (self.df["ct_m"] * (1 + self.get_tolerance("ratio", "flow")))
+            (self.df["ct_m"])
             / self.df["ct_m_des"]
             * self.df["min_flow_frac_per_cell"]
             / self.df["ct_cells"]
