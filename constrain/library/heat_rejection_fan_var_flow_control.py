@@ -11,8 +11,6 @@ class HeatRejectionFanVariableFlowControl(RuleCheckBase):
         self.df["normalized_m_ct_fan"] = self.df["m_ct_fan"] / self.df["ct_m_fan_dsgn"]
         self.df["normalized_P_ct_fan"] = self.df["ct_P_fan"] / self.df["ct_P_fan_dsgn"]
 
-        self.df = self.df.loc[self.df["normalized_P_ct_fan"] > 0.0]
-
         self.df = self.df.loc[
             self.df["normalized_P_ct_fan"] > 0.0
         ]  # filter out 0 values
