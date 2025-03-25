@@ -13,7 +13,7 @@ class UserProvidedVerificationItem_Beta(RuleCheckBase):
             else:
                 return True
         else:
-            return np.nan
+            return "Untested"
 
     def verify(self):
         self.result = self.df.apply(lambda d: self.automatic_oa_damper_check(d), axis=1)

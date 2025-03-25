@@ -1,5 +1,5 @@
 """
-ASHRAE 90.1-2022 
+ASHRAE 90.1-2022
 ### Description
 
 Section G3.1.4 HVAC System Fan Schedules
@@ -103,3 +103,5 @@ class AppendixGHVACSystemFanOperation(RuleCheckBase):
             self.result = self.df.apply(
                 lambda d: self.hvac_system_fan_operation(d), axis=1
             )
+        else:
+            self.result = self.df.apply(lambda d: "Untested", axis=1)

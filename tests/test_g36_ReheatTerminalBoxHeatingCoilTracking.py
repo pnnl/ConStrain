@@ -46,7 +46,17 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
         ]
 
         expected_results = pd.Series(
-            [True, True, True, np.nan, np.nan, False, True, np.nan, np.nan]
+            [
+                True,
+                True,
+                True,
+                "Untested",
+                "Untested",
+                False,
+                True,
+                "Untested",
+                "Untested",
+            ]
         )
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
@@ -96,7 +106,17 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
         ]
 
         expected_results = pd.Series(
-            [True, True, np.nan, np.nan, False, False, True, np.nan, np.nan]
+            [
+                True,
+                True,
+                "Untested",
+                "Untested",
+                False,
+                False,
+                True,
+                "Untested",
+                "Untested",
+            ]
         )
 
         df = pd.DataFrame(data, columns=points, index=timestamp)

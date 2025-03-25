@@ -67,7 +67,7 @@ class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
             if err_time == 0:
                 result_flag = True
             elif err_time <= 1:
-                result_flag = np.nan
+                result_flag = "Untested"
             elif err_time > 1:
                 if (
                     cur["v"] - cur["v_spt"] >= cur["v_tracking_tol"]

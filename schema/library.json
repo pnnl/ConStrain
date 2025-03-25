@@ -327,9 +327,7 @@
         ],
         "description_datapoints": {
             "p_set": "Static pressure setpoint",
-            "d_VAV_x": "VAV Damper x Position (includes all VAV dampers served by the system under test",
-            "tol": "Tolerance for VAV box damper position openings",
-            "p_set_min": ": Minimum static pressure setpoint threshold"
+            "d_VAV_x": "VAV Damper x Position (includes all VAV dampers served by the system under test"
         },
         "description_assertions": [
             "if d_VAV(n) (n=1,2,...,N) < 0.9 and p_set(t) > p_set(t-1), then fail else pass"
@@ -1576,19 +1574,54 @@
         "assertions_type": "pass",
         "description_assertions": [
             "if reheat_coil_flag:",
-            "  if V_dot_VAV_max == 0",
+            "  if V_dot_VAV_max == 0:",
             "     Untested",
-            "  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol",
+            "  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol:",
             "     fail",
             "  else:",
             "     pass",
-            "else",
+            "else: ",
+            "    Untested",
+            "end"
+        ]
+    },
+	"VAVMinimumTurndownDuringReheatPressureReset": {
+        "library_item_id": 69,
+        "description_brief": "When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio and the pressure setpoint must remain the same",
+        "description_index": [
+            "Section 6.5.2.1 ASHRAE 90.1-2016"
+        ],
+        "description_datapoints": {
+            "reheat_coil_flag": "VAV box reheat coil operation status",
+            "V_dot_VAV": "VAV airflow rate",
+            "V_dot_VAV_max": "VAV max airflow rate",
+            "VAV_min_turndown_design": "design VAV box min turndown ratio",
+			"P_set": "duct pressure setpoint",
+            "turndown_tol": "VAV turndown tolerance",
+			"P_set_tol": "pressure setpoint tolerance"
+        },
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if reheat_coil_flag:",
+            "  if V_dot_VAV_max == 0:",
+            "     Untested",
+            "  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol:",
+            "    if P_set_prev is None:",
+			"        Untested",
+			"    elif abs(P_set - P_set_prev) > P_set_tol:",
+			"        Untested",
+			"    else:",
+			"        fail",
+            "  else:",
+            "     pass",
+            "else: ",
             "    Untested",
             "end"
         ]
     },
     "VAVTurndownDuringReheat": {
-        "library_item_id": 69,
+        "library_item_id": 70,
         "description_brief": "When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should be higher than when it isn't in reheat mode",
         "description_index": [
             "Section 6.5.2.1 ASHRAE 90.1-2016"

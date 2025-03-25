@@ -41,7 +41,7 @@ class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
 
     def heating_coil_working(self, operation_mode, heating_coil_command, dat):
         if operation_mode.lower().strip() != "occupied":
-            return np.nan
+            return "Untested"
         if dat >= 10:
             return True
         else:
