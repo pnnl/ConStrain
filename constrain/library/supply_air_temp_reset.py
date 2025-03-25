@@ -35,8 +35,6 @@ class SupplyAirTempReset(RuleCheckBase):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
             daydf = self.df.loc[daystr]
             day = self.result[daystr]
-            if daydf["T_sa_set"].max() - daydf["T_sa_set"].min() > self.get_tolerance(
-                "temperature", "supply_air"
-            ):
+            if daydf["T_sa_set"].max() - daydf["T_sa_set"].min() > 0:
                 return day, daydf
             return day, daydf
