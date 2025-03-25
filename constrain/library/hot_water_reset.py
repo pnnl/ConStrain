@@ -26,7 +26,7 @@ class HWReset(RuleCheckBase):
                 & (
                     self.df["T_hw"]
                     >= self.df["T_hw_max_set"]
-                    * (1 - self.get_tolerance("temperature", "general"))
+                    - self.get_tolerance("temperature", "general")
                 )
             )
             | (
@@ -40,7 +40,7 @@ class HWReset(RuleCheckBase):
                 & (
                     self.df["T_hw"]
                     <= self.df["T_hw_min_set"]
-                    * (1 + self.get_tolerance("temperature", "general"))
+                    + self.get_tolerance("temperature", "general")
                 )
             )
             | (
@@ -60,12 +60,12 @@ class HWReset(RuleCheckBase):
                     (
                         self.df["T_hw"]
                         >= self.df["T_hw_min_set"]
-                        * (1 - self.get_tolerance("temperature", "general"))
+                        + self.get_tolerance("temperature", "general")
                     )
                     & (
                         self.df["T_hw"]
                         <= self.df["T_hw_max_set"]
-                        * (1 + self.get_tolerance("temperature", "general"))
+                        - self.get_tolerance("temperature", "general")
                     )
                 )
             )
