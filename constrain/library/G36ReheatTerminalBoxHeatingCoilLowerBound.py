@@ -25,10 +25,10 @@ The verification checks that during occupied mode, if the discharge air temperat
 ### Verification Algorithm Pseudo Code
 
 ```python
-if mode_sys != 'occupied':
+if mode_system != 'occupied':
     untested
 else:
-    if t_vav_dis < 10 and cmd_htg_coil < 99:
+    if t_discharge < 10 and cmd_coil_heat < 99:
         fail
     else:
         pass
@@ -36,19 +36,19 @@ else:
 
 ### Data requirements
 
-- mode_sys: System operation mode
+- mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System operation mode
+  - Data point Description: System mode
   - Data Point Affiliation: System control
 
-- cmd_htg_coil: Heating coil command
-  - Data Value Unit: percent (0-100)
+- cmd_coil_heat: Heating coil command
+  - Data Value Unit: percent
   - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- t_vav_dis: VAV discharge air temperature
-  - Data Value Unit: °C
-  - Data point Description: VAV discharge air temperature
+- t_discharge: Discharge air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
 """
@@ -58,18 +58,18 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     points = [
-        "operation_mode",
-        "heating_coil_command",
-        "dat",
+        "mode_system",
+        "cmd_coil_heat",
+        "t_discharge",
     ]
 
-    def heating_coil_working(self, operation_mode, heating_coil_command, dat):
-        if operation_mode.lower().strip() != "occupied":
+    def heating_coil_working(self, mode_system, cmd_coil_heat, t_discharge):
+        if mode_system.lower().strip() != "occupied":
             return "Untested"
-        if dat >= 10:
+        if t_discharge >= 10:
             return True
         else:
-            if heating_coil_command < 99:
+            if cmd_coil_heat < 99:
                 return False
             else:
                 return True  # heating coil tried its best
@@ -77,7 +77,7 @@ class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.heating_coil_working(
-                t["operation_mode"], t["heating_coil_command"], t["dat"]
+                t["mode_system"], t["cmd_coil_heat"], t["t_discharge"]
             ),
             axis=1,
         )

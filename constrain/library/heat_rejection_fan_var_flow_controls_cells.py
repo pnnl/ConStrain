@@ -6,9 +6,9 @@ This verification aims to check if multiple-cell heat rejection equipment proper
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
-- Code Section: 6.5.5.2 Fan Control
-- Code Subsection: Multiple-Cell Heat Rejection Equipment
+- Code Year: 2016
+- Code Section: 6.5.5.2 Fan Speed Control
+- Code Subsection: 6.5.5.2.2
 
 ### Verification Approach
 
@@ -44,7 +44,7 @@ if fan_power > 0:  # System is running
 
 ### Data requirements
 
-- n_cells_ct_op: Operating cells
+- n_cells_ct_ct_op: Operating cells
   - Data Value Unit: count
   - Data point Description: Number of operating cooling tower cells
   - Data Point Affiliation: System control
@@ -54,17 +54,17 @@ if fan_power > 0:  # System is running
   - Data point Description: Number of cooling tower cells
   - Data Point Affiliation: Equipment configuration
 
-- v_ct: Current flow
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Cooling tower volume flow rate
+- m_ct: Current flow
+  - Data Value Unit: mass flow rate
+  - Data point Description: Cooling tower mass flow rate
   - Data Point Affiliation: System monitoring
 
-- p_fan_ct: Fan power
+- p_power_fan_ct: Fan power
   - Data Value Unit: power
   - Data point Description: Cooling tower fan power
   - Data Point Affiliation: Fan monitoring
 
-- v_ct_dsgn: Design flow
+- m_ct_design: Design flow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Cooling tower design flow rate
   - Data Point Affiliation: Equipment specifications
@@ -81,31 +81,31 @@ from constrain.checklib import RuleCheckBase
 
 class HeatRejectionFanVariableFlowControlsCells(RuleCheckBase):
     points = [
-        "ct_op_cells",
-        "ct_cells",
-        "ct_m",
-        "ct_P_fan",
-        "ct_m_des",
-        "min_flow_frac_per_cell",
+        "n_cells_ct_ct_op",
+        "n_cells_ct",
+        "m_ct",
+        "p_power_fan_ct",
+        "m_ct_design",
+        "ratio_v_cell_min",
     ]
 
     def verify(self):
-        self.df["ct_cells_op_theo_intermediate"] = (
-            self.df["ct_m"]
-            / self.df["ct_m_des"]
-            * self.df["min_flow_frac_per_cell"]
-            / self.df["ct_cells"]
+        self.df["cells_op_theo_intermediate"] = (
+            self.df["m_ct"]
+            / self.df["m_ct_design"]
+            * self.df["ratio_v_cell_min"]
+            / self.df["n_cells_ct"]
         ) + 0.9999
-        self.df["ct_cells_op_theo_intermediate"] = self.df[
-            "ct_cells_op_theo_intermediate"
+        self.df["cells_op_theo_intermediate"] = self.df[
+            "cells_op_theo_intermediate"
         ].astype("int")
 
-        self.df["ct_cells_op_theo"] = self.df[
-            ["ct_cells_op_theo_intermediate", "ct_cells"]
+        self.df["cells_op_theo"] = self.df[
+            ["cells_op_theo_intermediate", "n_cells_ct"]
         ].min(axis=1)
 
         self.result = ~(
-            (self.df["ct_op_cells"] > 0)
-            & (self.df["ct_op_cells"] < self.df["ct_cells_op_theo"])
-            & (self.df["ct_P_fan"] > 0)
+            (self.df["n_cells_ct_ct_op"] > 0)
+            & (self.df["n_cells_ct_ct_op"] < self.df["cells_op_theo"])
+            & (self.df["p_power_fan_ct"] > 0)
         )

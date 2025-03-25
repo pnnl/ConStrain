@@ -7,8 +7,7 @@ This verification aims to check demand control ventilation functionality for hig
 
 - Code Name: ASHRAE 90.1
 - Code Year: 2016
-- Code Section: 6.4.3 Controls and Diagnostics
-- Code Subsection: 6.4.3.8 Demand Control Ventilation
+- Code Section: 6.4.3.8 Ventilation Controls for High-Occupancy Areas
 
 ### Verification Approach
 
@@ -26,13 +25,13 @@ The verification analyzes the correlation between outdoor air ventilation rates 
 
 ```
 # Filter data for when economizer is off and AHU is on
-df_filtered = df.loc[(df["flag_econ"] == 0.0) & (df["flag_hvac"] != 0.0)]
+df_filtered = df.loc[(df["status_economizer"] == 0.0) & (df["status_ahu"] != 0.0)]
 
 if len(df_filtered) == 0:
     return "Untested"  # No valid samples
 
 # Calculate correlation between occupancy and outdoor air flow
-correlation, p_value = pearsonr(df_filtered["n_occ"], df_filtered["v_oa"])
+correlation, p_value = pearsonr(df_filtered["n_occupants"], df_filtered["v_oa"])
 
 if p_value > 0.05:
     return "Untested"  # Correlation not statistically significant
@@ -51,17 +50,17 @@ else:
   - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: Zone ventilation
 
-- flag_hvac: HVAC System Operation Status
+- status_ahu: HVAC System Operation Status
   - Data Value Unit: binary
   - Data point Description: HVAC system status
   - Data Point Affiliation: System operation
 
-- flag_econ: Air System Outdoor Air Economizer Status
+- status_economizer: Air System Outdoor Air Economizer Status
   - Data Value Unit: binary
   - Data point Description: Economizer flag
   - Data Point Affiliation: System operation
 
-- n_occ: People Occupant Count
+- n_occupants: People Occupant Count
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
@@ -76,15 +75,15 @@ from scipy.stats import pearsonr
 class DemandControlVentilation(CheckLibBase):
     points = [
         "v_oa",
-        "s_ahu",
-        "s_eco",
-        "no_of_occ",
+        "status_ahu",
+        "status_economizer",
+        "n_occupants",
     ]
 
     def verify(self):
         self.bool_result = None
         df_filtered = self.df.loc[
-            (self.df["s_eco"] == 0.0) & (self.df["s_ahu"] != 0.0)
+            (self.df["status_economizer"] == 0.0) & (self.df["status_ahu"] != 0.0)
         ]  # filter out data when economizer isn't enabled
 
         if len(df_filtered) == 0:
@@ -93,20 +92,20 @@ class DemandControlVentilation(CheckLibBase):
                 "There is no samples with economizer off and AHU on, result: untested"
             )
         else:
-            corr, p_value = pearsonr(df_filtered["no_of_occ"], df_filtered["v_oa"])
+            corr, p_value = pearsonr(df_filtered["n_occupants"], df_filtered["v_oa"])
             if p_value > 0.05:
                 self.bool_result = "Untested"
                 self.msg = "correlation p value too large, result: untested"
             else:
                 if corr >= 0.3:
                     self.bool_result = True
-                    self.msg = "positive correlation between v_oa and no_of_occ observed, result: pass"
+                    self.msg = "positive correlation between v_oa and n_occupants observed, result: pass"
                 elif corr < 0.3 and corr > 0:
                     self.bool_result = False
-                    self.msg = "positive correlation between v_oa and no_of_occ is too small, result: fail"
+                    self.msg = "positive correlation between v_oa and n_occupants is too small, result: fail"
                 else:
                     self.bool_result = False
-                    self.msg = "negative correlation between v_oa and no_of_occ observed, result: fail"
+                    self.msg = "negative correlation between v_oa and n_occupants observed, result: fail"
 
         self.result = pd.Series(data=self.bool_result, index=self.df.index)
 

@@ -7,7 +7,7 @@ This verification aims to check if the return air damper operates correctly in s
 
 - Code Name: ASHRAE Guideline 36
 - Code Year: 2021
-- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Section: 5.16.2 Supply Air Temperature Control
 - Code Subsection: 5.16.2.3 Return Air Damper Control with Relief Damper/Fan
 
 ### Verification Approach
@@ -29,12 +29,12 @@ The verification checks return air damper position under four conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if out_htg > 0:
+if q_heat > 0:
     if abs(pos_damper_ra - pos_damper_ra_max) < tol_pos_damper_ra:
         pass
     else:
         fail
-elif out_clg > 0:
+elif q_cool > 0:
     if abs(pos_damper_ra - 0) < tol_pos_damper_ra:
         pass
     else:
@@ -53,44 +53,44 @@ elif abs(pos_damper_oa - pos_damper_oa_max) < tol_pos_damper_oa:
 
 ### Data requirements
 
-- out_htg: Heating output
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Heating output
+- q_heat: Heating signal
+  - Data Value Unit: percent
+  - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: System control
 
-- out_clg: Cooling output
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Cooling output
+- q_cool: Cooling signal
+  - Data Value Unit: percent
+  - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: System control
 
-- pos_damper_ra: Return air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Return air damper position
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_ra_max: Maximum return air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum return air damper position
-  - Data Point Affiliation: Air handling unit
-
-- tol_pos_damper_ra: Return air damper position tolerance
+- pos_damper_ra: Return air damper command
   - Data Value Unit: percent
-  - Data point Description: Return air damper position tolerance
+  - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa: Outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Outdoor air damper position
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_oa_max: Maximum outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum outdoor air damper position
-  - Data Point Affiliation: Air handling unit
-
-- tol_pos_damper_oa: Outdoor air damper position tolerance
+- pos_damper_ra_max: Maximum return air damper command
   - Data Value Unit: percent
-  - Data point Description: Outdoor air damper position tolerance
+  - Data point Description: Maximum return air damper command
+  - Data Point Affiliation: Air handling unit
+
+- tol_pos_damper_ra: Return air damper command tolerance
+  - Data Value Unit: percent
+  - Data point Description: Return air damper command tolerance
+  - Data Point Affiliation: Air handling unit
+
+- pos_damper_oa: Outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Outdoor air damper command
+  - Data Point Affiliation: Air handling unit
+
+- pos_damper_oa_max: Maximum outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Maximum outdoor air damper command
+  - Data Point Affiliation: Air handling unit
+
+- tol_pos_damper_oa: Outdoor air damper command tolerance
+  - Data Value Unit: percent
+  - Data point Description: Outdoor air damper command tolerance
   - Data Point Affiliation: Air handling unit
 
 """
@@ -100,34 +100,43 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReturnAirDamperPositionForReliefDamperOrFan(RuleCheckBase):
     points = [
-        "heating_output",
-        "cooling_output",
-        "ra_p",
-        "max_ra_p",
-        "ra_p_tol",
-        "oa_p",
-        "max_oa_p",
-        "oa_p_tol",
+        "q_heat",
+        "q_cool",
+        "pos_damper_ra",
+        "pos_damper_ra_max",
+        "tol_pos_damper_ra",
+        "pos_damper_oa",
+        "pos_damper_oa_max",
+        "tol_pos_damper_oa",
     ]
 
     def return_air_damper(self, data):
-        if data["heating_output"] > 0:
-            if abs(data["ra_p"] - data["max_ra_p"]) < data["ra_p_tol"]:
+        if data["q_heat"] > 0:
+            if (
+                abs(data["pos_damper_ra"] - data["pos_damper_ra_max"])
+                < data["tol_pos_damper_ra"]
+            ):
                 return True
             else:
                 return False
-        elif data["cooling_output"] > 0:
-            if data["ra_p"] < data["ra_p_tol"]:
+        elif data["q_cool"] > 0:
+            if data["pos_damper_ra"] < data["tol_pos_damper_ra"]:
                 return True
             else:
                 return False
-        elif data["oa_p"] < data["max_oa_p"]:
-            if abs(data["ra_p"] - data["max_ra_p"]) < data["ra_p_tol"]:
+        elif data["pos_damper_oa"] < data["pos_damper_oa_max"]:
+            if (
+                abs(data["pos_damper_ra"] - data["pos_damper_ra_max"])
+                < data["tol_pos_damper_ra"]
+            ):
                 return True
             else:
                 return False
-        elif abs(data["oa_p"] - data["max_oa_p"]) < data["oa_p_tol"]:
-            if data["ra_p"] < data["max_ra_p"]:
+        elif (
+            abs(data["pos_damper_oa"] - data["pos_damper_oa_max"])
+            < data["tol_pos_damper_oa"]
+        ):
+            if data["pos_damper_ra"] < data["pos_damper_ra_max"]:
                 return True
             else:
                 return False

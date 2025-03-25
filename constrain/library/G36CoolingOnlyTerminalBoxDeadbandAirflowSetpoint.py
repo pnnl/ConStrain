@@ -25,13 +25,13 @@ The verification checks that when the zone is in deadband mode, the active airfl
 ### Verification Algorithm Pseudo Code
 
 ```
-switch mode_sys
+switch mode_system
 case 'occupied'
-    minimum = v_vav_min
+    minimum = v_min
 case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
     minimum = 0
 
-if abs(v_vav_sp - minimum) <= tol_v_vav
+if abs(v_sp - minimum) <= tol_v
     pass
 else
     fail
@@ -40,9 +40,9 @@ end
 
 ### Data requirements
 
-- mode_sys: System operation mode
+- mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System operation mode
+  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - state_zone: Zone state
@@ -50,17 +50,17 @@ end
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_vav_min: Minimum airflow
+- v_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum airflow
+  - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- v_vav_sp: Airflow setpoint
+- v_sp: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- tol_v_vav: Airflow tolerance
+- tol_v: Airflow tolerance
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow tolerance
   - Data Point Affiliation: Zone airflow control
@@ -71,12 +71,12 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
-    points = ["operation_mode", "zone_state", "v_min", "v_spt", "v_spt_tol"]
+    points = ["mode_system", "state_zone", "v_min", "v_sp", "tol_v"]
 
-    def setpoint_at_minimum(self, operation_mode, zone_state, v_min, v_spt, v_spt_tol):
-        if zone_state.lower().strip() != "deadband":
+    def setpoint_at_minimum(self, mode_system, state_zone, v_min, v_sp, tol_v):
+        if state_zone.lower().strip() != "deadband":
             return "Untested"
-        match operation_mode.strip().lower():
+        match mode_system.strip().lower():
             case "occupied":
                 dbmin = v_min
             case "cooldown" | "setup" | "warmup" | "setback" | "unoccupied":
@@ -85,7 +85,7 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 print("invalid operation mode value")
                 return "Untested"
 
-        if abs(v_spt - dbmin) <= v_spt_tol:
+        if abs(v_sp - dbmin) <= tol_v:
             return True
         else:
             return False
@@ -93,11 +93,11 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_at_minimum(
-                t["operation_mode"],
-                t["zone_state"],
+                t["mode_system"],
+                t["state_zone"],
                 t["v_min"],
-                t["v_spt"],
-                t["v_spt_tol"],
+                t["v_sp"],
+                t["tol_v"],
             ),
             axis=1,
         )

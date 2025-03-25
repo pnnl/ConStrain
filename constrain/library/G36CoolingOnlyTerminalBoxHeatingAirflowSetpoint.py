@@ -25,18 +25,18 @@ The verification checks that when the zone is in heating mode, the active airflo
 ### Verification Algorithm Pseudo Code
 
 ```
-switch mode_sys
+switch mode_system
 case 'occupied'
-    heating_maximum = v_vav_heat_max
-    minimum = v_vav_min
+    heating_maximum = v_heat_max
+    minimum = v_min
 case 'cooldown', 'setup', 'unoccupied'
     heating_maximum = 0
     minimum = 0
 case 'warmup', 'setback'
-    heating_maximum = v_vav_cool_max
+    heating_maximum = v_cool_max
     minimum = 0
 
-if minimum <= v_vav_sp <= heating_maximum
+if minimum <= v_sp <= heating_maximum
     pass
 else
     fail
@@ -45,9 +45,9 @@ end
 
 ### Data requirements
 
-- mode_sys: System operation mode
+- mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System operation mode
+  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - state_zone: Zone state
@@ -55,22 +55,22 @@ end
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_vav_cool_max: Maximum cooling airflow
+- v_cool_max: Maximum cooling airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Maximum cooling airflow
+  - Data point Description: Maximum cooling airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_vav_heat_max: Maximum heating airflow
+- v_heat_max: Maximum heating airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Maximum heating airflow
+  - Data point Description: Maximum heating airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_vav_min: Minimum airflow
+- v_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum airflow
+  - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- v_vav_sp: Airflow setpoint
+- v_sp: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
@@ -82,20 +82,20 @@ from constrain.checklib import RuleCheckBase
 
 class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
     points = [
-        "operation_mode",
-        "zone_state",
+        "mode_system",
+        "state_zone",
         "v_cool_max",
         "v_heat_max",
         "v_min",
-        "v_spt",
+        "v_sp",
     ]
 
     def setpoint_in_range(
-        self, operation_mode, zone_state, v_cool_max, v_heat_max, v_min, v_spt
+        self, mode_system, state_zone, v_cool_max, v_heat_max, v_min, v_sp
     ):
-        if zone_state.lower().strip() != "heating":
+        if state_zone.lower().strip() != "heating":
             return "Untested"
-        match operation_mode.strip().lower():
+        match mode_system.strip().lower():
             case "occupied":
                 heating_max = v_heat_max
                 heating_min = v_min
@@ -109,7 +109,7 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
                 print("invalid operation mode value")
                 return "Untested"
 
-        if heating_min <= v_spt <= heating_max:
+        if heating_min <= v_sp <= heating_max:
             return True
         else:
             return False
@@ -117,12 +117,12 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_in_range(
-                t["operation_mode"],
-                t["zone_state"],
+                t["mode_system"],
+                t["state_zone"],
                 t["v_cool_max"],
                 t["v_heat_max"],
                 t["v_min"],
-                t["v_spt"],
+                t["v_sp"],
             ),
             axis=1,
         )

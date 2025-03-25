@@ -7,7 +7,7 @@ This verification aims to check if the relief air damper operates correctly in s
 
 - Code Name: ASHRAE Guideline 36
 - Code Year: 2021
-- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Section: 5.16.2 Supply Air Temperature Control
 - Code Subsection: 5.16.2.3 Relief Air Damper Control with Return Fan Airflow Tracking
 
 ### Verification Approach
@@ -28,17 +28,17 @@ The verification checks relief air damper position under three conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if out_htg > 0:
-    if abs(pos_damper_rea - 0) < tol_pos_damper_rea:
+if q_heat > 0:
+    if abs(pos_damper_relief - 0) < tol_pos_damper_relief:
         pass
     else:
         fail
-elif out_clg > 0:
-    if abs(pos_damper_rea - pos_damper_rea_max) < tol_pos_damper_rea:
+elif q_cool > 0:
+    if abs(pos_damper_relief - pos_damper_relief_max) < tol_pos_damper_relief:
         pass
     else:
         fail
-elif abs(pos_damper_rea - (1 - pos_damper_ra) * pos_damper_rea_max) < tol_pos_damper_rea:
+elif abs(pos_damper_relief - (1 - cmd_damper_ra) * pos_damper_relief_max) < tol_pos_damper_relief:
     pass
 else:
     fail
@@ -46,34 +46,34 @@ else:
 
 ### Data requirements
 
-- out_htg: Heating output
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Heating output
-  - Data Point Affiliation: System control
-
-- out_clg: Cooling output
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Cooling output
-  - Data Point Affiliation: System control
-
-- pos_damper_rea: Relief air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Relief air damper position
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_rea_max: Maximum relief air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum relief air damper position
-  - Data Point Affiliation: Air handling unit
-
-- tol_pos_damper_rea: Relief air damper position tolerance
+- q_heat: Heating signal
   - Data Value Unit: percent
-  - Data point Description: Relief air damper position tolerance
+  - Data point Description: Heating signal (0-100)
+  - Data Point Affiliation: System control
+
+- q_cool: Cooling signal
+  - Data Value Unit: percent
+  - Data point Description: Cooling signal (0-100)
+  - Data Point Affiliation: System control
+
+- pos_damper_relief: Relief air damper command
+  - Data Value Unit: percent
+  - Data point Description: Relief air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_ra: Return air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Return air damper position
+- pos_damper_relief_max: Maximum relief air damper command
+  - Data Value Unit: percent
+  - Data point Description: Maximum relief air damper command
+  - Data Point Affiliation: Air handling unit
+
+- tol_pos_damper_relief: Relief air damper command tolerance
+  - Data Value Unit: percent
+  - Data point Description: Relief air damper command tolerance
+  - Data Point Affiliation: Air handling unit
+
+- cmd_damper_ra: Return air damper command
+  - Data Value Unit: percent
+  - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
 
 """
@@ -83,28 +83,34 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReliefAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):
     points = [
-        "heating_output",
-        "cooling_output",
-        "rea_p",
-        "max_rea_p",
-        "rea_p_tol",
-        "ra_p",
+        "q_heat",
+        "q_cool",
+        "pos_damper_relief",
+        "pos_damper_relief_max",
+        "tol_pos_damper_relief",
+        "cmd_damper_ra",
     ]
 
     def relief_air_damper(self, data):
-        if data["heating_output"] > 0:
-            if data["rea_p"] < data["rea_p_tol"]:
+        if data["q_heat"] > 0:
+            if data["pos_damper_relief"] < data["tol_pos_damper_relief"]:
                 return True
             else:
                 return False
-        elif data["cooling_output"] > 0:
-            if abs(data["rea_p"] - data["max_rea_p"]) < data["rea_p_tol"]:
+        elif data["q_cool"] > 0:
+            if (
+                abs(data["pos_damper_relief"] - data["pos_damper_relief_max"])
+                < data["tol_pos_damper_relief"]
+            ):
                 return True
             else:
                 return False
         elif (
-            abs(data["rea_p"] - (1 - data["ra_p"]) * data["max_rea_p"])
-            < data["rea_p_tol"]
+            abs(
+                data["pos_damper_relief"]
+                - (1 - data["cmd_damper_ra"]) * data["pos_damper_relief_max"]
+            )
+            < data["tol_pos_damper_relief"]
         ):
             return True
         else:

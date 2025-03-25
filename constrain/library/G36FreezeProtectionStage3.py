@@ -30,11 +30,11 @@ if t_sa < 3.3 (continuously 15 minutes) or
   flag_freeze == True:
     if not (
         pos_damper_oa == 0 and
-        flag_fan_sa == 'off' and
-        flag_fan_ra == 'off' and
-        flag_fan_rea == 'off' and
-        cmd_vlv_clg == 100 and
-        cmd_vlv_htg > 0
+        status_fan_supply == 'off' and
+        status_fan_return == 'off' and
+        status_fan_relief == 'off' and
+        cmd_coil_cool == 100 and
+        cmd_coil_heat > 0
     ):
         fail
     else:
@@ -60,33 +60,33 @@ if never (
   - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa: Outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Outdoor air damper position
+- pos_damper_oa: Outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- flag_fan_sa: Supply fan status
+- status_fan_supply: Supply fan status
   - Data Value Unit: binary
   - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
 
-- flag_fan_ra: Return fan status
+- status_fan_return: Return fan status
   - Data Value Unit: binary
   - Data point Description: Return fan status
   - Data Point Affiliation: Air handling unit
 
-- flag_fan_rea: Relief fan status
+- status_fan_relief: Relief fan status
   - Data Value Unit: binary
   - Data point Description: Relief fan status
   - Data Point Affiliation: Air handling unit
 
-- cmd_vlv_clg: Cooling valve command
-  - Data Value Unit: percent (0-100)
+- cmd_coil_cool: Cooling valve command
+  - Data Value Unit: percent
   - Data point Description: Cooling valve command
   - Data Point Affiliation: Air handling unit
 
-- cmd_vlv_htg: Heating valve command
-  - Data Value Unit: percent (0-100)
+- cmd_coil_heat: Heating valve command
+  - Data Value Unit: percent
   - Data point Description: Heating valve command
   - Data Point Affiliation: Air handling unit
 
@@ -97,31 +97,31 @@ from constrain.checklib import RuleCheckBase
 
 class G36FreezeProtectionStage3(RuleCheckBase):
     points = [
-        "freeze_stat",
-        "supply_air_temp",
-        "outdoor_damper_command",
-        "supply_fan_status",
-        "return_fan_status",
-        "relief_fan_status",
-        "cooling_coil_command",
-        "heating_coil_command",
+        "flag_freeze",
+        "t_sa",
+        "pos_damper_oa",
+        "status_fan_supply",
+        "status_fan_return",
+        "status_fan_relief",
+        "cmd_coil_cool",
+        "cmd_coil_heat",
     ]
 
     def ts_verify_logic(self, t):
-        if not (t["freeze_status"] or bool(t["freeze_stat"])):
+        if not (t["freeze_status"] or bool(t["flag_freeze"])):
             return True
         if (
             (t["sat_lowerthan_3.3_timer"] > 15)
             or (t["sat_lowerthan_1_timer"] > 5)
-            or t["freeze_stat"]
+            or t["flag_freeze"]
         ):
             if not (
-                t["outdoor_damper_command"] < 1
-                and (not bool(t["supply_fan_status"]))
-                and (not bool(t["return_fan_status"]))
-                and (not bool(t["relief_fan_status"]))
-                and t["cooling_coil_command"] > 99
-                and t["heating_coil_command"] > 0
+                t["pos_damper_oa"] < 1
+                and (not bool(t["status_fan_supply"]))
+                and (not bool(t["status_fan_return"]))
+                and (not bool(t["status_fan_relief"]))
+                and t["cmd_coil_cool"] > 99
+                and t["cmd_coil_heat"] > 0
             ):
                 return False
         return True
@@ -134,7 +134,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
         lt1_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["supply_air_temp"] < 3.3:
+            if t["t_sa"] < 3.3:
                 if lt3p3_timer_start is None:
                     lt3p3_timer_start = i
                     lt3p3_timer_list.append(0)
@@ -148,7 +148,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
                 lt3p3_timer_start = None
                 lt3p3_timer_list.append(0)
 
-            if t["supply_air_temp"] < 1:
+            if t["t_sa"] < 1:
                 if lt1_timer_start is None:
                     lt1_timer_start = i
                     lt1_timer_list.append(0)
@@ -172,7 +172,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
         self.result = self.df.apply(lambda t: self.ts_verify_logic(t), axis=1)
 
     def check_bool(self):
-        free_stat_bool_list = [bool(x) for x in self.df["freeze_stat"]]
+        free_stat_bool_list = [bool(x) for x in self.df["flag_freeze"]]
         if len(self.result[self.result == False] > 0):
             return False
         else:

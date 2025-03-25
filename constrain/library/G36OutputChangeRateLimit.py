@@ -27,7 +27,7 @@ The verification monitors the rate of change in control loop outputs by comparin
 ```python
 time_delta = current_time - previous_time
 allowed_change = rate_change_max * (time_delta_in_minutes)
-actual_change = abs(cmd_loop(current_t) - cmd_loop(prev_t))
+actual_change = abs(cmd_control(current_t) - cmd_control(prev_t))
 
 if actual_change > allowed_change:
     fail
@@ -37,14 +37,14 @@ else:
 
 ### Data requirements
 
-- cmd_loop: Control loop command
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Control loop command
+- cmd_control: Control loop output
+  - Data Value Unit: percent
+  - Data point Description: Control loop output (0-100)
   - Data Point Affiliation: Control loop
 
-- rate_change_max: Maximum rate of change
+- rate_change_max: Maximum rate of change per minute
   - Data Value Unit: percent per minute
-  - Data point Description: Maximum rate of change
+  - Data point Description: Maximum rate of change per minute
   - Data Point Affiliation: Control loop configuration
 
 """
@@ -55,17 +55,17 @@ from constrain.checklib import RuleCheckBase
 
 class G36OutputChangeRateLimit(RuleCheckBase):
     points = [
-        "command",
-        "max_rate_of_change_per_min",
-    ]  # command is expected to have a data range of 100
+        "cmd_control",
+        "rate_change_max",
+    ]  # cmd_control is expected to have a data range of 100
 
     def change_rate_check(self, cur, prev, cur_time, prev_time):
         if prev is None:
             return "Untested"
         time_delta = cur_time - prev_time
         min_change = time_delta.total_seconds() / 60
-        allowable_change = min_change * cur["max_rate_of_change_per_min"]
-        actual_change = abs(cur["command"] - prev["command"])
+        allowable_change = min_change * cur["rate_change_max"]
+        actual_change = abs(cur["cmd_control"] - prev["cmd_control"])
         if actual_change > allowable_change:
             return False
         else:

@@ -6,9 +6,8 @@ This verification aims to check if static pressure sensors in VAV systems are pr
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
-- Code Section: 6.5.3.2 Fan Control
-- Code Subsection: Static Pressure Sensor Location
+- Code Year: 2016
+- Code Section: 6.5.3.2.2 VAV Static Pressure Sensor Location
 
 ### Verification Approach
 
@@ -40,12 +39,12 @@ else:
 
 ### Data requirements
 
-- sp_p_fan: Pressure setpoint
+- p_press_static_sp: Pressure setpoint
   - Data Value Unit: pressure
   - Data point Description: Fan pressure setpoint
   - Data Point Affiliation: System control
 
-- tol_p_fan: Pressure tolerance
+- tol_p_press_static: Pressure tolerance
   - Data Value Unit: pressure
   - Data point Description: Fan pressure tolerance
   - Data Point Affiliation: System configuration
@@ -58,10 +57,12 @@ from constrain.checklib import RuleCheckBase
 
 
 class VAVStaticPressureSensorLocation(RuleCheckBase):
-    points = ["p_fan_set", "tol_P_fan"]
+    points = ["p_press_static_sp", "tol_p_press_static"]
 
     def verify(self):
-        self.result = self.df["p_fan_set"] < 298.608 + self.df["tol_P_fan"]
+        self.result = (
+            self.df["p_press_static_sp"] < 298.608 + self.df["tol_p_press_static"]
+        )
 
     def calculate_plot_day(self):
         """over write method to select day for day plot"""

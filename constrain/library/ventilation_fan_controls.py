@@ -1,14 +1,13 @@
 """
 ### Description
 
-This verification aims to check if ventilation fans are properly controlled based on space occupancy and load conditions. The system should shut off ventilation fans when spaces are unoccupied and have no load requirements.
+This verification aims to check if ventilation fans are properly controlled based on space occupancy and load conditions. The system should shut off ventilation fans when zones are unoccupied and have no load requirements.
 
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
-- Code Section: 6.4.3.3 Ventilation Controls for High-Occupancy Areas
-- Code Subsection: Ventilation Fan Control Requirements
+- Code Year: 2016
+- Code Section: 6.4.3.4.4 Ventilation Fan Controls
 
 ### Verification Approach
 
@@ -32,28 +31,25 @@ The verification monitors three key conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if space_load == 0 and occupancy == 0:
-    if fan_power != 0:
-        fail  # Fan running unnecessarily
-    else:
-        pass  # Proper fan control
+if q_sensible == 0 and n_occupants == 0 and p_power_fan != 0:
+    fail
 else:
-    pass  # Fan operation may be needed
+    pass
 ```
 
 ### Data requirements
 
-- q_load: Space load
+- q_sensible: Zone sensible heat load
   - Data Value Unit: power
-  - Data point Description: Space load
-  - Data Point Affiliation: Space monitoring
+  - Data point Description: Zone load
+  - Data Point Affiliation: Zone monitoring
 
-- n_occ: Occupancy count
+- n_occupants: Occupancy count
   - Data Value Unit: count
   - Data point Description: Number of occupants
-  - Data Point Affiliation: Space monitoring
+  - Data Point Affiliation: Zone monitoring
 
-- p_fan: Fan power
+- p_power_fan: Fan power
   - Data Value Unit: power
   - Data point Description: Fan power
   - Data Point Affiliation: Equipment monitoring
@@ -66,13 +62,13 @@ from constrain.checklib import RuleCheckBase
 
 
 class VentilationFanControl(RuleCheckBase):
-    points = ["Q_load", "no_of_occ", "P_fan"]
+    points = ["q_sensible", "n_occupants", "p_power_fan"]
 
     def verify(self):
         self.result = ~(
-            (self.df["Q_load"] == 0)
-            & (self.df["no_of_occ"] == 0)
-            & (self.df["P_fan"] != 0)
+            (self.df["q_sensible"] == 0)
+            & (self.df["n_occupants"] == 0)
+            & (self.df["p_power_fan"] != 0)
         )
 
     def calculate_plot_day(self):

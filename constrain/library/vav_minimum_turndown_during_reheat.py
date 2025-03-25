@@ -7,8 +7,7 @@ This verification aims to check if VAV boxes maintain proper minimum turndown ra
 
 - Code Name: ASHRAE 90.1
 - Code Year: 2016
-- Code Section: 6.5.2 Simultaneous Heating and Cooling Limitation
-- Code Subsection: 6.5.2.1 Zone Controls
+- Code Section: 6.5.2.1 Zone Controls
 
 ### Verification Approach
 
@@ -33,9 +32,9 @@ The verification monitors airflow during reheat operation:
 
 ```python
 if flag_coil_htg:
-  if v_box_max == 0:
+  if v_vav_max == 0:
      Untested
-  if v_box_max > 0.0 and v_box / v_box_max > ratio_turndown_min + tol_turndown:
+  if v_vav_max > 0.0 and v_vav / v_vav_max > ratio_turndown_min + tol_turndown:
      fail
   else:
      pass
@@ -45,17 +44,17 @@ else:
 
 ### Data requirements
 
-- flag_htg_coil: VAV box reheat coil operation status
+- flag_coil_reheat: VAV box reheat coil operation status
   - Data Value Unit: binary
   - Data point Description: Heating coil flag
   - Data Point Affiliation: Terminal unit control
 
-- v_box: VAV airflow rate
+- v_vav: VAV airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Box volume flow rate
   - Data Point Affiliation: Terminal unit monitoring
 
-- v_box_max: VAV maximum airflow rate
+- v_vav_max: VAV maximum airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Box maximum volume flow rate
   - Data Point Affiliation: Terminal unit configuration
@@ -77,20 +76,20 @@ from constrain.checklib import RuleCheckBase
 
 class VAVMinimumTurndownDuringReheat(RuleCheckBase):
     points = [
-        "reheat_coil_flag",  # boolean
-        "V_dot_VAV",  # actual VAV volume flow
-        "V_dot_VAV_max",  # max VAV volume flow
-        "VAV_min_turndown_design",
-        "turndown_tol",
+        "flag_coil_reheat",  # boolean
+        "v_vav",  # actual VAV volume flow
+        "v_vav_max",  # max VAV volume flow
+        "ratio_turndown_min",
+        "tol_turndown",
     ]
 
     def vav_turndown_check(self, data):
-        if data["reheat_coil_flag"]:
-            if data["V_dot_VAV_max"] == 0:
+        if data["flag_coil_reheat"]:
+            if data["v_vav_max"] == 0:
                 return "Untested"
             elif (
-                data["V_dot_VAV"] / data["V_dot_VAV_max"]
-                > data["VAV_min_turndown_design"] + data["turndown_tol"]
+                data["v_vav"] / data["v_vav_max"]
+                > data["ratio_turndown_min"] + data["tol_turndown"]
             ):
                 return False
             else:
@@ -99,8 +98,8 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
             return "Untested"
 
     def verify(self):
-        if (self.df["V_dot_VAV_max"] != 0).all():
-            self.df["V_dot_ratio"] = (
-                self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
+        if (self.df["v_vav_max"] != 0).all():
+            self.df["v_vav_ratio"] = (
+                self.df["v_vav"] / self.df["v_vav_max"]
             )  # for plotting
         self.result = self.df.apply(lambda d: self.vav_turndown_check(d), axis=1)

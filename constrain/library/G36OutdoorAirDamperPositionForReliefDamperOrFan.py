@@ -7,7 +7,7 @@ This verification aims to check if the outdoor air damper operates correctly in 
 
 - Code Name: ASHRAE Guideline 36
 - Code Year: 2021
-- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Section: 5.16.2 Supply Air Temperature Control
 - Code Subsection: 5.16.2.3 Outdoor Air Damper Control with Relief Damper/Fan
 
 ### Verification Approach
@@ -29,13 +29,13 @@ The verification checks outdoor air damper position under various operating cond
 ### Verification Algorithm Pseudo Code
 
 ```python
-if out_htg > 0:
+if q_heat > 0:
     if abs(pos_damper_oa - pos_damper_oa_min) < tol_pos_damper_oa:
         pass
     else:
         fail
-elif out_clg > 0:
-    if flag_econ_hl:
+elif q_cool > 0:
+    if flag_economizer_limit:
         if abs(pos_damper_oa - pos_damper_oa_min) < tol_pos_damper_oa:
             pass
         else:
@@ -61,52 +61,52 @@ else:
 
 ### Data requirements
 
-- out_htg: Heating output
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Heating output
-  - Data Point Affiliation: Air handling unit
-
-- out_clg: Cooling output
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Cooling output
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_ra: Return air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Return air damper position
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_ra_max: Maximum return air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum return air damper position
-  - Data Point Affiliation: Air handling unit
-
-- tol_pos_damper_ra: Return air damper position tolerance
+- q_heat: Heating signal
   - Data Value Unit: percent
-  - Data point Description: Return air damper position tolerance
+  - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa: Outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Outdoor air damper position
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_oa_min: Minimum outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Minimum outdoor air damper position
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_oa_max: Maximum outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum outdoor air damper position
-  - Data Point Affiliation: Air handling unit
-
-- tol_pos_damper_oa: Outdoor air damper position tolerance
+- q_cool: Cooling signal
   - Data Value Unit: percent
-  - Data point Description: Outdoor air damper position tolerance
+  - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: Air handling unit
 
-- flag_econ_hl: Economizer high limit flag
+- pos_damper_ra: Return air damper command
+  - Data Value Unit: percent
+  - Data point Description: Return air damper command
+  - Data Point Affiliation: Air handling unit
+
+- pos_damper_ra_max: Maximum return air damper command
+  - Data Value Unit: percent
+  - Data point Description: Maximum return air damper command
+  - Data Point Affiliation: Air handling unit
+
+- tol_pos_damper_ra: Return air damper command tolerance
+  - Data Value Unit: percent
+  - Data point Description: Return air damper command tolerance
+  - Data Point Affiliation: Air handling unit
+
+- pos_damper_oa: Outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Outdoor air damper command
+  - Data Point Affiliation: Air handling unit
+
+- pos_damper_oa_min: Minimum outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Minimum outdoor air damper command
+  - Data Point Affiliation: Air handling unit
+
+- pos_damper_oa_max: Maximum outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Maximum outdoor air damper command
+  - Data Point Affiliation: Air handling unit
+
+- tol_pos_damper_oa: Outdoor air damper command tolerance
+  - Data Value Unit: percent
+  - Data point Description: Outdoor air damper command tolerance
+  - Data Point Affiliation: Air handling unit
+
+- flag_economizer_limit: Economizer high limit flag
   - Data Value Unit: binary
   - Data point Description: Economizer high limit flag
   - Data Point Affiliation: Economizer control
@@ -118,42 +118,61 @@ from constrain.checklib import RuleCheckBase
 
 class G36OutdoorAirDamperPositionForReliefDamperOrFan(RuleCheckBase):
     points = [
-        "heating_output",
-        "cooling_output",
-        "ra_p",
-        "max_ra_p",
-        "ra_p_tol",
-        "oa_p",
-        "min_oa_p",
-        "max_oa_p",
-        "oa_p_tol",
-        "economizer_high_limit_reached",
+        "q_heat",
+        "q_cool",
+        "pos_damper_ra",
+        "pos_damper_ra_max",
+        "tol_pos_damper_ra",
+        "pos_damper_oa",
+        "pos_damper_oa_min",
+        "pos_damper_oa_max",
+        "tol_pos_damper_oa",
+        "flag_economizer_limit",
     ]
 
     def outdoor_air_damper(self, data):
-        if data["heating_output"] > 0:
-            if abs(data["oa_p"] - data["min_oa_p"]) < data["oa_p_tol"]:
+        if data["q_heat"] > 0:
+            if (
+                abs(data["pos_damper_oa"] - data["pos_damper_oa_min"])
+                < data["tol_pos_damper_oa"]
+            ):
                 return True
             else:
                 return False
-        elif data["cooling_output"] > 0:
-            if data["economizer_high_limit_reached"]:
-                if abs(data["oa_p"] - data["min_oa_p"]) < data["oa_p_tol"]:
+        elif data["q_cool"] > 0:
+            if data["flag_economizer_limit"]:
+                if (
+                    abs(data["pos_damper_oa"] - data["pos_damper_oa_min"])
+                    < data["tol_pos_damper_oa"]
+                ):
                     return True
                 else:
                     return False
             else:
-                if abs(data["oa_p"] - data["max_oa_p"]) < data["oa_p_tol"]:
+                if (
+                    abs(data["pos_damper_oa"] - data["pos_damper_oa_max"])
+                    < data["tol_pos_damper_oa"]
+                ):
                     return True
                 else:
                     return False
-        elif data["ra_p"] < data["max_ra_p"]:
-            if abs(data["oa_p"] - data["max_oa_p"]) < data["oa_p_tol"]:
+        elif data["pos_damper_ra"] < data["pos_damper_ra_max"]:
+            if (
+                abs(data["pos_damper_oa"] - data["pos_damper_oa_max"])
+                < data["tol_pos_damper_oa"]
+            ):
                 return True
             else:
                 return False
-        elif abs(data["ra_p"] - data["max_ra_p"]) < data["ra_p_tol"]:
-            if data["min_oa_p"] < data["oa_p"] < data["max_oa_p"]:
+        elif (
+            abs(data["pos_damper_ra"] - data["pos_damper_ra_max"])
+            < data["tol_pos_damper_ra"]
+        ):
+            if (
+                data["pos_damper_oa_min"]
+                < data["pos_damper_oa"]
+                < data["pos_damper_oa_max"]
+            ):
                 return True
             else:
                 return False

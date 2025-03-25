@@ -7,8 +7,7 @@ This verification aims to check if the outdoor air damper control operates corre
 
 - Code Name: ASHRAE 90.1
 - Code Year: 2016
-- Code Section: 6.4.3 Controls and Diagnostics
-- Code Subsection: 6.4.3.4.2 Automatic Outdoor Air Damper Control
+- Code Section: 6.4.3.4.2 Shutoff Damper Controls
 
 ### Verification Approach
 
@@ -25,7 +24,7 @@ The verification checks that when a space is unoccupied and the economizer is no
 ### Verification Algorithm Pseudo Code
 
 ```
-if n_occ <= 0 + tol and v_ea + v_oa > 0 and flag_econ = 0
+if n_occupants <= 0 + tol and v_ea + v_oa > 0 and status_economizer = 0
     return false
 else
     return pass
@@ -33,7 +32,7 @@ else
 
 ### Data requirements
 
-- n_occ: Number of occupants
+- n_occupants: Number of occupants
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
@@ -48,12 +47,12 @@ else
   - Data point Description: Exhaust air volume flow rate
   - Data Point Affiliation: System ventilation
 
-- flag_econ: System air-side economizer status
-  - Data Value Unit: binary (0/1)
+- status_economizer: System air-side economizer status
+  - Data Value Unit: binary
   - Data point Description: Economizer flag
   - Data Point Affiliation: System operation
 
-- tol_n_occ: Tolerance for occupancy
+- tol_occupants: Tolerance for occupancy
   - Data Value Unit: count
   - Data point Description: Occupancy tolerance
   - Data Point Affiliation: Zone occupancy
@@ -74,13 +73,21 @@ from constrain.checklib import RuleCheckBase
 
 
 class AutomaticOADamperControl(RuleCheckBase):
-    points = ["o", "eco_onoff", "m_oa", "m_ea", "tol_o", "tol_m_oa", "tol_m_ea"]
+    points = [
+        "n_occupants",
+        "status_economizer",
+        "v_oa",
+        "v_ea",
+        "tol_occupants",
+        "tol_v_oa",
+        "tol_v_ea",
+    ]
 
     def automatic_oa_damper_check(self, data):
-        if data["o"] < data["tol_o"]:
-            if data["eco_onoff"] == 0 and (
-                float(data["m_oa"]) >= data["tol_m_oa"]
-                or float(data["m_ea"]) >= data["tol_m_ea"]
+        if data["n_occupants"] < data["tol_occupants"]:
+            if data["status_economizer"] == 0 and (
+                float(data["v_oa"]) >= data["tol_v_oa"]
+                or float(data["v_ea"]) >= data["tol_v_ea"]
             ):
                 return False
             else:

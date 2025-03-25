@@ -7,7 +7,7 @@ This verification aims to check if the system prevents simultaneous heating and 
 
 - Code Name: ASHRAE Guideline 36
 - Code Year: 2021
-- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Section: 5.16.2 Supply Air Temperature Control
 - Code Subsection: 5.16.2.3 Prevention of Simultaneous Heating and Cooling
 
 ### Verification Approach
@@ -25,7 +25,7 @@ The verification monitors heating and cooling outputs to ensure they are not act
 ### Verification Algorithm Pseudo Code
 
 ```python
-if out_htg > 0 and out_clg > 0:
+if q_heat > 0 and q_cool > 0:
     fail  # Simultaneous heating and cooling detected
 else:
     pass  # Normal operation
@@ -33,14 +33,14 @@ else:
 
 ### Data requirements
 
-- out_htg: Heating output
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Heating output
+- q_heat: Heating signal
+  - Data Value Unit: percent
+  - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: System control
 
-- out_clg: Cooling output
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Cooling output
+- q_cool: Cooling signal
+  - Data Value Unit: percent
+  - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: System control
 
 """
@@ -49,10 +49,10 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36SimultaneousHeatingCooling(RuleCheckBase):
-    points = ["heating_output", "cooling_output"]
+    points = ["q_heat", "q_cool"]
 
     def simultaneous_heating_and_cooling(self, data):
-        if data["heating_output"] > 0 and data["cooling_output"]:
+        if data["q_heat"] > 0 and data["q_cool"] > 0:
             return False
         else:
             return True

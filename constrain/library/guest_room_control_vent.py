@@ -6,9 +6,8 @@ This verification aims to check if guest room ventilation rates are properly con
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
+- Code Year: 2016
 - Code Section: 6.4.3.3.5 Automatic Control of HVAC in Hotel/Motel Guest Rooms
-- Code Subsection: Ventilation Control
 
 ### Verification Approach
 
@@ -56,7 +55,7 @@ for each day:
   - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: Zone ventilation
 
-- sch_occ: Occupancy schedule
+- schedule_occupancy: Occupancy schedule
   - Data Value Unit: fraction (0-1)
   - Data point Description: Occupancy schedule
   - Data Point Affiliation: Zone occupancy
@@ -71,12 +70,12 @@ for each day:
   - Data point Description: Zone height
   - Data Point Affiliation: Zone configuration
 
-- v_oa_per_zone: Outdoor air requirement
+- v_oa_per_area: Outdoor air requirement
   - Data Value Unit: volumetric flow rate per area
   - Data point Description: Zone outdoor air requirement
   - Data Point Affiliation: Zone ventilation
 
-- tol_sch_occ: Occupancy tolerance
+- tol_occupants: Occupancy tolerance
   - Data Value Unit: fraction
   - Data point Description: Occupancy schedule tolerance
   - Data Point Affiliation: Zone occupancy
@@ -94,20 +93,18 @@ from constrain.checklib import CheckLibBase
 
 class GuestRoomControlVent(CheckLibBase):
     points = [
-        "m_z_oa",
-        "O_sch",
-        "area_z",
-        "height_z",
-        "v_outdoor_per_zone",
-        "tol_occ",
-        "tol_oa_flow",
+        "v_oa",
+        "schedule_occupancy",
+        "area_zone",
+        "height_zone",
+        "v_oa_per_area",
+        "tol_occupants",
     ]
 
     def verify(self):
-        tol_occ = self.df["tol_occ"][0]
-        tol_m = self.df["tol_oa_flow"][0]
-        zone_volume = self.df["area_z"][0] * self.df["height_z"][0]
-        m_z_oa_set = self.df["v_outdoor_per_zone"][0] * self.df["area_z"][0]
+        tol_occupancy = self.df["tol_occupants"][0]
+        zone_volume = self.df["area_zone"][0] * self.df["height_zone"][0]
+        v_oa_set = self.df["v_oa_per_area"][0] * self.df["area_zone"][0]
 
         year_info = 2000
         result_repo = []
@@ -118,17 +115,17 @@ class GuestRoomControlVent(CheckLibBase):
                 pass
             else:
                 if (
-                    day["O_sch"] <= tol_occ
+                    day["schedule_occupancy"] <= tol_occupancy
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["m_z_oa"] == 0).all():
+                    if (day["v_oa"] == 0).all():
                         result_repo.append(1)  # pass,
                     else:
                         result_repo.append(0)  # fail
                 else:  # room is rented out
-                    if (day["m_z_oa"] > 0).all():
+                    if (day["v_oa"] > 0).all():
                         if (
-                            day["m_z_oa"] == m_z_oa_set
-                            or day["m_z_oa"].sum(axis=1) == zone_volume
+                            day["v_oa"] == v_oa_set
+                            or day["v_oa"].sum(axis=1) == zone_volume
                         ):
                             result_repo.append(1)  # pass
                         else:

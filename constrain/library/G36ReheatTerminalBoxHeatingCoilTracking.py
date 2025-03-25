@@ -8,7 +8,7 @@ This verification aims to check if the terminal box heating coil properly tracks
 - Code Name: ASHRAE Guideline 36
 - Code Year: 2021
 - Code Section: 5.6.5 Terminal Box Airflow Control with Reheat
-- Code Subsection: 5.6.5.3.c Heating Coil Temperature Control
+- Code Subsection: 5.6.5.3 (c) Heating Coil Temperature Control
 
 ### Verification Approach
 
@@ -31,13 +31,13 @@ The verification monitors discharge air temperature tracking performance:
 
 ```python
 # Only check when in heating mode
-if abs(t_vav_dis_sp - t_vav_dis) >= tol_t_vav_dis:
+if abs(t_discharge_sp - t_discharge) >= tol_t_tracking:
     if tracking_error_duration < 1_hour:
         pass  # Brief deviation acceptable
     else:
-        if (t_vav_dis - t_vav_dis_sp >= tol_t_vav_dis) and cmd_htg_coil <= 1:
+        if (t_discharge - t_discharge_sp >= tol_t_tracking) and cmd_coil_heat <= 1:
             pass  # Too hot, coil at minimum
-        elif (t_vav_dis_sp - t_vav_dis >= tol_t_vav_dis) and cmd_htg_coil >= 99:
+        elif (t_discharge_sp - t_discharge >= tol_t_tracking) and cmd_coil_heat >= 99:
             pass  # Too cold, coil at maximum
         else:
             fail  # Sustained deviation without appropriate response
@@ -47,29 +47,29 @@ else:
 
 ### Data requirements
 
-- mode_sys: System operation mode
+- mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System operation mode
+  - Data point Description: System mode
   - Data Point Affiliation: System control
 
-- cmd_htg_coil: Heating coil command
-  - Data Value Unit: percent (0-100)
+- cmd_coil_heat: Heating coil command
+  - Data Value Unit: percent
   - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- t_vav_dis: VAV discharge air temperature
-  - Data Value Unit: °C
-  - Data point Description: VAV discharge air temperature
+- t_discharge: Discharge air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
-- t_vav_dis_sp: VAV discharge air temperature setpoint
-  - Data Value Unit: °C
-  - Data point Description: VAV discharge air temperature setpoint
+- t_discharge_sp: Discharge air temperature setpoint
+  - Data Value Unit: temperature
+  - Data point Description: Discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control
 
-- tol_t_vav_dis: VAV discharge air temperature tolerance
-  - Data Value Unit: °C
-  - Data point Description: VAV discharge air temperature tolerance
+- tol_t_tracking: Temperature tracking tolerance
+  - Data Value Unit: temperature
+  - Data point Description: Temperature tracking tolerance
   - Data Point Affiliation: Terminal box control
 
 """
@@ -80,15 +80,15 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
     points = [
-        "operation_mode",
-        "heating_coil_command",
-        "dat",
-        "dat_spt",
-        "dat_tracking_tol",
+        "mode_system",
+        "cmd_coil_heat",
+        "t_discharge",
+        "t_discharge_sp",
+        "tol_t_tracking",
     ]
 
     def err_flag(self, t):
-        if abs(t["dat_spt"] - t["dat"]) >= t["dat_tracking_tol"]:
+        if abs(t["t_discharge_sp"] - t["t_discharge"]) >= t["tol_t_tracking"]:
             return True
         else:
             return False
@@ -100,7 +100,7 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
 
         self.result = pd.Series(index=self.df.index)
         for cur_time, cur in self.df.iterrows():
-            if cur["operation_mode"].strip().lower() != "heating":
+            if cur["mode_system"].strip().lower() != "heating":
                 result_flag = "Untested"
                 err_start_time = None
                 err_time = 0
@@ -122,13 +122,15 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
                     result_flag = "Untested"
                 elif err_time > 1:
                     if (
-                        cur["dat"] - cur["dat_spt"] >= cur["dat_tracking_tol"]
-                        and cur["heating_coil_command"] <= 1
+                        cur["t_discharge"] - cur["t_discharge_sp"]
+                        >= cur["tol_t_tracking"]
+                        and cur["cmd_coil_heat"] <= 1
                     ):
                         result_flag = True
                     elif (
-                        cur["dat_spt"] - cur["dat"] >= cur["dat_tracking_tol"]
-                        and cur["heating_coil_command"] >= 99
+                        cur["t_discharge_sp"] - cur["t_discharge"]
+                        >= cur["tol_t_tracking"]
+                        and cur["cmd_coil_heat"] >= 99
                     ):
                         result_flag = True
                     else:

@@ -7,7 +7,7 @@ This verification aims to check if the outdoor air damper operates correctly in 
 
 - Code Name: ASHRAE Guideline 36
 - Code Year: 2021
-- Code Section: 5.16.2 Air Handling Unit Control Sequences
+- Code Section: 5.16.2 Supply Air Temperature Control
 - Code Subsection: 5.16.2.3 Outdoor Air Damper Control with Return Fan Airflow Tracking
 
 ### Verification Approach
@@ -25,7 +25,7 @@ The verification checks that the outdoor air damper maintains its maximum positi
 ### Verification Algorithm Pseudo Code
 
 ```python
-if abs(pos_damper_oa - pos_damper_oa_max) < tol_pos_damper_oa:
+if abs(cmd_damper_oa - cmd_damper_oa_max) < tol_cmd_damper_oa:
     pass
 else:
     fail
@@ -33,19 +33,19 @@ else:
 
 ### Data requirements
 
-- pos_damper_oa: Outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Outdoor air damper position
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_oa_max: Maximum outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Maximum outdoor air damper position
-  - Data Point Affiliation: Air handling unit
-
-- tol_pos_damper_oa: Outdoor air damper position tolerance
+- cmd_damper_oa: Outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Outdoor air damper position tolerance
+  - Data point Description: Outdoor air damper command
+  - Data Point Affiliation: Air handling unit
+
+- cmd_damper_oa_max: Maximum outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Maximum outdoor air damper command
+  - Data Point Affiliation: Air handling unit
+
+- tol_cmd_damper_oa: Outdoor air damper command tolerance
+  - Data Value Unit: percent
+  - Data point Description: Outdoor air damper command tolerance
   - Data Point Affiliation: Air handling unit
 
 """
@@ -55,13 +55,16 @@ from constrain.checklib import RuleCheckBase
 
 class G36OutdoorAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):
     points = [
-        "oa_p",
-        "max_oa_p",
-        "oa_p_tol",
+        "cmd_damper_oa",
+        "cmd_damper_oa_max",
+        "tol_cmd_damper_oa",
     ]
 
     def outdoor_air_damper(self, data):
-        if abs(data["oa_p"] - data["max_oa_p"]) < data["oa_p_tol"]:
+        if (
+            abs(data["cmd_damper_oa"] - data["cmd_damper_oa_max"])
+            < data["tol_cmd_damper_oa"]
+        ):
             return True
         else:
             return False

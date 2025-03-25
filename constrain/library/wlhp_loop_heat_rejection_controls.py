@@ -6,9 +6,8 @@ This verification aims to check if water-loop heat pump (WLHP) systems maintain 
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
-- Code Section: 6.5.2.2 Hydronic System Controls
-- Code Subsection: Water-Loop Heat Pump Controls
+- Code Year: 2016
+- Code Section: 6.5.2.2.3 Hydronic (Water Loop) Heat Pump Systems
 
 ### Verification Approach
 
@@ -33,7 +32,7 @@ The verification analyzes loop temperature separation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if pump_flow > 0:  # Only check during system operation
+if m_pump > 0:
     max_heating_temp = max(heating_loop_temperature)
     min_cooling_temp = min(cooling_loop_temperature)
     
@@ -47,22 +46,22 @@ if pump_flow > 0:  # Only check during system operation
 
 ### Data requirements
 
-- t_htg_max: Heating loop temperature
+- t_heating_max: Heating loop temperature
   - Data Value Unit: temperature
   - Data point Description: Maximum heating loop temperature
   - Data Point Affiliation: System monitoring
 
-- t_clg_min: Cooling loop temperature
+- t_cooling_min: Cooling loop temperature
   - Data Value Unit: temperature
   - Data point Description: Minimum cooling loop temperature
   - Data Point Affiliation: System monitoring
 
-- v_pump: Pump flow
+- m_pump: Pump flow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Pump flow rate
   - Data Point Affiliation: System monitoring
 
-- tol_t: Temperature tolerance
+- tol_t_loop: Temperature tolerance
   - Data Value Unit: temperature
   - Data point Description: Temperature tolerance
   - Data Point Affiliation: System configuration
@@ -73,16 +72,16 @@ from constrain.checklib import RuleCheckBase
 
 
 class WLHPLoopHeatRejectionControl(RuleCheckBase):
-    points = ["T_max_heating_loop", "T_min_cooling_loop", "m_pump", "tol"]
+    points = ["t_heating_max", "t_cooling_min", "m_pump", "tol_t_loop"]
 
     def verify(self):
-        self.df["T_max_heating_loop_max"] = (
-            self.df.query("m_pump >0")["T_max_heating_loop"]
+        self.df["t_heating_max_max"] = (
+            self.df.query("m_pump >0")["t_heating_max"]
         ).max()
-        self.df["T_min_cooling_loop_min"] = (
-            self.df.query("m_pump >0")["T_min_cooling_loop"]
+        self.df["t_cooling_min_min"] = (
+            self.df.query("m_pump >0")["t_cooling_min"]
         ).min()
 
         self.result = (
-            self.df["T_max_heating_loop_max"] - self.df["T_min_cooling_loop_min"]
-        ) > 11.11 + self.df["tol"]
+            self.df["t_heating_max_max"] - self.df["t_cooling_min_min"]
+        ) > 11.11 + self.df["tol_t_loop"]

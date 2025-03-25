@@ -27,16 +27,16 @@ The verification checks two conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if t_vav_dis > t_vav_dis_min and cmd_htg_coil > tol_cmd_htg_coil:
+if t_discharge > t_discharge_min_sp and cmd_coil_heat > tol_cmd_coil_heat:
     fail
 else:
-    switch mode_sys:
+    switch mode_system:
         case 'occupied':
-            minimum = v_vav_min
+            minimum = v_min
         case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied':
             minimum = 0
 
-    if abs(v_vav_sp - minimum) <= tol_v_vav:
+    if abs(v_sp - minimum) <= tol_v:
         pass
     else:
         fail
@@ -44,9 +44,9 @@ else:
 
 ### Data requirements
 
-- mode_sys: System operation mode
+- mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System operation mode
+  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - state_zone: Zone state
@@ -54,39 +54,39 @@ else:
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_vav_min: Minimum airflow
+- v_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum airflow
+  - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- v_vav_sp: Airflow setpoint
+- v_sp: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- tol_v_vav: Airflow tolerance
+- tol_v: Airflow tolerance
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow tolerance
   - Data Point Affiliation: Zone airflow control
 
-- cmd_htg_coil: Heating coil command
-  - Data Value Unit: percent (0-100)
+- cmd_coil_heat: Heating coil command
+  - Data Value Unit: percent
   - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- tol_cmd_htg_coil: Heating coil command tolerance
+- tol_cmd_coil_heat: Heating coil command tolerance
   - Data Value Unit: percent
   - Data point Description: Heating coil command tolerance
   - Data Point Affiliation: Terminal box control
 
-- t_vav_dis: VAV discharge air temperature
-  - Data Value Unit: °C
-  - Data point Description: VAV discharge air temperature
+- t_discharge: Discharge air temperature
+  - Data Value Unit: temperature
+  - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
-- t_vav_dis_min: Minimum VAV discharge air temperature
-  - Data Value Unit: °C
-  - Data point Description: Minimum VAV discharge air temperature
+- t_discharge_min_sp: Minimum discharge air temperature setpoint
+  - Data Value Unit: temperature
+  - Data point Description: Minimum discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control
 
 """
@@ -96,34 +96,34 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
     points = [
-        "operation_mode",
-        "zone_state",
+        "mode_system",
+        "state_zone",
         "v_min",
-        "v_spt",
-        "v_spt_tol",
-        "heating_coil_command",
-        "heating_coil_command_tol",
-        "dat",
-        "dat_min_spt",
+        "v_sp",
+        "tol_v",
+        "cmd_coil_heat",
+        "tol_cmd_coil_heat",
+        "t_discharge",
+        "t_discharge_min_sp",
     ]
 
     def setpoint_at_minimum(
         self,
-        operation_mode,
-        zone_state,
+        mode_system,
+        state_zone,
         v_min,
-        v_spt,
-        v_spt_tol,
-        heating_coil_command,
-        heating_coil_command_tol,
-        dat,
-        dat_min_spt,
+        v_sp,
+        tol_v,
+        cmd_coil_heat,
+        tol_cmd_coil_heat,
+        t_discharge,
+        t_discharge_min_sp,
     ):
-        if zone_state.lower().strip() != "deadband":
+        if state_zone.lower().strip() != "deadband":
             return "Untested"
-        if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol:
+        if t_discharge > t_discharge_min_sp and cmd_coil_heat > tol_cmd_coil_heat:
             return False
-        match operation_mode.strip().lower():
+        match mode_system.strip().lower():
             case "occupied":
                 dbmin = v_min
             case "cooldown" | "setup" | "warmup" | "setback" | "unoccupied":
@@ -132,7 +132,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 print("invalid operation mode value")
                 return "Untested"
 
-        if abs(v_spt - dbmin) <= v_spt_tol:
+        if abs(v_sp - dbmin) <= tol_v:
             return True
         else:
             return False
@@ -140,15 +140,15 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_at_minimum(
-                t["operation_mode"],
-                t["zone_state"],
+                t["mode_system"],
+                t["state_zone"],
                 t["v_min"],
-                t["v_spt"],
-                t["v_spt_tol"],
-                t["heating_coil_command"],
-                t["heating_coil_command_tol"],
-                t["dat"],
-                t["dat_min_spt"],
+                t["v_sp"],
+                t["tol_v"],
+                t["cmd_coil_heat"],
+                t["tol_cmd_coil_heat"],
+                t["t_discharge"],
+                t["t_discharge_min_sp"],
             ),
             axis=1,
         )

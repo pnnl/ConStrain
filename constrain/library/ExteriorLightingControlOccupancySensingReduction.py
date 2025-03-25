@@ -25,16 +25,16 @@ The verification checks that when no activity is detected for more than 15 minut
 ### Verification Algorithm Pseudo Code
 
 ```
-design_total_lighting_power = max(total_lighting_power)
+design_lighting_power = max(p_power_light_total)
 
 # First check maximum power limit
-if design_total_lighting_power >= 1500:
+if design_lighting_power >= 1500:
     return False
 
 # Then check power reduction on no occupancy
 date_diff = current_date - last_reported_occupancy # in min
-if n_occ < tol_n_occ and date_diff > 15:
-    if p_light_total <= 0.5 * design_total_lighting_power:
+if n_occupants < tol_occupants and date_diff > 15:
+    if p_power_light_total <= 0.5 * design_lighting_power:
         return True
     else:
         return False
@@ -44,17 +44,17 @@ else:
 
 ### Data requirements
 
-- n_occ: Number of occupants
+- n_occupants: Number of occupants
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- p_light_total: Lighting power
+- p_power_light_total: Lighting power
   - Data Value Unit: power
   - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system
 
-- tol_n_occ: Occupancy threshold
+- tol_occupants: Occupancy threshold
   - Data Value Unit: count
   - Data point Description: Occupancy tolerance
   - Data Point Affiliation: Zone occupancy
@@ -66,34 +66,36 @@ from constrain.checklib import RuleCheckBase
 
 class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
     points = [
-        "o",
-        "total_lighting_power",
-        "tol_o",
+        "n_occupants",
+        "p_power_light_total",
+        "tol_occupants",
     ]
     last_reported_occupancy = None
-    design_total_lighting_power = None
+    design_lighting_power = None
 
     def occupancy_sensing_reduction(self, data):
         if self.last_reported_occupancy is None:
             self.last_reported_occupancy = data.name
         date_diff = data.name - self.last_reported_occupancy
-        if (data["o"] < data["tol_o"]) and date_diff.total_seconds() / 60 > 15:
+        if (
+            data["n_occupants"] < data["tol_occupants"]
+        ) and date_diff.total_seconds() / 60 > 15:
             # No activity detected or time since last activity exceeds 15 minutes
             # Therefore, the control requirement is met if the total lighting power is already reduced by at least 50%
-            if data["total_lighting_power"] <= 0.5 * self.design_total_lighting_power:
+            if data["p_power_light_total"] <= 0.5 * self.design_lighting_power:
                 check = True
             else:
                 check = False
         else:
             check = "Untested"
 
-        if data["o"] >= data["tol_o"]:
+        if data["n_occupants"] >= data["tol_occupants"]:
             self.last_reported_occupancy = data.name
         return check
 
     def verify(self):
-        self.design_total_lighting_power = self.df["total_lighting_power"].max()
-        if self.design_total_lighting_power >= 1500:
+        self.design_lighting_power = self.df["p_power_light_total"].max()
+        if self.design_lighting_power >= 1500:
             self.df["result"] = False
             self.result = self.df["result"]
         else:

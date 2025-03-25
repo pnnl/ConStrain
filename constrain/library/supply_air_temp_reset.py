@@ -6,9 +6,8 @@ This verification aims to check if the supply air temperature reset strategy pro
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
+- Code Year: 2016
 - Code Section: 6.5.3.5 Supply Air Temperature Reset Controls
-- Code Subsection: Reset Range Requirements
 
 ### Verification Approach
 
@@ -31,9 +30,9 @@ The verification analyzes supply air temperature setpoint variation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-sat_range = max(supply_air_temp_setpoint) - min(supply_air_temp_setpoint)
-min_sat = min(supply_air_temp_setpoint)
-required_range = (zone_cooling_setpoint - min_sat) * 0.25 * 0.99
+sat_range = max(t_sa_sp) - min(t_sa_sp)
+min_sat = min(t_sa_sp)
+required_range = (t_d_z_cool - min_sat) * 0.25 * 0.99
 
 if sat_range >= required_range:
     pass  # Adequate reset range
@@ -43,14 +42,14 @@ else:
 
 ### Data requirements
 
-- sp_t_sa: Supply air temperature setpoint
+- t_sa_sp: Supply air temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: System control
 
-- sp_t_z_clg: Zone cooling setpoint
+- t_d_z_cool: Design zone cooling temperature setpoint
   - Data Value Unit: temperature
-  - Data point Description: Zone cooling temperature setpoint
+  - Data point Description: Design zone cooling temperature setpoint
   - Data Point Affiliation: Zone control
 
 """
@@ -63,23 +62,23 @@ from constrain.checklib import RuleCheckBase
 
 
 class SupplyAirTempReset(RuleCheckBase):
-    points = ["T_sa_sp", "T_z_cool"]
+    points = ["t_sa_sp", "t_d_z_cool"]
 
     def verify(self):
-        t_sa_sp_max = max(self.df["T_sa_sp"])
-        t_sa_sp_min = min(self.df["T_sa_sp"])
+        t_sa_sp_max = max(self.df["t_sa_sp"])
+        t_sa_sp_min = min(self.df["t_sa_sp"])
 
         self.result = (t_sa_sp_max - t_sa_sp_min) >= (
-            self.df["T_z_cool"] - t_sa_sp_min
+            self.df["t_d_z_cool"] - t_sa_sp_min
         ) * 0.25 * 0.99  # 0.99 being the numeric threshold
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
         print(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
-        sns.histplot(self.df["T_sa_sp"])
-        plt.title("All samples distribution of T_sa_sp")
-        plt.savefig(f"{self.results_folder}/All_samples_distribution_of_T_sa_sp.png")
+        sns.histplot(self.df["t_sa_sp"])
+        plt.title("All samples distribution of t_sa_sp")
+        plt.savefig(f"{self.results_folder}/All_samples_distribution_of_t_sa_sp.png")
 
         super().plot(plot_option, plt_pts, fig_size)
 
@@ -89,6 +88,6 @@ class SupplyAirTempReset(RuleCheckBase):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
             daydf = self.df.loc[daystr]
             day = self.result[daystr]
-            if daydf["T_sa_sp"].max() - daydf["T_sa_sp"].min() > 0:
+            if daydf["t_sa_sp"].max() - daydf["t_sa_sp"].min() > 0:
                 return day, daydf
             return day, daydf

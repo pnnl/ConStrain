@@ -28,25 +28,25 @@ The test is considered untested if supply fan status doesn't show both ON and OF
 ### Verification Algorithm Pseudo Code
 
 ```python
-if pos_damper_rea > 0 and flag_fan_sa == 'on':
+if cmd_damper_relief > 0 and status_fan_supply == 'on':
     pass
-elif flag_fan_sa == 'off' and pos_damper_rea == 0:
+elif status_fan_supply == 'off' and cmd_damper_relief == 0:
     pass
 else:
     fail
 
-if not ['on', 'off'] in flag_fan_sa:
+if not ['on', 'off'] in status_fan_supply:
     untested
 ```
 
 ### Data requirements
 
-- pos_damper_rea: Relief damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Relief damper position
+- cmd_damper_relief: Relief damper command
+  - Data Value Unit: percent
+  - Data point Description: Relief damper command
   - Data Point Affiliation: Air handling unit
 
-- flag_fan_sa: Supply fan status
+- status_fan_supply: Supply fan status
   - Data Value Unit: binary
   - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
@@ -57,12 +57,12 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36ReliefDamperStatus(RuleCheckBase):
-    points = ["relief_damper_command", "supply_fan_status"]
+    points = ["cmd_damper_relief", "status_fan_supply"]
 
     def ts_verify_logic(self, t):
-        if t["relief_damper_command"] > 0 and bool(t["supply_fan_status"]):
+        if t["cmd_damper_relief"] > 0 and bool(t["status_fan_supply"]):
             return True
-        elif t["relief_damper_command"] < 1 and (not bool(t["supply_fan_status"])):
+        elif t["cmd_damper_relief"] < 1 and (not bool(t["status_fan_supply"])):
             return True
         else:
             return False
@@ -74,7 +74,7 @@ class G36ReliefDamperStatus(RuleCheckBase):
         if len(self.result[self.result == False] > 0):
             return False
         else:
-            obs_satuses = [bool(s) for s in list(self.df["supply_fan_status"].unique())]
+            obs_satuses = [bool(s) for s in list(self.df["status_fan_supply"].unique())]
             if (True in obs_satuses) and (False in obs_satuses):
                 return True
             else:

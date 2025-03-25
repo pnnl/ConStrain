@@ -29,10 +29,10 @@ for each timestep:
     if first timestep:
         return "Untested"
     else:
-        if current_sp_p_press_duct < previous_sp_p_press_duct:
+        if current_p_press_static_sp < previous_p_press_static_sp:
             # Setpoint is being reduced
             return True
-        elif any pos_damper_vav > 90%:
+        elif any cmd_damper_vav > 90%:
             # At least one damper is nearly wide open
             return True
         else:
@@ -43,14 +43,14 @@ for each timestep:
 
 ### Data requirements
 
-- sp_p_press_duct: Duct static pressure setpoint
+- p_press_static_sp: Duct static pressure setpoint
   - Data Value Unit: pressure
   - Data point Description: Duct static pressure setpoint
   - Data Point Affiliation: Fan control
 
-- pos_damper_vav: VAV damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: VAV damper position
+- cmd_damper_vav: VAV damper command
+  - Data Value Unit: percent
+  - Data point Description: VAV damper command
   - Data Point Affiliation: Zone control
 
 """
@@ -60,23 +60,32 @@ from constrain.checklib import RuleCheckBase
 
 class FanStaticPressureResetControl(RuleCheckBase):
     points = [
-        "p_set",
-        "d_VAV_1",
-        "d_VAV_2",
-        "d_VAV_3",
-        "d_VAV_4",
-        "d_VAV_5",
+        "p_press_static_sp",
+        "pos_damper_vav_1",
+        "pos_damper_vav_2",
+        "pos_damper_vav_3",
+        "pos_damper_vav_4",
+        "pos_damper_vav_5",
     ]
 
     def verify(self):
-        d_vav_points = ["d_VAV_1", "d_VAV_2", "d_VAV_3", "d_VAV_4", "d_VAV_5"]
-        d_vav_df = self.df[d_vav_points]
+        vav_points = [
+            "pos_damper_vav_1",
+            "pos_damper_vav_2",
+            "pos_damper_vav_3",
+            "pos_damper_vav_4",
+            "pos_damper_vav_5",
+        ]
+        vav_df = self.df[vav_points]
 
         for row_num, (index, row) in enumerate(self.df.iterrows()):
             if row_num != 0:
-                if self.df.at[index, "p_set"] < self.df.at[prev_index, "p_set"]:
+                if (
+                    self.df.at[index, "p_press_static_sp"]
+                    < self.df.at[prev_index, "p_press_static_sp"]
+                ):
                     self.df.at[index, "result"] = True
-                elif (d_vav_df.loc[index] > 0.9).any():
+                elif (vav_df.loc[index] > 0.9).any():
                     self.df.at[index, "result"] = True
                 else:
                     self.df.at[index, "result"] = False

@@ -30,34 +30,34 @@ The test is considered untested if both occupied and unoccupied modes haven't be
 ### Verification Algorithm Pseudo Code
 
 ```python
-if flag_vav_reheat_perimeter:
-    if mode_sys != 'unoccupied' and flag_fan_sa == 'off':
+if flag_reheat_perimeter:
+    if mode_system != 'unoccupied' and status_fan_supply == 'off':
         fail
     else:
         pass
 else:
-    if mode_sys in ['occupied', 'setup', 'cooldown'] and flag_fan_sa == 'off':
+    if mode_system in ['occupied', 'setup', 'cooldown'] and status_fan_supply == 'off':
         fail
     else:
         pass
 
-if not ('occupied' in mode_sys and 'unoccupied' in mode_sys):
+if not ('occupied' in mode_system and 'unoccupied' in mode_system):
     untested
 ```
 
 ### Data requirements
 
-- mode_sys: System operation mode
+- mode_system: System mode
   - Data Value Unit: enumeration
-  - Data point Description: System operation mode
+  - Data point Description: System mode
   - Data Point Affiliation: System control
 
-- flag_vav_reheat_perimeter: Zone configuration
+- flag_reheat_perimeter: Zone configuration
   - Data Value Unit: binary
-  - Data point Description: VAV reheat perimeter flag
+  - Data point Description: VAV reheat perimeter zones flag
   - Data Point Affiliation: System configuration
 
-- flag_fan_sa: Supply fan status
+- status_fan_supply: Supply fan status
   - Data Value Unit: binary
   - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
@@ -68,19 +68,19 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36SupplyFanStatus(RuleCheckBase):
-    points = ["sys_mode", "supply_fan_status", "has_reheat_box_on_perimeter_zones"]
+    points = ["mode_system", "status_fan_supply", "flag_reheat_perimeter"]
 
     def ts_verify_logic(self, t):
-        if bool(t["has_reheat_box_on_perimeter_zones"]):
-            if (t["sys_mode"].strip().lower() != "unoccupied") and (
-                not bool(t["supply_fan_status"])
+        if bool(t["flag_reheat_perimeter"]):
+            if (t["mode_system"].strip().lower() != "unoccupied") and (
+                not bool(t["status_fan_supply"])
             ):
                 return False
             return True
         else:
             if (
-                t["sys_mode"].strip().lower() in ["occupied", "setup", "cooldown"]
-            ) and (not bool(t["supply_fan_status"])):
+                t["mode_system"].strip().lower() in ["occupied", "setup", "cooldown"]
+            ) and (not bool(t["status_fan_supply"])):
                 return False
             return True
 
@@ -91,7 +91,9 @@ class G36SupplyFanStatus(RuleCheckBase):
         if len(self.result[self.result == False] > 0):
             return False
         else:
-            obs_modes = [s.lower().strip() for s in list(self.df["sys_mode"].unique())]
+            obs_modes = [
+                s.lower().strip() for s in list(self.df["mode_system"].unique())
+            ]
             if ("occupied" in obs_modes) and ("unoccupied" in obs_modes):
                 return True
             else:

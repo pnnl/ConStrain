@@ -7,8 +7,7 @@ This verification aims to check if multiple-zone systems properly adjust their o
 
 - Code Name: ASHRAE 90.1
 - Code Year: 2022
-- Code Section: 6.5.3.9 Multiple-Zone System Ventilation Optimization Control
-- Code Subsection: 6.5.3.9.1 Occupied-Standby Control
+- Code Section: 6.5.3.9.1 Occupied-Standby Control of Multiple-Zone Systems
 
 ### Verification Approach
 
@@ -44,17 +43,17 @@ else:
 
 ### Data requirements
 
-- flag_standby: Standby status
+- flag_zone_standby: Standby status
   - Data Value Unit: binary
   - Data point Description: Standby mode flag
   - Data Point Affiliation: Zone control
 
-- v_oa_sys: System OA setpoint
+- v_oa_system_sp: System OA setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: System outdoor air flow setpoint
   - Data Point Affiliation: System control
 
-- v_oa_zone: Zone OA requirement
+- v_oa_zone_req: Zone OA requirement
   - Data Value Unit: volumetric flow rate
   - Data point Description: Zone outdoor air flow requirement
   - Data Point Affiliation: Zone ventilation
@@ -66,27 +65,26 @@ from constrain.checklib import RuleCheckBase
 
 class MZSystemOccupiedStandbyVentilationZoneControl(RuleCheckBase):
     points = [
-        "zone_is_standby_mode",
-        "m_oa_requested_by_system",
-        "m_oa_zone_requirement",
+        "flag_zone_standby",
+        "v_oa_system_sp",
+        "v_oa_zone_req",
     ]
-    last_non_standby_mode_requested_m_oa = None  # expects kg/s
+    last_non_standby_mode_requested_v_oa = None  # expects volumetric flow rate
 
     def occupied_standby_ventilation_zontrol_control(self, data):
         # initialization
-        if self.last_non_standby_mode_requested_m_oa is None:
-            self.last_non_standby_mode_requested_m_oa = data["m_oa_requested_by_system"]
+        if self.last_non_standby_mode_requested_v_oa is None:
+            self.last_non_standby_mode_requested_v_oa = data["v_oa_system_sp"]
         # verification
-        if data["zone_is_standby_mode"]:
+        if data["flag_zone_standby"]:
             if (
-                self.last_non_standby_mode_requested_m_oa
-                - data["m_oa_requested_by_system"]
-            ) >= data["m_oa_zone_requirement"]:
+                self.last_non_standby_mode_requested_v_oa - data["v_oa_system_sp"]
+            ) >= data["v_oa_zone_req"]:
                 return True
             else:
                 return False
         else:
-            self.last_non_standby_mode_requested_m_oa = data["m_oa_requested_by_system"]
+            self.last_non_standby_mode_requested_v_oa = data["v_oa_system_sp"]
             return "Untested"
 
     def verify(self):

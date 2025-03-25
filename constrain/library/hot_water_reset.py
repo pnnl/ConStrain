@@ -6,9 +6,8 @@ This verification aims to check if the hot water temperature reset control opera
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
-- Code Section: 6.5.4.4 Hydronic System Controls
-- Code Subsection: Hot Water Temperature Reset
+- Code Year: 2016
+- Code Section: 6.5.4.4 Chilled- and Hot-Water Temperature Reset Controls
 
 ### Verification Approach
 
@@ -73,17 +72,17 @@ elif outdoor_min < outdoor_temp < outdoor_max:
   - Data point Description: Hot water temperature
   - Data Point Affiliation: System monitoring
 
-- v_hw: Hot water flow
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Hot water volume flow rate
+- m_hw: Hot water flow
+  - Data Value Unit: mass flow rate
+  - Data point Description: Hot water mass flow rate
   - Data Point Affiliation: System monitoring
 
-- sp_t_hw_max: Maximum temperature setpoint
+- t_hw_max_sp: Maximum temperature setpoint
   - Data Value Unit: °C
   - Data point Description: Hot water maximum temperature setpoint
   - Data Point Affiliation: System control
 
-- sp_t_hw_min: Minimum temperature setpoint
+- t_hw_min_sp: Minimum temperature setpoint
   - Data Value Unit: °C
   - Data point Description: Hot water minimum temperature setpoint
   - Data Point Affiliation: System control
@@ -97,13 +96,13 @@ from constrain.checklib import RuleCheckBase
 
 class HWReset(RuleCheckBase):
     points = [
-        "T_oa_db",
-        "T_oa_max",
-        "T_oa_min",
-        "T_hw",
+        "t_oa",
+        "t_oa_max",
+        "t_oa_min",
+        "t_hw",
         "m_hw",
-        "T_hw_max_sp",
-        "T_hw_min_sp",
+        "t_hw_max_sp",
+        "t_hw_min_sp",
     ]
 
     def verify(self):
@@ -112,32 +111,32 @@ class HWReset(RuleCheckBase):
                 self.df["m_hw"] <= 0
             )  # add boundary relaxation in the rules for this one and chwreset
             | (
-                (self.df["T_oa_db"] <= self.df["T_oa_min"])
-                & (self.df["T_hw"] >= self.df["T_hw_max_sp"] * 0.99)
+                (self.df["t_oa"] <= self.df["t_oa_min"])
+                & (self.df["t_hw"] >= self.df["t_hw_max_sp"] * 0.99)
             )
             | (
-                (self.df["T_oa_db"] >= (self.df["T_oa_max"]))
-                & (self.df["T_hw"] <= self.df["T_hw_min_sp"] * 1.01)
+                (self.df["t_oa"] >= (self.df["t_oa_max"]))
+                & (self.df["t_hw"] <= self.df["t_hw_min_sp"] * 1.01)
             )
             | (
                 (
-                    (self.df["T_oa_db"] >= self.df["T_oa_min"])
-                    & (self.df["T_oa_db"] <= self.df["T_oa_max"])
+                    (self.df["t_oa"] >= self.df["t_oa_min"])
+                    & (self.df["t_oa"] <= self.df["t_oa_max"])
                 )
                 & (
-                    (self.df["T_hw"] >= self.df["T_hw_min_sp"] * 0.99)
-                    & (self.df["T_hw"] <= self.df["T_hw_max_sp"] * 1.01)
+                    (self.df["t_hw"] >= self.df["t_hw_min_sp"] * 0.99)
+                    & (self.df["t_hw"] <= self.df["t_hw_max_sp"] * 1.01)
                 )
             )
         )
 
-    # Add a correlation scatter plot of T_oa_db and T_hw
+    # Add a correlation scatter plot of t_oa and t_hw
     def plot(self, plot_option, fig_size, plt_pts=None):
         print(
             "Specific plot method implemented, additional scatter plot is being added!"
         )
         plt.subplots()
-        sns.scatterplot(x="T_oa_db", y="T_hw", data=self.df)
-        plt.title("Scatter plot between T_oa_db and T_hw")
+        sns.scatterplot(x="t_oa", y="t_hw", data=self.df)
+        plt.title("Scatter plot between t_oa and t_hw")
 
         super().plot(plot_option, plt_pts)

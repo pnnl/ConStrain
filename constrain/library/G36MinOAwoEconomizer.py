@@ -25,13 +25,13 @@ The verification checks that during occupied periods when economizer is in locko
 ### Verification Algorithm Pseudo Code
 
 ```python
-if economizer_lockout(t_oa, t_oa_econ_hl) and mode_sys == 'occupied':
-    if v_oa < v_oa_min (continuously for 1 hour):
+if economizer_lockout(t_oa, t_oa_economizer_high_limit) and mode_system == 'occupied':
+    if v_oa < v_oa_min_sp (continuously for 1 hour):
         if pos_damper_oa == 100 and pos_damper_ra == 0:
             pass
         else:
             fail
-    elif v_oa > v_oa_min (continuously for 1 hour):
+    elif v_oa > v_oa_min_sp (continuously for 1 hour):
         if pos_damper_oa == 0 and pos_damper_ra == 100:
             pass
         else:
@@ -49,19 +49,19 @@ else:
   - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
-- t_oa_econ_hl: Economizer high limit temperature
+- t_oa_economizer_high_limit: Economizer high limit temperature
   - Data Value Unit: °C
   - Data point Description: Economizer high limit temperature
   - Data Point Affiliation: Economizer control
 
-- pos_damper_oa: Outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Outdoor air damper position
+- pos_damper_oa: Outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_ra: Return air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Return air damper position
+- pos_damper_ra: Return air damper command
+  - Data Value Unit: percent
+  - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
 
 - v_oa: Outdoor airflow
@@ -69,12 +69,12 @@ else:
   - Data point Description: Outdoor airflow
   - Data Point Affiliation: Air handling unit
 
-- v_oa_min: Minimum outdoor airflow
+- v_oa_min_sp: Minimum outdoor airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum outdoor airflow
+  - Data point Description: Minimum outdoor airflow setpoint
   - Data Point Affiliation: Air handling unit
 
-- mode_sys: System operation mode
+- mode_system: System mode
   - Data Value Unit: enumeration
   - Data point Description: System operation mode
   - Data Point Affiliation: System control
@@ -86,35 +86,33 @@ from constrain.checklib import RuleCheckBase
 
 class G36MinOAwoEconomizer(RuleCheckBase):
     points = [
-        "outdoor_air_temp",
-        "economizer_high_limit_sp",
-        "outdoor_damper_command",
-        "return_damper_command",
-        "outdoor_air_flow",
-        "min_oa_sp",
-        "sys_mode",
+        "t_oa",
+        "t_oa_economizer_high_limit",
+        "pos_damper_oa",
+        "pos_damper_ra",
+        "v_oa",
+        "v_oa_min_sp",
+        "mode_system",
     ]
 
-    def economizer_lockout(self, outdoor_air_temp, economizer_high_limit_sp):
-        if outdoor_air_temp > economizer_high_limit_sp:
+    def economizer_lockout(self, t_oa, t_oa_economizer_high_limit):
+        if t_oa > t_oa_economizer_high_limit:
             return True
         else:
             return False
 
     def ts_verify_logic(self, t):
         if (
-            self.economizer_lockout(
-                t["outdoor_air_temp"], t["economizer_high_limit_sp"]
-            )
-            and t["sys_mode"].strip().lower() == "occupied"
+            self.economizer_lockout(t["t_oa"], t["t_oa_economizer_high_limit"])
+            and t["mode_system"].strip().lower() == "occupied"
         ):
             if t["oaf_low_timer"] > 60:
-                if t["outdoor_damper_command"] > 99 and t["return_damper_command"] < 1:
+                if t["pos_damper_oa"] > 99 and t["pos_damper_ra"] < 1:
                     return True
                 else:
                     return False
             elif t["oaf_high_timer"] > 60:
-                if t["outdoor_damper_command"] < 1 and t["return_damper_command"] > 99:
+                if t["pos_damper_oa"] < 1 and t["pos_damper_ra"] > 99:
                     return True
                 else:
                     return False
@@ -130,13 +128,11 @@ class G36MinOAwoEconomizer(RuleCheckBase):
         high_timer_start = None
         for i, t in self.df.iterrows():
             if (
-                self.economizer_lockout(
-                    t["outdoor_air_temp"], t["economizer_high_limit_sp"]
-                )
-                and t["sys_mode"].strip().lower() == "occupied"
+                self.economizer_lockout(t["t_oa"], t["t_oa_economizer_high_limit"])
+                and t["mode_system"].strip().lower() == "occupied"
             ):
                 # only count the timers when it is in occupied mode with economizer lockout
-                if t["outdoor_air_flow"] < t["min_oa_sp"]:
+                if t["v_oa"] < t["v_oa_min_sp"]:
                     high_timer_start = None
                     high_timer_list.append(0)
                     if low_timer_start is None:
@@ -146,7 +142,7 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                         low_timer_list.append(
                             (i - low_timer_start).total_seconds() / 60
                         )
-                if t["outdoor_air_flow"] > t["min_oa_sp"]:
+                if t["v_oa"] > t["v_oa_min_sp"]:
                     low_timer_start = None
                     low_timer_list.append(0)
                     if high_timer_start is None:

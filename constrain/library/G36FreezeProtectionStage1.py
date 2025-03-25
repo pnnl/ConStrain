@@ -43,14 +43,14 @@ if never (t_sa < 4.4 (continuously 5 minutes)):
   - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa: Outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Outdoor air damper position
+- pos_damper_oa: Outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa_min: Minimum outdoor air damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: Minimum outdoor air damper position
+- pos_damper_oa_min: Minimum outdoor air damper command
+  - Data Value Unit: percent
+  - Data point Description: Minimum outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 """
@@ -59,16 +59,16 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36FreezeProtectionStage1(RuleCheckBase):
-    points = ["supply_air_temp", "outdoor_damper_command", "outdoor_damper_minimum"]
+    points = ["t_sa", "pos_damper_oa", "pos_damper_oa_min"]
 
     def ts_verify_logic(self, t):
         if not t["freeze_status"]:
             return True
         if (t["sat_lowerthan_4.4_timer"] > 5) and (
-            t["outdoor_damper_command"] > t["outdoor_damper_minimum"]
+            t["pos_damper_oa"] > t["pos_damper_oa_min"]
         ):
             return False
-        elif (t["outdoor_damper_command"] > t["outdoor_damper_minimum"]) and (
+        elif (t["pos_damper_oa"] > t["pos_damper_oa_min"]) and (
             not (t["sat_higherthan_7_timer"] >= 5)
         ):
             return False
@@ -83,7 +83,7 @@ class G36FreezeProtectionStage1(RuleCheckBase):
         ht7_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["supply_air_temp"] < 4.4:
+            if t["t_sa"] < 4.4:
                 if lt4p4_timer_start is None:
                     lt4p4_timer_start = i
                     lt4p4_timer_list.append(0)
@@ -96,7 +96,7 @@ class G36FreezeProtectionStage1(RuleCheckBase):
                 lt4p4_timer_start = None
                 lt4p4_timer_list.append(0)
 
-            if t["supply_air_temp"] > 7:
+            if t["t_sa"] > 7:
                 if ht7_timer_start is None:
                     ht7_timer_start = i
                     ht7_timer_list.append(0)

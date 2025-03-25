@@ -6,9 +6,9 @@ This verification aims to check if heat rejection fan power varies appropriately
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
-- Code Section: 6.5.5.2 Fan Control
-- Code Subsection: Heat Rejection Fan Variable Flow Control
+- Code Year: 2016
+- Code Section: 6.5.5.2 Fan Speed Control
+- Code Subsection: 6.5.5.2.1  
 
 ### Verification Approach
 
@@ -52,22 +52,22 @@ else:
 
 ### Data requirements
 
-- p_fan_ct: Fan power
+- p_power_fan_ct: Fan power
   - Data Value Unit: power
   - Data point Description: Cooling tower fan power
   - Data Point Affiliation: Fan monitoring
 
-- ratio_v_fan_ct: Flow ratio
+- ratio_flow_ct: Flow ratio
   - Data Value Unit: fraction
   - Data point Description: Cooling tower fan flow ratio
   - Data Point Affiliation: Fan control
 
-- p_fan_ct_dsgn: Design power
+- p_power_fan_ct_design: Design power
   - Data Value Unit: power
   - Data point Description: Cooling tower fan design power
   - Data Point Affiliation: Equipment specifications
 
-- v_fan_ct_dsgn: Design flow
+- v_ct_design: Design flow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Cooling tower fan design flow rate
   - Data Point Affiliation: Equipment specifications
@@ -81,27 +81,29 @@ from sklearn.linear_model import LinearRegression
 
 
 class HeatRejectionFanVariableFlowControl(RuleCheckBase):
-    points = ["ct_P_fan", "ct_m_fan_ratio", "ct_P_fan_dsgn", "ct_m_fan_dsgn"]
+    points = ["p_power_fan_ct", "ratio_flow_ct", "p_power_fan_ct_design", "v_ct_design"]
 
     def verify(self):
-        self.df["m_ct_fan"] = self.df["ct_m_fan_ratio"] * self.df["ct_m_fan_dsgn"]
-        self.df["normalized_m_ct_fan"] = self.df["m_ct_fan"] / self.df["ct_m_fan_dsgn"]
-        self.df["normalized_P_ct_fan"] = self.df["ct_P_fan"] / self.df["ct_P_fan_dsgn"]
+        self.df["v_fan"] = self.df["ratio_flow_ct"] * self.df["v_ct_design"]
+        self.df["normalized_v_fan"] = self.df["v_fan"] / self.df["v_ct_design"]
+        self.df["normalized_p_power_fan_ct"] = (
+            self.df["p_power_fan_ct"] / self.df["p_power_fan_ct_design"]
+        )
 
         self.df = self.df.loc[
-            self.df["normalized_P_ct_fan"] > 0.0
+            self.df["normalized_p_power_fan_ct"] > 0.0
         ]  # filter out 0 values
-        self.df["normalized_m_ct_fan"] -= 1  # minus 1 to transform the data
-        self.df["normalized_P_ct_fan"] -= 1
+        self.df["normalized_v_fan"] -= 1  # minus 1 to transform the data
+        self.df["normalized_p_power_fan_ct"] -= 1
 
         self.df = self.df.loc[
-            self.df["normalized_m_ct_fan"] > -0.5
+            self.df["normalized_v_fan"] > -0.5
         ]  # filter out airflow points > -0.5, since the code requirement is at this point
 
         # linear regression
         reg = LinearRegression(fit_intercept=False).fit(
-            self.df["normalized_m_ct_fan"].values.reshape(-1, 1),
-            self.df["normalized_P_ct_fan"],
+            self.df["normalized_v_fan"].values.reshape(-1, 1),
+            self.df["normalized_p_power_fan_ct"],
         )  # fit_intercept=False is for set the intercept to 0
 
         if reg.coef_[0] >= 1.4:

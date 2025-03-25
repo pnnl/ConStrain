@@ -30,13 +30,13 @@ The verification monitors airflow tracking performance:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if abs(v_vav_sp - v_vav) >= tol_v_vav:
+if abs(v_sp - v) >= tol_v_tracking:
     if tracking_error_duration < 1_hour:
         pass  # Brief deviation acceptable
     else:
-        if (v_vav - v_vav_sp >= tol_v_vav) and pos_damper_vav <= 1:
+        if (v - v_sp >= tol_v_tracking) and cmd_damper_vav <= 1:
             pass  # Flow too high, damper at minimum
-        elif (v_vav_sp - v_vav >= tol_v_vav) and pos_damper_vav >= 99:
+        elif (v_sp - v >= tol_v_tracking) and cmd_damper_vav >= 99:
             pass  # Flow too low, damper at maximum
         else:
             fail  # Sustained deviation without appropriate response
@@ -46,24 +46,24 @@ else:
 
 ### Data requirements
 
-- pos_damper_vav: VAV damper position
-  - Data Value Unit: percent (0-100)
-  - Data point Description: VAV damper position
+- cmd_damper_vav: Damper command
+  - Data Value Unit: percent
+  - Data point Description: Damper command
   - Data Point Affiliation: Terminal box control
 
-- v_vav: VAV airflow rate
+- v: Airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: VAV airflow rate
+  - Data point Description: Airflow rate
   - Data Point Affiliation: Terminal box monitoring
 
-- v_vav_sp: VAV airflow setpoint
+- v_sp: Airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: VAV airflow setpoint
+  - Data point Description: Airflow setpoint
   - Data Point Affiliation: Terminal box control
 
-- tol_v_vav: VAV airflow tolerance
+- tol_v_tracking: Airflow tolerance
   - Data Value Unit: volumetric flow rate
-  - Data point Description: VAV airflow tolerance
+  - Data point Description: Airflow tolerance
   - Data Point Affiliation: Terminal box control
 
 """
@@ -73,10 +73,10 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
-    points = ["vav_damper_command", "v", "v_spt", "v_tracking_tol"]
+    points = ["cmd_damper_vav", "v", "v_sp", "tol_v_tracking"]
 
     def err_flag(self, t):
-        if abs(t["v_spt"] - t["v"]) >= t["v_tracking_tol"]:
+        if abs(t["v_sp"] - t["v"]) >= t["tol_v_tracking"]:
             return True
         else:
             return False
@@ -105,13 +105,13 @@ class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
                 result_flag = "Untested"
             elif err_time > 1:
                 if (
-                    cur["v"] - cur["v_spt"] >= cur["v_tracking_tol"]
-                    and cur["vav_damper_command"] <= 1
+                    cur["v"] - cur["v_sp"] >= cur["tol_v_tracking"]
+                    and cur["cmd_damper_vav"] <= 1
                 ):
                     result_flag = True
                 elif (
-                    cur["v_spt"] - cur["v"] >= cur["v_tracking_tol"]
-                    and cur["vav_damper_command"] >= 99
+                    cur["v_sp"] - cur["v"] >= cur["tol_v_tracking"]
+                    and cur["cmd_damper_vav"] >= 99
                 ):
                     result_flag = True
                 else:

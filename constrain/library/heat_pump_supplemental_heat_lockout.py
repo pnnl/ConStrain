@@ -6,15 +6,14 @@ This verification aims to check if heat pump supplemental heating is properly lo
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
-- Code Section: 6.4.3.5 Heat Pump Auxiliary Heat Control
-- Code Subsection: Supplemental Heat Lockout
+- Code Year: 2016
+- Code Section: 6.4.3.5 Heat Pump Auxiliary Heat Control & 6.3.2.h Criteria
 
 ### Verification Approach
 
 The verification checks three conditions:
-1. If supplemental heat is off: always pass
-2. If defrost cycle is active: supplemental heat allowed
+1. If heating coil is off: always pass
+2. If defrost cycle is active: always pass
 3. Otherwise: supplemental heat only allowed when heat pump capacity is below load
    - Capacity calculated using reference capacity with temperature and flow modifiers
 
@@ -29,53 +28,53 @@ The verification checks three conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-operating_capacity = reference_capacity * temperature_modifier * flow_modifier
+operating_capacity = heating coil ref capacity * heating capacity fractions
 
-if supplemental_heat == 0:
-    pass  # No supplemental heat used
+if heating coil gas rate == 0:
+    pass
 elif defrost_active > 0:
-    pass  # Supplemental heat allowed during defrost
-elif operating_capacity > heating_load + tolerance:
-    fail  # Unnecessary supplemental heat use
+    pass
+elif operating_capacity > heating runtime fraction + tolerance:
+    fail 
 else:
-    pass  # Supplemental heat needed
+    pass  
 ```
 
 ### Data requirements
 
-- cap_ref: Reference capacity
+- C_ref: Heating coil reference capacity
   - Data Value Unit: power
   - Data point Description: Reference capacity
   - Data Point Affiliation: Equipment specifications
 
-- load_op: Operating load
+- L_op: Heating coil runtime fraction
   - Data Value Unit: power
   - Data point Description: Operating load
   - Data Point Affiliation: System monitoring
 
-- p_htg_supp: Supplemental heat
+- C_t_mod: heating coil heating rate
   - Data Value Unit: power
   - Data point Description: Supplemental heating power
   - Data Point Affiliation: System monitoring
 
-- mod_cap_t: Temperature modifier
+- P_supp_ht: Heating coil gas rate
   - Data Value Unit: fraction
   - Data point Description: Temperature capacity modifier
   - Data Point Affiliation: Equipment performance
 
-- mod_cap_ff: Flow modifier
+- C_ff_mod: Heating capacity function of flow fraction curve
   - Data Value Unit: fraction
   - Data point Description: Flow capacity modifier
   - Data Point Affiliation: Equipment performance
 
-- flag_defrost: Defrost status
+- L_defrost: Defrost load on the heating coil
   - Data Value Unit: binary
   - Data point Description: Defrost flag
   - Data Point Affiliation: System operation
 
-- tol_cap: Capacity tolerance
-  - Data Value Unit: power
-  - Data point Description: Capacity tolerance
+- tol_L_op_capacity: Heating coil runtime fraction tolerance
+  - Data Value Unit: unitless
+  - Data point Description: tolerance
   - Data Point Affiliation: System configuration
 
 """
@@ -84,7 +83,15 @@ from constrain.checklib import RuleCheckBase
 
 
 class HeatPumpSupplementalHeatLockout(RuleCheckBase):
-    points = ["C_ref", "L_op", "P_supp_ht", "C_t_mod", "C_ff_mod", "L_defrost", "tol"]
+    points = [
+        "C_ref",
+        "L_op",
+        "P_supp_ht",
+        "C_t_mod",
+        "C_ff_mod",
+        "L_defrost",
+        "tol_L_op_capacity",
+    ]
 
     def heating_coil_verification(self, data):
         if data["P_supp_ht"] == 0:
@@ -93,7 +100,7 @@ class HeatPumpSupplementalHeatLockout(RuleCheckBase):
             if data["L_defrost"] > 0:
                 data["result"] = 1
             else:
-                if data["C_op"] > data["L_op"] + data["tol"]:
+                if data["C_op"] > data["L_op"] + data["tol_L_op_capacity"]:
                     data["result"] = 0  # False
                 else:
                     data["result"] = 1

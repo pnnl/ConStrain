@@ -5,10 +5,10 @@ This verification aims to check if a direct-acting control loop properly saturat
 
 ### Code requirement
 
-- Code Name: ASHRAE Guideline 36
-- Code Year: 2021
-- Code Section: 5.1.12 Control Loops
-- Code Subsection: Loop Saturation Requirements
+- Code Name: N/A
+- Code Year: N/A
+- Code Section: N/A
+- Code Subsection: N/A
 
 ### Verification Approach
 
@@ -45,22 +45,22 @@ for each timestep:
 
 ### Data requirements
 
-- v_fb: Process variable
+- val_sensor: Process variable
   - Data Value Unit: varies by application
   - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
-- sp: Control setpoint
-  - Data Value Unit: same as v_fb
+- val_setpoint: Control setpoint
+  - Data Value Unit: same as val_sensor
   - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 
-- out: Actuator command
+- cmd: Actuator command
   - Data Value Unit: percent
   - Data point Description: Control output
   - Data Point Affiliation: Control loop output
 
-- out_min: Minimum command
+- cmd_min: Minimum command
   - Data Value Unit: percent
   - Data point Description: Minimum output
   - Data Point Affiliation: Control loop configuration
@@ -72,16 +72,16 @@ from constrain.checklib import RuleCheckBase
 
 
 class LocalLoopSaturationDirectActingMin(RuleCheckBase):
-    points = ["feedback_sensor", "set_point", "cmd", "cmd_min"]
+    points = ["val_sensor", "val_setpoint", "cmd_control", "cmd_min"]
 
     def saturation_flag(self, t):
-        if 0 <= t["cmd"] - t["cmd_min"] <= 0.01:
+        if 0 <= t["cmd_control"] - t["cmd_min"] <= 0.01:
             return True
         else:
             return False
 
     def err_flag(self, t):
-        if t["feedback_sensor"] < t["set_point"]:
+        if t["val_sensor"] < t["sp"]:
             return True
         else:
             return False

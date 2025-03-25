@@ -6,9 +6,8 @@ This verification aims to check if guest room temperature setpoints are properly
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
-- Code Year: 2019
+- Code Year: 2016
 - Code Section: 6.4.3.3.5 Automatic Control of HVAC in Hotel/Motel Guest Rooms
-- Code Subsection: Temperature Setpoint Control
 
 ### Verification Approach
 
@@ -50,22 +49,22 @@ for each day:
 
 ### Data requirements
 
-- sp_t_htg: Heating setpoint
+- t_zone_heat_sp: Heating setpoint
   - Data Value Unit: °C
   - Data point Description: Zone heating temperature setpoint
   - Data Point Affiliation: Zone temperature control
 
-- sp_t_clg: Cooling setpoint
+- t_zone_cool_sp: Cooling setpoint
   - Data Value Unit: °C
   - Data point Description: Zone cooling temperature setpoint
   - Data Point Affiliation: Zone temperature control
 
-- sch_occ: Occupancy schedule
+- schedule_occupancy: Occupancy schedule
   - Data Value Unit: fraction (0-1)
   - Data point Description: Occupancy schedule
   - Data Point Affiliation: Zone occupancy
 
-- tol_sch_occ: Occupancy tolerance
+- tol_occupants: Occupancy tolerance
   - Data Value Unit: fraction
   - Data point Description: Occupancy schedule tolerance
   - Data Point Affiliation: Zone occupancy
@@ -82,11 +81,17 @@ from constrain.checklib import RuleCheckBase
 
 
 class GuestRoomControlTemp(RuleCheckBase):
-    points = ["T_z_heat_sp", "T_z_cool_sp", "O_sch", "tol_occ", "tol_temp"]
+    points = [
+        "t_zone_heat_sp",
+        "t_zone_cool_sp",
+        "schedule_occupancy",
+        "tol_occupants",
+        "tol_t",
+    ]
 
     def verify(self):
-        tol_occ = self.df["tol_occ"][0]
-        tol_temp = self.df["tol_temp"][0]
+        tol_occupancy = self.df["tol_occupants"][0]
+        tol_temp = self.df["tol_t"][0]
         year_info = 2000
         result_repo = []
         for idx, day in self.df.groupby(self.df.index.date):
@@ -100,10 +105,10 @@ class GuestRoomControlTemp(RuleCheckBase):
                 pass
             else:
                 if (
-                    day["O_sch"] <= tol_occ
+                    day["schedule_occupancy"] <= tol_occupancy
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["T_z_heat_sp"] < 15.6 + tol_temp).all() and (
-                        day["T_z_cool_sp"] > 26.7 - tol_temp
+                    if (day["t_zone_heat_sp"] < 15.6 + tol_temp).all() and (
+                        day["t_zone_cool_sp"] > 26.7 - tol_temp
                     ).all():
                         result_repo.append(
                             1
@@ -113,13 +118,17 @@ class GuestRoomControlTemp(RuleCheckBase):
                             0
                         )  # fail, zone temperature setpoint was not reset correctly
                 else:  # room is rented out
-                    T_z_heat_occ_sp = day.query("O_sch > 0.0")["T_z_heat_sp"].max()
-                    T_z_cool_occ_sp = day.query("O_sch > 0.0")["T_z_cool_sp"].min()
+                    t_zone_heat_occ_sp = day.query("schedule_occupancy > 0.0")[
+                        "t_zone_heat_sp"
+                    ].max()
+                    t_zone_cool_occ_sp = day.query("schedule_occupancy > 0.0")[
+                        "t_zone_cool_sp"
+                    ].min()
 
                     if (
-                        day["T_z_heat_sp"] < T_z_heat_occ_sp - 2.22 + tol_temp
+                        day["t_zone_heat_sp"] < t_zone_heat_occ_sp - 2.22 + tol_temp
                     ).all() or (
-                        day["T_z_cool_sp"] > T_z_cool_occ_sp + 2.22 - tol_temp
+                        day["t_zone_cool_sp"] > t_zone_cool_occ_sp + 2.22 - tol_temp
                     ).all():
                         result_repo.append(
                             1

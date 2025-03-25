@@ -443,12 +443,12 @@
             "Section 6.4.3.5 Heat Pump Auxiliary Heat Control and 6.3.2.h Criteria in 90.1-2016"
         ],
         "description_datapoints": {
-            "q_heat_ref": "Heating coil reference capacity",
-            "frac_runtime": "Heating coil runtime fraction",
-            "q_heat": "Heating coil heating rate",
-            "p_power_heat_supp": "Supplemental heating power",
-            "f_cap_flow": "Heating capacity flow fraction function",
-            "q_defrost": "Defrost heat load"
+            "C_ref": "Heating Coil Reference Capacity",
+            "L_op": "Heating Coil Runtime Fraction",
+            "C_t_mod": "Heating Coil Heating Rate",
+            "P_supp_ht": "Heating Coil Gas Rate",
+            "C_ff_mod": "Heating Capacity Function of Flow Fraction Curve",
+            "L_defrost": "Defrost load on the heating coil"
         },
         "description_assertions": [
             "If C_ref * C_t_mod >= L_op and P_supp_ht == 0 then pass else fail"
@@ -518,15 +518,12 @@
             "Section 6.4.3.3.5.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "schedule_damper": "Damper schedule",
-            "frac_oa": "Outdoor air flow fraction",
+            "v_oa": "Outdoor air volume flow",
             "schedule_occupancy": "Occupancy schedule",
-            "v_oa_heat_design": "Design heating outdoor air volume flow",
-            "v_oa_cool_design": "Design cooling outdoor air volume flow",
-            "vol_zone": "Zone volume",
+            "area_zone": "Thermal zone area",
+            "height_zone": "Thermal zone height",
             "v_oa_per_area": "Outdoor air volume flow per zone area",
-            "tol_occupants": "Occupant count tolerance",
-            "tol_v_oa": "Outdoor air flow tolerance"
+            "tol_occupants": "Occupant count tolerance"
         },
         "description_assertions": [
             "Check the two different airflow control logics when the room is/isn't rented out"
@@ -610,11 +607,14 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
+            "q_heat": "Heating output",
+            "q_cool": "Cooling output",
             "pos_damper_ra_max": "Maximum return air damper position",
             "tol_pos_damper_ra": "Return air damper position tolerance",
             "pos_damper_ra": "Return air damper position",
             "pos_damper_oa": "Outdoor air damper position",
-            "pos_damper_oa_max": "Maximum outdoor air damper position"
+            "pos_damper_oa_max": "Maximum outdoor air damper position",
+            "tol_pos_damper_oa": "Outdoor air damper position tolerance"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -936,13 +936,13 @@
             "t_economizer_limit": "Economizer lockout temperature limit",
             "pos_damper_oa": "Outdoor air damper position",
             "pos_damper_oa_min": "Minimum outdoor air damper position",
-            "v_oa_min": "Minimum outdoor air volume flow setpoint",
+            "v_oa_min_sp": "Minimum outdoor air volume flow setpoint",
             "v_oa": "Outdoor air volume flow",
             "mode_system": "System operation mode"
         },
         "description_assertions": [
             "if not economizer_lockout(t_oa, t_economizer_limit) and mode_system == 'occupied':",
-            "  if pos_damper_oa >= pos_damper_oa_min and v_oa >= v_oa_min:",
+            "  if pos_damper_oa >= pos_damper_oa_min and v_oa >= v_oa_min_sp:",
             "    pass",
             "  else:",
             "    fail",
@@ -964,17 +964,17 @@
             "pos_damper_oa": "Outdoor air damper position",
             "pos_damper_ra": "Return air damper position",
             "v_oa": "Outdoor air volume flow",
-            "v_oa_min": "Minimum outdoor air volume flow setpoint",
+            "v_oa_min_sp": "Minimum outdoor air volume flow setpoint",
             "mode_system": "System operation mode"
         },
         "description_assertions": [
             "if economizer_lockout(t_oa, t_economizer_limit) and mode_system == 'occupied':",
-            "  if v_oa < v_oa_min (continuously (e.g. fall below the sp for a consecutive 1 hr)):",
+            "  if v_oa < v_oa_min_sp (continuously (e.g. fall below the sp for a consecutive 1 hr)):",
             "    if pos_damper_oa == 100 and pos_damper_ra == 0:",
             "      pass",
             "    else:",
             "      fail",
-            "  elif v_oa > v_oa_min (continuously):",
+            "  elif v_oa > v_oa_min_sp (continuously):",
             "    if pos_damper_oa == 0 and pos_damper_ra == 100:",
             "      pass",
             "    else:",

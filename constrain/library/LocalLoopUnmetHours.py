@@ -5,10 +5,9 @@ This verification aims to check if control loops maintain setpoint tracking over
 
 ### Code requirement
 
-- Code Name: ASHRAE Guideline 36
-- Code Year: 2021
-- Code Section: 5.1.12 Control Loops
-- Code Subsection: Loop Performance Requirements
+- Code Name: N/A
+- Code Year: N/A
+- Code Section: N/A
 
 ### Verification Approach
 
@@ -24,7 +23,7 @@ The verification analyzes duration of control errors:
 ### Verification Applicability
 
 - Building Type(s): any
-- Space Type(s): any
+- val_setpointace Type(s): any
 - System(s): any control loop
 - Climate Zone(s): any
 - Component(s): sensors, actuators, controllers
@@ -51,12 +50,12 @@ else:
 
 ### Data requirements
 
-- v_fb: Process variable
+- val_sensor: Process variable
   - Data Value Unit: varies by application
   - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
-- sp: Control setpoint
+- val_setpoint: Control setpoint
   - Data Value Unit: same as v_fb
   - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
@@ -68,18 +67,18 @@ from constrain.checklib import RuleCheckBase
 
 
 class LocalLoopUnmetHours(RuleCheckBase):
-    points = ["feedback_sensor", "set_point"]
+    points = ["val_sensor", "val_setpoint"]
 
     def error_below_5percent(self, t):
         # this method checks each sample, and returns true if the error is within 5 percent of absolute setpoint value
         # if the set point is 0, a default error threshold of 0.01 is used
-        err_abs = abs(t["feedback_sensor"] - t["set_point"])
-        if t["set_point"] == 0:
+        err_abs = abs(t["val_sensor"] - t["val_setpoint"])
+        if t["val_setpoint"] == 0:
             if err_abs > 0.01:
                 return False
             else:
                 return True
-        if err_abs / abs(t["set_point"]) > 0.05:
+        if err_abs / abs(t["val_setpoint"]) > 0.05:
             return False
         else:
             return True

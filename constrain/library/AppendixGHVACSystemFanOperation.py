@@ -60,12 +60,12 @@ Endif
 
 ### Data requirements
 
-- n_occ: Number of occupants
+- n_occupants: Number of occupants
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- fan_runtime: Fan runtime fraction
+- frac_runtime_fan: Fan runtime fraction
   - Data Value Unit: fraction
   - Data point Description: Fan runtime fraction
   - Data Point Affiliation: System operation
@@ -75,7 +75,7 @@ Endif
   - Data point Description: Outdoor air flow rate
   - Data Point Affiliation: System ventilation
 
-- tol_occ: Occupancy threshold
+- tol_occupants: Occupancy threshold
   - Data Value Unit: count
   - Data point Description: Occupancy tolerance
   - Data Point Affiliation: Zone occupancy
@@ -86,19 +86,19 @@ from constrain.checklib import RuleCheckBase
 
 
 class AppendixGHVACSystemFanOperation(RuleCheckBase):
-    points = ["o", "fan_runtime_fraction", "m_oa", "tol_o"]
+    points = ["n_occupants", "frac_runtime_fan", "v_oa", "tol_occupants"]
     potential_failures_counter = 0
     potential_pass_count = 0
 
     def hvac_system_fan_operation(self, data):
-        if data["o"] >= data["tol_o"]:
-            if data["fan_runtime_fraction"] == 1:
+        if data["n_occupants"] >= data["tol_occupants"]:
+            if data["frac_runtime_fan"] == 1:
                 return True
             else:
                 return False
         else:
             # the system could be "cycling" for the whole timestep
-            if data["fan_runtime_fraction"] == 1:
+            if data["frac_runtime_fan"] == 1:
                 self.potential_failures_counter += 1
                 return True  # assume that it passes, final failure/pass determination is handled by check_bool
             else:
@@ -107,7 +107,7 @@ class AppendixGHVACSystemFanOperation(RuleCheckBase):
 
     def check_system_oa(self, data):
         # check that the system does provide outdoor air
-        total_oa = sum(data["m_oa"])
+        total_oa = sum(data["v_oa"])
         if total_oa > 0:
             return True
         else:

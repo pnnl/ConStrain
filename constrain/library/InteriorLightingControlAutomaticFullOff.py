@@ -34,14 +34,14 @@ Exceptions not verified:
 
 ```python
 # Check control area limitation
-if area_floor_lit >= 5000:
+if area_lit_lit >= 5000:
     fail  # Exceeds maximum area per control device
 
 # Check shutoff timing and power
 time_since_occupancy = current_time - last_occupancy_time
 
 if occupancy < occupancy_threshold and time_since_occupancy > 20_minutes:
-    if p_light_total / area_floor_lit <= 0.02:
+    if p_power_light_total / area_lit <= 0.02:
         pass  # Proper shutoff or within exemption
     else:
         fail  # Lights still on above exemption threshold
@@ -51,22 +51,22 @@ else:
 
 ### Data requirements
 
-- n_occ: Occupancy count
+- n_occupants: Occupancy count
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- p_light_total: Lighting power
+- p_power_light_total: Lighting power
   - Data Value Unit: power
   - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system
 
-- area_floor_lit: Floor area
+- area_lit: Floor area
   - Data Value Unit: area
   - Data point Description: Lighted floor area
   - Data Point Affiliation: Space configuration
 
-- tol_n_occ: Occupancy threshold
+- tol_occupants: Occupancy threshold
   - Data Value Unit: count
   - Data point Description: Occupancy tolerance
   - Data Point Affiliation: Zone occupancy
@@ -78,27 +78,29 @@ from constrain.checklib import RuleCheckBase
 
 class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
     points = [
-        "o",
-        "total_lighting_power",
-        "lighted_floor_area",
-        "tol_o",
+        "n_occupants",
+        "p_power_light_total",
+        "area_lit",
+        "tol_occupants",
     ]
     min_lighting_power_density = 0
     last_reported_occupancy = None
 
-    def daylight_off(self, data):
+    def automatic_full_off(self, data):
         # initialization
         if self.last_reported_occupancy is None:
             self.last_reported_occupancy = data.name
 
         # verification based on lighted space
-        if data["lighted_floor_area"] >= 5000:
+        if data["area_lit"] >= 5000:
             return False
 
         # verification based on power
         date_diff = data.name - self.last_reported_occupancy
-        if (data["o"] < data["tol_o"]) and date_diff.total_seconds() / 60 > 20:
-            if (data["total_lighting_power"] / data["lighted_floor_area"]) <= 0.02:
+        if (
+            data["n_occupants"] < data["tol_occupants"]
+        ) and date_diff.total_seconds() / 60 > 20:
+            if (data["p_power_light_total"] / data["area_lit"]) <= 0.02:
                 check = True
             else:
                 check = False
@@ -106,12 +108,12 @@ class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
             check = "Untested"
 
         # update last identified occupancy flag if applicable
-        if data["o"] >= data["tol_o"]:
+        if data["n_occupants"] >= data["tol_occupants"]:
             self.last_reported_occupancy = data.name
         return check
 
     def verify(self):
         self.min_lighting_power_density = (
-            self.df["total_lighting_power"].min() / self.df["lighted_floor_area"]
+            self.df["p_power_light_total"].min() / self.df["area_lit"]
         )
-        self.result = self.df.apply(lambda d: self.daylight_off(d), axis=1)
+        self.result = self.df.apply(lambda d: self.automatic_full_off(d), axis=1)

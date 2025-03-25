@@ -28,16 +28,16 @@ The test is considered untested if supply air temperature is not above room temp
 ### Verification Algorithm Pseudo Code
 
 ```python
-if t_sa_sp <= t_zone:
+if t_sa_sp <= t_room:
     untested
 else:
-    match mode_sys:
+    match mode_system:
         case 'occupied':
-            minimum = v_vav_min
+            minimum = v_min
         case 'cooldown' | 'setup' | 'warmup' | 'setback' | 'unoccupied':
             minimum = 0
 
-    if v_vav_sp - tol_v_vav > minimum:
+    if v_sp - tol_v > minimum:
         fail
     else:
         pass
@@ -45,9 +45,9 @@ else:
 
 ### Data requirements
 
-- mode_sys: System operation mode
+- mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System operation mode
+  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - state_zone: Zone state
@@ -55,29 +55,29 @@ else:
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_vav_min: Minimum airflow
+- v_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum airflow
+  - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
 - t_sa_sp: Supply air temperature setpoint
-  - Data Value Unit: °C
+  - Data Value Unit: temperature
   - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: AHU control
 
-- v_vav_sp: Airflow setpoint
+- v_sp: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- tol_v_vav: Airflow tolerance
+- tol_v: Airflow tolerance
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow tolerance
   - Data Point Affiliation: Zone airflow control
 
-- t_zone: Zone temperature
-  - Data Value Unit: °C
-  - Data point Description: Zone temperature
+- t_room: Room temperature
+  - Data Value Unit: temperature
+  - Data point Description: Room temperature
   - Data Point Affiliation: Zone monitoring
 
 """
@@ -87,30 +87,30 @@ from constrain.checklib import RuleCheckBase
 
 class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
     points = [
-        "operation_mode",
-        "zone_state",
+        "mode_system",
+        "state_zone",
         "v_min",
-        "ahu_sat_spt",
-        "v_spt",
-        "v_spt_tol",
-        "room_temp",
+        "t_sa_sp",
+        "v_sp",
+        "tol_v",
+        "t_room",
     ]
 
     def setpoint_at_minimum_when_dat_high(
         self,
-        operation_mode,
-        zone_state,
+        mode_system,
+        state_zone,
         v_min,
-        ahu_sat_spt,
-        v_spt,
-        v_spt_tol,
-        room_temp,
+        t_sa_sp,
+        v_sp,
+        tol_v,
+        t_room,
     ):
-        if zone_state.lower().strip() != "cooling":
+        if state_zone.lower().strip() != "cooling":
             return "Untested"
-        if ahu_sat_spt <= room_temp:
+        if t_sa_sp <= t_room:
             return "Untested"
-        match operation_mode.strip().lower():
+        match mode_system.strip().lower():
             case "occupied":
                 airflowmin = v_min
             case "cooldown" | "setup" | "warmup" | "setback" | "unoccupied":
@@ -119,7 +119,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
                 print("invalid operation mode value")
                 return "Untested"
 
-        if v_spt - v_spt_tol > airflowmin:
+        if v_sp - tol_v > airflowmin:
             return False
         else:
             return True
@@ -127,13 +127,13 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_at_minimum_when_dat_high(
-                t["operation_mode"],
-                t["zone_state"],
+                t["mode_system"],
+                t["state_zone"],
                 t["v_min"],
-                t["ahu_sat_spt"],
-                t["v_spt"],
-                t["v_spt_tol"],
-                t["room_temp"],
+                t["t_sa_sp"],
+                t["v_sp"],
+                t["tol_v"],
+                t["t_room"],
             ),
             axis=1,
         )
