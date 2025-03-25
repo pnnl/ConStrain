@@ -35,11 +35,11 @@ class G36ReliefDamperStatus(RuleCheckBase):
 
     def ts_verify_logic(self, t):
         if t["relief_damper_command"] > self.get_tolerance(
-            "damper", "position"
+            "damper", "command"
         ) and bool(t["supply_fan_status"]):
             return True
         elif t["relief_damper_command"] < (
-            1 - self.get_tolerance("damper", "position")
+            (1 - self.get_tolerance("damper", "command")) * 100
         ) and not bool(t["supply_fan_status"]):
             return True
         else:

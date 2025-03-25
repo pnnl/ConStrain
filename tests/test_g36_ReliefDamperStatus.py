@@ -17,6 +17,7 @@ class TestG36ReliefDamperStatus(unittest.TestCase):
             "general": 0.0,
             "types": {
                 "position": 0.0,
+                "command": 0.0,
             },
         }
     }
