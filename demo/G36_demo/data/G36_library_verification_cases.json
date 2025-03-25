@@ -13,16 +13,16 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "dev_settings": {
-                    "heating_output": "heating_output",
-                    "cooling_output": "cooling_output",
-                    "ra_p": "ra_p",
-                    "max_ra_p": "max_ra_p",
-                    "oa_p": "oa_p",
-                    "max_oa_p": "max_oa_p"
+                    "q_heat": "heating_output",
+                    "q_cool": "cooling_output",
+                    "pos_damper_ra": "ra_p",
+                    "pos_damper_ra_max": "max_ra_p",
+                    "pos_damper_oa": "oa_p",
+                    "pos_damper_oa_max": "max_oa_p"
                 },
                 "parameters": {
-                    "ra_p_tol": 0.01,
-                    "oa_p_tol": 0.01
+                    "tol_pos_damper_ra": 0.01,
+                    "tol_pos_damper_oa": 0.01
                 }
             },
             "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"
@@ -40,18 +40,18 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "dev_settings": {
-                    "heating_output": "heating_output",
-                    "cooling_output": "cooling_output",
-                    "ra_p": "ra_p",
-                    "max_ra_p": "max_ra_p",
-                    "oa_p": "oa_p",
-                    "min_oa_p": "min_oa_p",
-                    "max_oa_p": "max_oa_p",
-                    "economizer_high_limit_reached": "economizer_high_limit_reached"
+                    "q_heat": "heating_output",
+                    "q_cool": "cooling_output",
+                    "pos_damper_ra": "ra_p",
+                    "pos_damper_ra_max": "max_ra_p",
+                    "pos_damper_oa": "oa_p",
+                    "pos_damper_oa_min": "min_oa_p",
+                    "pos_damper_oa_max": "max_oa_p",
+                    "flag_economizer_limit": "economizer_high_limit_reached"
                 },
                 "parameters": {
-                    "ra_p_tol": 0.01,
-                    "oa_p_tol": 0.01
+                    "tol_pos_damper_ra": 0.01,
+                    "tol_pos_damper_oa": 0.01
                 }
             },
             "verification_class": "G36OutdoorAirDamperPositionForReliefDamperOrFan"
@@ -69,17 +69,17 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "dev_settings": {
-                    "operation_mode": "operation_mode",
-                    "oa_t": "oa_t",
-                    "t_max": "t_max",
-                    "sa_t_sp_ac": "sa_t_sp_ac",
-                    "oa_t_min": "oa_t_min",
-                    "oa_t_max": "oa_t_max",
-                    "min_clg_sa_t_sp": "min_clg_sa_t_sp",
-                    "max_clg_sa_t_sp": "max_clg_sa_t_sp"
+                    "mode_operation": "operation_mode",
+                    "t_oa": "oa_t",
+                    "t_sa_max": "t_max",
+                    "t_sa_sp": "sa_t_sp_ac",
+                    "t_oa_min": "oa_t_min",
+                    "t_oa_max": "oa_t_max",
+                    "t_sa_cool_min": "min_clg_sa_t_sp",
+                    "t_sa_cool_max": "max_clg_sa_t_sp"
                 },
                 "parameters": {
-                    "sa_sp_tol": 0.1
+                    "tol_t_sa": 0.1
                 }
             },
             "verification_class": "G36SupplyAirTemperatureSetpoint"
