@@ -49,7 +49,7 @@ class G36FreezeProtectionStage2(RuleCheckBase):
         freeze_status = False
         for i, t in self.df.iterrows():
             if t["supply_air_temp"] < (
-                3.3 - self.get_tolerance("temperature", "supply_air")
+                3.3 + self.get_tolerance("temperature", "supply_air")
             ):
                 if lt3p3_timer_start is None:
                     lt3p3_timer_start = i
