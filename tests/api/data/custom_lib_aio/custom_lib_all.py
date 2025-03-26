@@ -345,7 +345,15 @@ from constrain import CheckLibBase, RuleCheckBase
 
 
 class UserProvidedVerificationItem1(RuleCheckBase):
-    points = ["n_occupants", "status_economizer", "v_oa", "v_ea", "tol_occupants", "tol_v_oa", "tol_v_ea"]
+    points = [
+        "n_occupants",
+        "status_economizer",
+        "v_oa",
+        "v_ea",
+        "tol_occupants",
+        "tol_v_oa",
+        "tol_v_ea",
+    ]
 
     def automatic_oa_damper_check(self, data):
         if data["n_occupants"] < data["tol_occupants"]:
@@ -363,7 +371,15 @@ class UserProvidedVerificationItem1(RuleCheckBase):
 
 
 class UserProvidedVerificationItem_Beta(RuleCheckBase):
-    points = ["n_occupants", "status_economizer", "v_oa", "v_ea", "tol_occupants", "tol_v_oa", "tol_v_ea"]
+    points = [
+        "n_occupants",
+        "status_economizer",
+        "v_oa",
+        "v_ea",
+        "tol_occupants",
+        "tol_v_oa",
+        "tol_v_ea",
+    ]
 
     def automatic_oa_damper_check(self, data):
         if data["n_occupants"] < data["tol_occupants"]:

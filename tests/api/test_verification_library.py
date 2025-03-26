@@ -137,7 +137,14 @@ class TestVerificationLibrary(unittest.TestCase):
     def test_get_applicable_library_items_by_datapoints(self):
         vl_obj = VerificationLibrary(lib_path)
         applicable_lib_items = vl_obj.get_applicable_library_items_by_datapoints(
-            ["t_sa_sp", "t_z_design_cool", "v_oa", "status_ahu", "status_economizer", "n_occupants"]
+            [
+                "t_sa_sp",
+                "t_z_design_cool",
+                "v_oa",
+                "status_ahu",
+                "status_economizer",
+                "n_occupants",
+            ]
         )  # datapoints for `SupplyAirTempReset` and `DemandControlVentilation`
         self.assertEqual(
             applicable_lib_items["SupplyAirTempReset"],
