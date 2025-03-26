@@ -200,41 +200,41 @@ class TestBrickCompliance(unittest.TestCase):
         # check zone 1's datapoint names
         zone1_info = query_result[0]["datapoints_source"]["idf_output_variables"]
         self.assertEqual(
-            zone1_info["T_z_cool_sp"]["subject"],
+            zone1_info["t_z_cool_sp"]["subject"],
             "zone_1",
         )
         self.assertEqual(
-            zone1_info["T_z_cool_sp"]["variable"],
-            "Zone Thermostat Cooling Setpoint Temperature",
+            zone1_info["t_z_cool_sp"]["variable"],
+            "Zone cooling temperature setpoint",
         )
 
         self.assertEqual(
-            zone1_info["T_z_heat_sp"]["subject"],
+            zone1_info["t_z_heat_sp"]["subject"],
             "zone_1",
         )
         self.assertEqual(
-            zone1_info["T_z_heat_sp"]["variable"],
-            "Zone Thermostat Heating Setpoint Temperature",
+            zone1_info["t_z_heat_sp"]["variable"],
+            "Zone heating temperature setpoint",
         )
 
         # check zone 2's datapoint names
         zone2_info = query_result[1]["datapoints_source"]["idf_output_variables"]
         self.assertEqual(
-            zone2_info["T_z_cool_sp"]["subject"],
+            zone2_info["t_z_cool_sp"]["subject"],
             "zone_2",
         )
         self.assertEqual(
-            zone2_info["T_z_cool_sp"]["variable"],
-            "Zone Thermostat Cooling Setpoint Temperature",
+            zone2_info["t_z_cool_sp"]["variable"],
+            "Zone cooling temperature setpoint",
         )
 
         self.assertEqual(
-            zone2_info["T_z_heat_sp"]["subject"],
+            zone2_info["t_z_heat_sp"]["subject"],
             "zone_2",
         )
         self.assertEqual(
-            zone2_info["T_z_heat_sp"]["variable"],
-            "Zone Thermostat Heating Setpoint Temperature",
+            zone2_info["t_z_heat_sp"]["variable"],
+            "Zone heating temperature setpoint",
         )
 
         # default (non-EnergyPlus variable) style names
@@ -245,40 +245,40 @@ class TestBrickCompliance(unittest.TestCase):
         # check zone 1's datapoint names
         zone1_info = query_result[0]["datapoints_source"]["dev_settings"]
         self.assertEqual(
-            zone1_info["T_z_cool_sp"]["subject"],
+            zone1_info["t_z_cool_sp"]["subject"],
             "zone_1",
         )
         self.assertEqual(
-            zone1_info["T_z_cool_sp"]["variable"],
+            zone1_info["t_z_cool_sp"]["variable"],
             "zone_1_cooling_temperature_setpoint",
         )
 
         self.assertEqual(
-            zone1_info["T_z_heat_sp"]["subject"],
+            zone1_info["t_z_heat_sp"]["subject"],
             "zone_1",
         )
         self.assertEqual(
-            zone1_info["T_z_heat_sp"]["variable"],
+            zone1_info["t_z_heat_sp"]["variable"],
             "zone_1_heating_temperature_setpoint",
         )
 
         # check zone 2's datapoint names
         zone2_info = query_result[1]["datapoints_source"]["dev_settings"]
         self.assertEqual(
-            zone2_info["T_z_cool_sp"]["subject"],
+            zone2_info["t_z_cool_sp"]["subject"],
             "zone_2",
         )
         self.assertEqual(
-            zone2_info["T_z_cool_sp"]["variable"],
+            zone2_info["t_z_cool_sp"]["variable"],
             "zone_2_cooling_temperature_setpoint",
         )
 
         self.assertEqual(
-            zone2_info["T_z_heat_sp"]["subject"],
+            zone2_info["t_z_heat_sp"]["subject"],
             "zone_2",
         )
         self.assertEqual(
-            zone2_info["T_z_heat_sp"]["variable"],
+            zone2_info["t_z_heat_sp"]["variable"],
             "zone_2_heating_temperature_setpoint",
         )
 

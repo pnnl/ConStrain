@@ -81,7 +81,7 @@ class TestVerificationLibrary(unittest.TestCase):
             list(
                 vl_obj.lib_items["AutomaticShutdown"]["description_datapoints"].keys()
             ),
-            ["hvac_set"],
+            ["schedule_hvac"],
         )
 
     def test_validate_library_invalid(self):
@@ -137,7 +137,7 @@ class TestVerificationLibrary(unittest.TestCase):
     def test_get_applicable_library_items_by_datapoints(self):
         vl_obj = VerificationLibrary(lib_path)
         applicable_lib_items = vl_obj.get_applicable_library_items_by_datapoints(
-            ["T_sa_sp", "T_z_cool", "v_oa", "s_ahu", "s_eco", "no_of_occ"]
+            ["t_sa_sp", "t_z_design_cool", "v_oa", "status_ahu", "status_economizer", "n_occupants"]
         )  # datapoints for `SupplyAirTempReset` and `DemandControlVentilation`
         self.assertEqual(
             applicable_lib_items["SupplyAirTempReset"],

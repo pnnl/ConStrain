@@ -179,23 +179,23 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_sa_sp": {
+                                "t_sa_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "T_sa_sp"
+                                "t_sa_sp"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "T_z_cool": {
+                                "t_z_design_cool": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "T_z_cool"
+                                "t_z_design_cool"
                             ]
                         }
                     }
@@ -217,36 +217,36 @@
                                 "oa_flow": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "oa_db": {
+                                "t_oa": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "ret_a_enth": {
+                                "h_ra": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "oa_enth": {
+                                "h_oa": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "oa_flow",
-                                "oa_db",
-                                "ret_a_enth",
-                                "oa_enth"
+                                "v_oa",
+                                "t_oa",
+                                "h_ra",
+                                "h_oa"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "oa_threshold": {
+                                "t_oa_threshold": {
                                     "type": "number"
                                 },
-                                "oa_min_flow": {
+                                "v_oa_min": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "oa_threshold",
-                                "oa_min_flow"
+                                "t_oa_threshold",
+                                "v_oa_min"
                             ]
                         }
                     }
@@ -265,27 +265,27 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "oa_flow": {
+                                "v_oa": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "ccoil_out": {
+                                "q_cool": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "oa_flow",
-                                "ccoil_out"
+                                "v_oa",
+                                "q_cool"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "oa_min_flow": {
+                                "v_oa_min": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "oa_min_flow"
+                                "v_oa_min"
                             ]
                         }
                     }
@@ -304,10 +304,10 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_oa_db": {
+                                "t_oa": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_hw": {
+                                "t_hw": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "m_hw": {
@@ -315,32 +315,32 @@
                                 }
                             },
                             "required": [
-                                "T_oa_db",
-                                "T_hw",
+                                "t_oa",
+                                "t_hw",
                                 "m_hw"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "T_oa_max": {
+                                "t_oa_max": {
                                     "type": "number"
                                 },
-                                "T_oa_min": {
+                                "t_oa_min": {
                                     "type": "number"
                                 },
-                                "T_hw_max_set": {
+                                "t_hw_max_sp": {
                                     "type": "number"
                                 },
-                                "T_hw_min_set": {
+                                "t_hw_min_sp": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "T_oa_max",
-                                "T_oa_min",
-                                "T_hw_max_set",
-                                "T_hw_min_set"
+                                "t_oa_max",
+                                "t_oa_min",
+                                "t_hw_max_sp",
+                                "t_hw_min_sp"
                             ]
                         }
                     }
@@ -359,7 +359,7 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_oa_db": {
+                                "t_oa": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "T_chw": {
@@ -370,7 +370,7 @@
                                 }
                             },
                             "required": [
-                                "T_oa_db",
+                                "t_oa",
                                 "T_chw",
                                 "m_chw"
                             ]
@@ -378,24 +378,24 @@
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "T_oa_max": {
+                                "t_oa_max": {
                                     "type": "number"
                                 },
-                                "T_oa_min": {
+                                "t_oa_min": {
                                     "type": "number"
                                 },
-                                "T_chw_max_st": {
+                                "t_chw_max_sp": {
                                     "type": "number"
                                 },
-                                "T_chw_min_st": {
+                                "t_chw_min_sp": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "T_oa_max",
-                                "T_oa_min",
-                                "T_chw_max_st",
-                                "T_chw_min_st"
+                                "t_oa_max",
+                                "t_oa_min",
+                                "t_chw_max_sp",
+                                "t_chw_min_sp"
                             ]
                         }
                     }
@@ -414,28 +414,28 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_zone": {
+                                "t_z": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "HVAC_operation_sch": {
+                                "schedule_hvac": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_z_heat_sp": {
+                                "t_z_heat_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_z_cool_sp": {
+                                "t_z_cool_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "Fan_elec_rate": {
+                                "p_power_fan": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "T_zone",
-                                "HVAC_operation_sch",
-                                "T_z_heat_sp",
-                                "T_z_cool_sp",
-                                "Fan_elec_rate"
+                                "t_z",
+                                "schedule_hvac",
+                                "t_z_heat_sp",
+                                "t_z_cool_sp",
+                                "p_power_fan"
                             ]
                         },
                         "parameters": {
@@ -457,31 +457,39 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "o": {
+                                "n_occupants": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "m_oa": {
+                                "v_oa": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "eco_onoff": {
+                                "status_economizer": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "o",
-                                "m_oa",
-                                "eco_onoff"
+                                "n_occupants",
+                                "v_oa",
+                                "status_economizer"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "tol": {
+                                "tol_occupants": {
+                                    "type": "number"
+                                },
+								"tol_v_oa": {
+                                    "type": "number"
+                                },
+								"tol_v_ea": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "tol"
+                                "tol_occupants",
+								"tol_v_oa",
+								"tol_v_ea"
                             ]
                         }
                     }
@@ -500,49 +508,37 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "p_set": {
+                                "p_press_static_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "d_VAV_1": {
+                                "pos_damper_vav1": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "d_VAV_2": {
+                                "pos_damper_vav2": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "d_VAV_3": {
+                                "pos_damper_vav3": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "d_VAV_4": {
+                                "pos_damper_vav4": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "d_VAV_5": {
+                                "pos_damper_vav5": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "p_set",
-                                "d_VAV_1",
-                                "d_VAV_2",
-                                "d_VAV_3",
-                                "d_VAV_4",
-                                "d_VAV_5"
+                                "p_press_static_sp",
+                                "pos_damper_vav1",
+                                "pos_damper_vav2",
+                                "pos_damper_vav3",
+                                "pos_damper_vav4",
+                                "pos_damper_vav5"
                             ]
                         },
                         "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "p_set_min": {
-                                    "type": "number"
-                                },
-                                "tol": {
-                                    "type": "number"
-                                }
-                            },
-                            "required": [
-                                "p_set_min",
-                                "tol"
-                            ]
-                        }
+							"type": "object"
+						}
                     }
                 },
                 "verification_class": {
@@ -559,39 +555,39 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "ct_op_cells": {
+                                "n_cells_ct_op": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "ct_m": {
+                                "m_ct": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "ct_P_fan": {
+                                "p_power_fan_ct": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "ct_op_cells",
-                                "ct_m",
-                                "ct_P_fan"
+                                "n_cells_ct_op",
+                                "m_ct",
+                                "p_power_fan_ct"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "ct_cells": {
+                                "n_cells_ct": {
                                     "type": "number"
                                 },
-                                "ct_m_des": {
+                                "m_ct_design": {
                                     "type": "number"
                                 },
-                                "min_flow_frac_per_cell": {
+                                "frac_flow_min_cell": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "ct_cells",
-                                "ct_m_des",
-                                "min_flow_frac_per_cell"
+                                "n_cells_ct",
+                                "m_ct_design",
+                                "frac_flow_min_cell"
                             ]
                         }
                     }
@@ -610,12 +606,12 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_wh_inlet": {
+                                "t_wh_in": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "T_wh_inlet"
+                                "t_wh_in"
                             ]
                         },
                         "parameters": {
@@ -637,23 +633,23 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "p_fan_set": {
+                                "p_press_static_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "p_fan_set"
+                                "p_press_static_sp"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "ct_cells": {
+                                "tol_p_press_static": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "ct_cells"
+                                "tol_p_press_static"
                             ]
                         }
                     }
@@ -672,20 +668,20 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "no_of_occ": {
+                                "n_occupants": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "Q_load": {
+                                "q_sensible": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "P_fan": {
+                                "p_power_fan": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "no_of_occ",
-                                "Q_load",
-                                "P_fan"
+                                "n_occupants",
+                                "q_sensible",
+                                "p_power_fan"
                             ]
                         },
                         "parameters": {
@@ -707,10 +703,10 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_max_heating_loop": {
+                                "t_heating_max": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_min_cooling_loop": {
+                                "t_cooling_min": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "m_pump": {
@@ -718,20 +714,20 @@
                                 }
                             },
                             "required": [
-                                "T_max_heating_loop",
-                                "T_min_cooling_loop",
+                                "t_heating_max",
+                                "t_cooling_min",
                                 "m_pump"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "tol": {
+                                "tol_t_loop": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "tol"
+                                "tol_t_loop"
                             ]
                         }
                     }
@@ -750,12 +746,12 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "hvac_set": {
+                                "schedule_hvac": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "hvac_set"
+                                "schedule_hvac"
                             ]
                         },
                         "parameters": {
@@ -832,31 +828,31 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "ct_P_fan": {
+                                "p_power_fan_ct": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "ct_m_fan_ratio": {
+                                "ratio_flow_ct": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "ct_P_fan",
-                                "ct_m_fan_ratio"
+                                "p_power_fan_ct",
+                                "ratio_flow_ct"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "ct_m_fan_dsgn": {
+                                "v_ct_design": {
                                     "type": "number"
                                 },
-                                "ct_P_fan_dsgn": {
+                                "p_power_fan_ct_design": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "ct_m_fan_dsgn",
-                                "ct_P_fan_dsgn"
+                                "v_ct_design",
+                                "p_power_fan_ct_design"
                             ]
                         }
                     }
@@ -875,43 +871,39 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "m_z_oa": {
+                                "v_oa": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "O_sch": {
+                                "schedule_occupancy": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "m_z_oa",
-                                "O_sch"
+                                "v_oa",
+                                "schedule_occupancy"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "area_z": {
+                                "area_zone": {
                                     "type": "number"
                                 },
-                                "height_z": {
+                                "height_zone": {
                                     "type": "number"
                                 },
-                                "v_outdoor_per_zone": {
+                                "v_oa_per_area": {
                                     "type": "number"
                                 },
-                                "tol_occ": {
-                                    "type": "number"
-                                },
-                                "tol_oa_flow": {
+                                "tol_occupants": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "area_z",
-                                "height_z",
-                                "v_outdoor_per_zone",
-                                "tol_occ",
-                                "tol_oa_flow"
+                                "area_zone",
+                                "height_zone",
+                                "v_oa_per_area",
+                                "tol_occupants"
                             ]
                         }
                     }
@@ -930,35 +922,35 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "T_z_heat_sp": {
+                                "t_z_heat_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_z_cool_sp": {
+                                "t_z_cool_sp": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "O_sch": {
+                                "schedule_occupancy": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "T_z_heat_sp",
-                                "T_z_cool_sp",
-                                "O_sch"
+                                "t_z_heat_sp",
+                                "t_z_cool_sp",
+                                "schedule_occupancy"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "tol_occ": {
+                                "tol_occupants": {
                                     "type": "number"
                                 },
-                                "tol_temp": {
+                                "tol_t": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "tol_occ",
-                                "tol_temp"
+                                "tol_occupants",
+                                "tol_t"
                             ]
                         }
                     }
@@ -980,53 +972,25 @@
                                 "v_oa": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "s_ahu": {
+                                "status_ahu": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "s_eco": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "no_of_occ_core": {
-                                    "$ref": "#/$defs/output_variable"
-                                },
-                                "no_of_occ_per1": {
-                                    "$ref": "#/$defs/output_variable"
-                                },
-                                "no_of_occ_per2": {
-                                    "$ref": "#/$defs/output_variable"
-                                },
-                                "no_of_occ_per3": {
-                                    "$ref": "#/$defs/output_variable"
-                                },
-                                "no_of_occ_per4": {
+                                "n_occupants": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
                                 "v_oa",
-                                "s_ahu",
+                                "status_ahu",
                                 "s_eco",
-                                "no_of_occ_core",
-                                "no_of_occ_per1",
-                                "no_of_occ_per2",
-                                "no_of_occ_per3",
-                                "no_of_occ_per4"
+                                "n_occupants"
                             ]
                         },
                         "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "tol_occ": {
-                                    "type": "number"
-                                },
-                                "tol_temp": {
-                                    "type": "number"
-                                }
-                            },
-                            "required": [
-                                "tol_occ",
-                                "tol_temp"
-                            ]
+                            "type": "object"
                         }
                     }
                 },
