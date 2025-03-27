@@ -54,7 +54,8 @@
         "unit": "W",
         "types": {
             "zone": 100,
-            "general": 100
+            "general": 100,
+            "coil": 20
         }
     },
     "ratio": {
