@@ -7,9 +7,9 @@ class VentilationFanControl(RuleCheckBase):
 
     def verify(self):
         self.result = ~(
-            (self.df["Q_load"] == 0)
+            (abs(self.df["Q_load"]) < self.get_tolerance("load", "zone"))
             & (self.df["no_of_occ"] == 0)
-            & (self.df["P_fan"] != 0)
+            & (abs(self.df["P_fan"]) > self.get_tolerance("power", "fan"))
         )
 
     def calculate_plot_day(self):

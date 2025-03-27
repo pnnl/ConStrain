@@ -324,6 +324,7 @@ class TestVerification(unittest.TestCase):
                 fig_size=(6, 5),
                 num_threads=1,
                 preprocessed_data=df.data,
+                path_to_custom_tolerance_file="./constrain/tolerances.json",
             )
             assert len(logobs.output) == 11
 

@@ -3,11 +3,9 @@ import pandas as pd
 
 
 class GuestRoomControlTemp(RuleCheckBase):
-    points = ["T_z_hea_set", "T_z_coo_set", "O_sch", "tol_occ", "tol_temp"]
+    points = ["T_z_hea_set", "T_z_coo_set", "O_sch"]
 
     def verify(self):
-        tol_occ = self.df["tol_occ"][0]
-        tol_temp = self.df["tol_temp"][0]
         year_info = 2000
         result_repo = []
         for idx, day in self.df.groupby(self.df.index.date):
@@ -21,10 +19,14 @@ class GuestRoomControlTemp(RuleCheckBase):
                 pass
             else:
                 if (
-                    day["O_sch"] <= tol_occ
+                    day["O_sch"] <= self.get_tolerance("ratio", "occupancy")
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["T_z_hea_set"] < 15.6 + tol_temp).all() and (
-                        day["T_z_coo_set"] > 26.7 - tol_temp
+                    if (
+                        day["T_z_hea_set"]
+                        < 15.6 + self.get_tolerance("temperature", "zone")
+                    ).all() and (
+                        day["T_z_coo_set"]
+                        > 26.7 - self.get_tolerance("temperature", "zone")
                     ).all():
                         result_repo.append(
                             1
@@ -38,9 +40,15 @@ class GuestRoomControlTemp(RuleCheckBase):
                     T_z_coo_occ_set = day.query("O_sch > 0.0")["T_z_coo_set"].min()
 
                     if (
-                        day["T_z_hea_set"] < T_z_hea_occ_set - 2.22 + tol_temp
+                        day["T_z_hea_set"]
+                        < T_z_hea_occ_set
+                        - 2.22
+                        + self.get_tolerance("temperature", "zone")
                     ).all() or (
-                        day["T_z_coo_set"] > T_z_coo_occ_set + 2.22 - tol_temp
+                        day["T_z_coo_set"]
+                        > T_z_coo_occ_set
+                        + 2.22
+                        - self.get_tolerance("temperature", "zone")
                     ).all():
                         result_repo.append(
                             1

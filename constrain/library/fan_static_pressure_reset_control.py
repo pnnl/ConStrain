@@ -52,7 +52,9 @@ class FanStaticPressureResetControl(RuleCheckBase):
 
         for row_num, (index, row) in enumerate(self.df.iterrows()):
             if row_num != 0:
-                if self.df.at[index, "p_set"] < self.df.at[prev_index, "p_set"]:
+                if self.df.at[prev_index, "p_set"] - self.df.at[
+                    index, "p_set"
+                ] > self.get_tolerance("pressure", "static"):
                     self.df.at[index, "result"] = True
                 elif (d_vav_df.loc[index] > 0.9).any():
                     self.df.at[index, "result"] = True

@@ -33,8 +33,6 @@ else
 - V_dot_VAV_max: max VAV volume flow
 - VAV_min_turndown_design: design VAV box min turndown ratio
 - P_set: duct pressure setpoint
-- turndown_tol: VAV turndown tolerance
-- P_set_tol: pressure setpoint tolerance
 
 """
 
@@ -49,21 +47,20 @@ class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
         "V_dot_VAV_max",
         "VAV_min_turndown_design",
         "P_set",
-        "turndown_tol",
-        "P_set_tol",
     ]
 
     def vav_turndown_check(self, data):
         if data["reheat_coil_flag"]:
             if data["V_dot_VAV_max"] == 0:
                 return "Untested"
-            elif (
-                data["V_dot_VAV"] / data["V_dot_VAV_max"]
-                > data["VAV_min_turndown_design"] + data["turndown_tol"]
-            ):
+            elif data["V_dot_VAV"] / data["V_dot_VAV_max"] > data[
+                "VAV_min_turndown_design"
+            ] + self.get_tolerance("ratio", "flow"):
                 if data["P_set_prev"] is None:
                     return "Untested"
-                elif abs(data["P_set"] - data["P_set_prev"]) > data["P_set_tol"]:
+                elif abs(data["P_set"] - data["P_set_prev"]) > self.get_tolerance(
+                    "pressure", "static"
+                ):
                     return "Untested"
                 else:
                     return False
