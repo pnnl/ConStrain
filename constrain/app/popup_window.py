@@ -24,7 +24,7 @@ from PyQt6.QtGui import QPixmap
 from constrain.app.list_and_choice_popups import ListPopup, ChoicesPopup
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
-dependencies_path = os.path.join(script_directory, "dependencies.json")
+dependencies_path = os.path.join(script_directory, "schema.json")
 api_to_method_path = os.path.join(script_directory, "api_to_method.json")
 
 # mapping from object to its methods and its methods to its parameters for display in popup
@@ -473,7 +473,7 @@ class PopupWindow(QDialog):
             self.method_combo_box.addItems(methods)
             self.method_combo_box.show()
 
-    def make_and_add_groupbox(self, title, widget):
+    def make_and_add_groupbox(self, title, widget, description=None):
         """Creates and adds QGroupBox to layout with given title and widget
 
         Args:
@@ -487,11 +487,9 @@ class PopupWindow(QDialog):
         gb.setTitle(title)
         layout = QVBoxLayout()
 
-        # tt_label = QLabel()
-        # pixmap = QPixmap("tt.png")
-        # tt_label.setPixmap(pixmap)
+        if description:
+            gb.setToolTip(description)
 
-        # layout.addWidget(tt_label)
         layout.addWidget(widget)
         gb.setLayout(layout)
         self.form_layout.addWidget(gb)
@@ -554,11 +552,16 @@ class PopupWindow(QDialog):
             # create groupboxes for each necessary field for the method
             for field in fields:
                 if field["type"] == "line_edit":
-                    self.make_and_add_groupbox(field["label"], QLineEdit())
+                    self.make_and_add_groupbox(
+                        field["label"], QLineEdit(), field["description"]
+                    )
                 elif field["type"] == "combo_box":
                     combo_box = QComboBox()
                     combo_box.addItems(["", "True", "False"])
-                    self.make_and_add_groupbox(field["label"], combo_box)
+                    combo_box.setCurrentText("False")
+                    self.make_and_add_groupbox(
+                        field["label"], combo_box, field["description"]
+                    )
 
         payload_widget = QGroupBox()
         payload_widget.setTitle("Payloads")
