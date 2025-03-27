@@ -13,9 +13,11 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
     tolerances = {
         "airflow": {
             "unit": "m3/s",
-            "general": 50,
+            "types": {
+                "general": 50,
+            },
         },
-        "damper": {"unit": "%", "general": 0.01, "types": {"command": 0.01}},
+        "damper": {"unit": "%", "types": {"command": 0.01, "general": 0.01}},
     }
 
     def test_g36_terminal_box_vav_damper_tracking0(self):

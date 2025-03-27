@@ -12,9 +12,9 @@ class TestFanStaticPressureResetControl(unittest.TestCase):
     tolerances = {
         "pressure": {
             "unit": "Pa",
-            "general": 0.0,
             "types": {
                 "static": 0.0,
+                "general": 0.0,
             },
         }
     }

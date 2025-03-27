@@ -12,9 +12,9 @@ class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
     tolerances = {
         "temperature": {
             "unit": "deg. C",
-            "general": 0.2,
             "types": {
                 "supply_air": 0.2,
+                "general": 0.2,
             },
         }
     }

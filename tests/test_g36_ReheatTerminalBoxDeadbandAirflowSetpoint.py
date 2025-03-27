@@ -10,10 +10,7 @@ import numpy as np
 
 class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
     tolerances = {
-        "airflow": {
-            "unit": "m3/s",
-            "general": 0.01,
-        },
+        "airflow": {"unit": "m3/s", "types": {"general": 0.01}},
         "damper": {"unit": "%", "general": 0.01, "types": {"command": 0.01}},
     }
 

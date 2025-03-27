@@ -14,15 +14,11 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
     tolerances = {
         "damper": {
             "unit": "%",
-            "general": 0.0,
-            "types": {"position": 0.0, "command": 0.01},
+            "types": {"position": 0.0, "command": 0.01, "general": 0.0},
         },
         "temperature": {
             "unit": "deg. C",
-            "general": 0.0,
-            "types": {
-                "supply_air": 0.0,
-            },
+            "types": {"supply_air": 0.0, "general": 0.0},
         },
     }
 

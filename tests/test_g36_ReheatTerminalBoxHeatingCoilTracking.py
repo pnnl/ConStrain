@@ -13,15 +13,11 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
     tolerances = {
         "temperature": {
             "unit": "deg. C",
-            "general": 1.5,
-            "types": {
-                "discharge_air": 1.5,
-            },
+            "types": {"discharge_air": 1.5, "general": 1.5},
         },
         "damper": {
             "unit": "%",
-            "general": 0.0,
-            "types": {"position": 0.0, "command": 0.01},
+            "types": {"position": 0.0, "command": 0.01, "general": 0.0},
         },
     }
 

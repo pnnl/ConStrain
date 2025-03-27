@@ -14,10 +14,9 @@ class TestAutomaticOADamperControl(unittest.TestCase):
         tolerances = {
             "airflow": {
                 "unit": "m3/s",
-                "general": 50,
-                "types": {"exhaust_air": 50, "outdoor_air": 50},
+                "types": {"exhaust_air": 50, "outdoor_air": 50, "general": 50},
             },
-            "ratio": {"unit": "%", "general": 0.001, "types": {"occupancy": 0.001}},
+            "ratio": {"unit": "%", "types": {"occupancy": 0.001, "general": 0.001}},
         }
         points = ["o", "eco_onoff", "m_oa", "m_ea"]
         data = [

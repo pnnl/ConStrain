@@ -9,7 +9,7 @@ import numpy as np
 
 
 class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
-    tolerances = {"ratio": {"unit": "%", "general": 0.25, "types": {"occupancy": 0.25}}}
+    tolerances = {"ratio": {"unit": "%", "types": {"occupancy": 0.25, "general": 0.25}}}
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_power_too_high(self):
         points = [

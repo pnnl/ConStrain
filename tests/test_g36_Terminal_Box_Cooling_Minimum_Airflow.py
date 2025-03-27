@@ -13,13 +13,15 @@ class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
         tolerances = {
             "airflow": {
                 "unit": "m3/s",
-                "general": 0.01,
+                "types": {
+                    "general": 0.01,
+                },
             },
             "temperature": {
                 "unit": "deg. C",
-                "general": 0.0,
                 "types": {
                     "supply_air": 0.0,
+                    "general": 0.0,
                 },
             },
         }

@@ -10,9 +10,9 @@ class TestG36ReturnAirDamperPositionForReliefDamperOrFan(unittest.TestCase):
     tolerances = {
         "damper": {
             "unit": "%",
-            "general": 0.05,
             "types": {
                 "position": 0.05,
+                "general": 0.05,
             },
         }
     }

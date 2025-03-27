@@ -14,15 +14,15 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
     tolerances = {
         "damper": {
             "unit": "%",
-            "general": 0.01,
-            "types": {"position": 0.01, "command": 0.01},
+            "types": {
+                "position": 0.01,
+                "command": 0.01,
+                "general": 0.01,
+            },
         },
         "airflow": {
             "unit": "m3/s",
-            "general": 0.0,
-            "types": {
-                "outdoor_air": 0.0,
-            },
+            "types": {"outdoor_air": 0.0, "general": 0.0},
         },
     }
 
