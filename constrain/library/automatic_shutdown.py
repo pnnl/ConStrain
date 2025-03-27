@@ -49,7 +49,7 @@ from constrain.checklib import RuleCheckBase
 
 
 class AutomaticShutdown(RuleCheckBase):
-    points = ["schedule_hvac"]
+    points = ["status_hvac"]
 
     def verify(self):
         copied_df = (
@@ -60,7 +60,7 @@ class AutomaticShutdown(RuleCheckBase):
             inplace=True
         )  # convert index column back to normal column
         copied_df["hvac_operation_diff"] = copied_df[
-            "schedule_hvac"
+            "status_hvac"
         ].diff()  # calculate the difference between previous and current rows
         copied_df = copied_df.dropna(axis=0)  # drop NaN row
         copied_df = copied_df.loc[

@@ -96,36 +96,60 @@ from constrain.checklib import RuleCheckBase
 
 class HWReset(RuleCheckBase):
     points = [
-        "t_oa",
-        "t_oa_max",
-        "t_oa_min",
-        "t_hw",
-        "m_hw",
-        "t_hw_max_sp",
-        "t_hw_min_sp",
+        "temperature_air_outdoor",
+        "temperature_air_outdoor_max",
+        "temperature_air_outdoor_min",
+        "temperature_water_hot",
+        "flow_mass_water_hot",
+        "temperature_water_hot_setpoint_max",
+        "temperature_water_hot_setpoint_min",
     ]
 
     def verify(self):
         self.result = (
             (
-                self.df["m_hw"] <= 0
+                self.df["flow_mass_water_hot"] <= 0
             )  # add boundary relaxation in the rules for this one and chwreset
             | (
-                (self.df["t_oa"] <= self.df["t_oa_min"])
-                & (self.df["t_hw"] >= self.df["t_hw_max_sp"] * 0.99)
-            )
-            | (
-                (self.df["t_oa"] >= (self.df["t_oa_max"]))
-                & (self.df["t_hw"] <= self.df["t_hw_min_sp"] * 1.01)
+                (
+                    self.df["temperature_air_outdoor"]
+                    <= self.df["temperature_air_outdoor_min"]
+                )
+                & (
+                    self.df["temperature_water_hot"]
+                    >= self.df["temperature_water_hot_setpoint_max"] * 0.99
+                )
             )
             | (
                 (
-                    (self.df["t_oa"] >= self.df["t_oa_min"])
-                    & (self.df["t_oa"] <= self.df["t_oa_max"])
+                    self.df["temperature_air_outdoor"]
+                    >= (self.df["temperature_air_outdoor_max"])
                 )
                 & (
-                    (self.df["t_hw"] >= self.df["t_hw_min_sp"] * 0.99)
-                    & (self.df["t_hw"] <= self.df["t_hw_max_sp"] * 1.01)
+                    self.df["temperature_water_hot"]
+                    <= self.df["temperature_water_hot_setpoint_min"] * 1.01
+                )
+            )
+            | (
+                (
+                    (
+                        self.df["temperature_air_outdoor"]
+                        >= self.df["temperature_air_outdoor_min"]
+                    )
+                    & (
+                        self.df["temperature_air_outdoor"]
+                        <= self.df["temperature_air_outdoor_max"]
+                    )
+                )
+                & (
+                    (
+                        self.df["temperature_water_hot"]
+                        >= self.df["temperature_water_hot_setpoint_min"] * 0.99
+                    )
+                    & (
+                        self.df["temperature_water_hot"]
+                        <= self.df["temperature_water_hot_setpoint_max"] * 1.01
+                    )
                 )
             )
         )
@@ -136,7 +160,9 @@ class HWReset(RuleCheckBase):
             "Specific plot method implemented, additional scatter plot is being added!"
         )
         plt.subplots()
-        sns.scatterplot(x="t_oa", y="t_hw", data=self.df)
+        sns.scatterplot(
+            x="temperature_air_outdoor", y="temperature_water_hot", data=self.df
+        )
         plt.title("Scatter plot between t_oa and t_hw")
 
         super().plot(plot_option, plt_pts)

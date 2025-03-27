@@ -9,7 +9,7 @@ import pandas as pd
 
 class TestLocalLoopSetPointTracking(unittest.TestCase):
     def test_set_point_tracking_pass(self):
-        points = ["val_sensor", "val_setpoint"]
+        points = ["value_sensor", "value_setpoint"]
         timestamp = [
             datetime(2023, 5, 1, 18, 0, 0),
             datetime(2023, 5, 1, 18, 1, 0),
@@ -96,7 +96,7 @@ class TestLocalLoopSetPointTracking(unittest.TestCase):
         self.assertTrue(binaryflag)
 
     def test_set_point_tracking_fail_samplepct(self):
-        points = ["val_sensor", "val_setpoint"]
+        points = ["value_sensor", "value_setpoint"]
         timestamp = [
             datetime(2023, 5, 1, 18, 0, 0),
             datetime(2023, 5, 1, 18, 1, 0),
@@ -150,7 +150,7 @@ class TestLocalLoopSetPointTracking(unittest.TestCase):
         self.assertFalse(binaryflag)
 
     def test_set_point_tracking_pass(self):
-        points = ["val_sensor", "val_setpoint"]
+        points = ["value_sensor", "value_setpoint"]
         timestamp = [
             datetime(2023, 5, 1, 18, 0, 0),
             datetime(2023, 5, 1, 18, 1, 0),

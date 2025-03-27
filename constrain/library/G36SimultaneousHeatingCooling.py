@@ -49,10 +49,10 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36SimultaneousHeatingCooling(RuleCheckBase):
-    points = ["q_heat", "q_cool"]
+    points = ["output_coil_heating", "output_coil_cooling"]
 
     def simultaneous_heating_and_cooling(self, data):
-        if data["q_heat"] > 0 and data["q_cool"] > 0:
+        if data["output_coil_heating"] > 0 and data["output_coil_cooling"] > 0:
             return False
         else:
             return True

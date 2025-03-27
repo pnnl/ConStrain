@@ -78,8 +78,8 @@ from constrain.checklib import RuleCheckBase
 
 class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
     points = [
-        "n_occupants",
-        "p_power_light_total",
+        "number_occupants",
+        "power_light_total",
         "area_lit",
         "tol_occupants",
     ]
@@ -98,9 +98,9 @@ class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
         # verification based on power
         date_diff = data.name - self.last_reported_occupancy
         if (
-            data["n_occupants"] < data["tol_occupants"]
+            data["number_occupants"] < data["tol_occupants"]
         ) and date_diff.total_seconds() / 60 > 20:
-            if (data["p_power_light_total"] / data["area_lit"]) <= 0.02:
+            if (data["power_light_total"] / data["area_lit"]) <= 0.02:
                 check = True
             else:
                 check = False
@@ -108,12 +108,12 @@ class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
             check = "Untested"
 
         # update last identified occupancy flag if applicable
-        if data["n_occupants"] >= data["tol_occupants"]:
+        if data["number_occupants"] >= data["tol_occupants"]:
             self.last_reported_occupancy = data.name
         return check
 
     def verify(self):
         self.min_lighting_power_density = (
-            self.df["p_power_light_total"].min() / self.df["area_lit"]
+            self.df["power_light_total"].min() / self.df["area_lit"]
         )
         self.result = self.df.apply(lambda d: self.automatic_full_off(d), axis=1)

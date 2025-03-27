@@ -11,13 +11,13 @@ class TestG36FreezeProtectionStage3(unittest.TestCase):
     def test_freeze_protection_3_pass(self):
         points = [
             "flag_freeze",
-            "t_sa",
-            "pos_damper_oa",
+            "temperature_air_supply_setpoint",
+            "position_damper_air_outdoor",
             "status_fan_supply",
             "status_fan_return",
             "status_fan_relief",
-            "cmd_coil_cool",
-            "cmd_coil_heat",
+            "command_coil_cool",
+            "command_coil_heat",
         ]
 
         timestamp = [
@@ -54,13 +54,13 @@ class TestG36FreezeProtectionStage3(unittest.TestCase):
     def test_freeze_protection_3_Fail(self):
         points = [
             "flag_freeze",
-            "t_sa",
-            "pos_damper_oa",
+            "temperature_air_supply_setpoint",
+            "position_damper_air_outdoor",
             "status_fan_supply",
             "status_fan_return",
             "status_fan_relief",
-            "cmd_coil_cool",
-            "cmd_coil_heat",
+            "command_coil_cool",
+            "command_coil_heat",
         ]
 
         timestamp = [
@@ -97,13 +97,13 @@ class TestG36FreezeProtectionStage3(unittest.TestCase):
     def test_freeze_protection_3_untested(self):
         points = [
             "flag_freeze",
-            "t_sa",
-            "pos_damper_oa",
+            "temperature_air_supply_setpoint",
+            "position_damper_air_outdoor",
             "status_fan_supply",
             "status_fan_return",
             "status_fan_relief",
-            "cmd_coil_cool",
-            "cmd_coil_heat",
+            "command_coil_cool",
+            "command_coil_heat",
         ]
 
         timestamp = [

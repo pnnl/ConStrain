@@ -94,26 +94,26 @@ from constrain.checklib import RuleCheckBase
 class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
     points = [
         "flag_coil_reheat",
-        "v_vav",
-        "v_vav_max",
+        "flow_volumetric_air_vav",
+        "flow_volumetric_air_max",
         "ratio_turndown_min",
-        "p_press_duct_sp",
+        "pressure_duct_setpoint",
         "tol_turndown",
         "tol_p_press",
     ]
 
     def vav_turndown_check(self, data):
         if data["flag_coil_reheat"]:
-            if data["v_vav_max"] == 0:
+            if data["flow_volumetric_air_max"] == 0:
                 return "Untested"
             elif (
-                data["v_vav"] / data["v_vav_max"]
+                data["flow_volumetric_air_vav"] / data["flow_volumetric_air_max"]
                 > data["ratio_turndown_min"] + data["tol_turndown"]
             ):
                 if data["p_press_duct_sp_prev"] is None:
                     return "Untested"
                 elif (
-                    abs(data["p_press_duct_sp"] - data["p_press_duct_sp_prev"])
+                    abs(data["pressure_duct_setpoint"] - data["p_press_duct_sp_prev"])
                     > data["tol_p_press"]
                 ):
                     return "Untested"
@@ -127,10 +127,10 @@ class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
     def verify(self):
         # Copy the previous row's value in 'p_press_duct_sp' column to the current row
         self.df["p_press_duct_sp_prev"] = (
-            self.df["p_press_duct_sp"].shift(1).replace({np.nan: None})
+            self.df["pressure_duct_setpoint"].shift(1).replace({np.nan: None})
         )
-        if (self.df["v_vav_max"] != 0).all():
+        if (self.df["flow_volumetric_air_max"] != 0).all():
             self.df["v_vav_ratio"] = (
-                self.df["v_vav"] / self.df["v_vav_max"]
+                self.df["flow_volumetric_air_vav"] / self.df["flow_volumetric_air_max"]
             )  # for plotting
         self.result = self.df.apply(lambda d: self.vav_turndown_check(d), axis=1)

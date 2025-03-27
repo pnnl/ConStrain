@@ -25,7 +25,7 @@ The verification checks if the exterior lighting is turned off when either suffi
 ### Verification Algorithm Pseudo Code
 
 ```
-daylight_setpoint_met = data["val_daylight"] / data["val_daylight_sp"]
+daylight_setpoint_met = data["value_daylight"] / data["value_daylight_setpoint"]
 
 If daylight_setpoint_met >= 1 or time_since_last_sun_up >= 30: # min
     If p_power_light_total == 0:
@@ -68,9 +68,9 @@ from constrain.checklib import RuleCheckBase
 class ExteriorLightingControlDaylightOff(RuleCheckBase):
     points = [
         "flag_sun_up",
-        "val_daylight",
-        "val_daylight_sp",
-        "p_power_light_total",
+        "value_daylight",
+        "value_daylight_setpoint",
+        "power_light_total",
     ]
     last_sun_up_time = None
     was_sun_up = False
@@ -86,11 +86,11 @@ class ExteriorLightingControlDaylightOff(RuleCheckBase):
         self.was_sun_up = data["flag_sun_up"]
 
         # determine if enough daylight is sensed
-        daylight_setpoint_met = data["val_daylight"] / data["val_daylight_sp"]
+        daylight_setpoint_met = data["value_daylight"] / data["value_daylight_setpoint"]
 
         # perform verification
         if daylight_setpoint_met >= 1 or time_since_last_sun_up >= 30:
-            if data["p_power_light_total"] == 0:
+            if data["power_light_total"] == 0:
                 return True
             else:
                 return False

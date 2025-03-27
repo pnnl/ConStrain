@@ -10,7 +10,13 @@ import numpy as np
 
 class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
     def test_g36_cooling_only_terminal_box_deadband_airflow_setpoint(self):
-        points = ["mode_system", "state_zone", "v_min", "v_sp", "tol_v"]
+        points = [
+            "mode_system",
+            "state_zone",
+            "flow_volumetric_air_setpoint_min",
+            "flow_volumetric_air_setpoint",
+            "tol_v",
+        ]
 
         data = [
             ["occupied", "heating", 10, 90, 0.01],

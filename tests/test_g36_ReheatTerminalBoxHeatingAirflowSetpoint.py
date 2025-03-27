@@ -13,18 +13,18 @@ class TestG36ReheatTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
         points = [
             "mode_system",
             "state_zone",
-            "v_cool_max",
-            "v_heat_max",
-            "v_heat_min",
-            "v_min",
-            "v_sp",
+            "flow_volumetric_air_cool_max",
+            "flow_volumetric_air_heat_max",
+            "flow_volumetric_air_heat_min",
+            "flow_volumetric_air_setpoint_min",
+            "flow_volumetric_air_setpoint",
             "tol_v",
             "signal_heat",
-            "t_room",
-            "t_space_sp",
-            "t_sa_sp",
-            "t_discharge",
-            "t_discharge_sp",
+            "temperature_air_room",
+            "temperature_air_space_setpoint",
+            "temperature_air_supply",
+            "temperature_air_discharge",
+            "temperature_air_discharge_setpoint",
         ]
 
         data = [

@@ -11,8 +11,8 @@ import numpy as np
 class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
     def test_interior_lighting_control_automatic_full_off_area_fail(self):
         points = [
-            "n_occupants",
-            "p_power_light_total",
+            "number_occupants",
+            "power_light_total",
             "area_lit",
             "tol_occupants",
         ]
@@ -34,8 +34,8 @@ class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
 
     def test_interior_lighting_control_automatic_full_off_fail(self):
         points = [
-            "n_occupants",
-            "p_power_light_total",
+            "number_occupants",
+            "power_light_total",
             "area_lit",
             "tol_occupants",
         ]
@@ -61,8 +61,8 @@ class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
 
     def test_interior_lighting_control_automatic_full_off_pass(self):
         points = [
-            "n_occupants",
-            "p_power_light_total",
+            "number_occupants",
+            "power_light_total",
             "area_lit",
             "tol_occupants",
         ]

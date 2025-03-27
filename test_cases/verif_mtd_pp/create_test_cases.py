@@ -62,20 +62,20 @@ def chwreset(idf, idf_f, id, cases):
                     "variable": "Site Outdoor Air Drybulb Temperature",
                     "frequency": "Detailed",
                 },
-                "T_chw": {
+                "temperature_water_chilled": {
                     "subject": f"{chw_node}",
                     "variable": "System Node Setpoint Temperature",
                     "frequency": "Detailed",
                 },
-                "m_chw": {
+                "flow_mass_water_chilled": {
                     "subject": f"{chiller_name}",
                     "variable": "Chiller Evaporator Mass Flow Rate",
                     "frequency": "Detailed",
                 },
             },
             "parameters": {
-                "T_oa_max": t_oa_max,
-                "T_oa_min": t_oa_min,
+                "temperature_air_outdoor_max": t_oa_max,
+                "temperature_air_outdoor_min": t_oa_min,
                 "T_chw_max_st": t_chw_max_st,
                 "T_chw_min_st": t_chw_min_st,
             },
@@ -128,20 +128,20 @@ def hwreset(idf, idf_f, id, cases):
                     "variable": "Site Outdoor Air Drybulb Temperature",
                     "frequency": "Detailed",
                 },
-                "T_hw": {
+                "temperature_water_hot": {
                     "subject": f"{hw_node}",
                     "variable": "System Node Setpoint Temperature",
                     "frequency": "Detailed",
                 },
-                "m_hw": {
+                "flow_mass_water_hot": {
                     "subject": f"{boiler_name}",
                     "variable": "Boiler Mass Flow Rate",
                     "frequency": "Detailed",
                 },
             },
             "parameters": {
-                "T_oa_max": t_oa_max,
-                "T_oa_min": t_oa_min,
+                "temperature_air_outdoor_max": t_oa_max,
+                "temperature_air_outdoor_min": t_oa_min,
                 "T_hw_max_st": t_hw_max_st,
                 "T_hw_min_st": t_hw_min_st,
             },
@@ -217,7 +217,7 @@ def sat_reset(idf, idf_f, id, cases):
             sat_case["verification_class"] = "SupplyAirTempReset"
             sat_case["datapoints_source"] = {
                 "idf_output_variables": {
-                    "T_sa_sp": {
+                    "temperature_air_supply": {
                         "subject": f"{sat_node}",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed",
@@ -293,7 +293,7 @@ def zone_temp_ctrl_depth_htg(idf, idf_f, id, cases):
         zone_temp_ctrl_depth_htg["verification_class"] = "ZoneHeatingResetDepth"
         zone_temp_ctrl_depth_htg["datapoints_source"] = {
             "idf_output_variables": {
-                "T_z_heat_sp": {
+                "temperature_air_zone_heat_setpoint": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Heating Setpoint Temperature",
                     "frequency": "detailed",
@@ -328,7 +328,7 @@ def zone_temp_ctrl_depth_clg(idf, idf_f, id, cases):
         zone_temp_ctrl_depth_clg["verification_class"] = "ZoneCoolingResetDepth"
         zone_temp_ctrl_depth_clg["datapoints_source"] = {
             "idf_output_variables": {
-                "T_z_cool_sp": {
+                "temperature_air_zone_cool_setpoint": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Cooling Setpoint Temperature",
                     "frequency": "detailed",
@@ -363,7 +363,7 @@ def zone_temp_ctrl_min(idf, idf_f, id, cases):
         zone_temp_ctrl_min["verification_class"] = "ZoneHeatSetpointMinimum"
         zone_temp_ctrl_min["datapoints_source"] = {
             "idf_output_variables": {
-                "T_z_heat_sp": {
+                "temperature_air_zone_heat_setpoint": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Heating Setpoint Temperature",
                     "frequency": "detailed",
@@ -398,7 +398,7 @@ def zone_temp_ctrl_max(idf, idf_f, id, cases):
         zone_temp_ctrl_max["verification_class"] = "ZoneCoolingSetpointMaximum"
         zone_temp_ctrl_max["datapoints_source"] = {
             "idf_output_variables": {
-                "T_z_cool_sp": {
+                "temperature_air_zone_cool_setpoint": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Cooling Setpoint Temperature",
                     "frequency": "detailed",

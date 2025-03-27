@@ -12,8 +12,8 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_untested(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
             "tol_turndown",
         ]
@@ -45,8 +45,8 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_V_dot_max_zero_untested(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
             "tol_turndown",
         ]
@@ -78,8 +78,8 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_pass(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
             "tol_turndown",
         ]
@@ -115,8 +115,8 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_fail(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
             "tol_turndown",
         ]

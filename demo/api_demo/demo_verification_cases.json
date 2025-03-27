@@ -13,14 +13,14 @@
 			"expected_result": "pass",
 			"datapoints_source": {
 				"idf_output_variables": {
-					"t_sa_sp": {
+					"temperature_air_supply": {
 						"subject": "VAV_1 Supply Equipment Outlet Node",
 						"variable": "System Node Setpoint Temperature",
 						"frequency": "detailed"
 					}
 				},
 				"parameters": {
-					"t_z_design_cool": 24.0
+					"temperature_air_zone_design_cool_setpoint": 24.0
 				}
 			},
 			"verification_class": "SupplyAirTempReset"
@@ -38,14 +38,14 @@
 			"expected_result": "pass",
 			"datapoints_source": {
 				"idf_output_variables": {
-					"t_sa_sp": {
+					"temperature_air_supply": {
 						"subject": "VAV_2 Supply Equipment Outlet Node",
 						"variable": "System Node Setpoint Temperature",
 						"frequency": "detailed"
 					}
 				},
 				"parameters": {
-					"t_z_design_cool": 24.0
+					"temperature_air_zone_design_cool_setpoint": 24.0
 				}
 			},
 			"verification_class": "SupplyAirTempReset"
@@ -63,14 +63,14 @@
 			"expected_result": "pass",
 			"datapoints_source": {
 				"idf_output_variables": {
-					"t_sa_sp": {
+					"temperature_air_supply": {
 						"subject": "CAV_KITCHEN SUPPLY EQUIPMENT OUTLET NODE",
 						"variable": "System Node Setpoint Temperature",
 						"frequency": "detailed"
 					}
 				},
 				"parameters": {
-					"t_z_design_cool": 24.0
+					"temperature_air_zone_design_cool_setpoint": 24.0
 				}
 			},
 			"verification_class": "SupplyAirTempReset"

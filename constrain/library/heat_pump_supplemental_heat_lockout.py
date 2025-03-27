@@ -85,7 +85,7 @@ from constrain.checklib import RuleCheckBase
 class HeatPumpSupplementalHeatLockout(RuleCheckBase):
     points = [
         "C_ref",
-        "L_op",
+        "L_operation",
         "P_supp_ht",
         "C_t_mod",
         "C_ff_mod",
@@ -100,7 +100,7 @@ class HeatPumpSupplementalHeatLockout(RuleCheckBase):
             if data["L_defrost"] > 0:
                 data["result"] = 1
             else:
-                if data["C_op"] > data["L_op"] + data["tol_L_op_capacity"]:
+                if data["C_op"] > data["L_operation"] + data["tol_L_op_capacity"]:
                     data["result"] = 0  # False
                 else:
                     data["result"] = 1

@@ -56,7 +56,7 @@
                         "variable": "System Node Temperature",
                         "frequency": "Timestep"
                     },
-                    "m_pump": {
+                    "flow_mass_water_pump": {
                         "subject": "PLANT CIRC PUMP",
                         "variable": "Pump Mass Flow Rate",
                         "frequency": "Timestep"

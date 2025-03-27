@@ -118,31 +118,37 @@ from constrain.checklib import RuleCheckBase
 
 class G36OutdoorAirDamperPositionForReliefDamperOrFan(RuleCheckBase):
     points = [
-        "q_heat",
-        "q_cool",
-        "pos_damper_ra",
-        "pos_damper_ra_max",
+        "output_coil_heating",
+        "output_coil_cooling",
+        "position_damper_air_return",
+        "position_damper_air_return_max",
         "tol_pos_damper_ra",
-        "pos_damper_oa",
-        "pos_damper_oa_min",
-        "pos_damper_oa_max",
+        "position_damper_air_outdoor",
+        "position_damper_air_outdoor_min",
+        "position_damper_air_outdoor_max",
         "tol_pos_damper_oa",
         "flag_economizer_limit",
     ]
 
     def outdoor_air_damper(self, data):
-        if data["q_heat"] > 0:
+        if data["output_coil_heating"] > 0:
             if (
-                abs(data["pos_damper_oa"] - data["pos_damper_oa_min"])
+                abs(
+                    data["position_damper_air_outdoor"]
+                    - data["position_damper_air_outdoor_min"]
+                )
                 < data["tol_pos_damper_oa"]
             ):
                 return True
             else:
                 return False
-        elif data["q_cool"] > 0:
+        elif data["output_coil_cooling"] > 0:
             if data["flag_economizer_limit"]:
                 if (
-                    abs(data["pos_damper_oa"] - data["pos_damper_oa_min"])
+                    abs(
+                        data["position_damper_air_outdoor"]
+                        - data["position_damper_air_outdoor_min"]
+                    )
                     < data["tol_pos_damper_oa"]
                 ):
                     return True
@@ -150,28 +156,39 @@ class G36OutdoorAirDamperPositionForReliefDamperOrFan(RuleCheckBase):
                     return False
             else:
                 if (
-                    abs(data["pos_damper_oa"] - data["pos_damper_oa_max"])
+                    abs(
+                        data["position_damper_air_outdoor"]
+                        - data["position_damper_air_outdoor_max"]
+                    )
                     < data["tol_pos_damper_oa"]
                 ):
                     return True
                 else:
                     return False
-        elif data["pos_damper_ra"] < data["pos_damper_ra_max"]:
+        elif (
+            data["position_damper_air_return"] < data["position_damper_air_return_max"]
+        ):
             if (
-                abs(data["pos_damper_oa"] - data["pos_damper_oa_max"])
+                abs(
+                    data["position_damper_air_outdoor"]
+                    - data["position_damper_air_outdoor_max"]
+                )
                 < data["tol_pos_damper_oa"]
             ):
                 return True
             else:
                 return False
         elif (
-            abs(data["pos_damper_ra"] - data["pos_damper_ra_max"])
+            abs(
+                data["position_damper_air_return"]
+                - data["position_damper_air_return_max"]
+            )
             < data["tol_pos_damper_ra"]
         ):
             if (
-                data["pos_damper_oa_min"]
-                < data["pos_damper_oa"]
-                < data["pos_damper_oa_max"]
+                data["position_damper_air_outdoor_min"]
+                < data["position_damper_air_outdoor"]
+                < data["position_damper_air_outdoor_max"]
             ):
                 return True
             else:

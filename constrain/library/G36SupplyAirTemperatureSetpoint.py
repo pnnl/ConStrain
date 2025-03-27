@@ -112,36 +112,45 @@ from constrain.checklib import RuleCheckBase
 class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
     points = [
         "mode_operation",
-        "t_sa_max",
-        "t_sa_cool_max",
-        "t_sa_cool_min",
-        "t_oa",
-        "t_oa_min",
-        "t_oa_max",
-        "t_sa_sp",
+        "temperature_air_supply_max",
+        "temperature_air_supply_cool_max",
+        "temperature_air_supply_cool_min",
+        "temperature_air_outdoor",
+        "temperature_air_outdoor_min",
+        "temperature_air_outdoor_max",
+        "temperature_air_supply",
         "tol_t_sa",
     ]
 
     def supply_air_temperature_setpoint(self, data):
-        if data["t_sa_max"] > data["t_sa_cool_max"]:
+        if data["temperature_air_supply_max"] > data["temperature_air_supply_cool_max"]:
             return False
         sa_t_sp = -999
         if data["mode_operation"] == "cooldown":
-            sa_t_sp = data["t_sa_cool_min"]
+            sa_t_sp = data["temperature_air_supply_cool_min"]
         elif data["mode_operation"] in ["warmup", "setback"]:
             sa_t_sp = 35.0  # 95 deg. F
         elif data["mode_operation"] in ["occupied", "setup"]:
-            if data["t_oa"] <= data["t_oa_min"]:
-                sa_t_sp = data["t_sa_max"]
-            elif data["t_oa"] >= data["t_oa_max"]:
-                sa_t_sp = data["t_sa_cool_min"]
+            if data["temperature_air_outdoor"] <= data["temperature_air_outdoor_min"]:
+                sa_t_sp = data["temperature_air_supply_max"]
+            elif data["temperature_air_outdoor"] >= data["temperature_air_outdoor_max"]:
+                sa_t_sp = data["temperature_air_supply_cool_min"]
             else:
-                sa_t_sp = (data["t_oa"] - data["t_oa_min"]) * (
-                    data["t_sa_max"] - data["t_sa_cool_min"]
-                ) / (data["t_oa_min"] - data["t_oa_max"]) + data["t_sa_max"]
+                sa_t_sp = (
+                    data["temperature_air_outdoor"]
+                    - data["temperature_air_outdoor_min"]
+                ) * (
+                    data["temperature_air_supply_max"]
+                    - data["temperature_air_supply_cool_min"]
+                ) / (
+                    data["temperature_air_outdoor_min"]
+                    - data["temperature_air_outdoor_max"]
+                ) + data[
+                    "temperature_air_supply_max"
+                ]
         if sa_t_sp == -999:
             return "Untested"
-        if abs(sa_t_sp - data["t_sa_sp"]) < data["tol_t_sa"]:
+        if abs(sa_t_sp - data["temperature_air_supply"]) < data["tol_t_sa"]:
             return True
         else:
             return False

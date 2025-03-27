@@ -55,7 +55,7 @@ from constrain.checklib import RuleCheckBase
 
 class G36OutputChangeRateLimit(RuleCheckBase):
     points = [
-        "cmd_control",
+        "command_control",
         "rate_change_max",
     ]  # cmd_control is expected to have a data range of 100
 
@@ -65,7 +65,7 @@ class G36OutputChangeRateLimit(RuleCheckBase):
         time_delta = cur_time - prev_time
         min_change = time_delta.total_seconds() / 60
         allowable_change = min_change * cur["rate_change_max"]
-        actual_change = abs(cur["cmd_control"] - prev["cmd_control"])
+        actual_change = abs(cur["command_control"] - prev["command_control"])
         if actual_change > allowable_change:
             return False
         else:

@@ -73,10 +73,18 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
-    points = ["cmd_damper_vav", "v", "v_sp", "tol_v_tracking"]
+    points = [
+        "command_damper_vav",
+        "flow_volumetric_air_discharge",
+        "flow_volumetric_air_setpoint",
+        "tol_v_tracking",
+    ]
 
     def err_flag(self, t):
-        if abs(t["v_sp"] - t["v"]) >= t["tol_v_tracking"]:
+        if (
+            abs(t["flow_volumetric_air_setpoint"] - t["flow_volumetric_air_discharge"])
+            >= t["tol_v_tracking"]
+        ):
             return True
         else:
             return False
@@ -105,13 +113,17 @@ class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
                 result_flag = "Untested"
             elif err_time > 1:
                 if (
-                    cur["v"] - cur["v_sp"] >= cur["tol_v_tracking"]
-                    and cur["cmd_damper_vav"] <= 1
+                    cur["flow_volumetric_air_discharge"]
+                    - cur["flow_volumetric_air_setpoint"]
+                    >= cur["tol_v_tracking"]
+                    and cur["command_damper_vav"] <= 1
                 ):
                     result_flag = True
                 elif (
-                    cur["v_sp"] - cur["v"] >= cur["tol_v_tracking"]
-                    and cur["cmd_damper_vav"] >= 99
+                    cur["flow_volumetric_air_setpoint"]
+                    - cur["flow_volumetric_air_discharge"]
+                    >= cur["tol_v_tracking"]
+                    and cur["command_damper_vav"] >= 99
                 ):
                     result_flag = True
                 else:

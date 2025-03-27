@@ -11,10 +11,10 @@ class TestG36ReturnAirDamperPositionForReturnFanDirectBuildingPressure(
 ):
     def test_return_air_damper_position(self):
         points = [
-            "q_heat",
-            "q_cool",
-            "pos_damper_ra",
-            "pos_damper_ra_max",
+            "output_coil_heating",
+            "output_coil_cooling",
+            "position_damper_air_return",
+            "position_damper_air_return_max",
             "tol_pos_damper_ra",
         ]
         data = [

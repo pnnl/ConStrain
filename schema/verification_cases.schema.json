@@ -179,23 +179,23 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "t_sa_sp": {
+                                "temperature_air_supply": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "t_sa_sp"
+                                "temperature_air_supply"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "t_z_design_cool": {
+                                "temperature_air_zone_design_cool_setpoint": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "t_z_design_cool"
+                                "temperature_air_zone_design_cool_setpoint"
                             ]
                         }
                     }
@@ -217,36 +217,36 @@
                                 "oa_flow": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "t_oa": {
+                                "temperature_air_outdoor": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "h_ra": {
+                                "enthalpy_air_return": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "h_oa": {
+                                "enthalpy_air_outdoor": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "v_oa",
-                                "t_oa",
-                                "h_ra",
-                                "h_oa"
+                                "flow_volumetric_air_outdoor",
+                                "temperature_air_outdoor",
+                                "enthalpy_air_return",
+                                "enthalpy_air_outdoor"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "t_oa_threshold": {
+                                "temperature_air_outdoor_threshold": {
                                     "type": "number"
                                 },
-                                "v_oa_min": {
+                                "flow_volumetric_air_outdoor_setpoint_min": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "t_oa_threshold",
-                                "v_oa_min"
+                                "temperature_air_outdoor_threshold",
+                                "flow_volumetric_air_outdoor_setpoint_min"
                             ]
                         }
                     }
@@ -265,27 +265,27 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "v_oa": {
+                                "flow_volumetric_air_outdoor": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "q_cool": {
+                                "output_coil_cooling": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "v_oa",
-                                "q_cool"
+                                "flow_volumetric_air_outdoor",
+                                "output_coil_cooling"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "v_oa_min": {
+                                "flow_volumetric_air_outdoor_setpoint_min": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "v_oa_min"
+                                "flow_volumetric_air_outdoor_setpoint_min"
                             ]
                         }
                     }
@@ -304,43 +304,43 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "t_oa": {
+                                "temperature_air_outdoor": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "t_hw": {
+                                "temperature_water_hot": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "m_hw": {
+                                "flow_mass_water_hot": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "t_oa",
-                                "t_hw",
-                                "m_hw"
+                                "temperature_air_outdoor",
+                                "temperature_water_hot",
+                                "flow_mass_water_hot"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "t_oa_max": {
+                                "temperature_air_outdoor_max": {
                                     "type": "number"
                                 },
-                                "t_oa_min": {
+                                "temperature_air_outdoor_min": {
                                     "type": "number"
                                 },
-                                "t_hw_max_sp": {
+                                "temperature_water_hot_setpoint_max": {
                                     "type": "number"
                                 },
-                                "t_hw_min_sp": {
+                                "temperature_water_hot_setpoint_min": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "t_oa_max",
-                                "t_oa_min",
-                                "t_hw_max_sp",
-                                "t_hw_min_sp"
+                                "temperature_air_outdoor_max",
+                                "temperature_air_outdoor_min",
+                                "temperature_water_hot_setpoint_max",
+                                "temperature_water_hot_setpoint_min"
                             ]
                         }
                     }
@@ -359,43 +359,43 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "t_oa": {
+                                "temperature_air_outdoor": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "T_chw": {
+                                "temperature_water_chilled": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "m_chw": {
+                                "flow_mass_water_chilled": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "t_oa",
-                                "T_chw",
-                                "m_chw"
+                                "temperature_air_outdoor",
+                                "temperature_water_chilled",
+                                "flow_mass_water_chilled"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "t_oa_max": {
+                                "temperature_air_outdoor_max": {
                                     "type": "number"
                                 },
-                                "t_oa_min": {
+                                "temperature_air_outdoor_min": {
                                     "type": "number"
                                 },
-                                "t_chw_max_sp": {
+                                "temperature_water_chilled_setpoint_max": {
                                     "type": "number"
                                 },
-                                "t_chw_min_sp": {
+                                "temperature_water_chilled_setpoint_min": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "t_oa_max",
-                                "t_oa_min",
-                                "t_chw_max_sp",
-                                "t_chw_min_sp"
+                                "temperature_air_outdoor_max",
+                                "temperature_air_outdoor_min",
+                                "temperature_water_chilled_setpoint_max",
+                                "temperature_water_chilled_setpoint_min"
                             ]
                         }
                     }
@@ -414,28 +414,28 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "t_z": {
+                                "temperature_air_zone": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "schedule_hvac": {
+                                "status_hvac": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "t_z_heat_sp": {
+                                "temperature_air_zone_heat_setpoint": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "t_z_cool_sp": {
+                                "temperature_air_zone_cool_setpoint": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "p_power_fan": {
+                                "power_fan": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "t_z",
-                                "schedule_hvac",
-                                "t_z_heat_sp",
-                                "t_z_cool_sp",
-                                "p_power_fan"
+                                "temperature_air_zone",
+                                "status_hvac",
+                                "temperature_air_zone_heat_setpoint",
+                                "temperature_air_zone_cool_setpoint",
+                                "power_fan"
                             ]
                         },
                         "parameters": {
@@ -457,10 +457,10 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "n_occupants": {
+                                "number_occupants": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "v_oa": {
+                                "flow_volumetric_air_outdoor": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "status_economizer": {
@@ -468,8 +468,8 @@
                                 }
                             },
                             "required": [
-                                "n_occupants",
-                                "v_oa",
+                                "number_occupants",
+                                "flow_volumetric_air_outdoor",
                                 "status_economizer"
                             ]
                         },
@@ -508,7 +508,7 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "p_press_static_sp": {
+                                "pressure_static_setpoint": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "pos_damper_vav1": {
@@ -528,7 +528,7 @@
                                 }
                             },
                             "required": [
-                                "p_press_static_sp",
+                                "pressure_static_setpoint",
                                 "pos_damper_vav1",
                                 "pos_damper_vav2",
                                 "pos_damper_vav3",
@@ -555,39 +555,39 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "n_cells_ct_op": {
+                                "number_cells_coolingtower_operation": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "m_ct": {
+                                "flow_mass_coolingtower": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "p_power_fan_ct": {
+                                "power_fan_coolingtower": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "n_cells_ct_op",
-                                "m_ct",
-                                "p_power_fan_ct"
+                                "number_cells_coolingtower_operation",
+                                "flow_mass_coolingtower",
+                                "power_fan_coolingtower"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "n_cells_ct": {
+                                "number_cells_coolingtower": {
                                     "type": "number"
                                 },
-                                "m_ct_design": {
+                                "flow_mass_coolingtower_design": {
                                     "type": "number"
                                 },
-                                "frac_flow_min_cell": {
+                                "fraction_flow_min_cell": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "n_cells_ct",
-                                "m_ct_design",
-                                "frac_flow_min_cell"
+                                "number_cells_coolingtower",
+                                "flow_mass_coolingtower_design",
+                                "fraction_flow_min_cell"
                             ]
                         }
                     }
@@ -606,12 +606,12 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "t_wh_in": {
+                                "temperature_water_inlet": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "t_wh_in"
+                                "temperature_water_inlet"
                             ]
                         },
                         "parameters": {
@@ -633,12 +633,12 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "p_press_static_sp": {
+                                "pressure_static_setpoint": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "p_press_static_sp"
+                                "pressure_static_setpoint"
                             ]
                         },
                         "parameters": {
@@ -668,20 +668,20 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "n_occupants": {
+                                "number_occupants": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "q_sensible": {
+                                "heat_sensible": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "p_power_fan": {
+                                "power_fan": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "n_occupants",
-                                "q_sensible",
-                                "p_power_fan"
+                                "number_occupants",
+                                "heat_sensible",
+                                "power_fan"
                             ]
                         },
                         "parameters": {
@@ -703,20 +703,20 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "t_heating_max": {
+                                "temperature_water_heating_max": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "t_cooling_min": {
+                                "temperature_water_cooling_min": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "m_pump": {
+                                "flow_mass_water_pump": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "t_heating_max",
-                                "t_cooling_min",
-                                "m_pump"
+                                "temperature_water_heating_max",
+                                "temperature_water_cooling_min",
+                                "flow_mass_water_pump"
                             ]
                         },
                         "parameters": {
@@ -746,12 +746,12 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "schedule_hvac": {
+                                "status_hvac": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "schedule_hvac"
+                                "status_hvac"
                             ]
                         },
                         "parameters": {
@@ -773,7 +773,7 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "L_op": {
+                                "L_operation": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "P_supp_ht": {
@@ -790,7 +790,7 @@
                                 }
                             },
                             "required": [
-                                "L_op",
+                                "L_operation",
                                 "P_supp_ht",
                                 "C_t_mod",
                                 "C_ff_mod",
@@ -828,31 +828,31 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "p_power_fan_ct": {
+                                "power_fan_coolingtower": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "ratio_flow_ct": {
+                                "ratio_flow_coolingtower": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "p_power_fan_ct",
-                                "ratio_flow_ct"
+                                "power_fan_coolingtower",
+                                "ratio_flow_coolingtower"
                             ]
                         },
                         "parameters": {
                             "type": "object",
                             "properties": {
-                                "v_ct_design": {
+                                "flow_volumetric_air_coolingtower_design": {
                                     "type": "number"
                                 },
-                                "p_power_fan_ct_design": {
+                                "power_fan_coolingtower_design": {
                                     "type": "number"
                                 }
                             },
                             "required": [
-                                "v_ct_design",
-                                "p_power_fan_ct_design"
+                                "flow_volumetric_air_coolingtower_design",
+                                "power_fan_coolingtower_design"
                             ]
                         }
                     }
@@ -871,7 +871,7 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "v_oa": {
+                                "flow_volumetric_air_outdoor": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "schedule_occupancy": {
@@ -879,7 +879,7 @@
                                 }
                             },
                             "required": [
-                                "v_oa",
+                                "flow_volumetric_air_outdoor",
                                 "schedule_occupancy"
                             ]
                         },
@@ -892,7 +892,7 @@
                                 "height_zone": {
                                     "type": "number"
                                 },
-                                "v_oa_per_area": {
+                                "flow_volumetric_air_outdoor_per_area": {
                                     "type": "number"
                                 },
                                 "tol_occupants": {
@@ -902,7 +902,7 @@
                             "required": [
                                 "area_zone",
                                 "height_zone",
-                                "v_oa_per_area",
+                                "flow_volumetric_air_outdoor_per_area",
                                 "tol_occupants"
                             ]
                         }
@@ -922,10 +922,10 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "t_z_heat_sp": {
+                                "temperature_air_zone_heat_setpoint": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "t_z_cool_sp": {
+                                "temperature_air_zone_cool_setpoint": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "schedule_occupancy": {
@@ -933,8 +933,8 @@
                                 }
                             },
                             "required": [
-                                "t_z_heat_sp",
-                                "t_z_cool_sp",
+                                "temperature_air_zone_heat_setpoint",
+                                "temperature_air_zone_cool_setpoint",
                                 "schedule_occupancy"
                             ]
                         },
@@ -969,7 +969,7 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "v_oa": {
+                                "flow_volumetric_air_outdoor": {
                                     "$ref": "#/$defs/output_variable"
                                 },
                                 "status_ahu": {
@@ -978,15 +978,15 @@
                                 "s_eco": {
                                     "$ref": "#/$defs/output_variable"
                                 },
-                                "n_occupants": {
+                                "number_occupants": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "v_oa",
+                                "flow_volumetric_air_outdoor",
                                 "status_ahu",
                                 "s_eco",
-                                "n_occupants"
+                                "number_occupants"
                             ]
                         },
                         "parameters": {

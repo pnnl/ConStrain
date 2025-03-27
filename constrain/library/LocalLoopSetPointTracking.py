@@ -65,18 +65,18 @@ from constrain.checklib import RuleCheckBase
 
 
 class LocalLoopSetPointTracking(RuleCheckBase):
-    points = ["val_sensor", "val_setpoint"]
+    points = ["value_sensor", "value_setpoint"]
 
     def error_below_5percent(self, t):
         # this method checks each sample, and returns true if the error is within 5 percent of absolute setpoint value
         # if the set point is 0, a default error threshold of 0.01 is used
-        err_abs = abs(t["val_sensor"] - t["val_setpoint"])
-        if t["val_setpoint"] == 0:
+        err_abs = abs(t["value_sensor"] - t["value_setpoint"])
+        if t["value_setpoint"] == 0:
             if err_abs > 0.01:
                 return False
             else:
                 return True
-        if err_abs / abs(t["val_setpoint"]) > 0.05:
+        if err_abs / abs(t["value_setpoint"]) > 0.05:
             return False
         else:
             return True

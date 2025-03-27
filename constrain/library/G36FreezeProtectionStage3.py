@@ -98,13 +98,13 @@ from constrain.checklib import RuleCheckBase
 class G36FreezeProtectionStage3(RuleCheckBase):
     points = [
         "flag_freeze",
-        "t_sa",
-        "pos_damper_oa",
+        "temperature_air_supply_setpoint",
+        "position_damper_air_outdoor",
         "status_fan_supply",
         "status_fan_return",
         "status_fan_relief",
-        "cmd_coil_cool",
-        "cmd_coil_heat",
+        "command_coil_cool",
+        "command_coil_heat",
     ]
 
     def ts_verify_logic(self, t):
@@ -116,12 +116,12 @@ class G36FreezeProtectionStage3(RuleCheckBase):
             or t["flag_freeze"]
         ):
             if not (
-                t["pos_damper_oa"] < 1
+                t["position_damper_air_outdoor"] < 1
                 and (not bool(t["status_fan_supply"]))
                 and (not bool(t["status_fan_return"]))
                 and (not bool(t["status_fan_relief"]))
-                and t["cmd_coil_cool"] > 99
-                and t["cmd_coil_heat"] > 0
+                and t["command_coil_cool"] > 99
+                and t["command_coil_heat"] > 0
             ):
                 return False
         return True
@@ -134,7 +134,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
         lt1_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["t_sa"] < 3.3:
+            if t["temperature_air_supply_setpoint"] < 3.3:
                 if lt3p3_timer_start is None:
                     lt3p3_timer_start = i
                     lt3p3_timer_list.append(0)
@@ -148,7 +148,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
                 lt3p3_timer_start = None
                 lt3p3_timer_list.append(0)
 
-            if t["t_sa"] < 1:
+            if t["temperature_air_supply_setpoint"] < 1:
                 if lt1_timer_start is None:
                     lt1_timer_start = i
                     lt1_timer_list.append(0)

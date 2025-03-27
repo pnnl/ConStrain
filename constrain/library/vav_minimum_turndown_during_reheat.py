@@ -77,18 +77,18 @@ from constrain.checklib import RuleCheckBase
 class VAVMinimumTurndownDuringReheat(RuleCheckBase):
     points = [
         "flag_coil_reheat",  # boolean
-        "v_vav",  # actual VAV volume flow
-        "v_vav_max",  # max VAV volume flow
+        "flow_volumetric_air_vav",  # actual VAV volume flow
+        "flow_volumetric_air_max",  # max VAV volume flow
         "ratio_turndown_min",
         "tol_turndown",
     ]
 
     def vav_turndown_check(self, data):
         if data["flag_coil_reheat"]:
-            if data["v_vav_max"] == 0:
+            if data["flow_volumetric_air_max"] == 0:
                 return "Untested"
             elif (
-                data["v_vav"] / data["v_vav_max"]
+                data["flow_volumetric_air_vav"] / data["flow_volumetric_air_max"]
                 > data["ratio_turndown_min"] + data["tol_turndown"]
             ):
                 return False
@@ -98,8 +98,8 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
             return "Untested"
 
     def verify(self):
-        if (self.df["v_vav_max"] != 0).all():
+        if (self.df["flow_volumetric_air_max"] != 0).all():
             self.df["v_vav_ratio"] = (
-                self.df["v_vav"] / self.df["v_vav_max"]
+                self.df["flow_volumetric_air_vav"] / self.df["flow_volumetric_air_max"]
             )  # for plotting
         self.result = self.df.apply(lambda d: self.vav_turndown_check(d), axis=1)

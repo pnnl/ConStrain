@@ -89,11 +89,11 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
     points = [
         "mode_system",
         "state_zone",
-        "v_min",
-        "t_sa_sp",
-        "v_sp",
+        "flow_volumetric_air_setpoint_min",
+        "temperature_air_supply_setpoint",
+        "flow_volumetric_air_setpoint",
         "tol_v",
-        "t_room",
+        "temperature_air_room",
     ]
 
     def setpoint_at_minimum_when_dat_high(
@@ -129,11 +129,11 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
             lambda t: self.setpoint_at_minimum_when_dat_high(
                 t["mode_system"],
                 t["state_zone"],
-                t["v_min"],
-                t["t_sa_sp"],
-                t["v_sp"],
+                t["flow_volumetric_air_setpoint_min"],
+                t["temperature_air_supply_setpoint"],
+                t["flow_volumetric_air_setpoint"],
                 t["tol_v"],
-                t["t_room"],
+                t["temperature_air_room"],
             ),
             axis=1,
         )

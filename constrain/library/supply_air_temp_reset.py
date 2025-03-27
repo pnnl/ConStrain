@@ -62,21 +62,21 @@ from constrain.checklib import RuleCheckBase
 
 
 class SupplyAirTempReset(RuleCheckBase):
-    points = ["t_sa_sp", "t_z_design_cool"]
+    points = ["temperature_air_supply", "temperature_air_zone_design_cool_setpoint"]
 
     def verify(self):
-        t_sa_sp_max = max(self.df["t_sa_sp"])
-        t_sa_sp_min = min(self.df["t_sa_sp"])
+        t_sa_sp_max = max(self.df["temperature_air_supply"])
+        t_sa_sp_min = min(self.df["temperature_air_supply"])
 
         self.result = (t_sa_sp_max - t_sa_sp_min) >= (
-            self.df["t_z_design_cool"] - t_sa_sp_min
+            self.df["temperature_air_zone_design_cool_setpoint"] - t_sa_sp_min
         ) * 0.25 * 0.99  # 0.99 being the numeric threshold
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
         print(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
-        sns.histplot(self.df["t_sa_sp"])
+        sns.histplot(self.df["temperature_air_supply"])
         plt.title("All samples distribution of t_sa_sp")
         plt.savefig(f"{self.results_folder}/All_samples_distribution_of_t_sa_sp.png")
 
@@ -88,6 +88,10 @@ class SupplyAirTempReset(RuleCheckBase):
             daystr = f"{str(one_day.year)}-{str(one_day.month)}-{str(one_day.day)}"
             daydf = self.df.loc[daystr]
             day = self.result[daystr]
-            if daydf["t_sa_sp"].max() - daydf["t_sa_sp"].min() > 0:
+            if (
+                daydf["temperature_air_supply"].max()
+                - daydf["temperature_air_supply"].min()
+                > 0
+            ):
                 return day, daydf
             return day, daydf

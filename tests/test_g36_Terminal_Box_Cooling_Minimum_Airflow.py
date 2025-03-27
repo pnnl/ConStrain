@@ -13,11 +13,11 @@ class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
         points = [
             "mode_system",
             "state_zone",
-            "v_min",
-            "t_sa_sp",
-            "v_sp",
+            "flow_volumetric_air_setpoint_min",
+            "temperature_air_supply_setpoint",
+            "flow_volumetric_air_setpoint",
             "tol_v",
-            "t_room",
+            "temperature_air_room",
         ]
 
         data = [

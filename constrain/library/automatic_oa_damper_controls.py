@@ -74,20 +74,20 @@ from constrain.checklib import RuleCheckBase
 
 class AutomaticOADamperControl(RuleCheckBase):
     points = [
-        "n_occupants",
+        "number_occupants",
         "status_economizer",
-        "v_oa",
-        "v_ea",
+        "flow_volumetric_air_outdoor",
+        "flow_volumetric_air_exhaust",
         "tol_occupants",
         "tol_v_oa",
         "tol_v_ea",
     ]
 
     def automatic_oa_damper_check(self, data):
-        if data["n_occupants"] < data["tol_occupants"]:
+        if data["number_occupants"] < data["tol_occupants"]:
             if data["status_economizer"] == 0 and (
-                float(data["v_oa"]) >= data["tol_v_oa"]
-                or float(data["v_ea"]) >= data["tol_v_ea"]
+                float(data["flow_volumetric_air_outdoor"]) >= data["tol_v_oa"]
+                or float(data["flow_volumetric_air_exhaust"]) >= data["tol_v_ea"]
             ):
                 return False
             else:

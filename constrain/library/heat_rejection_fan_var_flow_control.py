@@ -81,13 +81,23 @@ from sklearn.linear_model import LinearRegression
 
 
 class HeatRejectionFanVariableFlowControl(RuleCheckBase):
-    points = ["p_power_fan_ct", "ratio_flow_ct", "p_power_fan_ct_design", "v_ct_design"]
+    points = [
+        "power_fan_coolingtower",
+        "ratio_flow_coolingtower",
+        "power_fan_coolingtower_design",
+        "flow_volumetric_air_coolingtower_design",
+    ]
 
     def verify(self):
-        self.df["v_fan"] = self.df["ratio_flow_ct"] * self.df["v_ct_design"]
-        self.df["normalized_v_fan"] = self.df["v_fan"] / self.df["v_ct_design"]
+        self.df["v_fan"] = (
+            self.df["ratio_flow_coolingtower"]
+            * self.df["flow_volumetric_air_coolingtower_design"]
+        )
+        self.df["normalized_v_fan"] = (
+            self.df["v_fan"] / self.df["flow_volumetric_air_coolingtower_design"]
+        )
         self.df["normalized_p_power_fan_ct"] = (
-            self.df["p_power_fan_ct"] / self.df["p_power_fan_ct_design"]
+            self.df["power_fan_coolingtower"] / self.df["power_fan_coolingtower_design"]
         )
 
         self.df = self.df.loc[

@@ -11,8 +11,8 @@ import numpy as np
 class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
     def test_exterior_lighting_control_occupancy_sensing_reduction_power_too_high(self):
         points = [
-            "n_occupants",
-            "p_power_light_total",
+            "number_occupants",
+            "power_light_total",
             "tol_occupants",
         ]
         timestamp = [
@@ -34,8 +34,8 @@ class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_pass(self):
         points = [
-            "n_occupants",
-            "p_power_light_total",
+            "number_occupants",
+            "power_light_total",
             "tol_occupants",
         ]
         timestamp = [
@@ -60,8 +60,8 @@ class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_fail(self):
         points = [
-            "n_occupants",
-            "p_power_light_total",
+            "number_occupants",
+            "power_light_total",
             "tol_occupants",
         ]
         timestamp = [

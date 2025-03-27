@@ -72,16 +72,16 @@ from constrain.checklib import RuleCheckBase
 
 
 class LocalLoopSaturationDirectActingMax(RuleCheckBase):
-    points = ["val_sensor", "val_setpoint", "cmd_control", "cmd_max"]
+    points = ["value_sensor", "value_setpoint", "command_control", "command_max"]
 
     def saturation_flag(self, t):
-        if 0 <= t["cmd_max"] - t["cmd_control"] <= 0.01:
+        if 0 <= t["command_max"] - t["command_control"] <= 0.01:
             return True
         else:
             return False
 
     def err_flag(self, t):
-        if t["val_sensor"] > t["val_setpoint"]:
+        if t["value_sensor"] > t["value_setpoint"]:
             return True
         else:
             return False

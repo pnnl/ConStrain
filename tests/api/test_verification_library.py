@@ -81,7 +81,7 @@ class TestVerificationLibrary(unittest.TestCase):
             list(
                 vl_obj.lib_items["AutomaticShutdown"]["description_datapoints"].keys()
             ),
-            ["schedule_hvac"],
+            ["status_hvac"],
         )
 
     def test_validate_library_invalid(self):
@@ -138,12 +138,12 @@ class TestVerificationLibrary(unittest.TestCase):
         vl_obj = VerificationLibrary(lib_path)
         applicable_lib_items = vl_obj.get_applicable_library_items_by_datapoints(
             [
-                "t_sa_sp",
-                "t_z_design_cool",
-                "v_oa",
+                "temperature_air_supply",
+                "temperature_air_zone_design_cool_setpoint",
+                "flow_volumetric_air_outdoor",
                 "status_ahu",
                 "status_economizer",
-                "n_occupants",
+                "number_occupants",
             ]
         )  # datapoints for `SupplyAirTempReset` and `DemandControlVentilation`
         self.assertEqual(
@@ -165,7 +165,9 @@ class TestVerificationLibrary(unittest.TestCase):
         vl_obj = VerificationLibrary(lib_path)
 
         with self.assertLogs() as logobs:
-            vl_obj.get_applicable_library_items_by_datapoints({"T_sa_sp", "T_z_cool"})
+            vl_obj.get_applicable_library_items_by_datapoints(
+                {"temperature_air_supply", "T_z_cool"}
+            )
             self.assertEqual(
                 "ERROR:root:datapoints' type must be List. It can't be <class 'set'>.",
                 logobs.output[0],
@@ -179,7 +181,9 @@ class TestVerificationLibrary(unittest.TestCase):
             )
 
         with self.assertLogs() as logobs:
-            vl_obj.get_applicable_library_items_by_datapoints(["T_sa_sp", {"T_z_cool"}])
+            vl_obj.get_applicable_library_items_by_datapoints(
+                ["temperature_air_supply", {"T_z_cool"}]
+            )
             self.assertEqual(
                 "ERROR:root:element's type in the datapoints argument must be str. It can't be <class 'set'>.",
                 logobs.output[0],

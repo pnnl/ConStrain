@@ -13,10 +13,10 @@ class TestG36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
         points = [
             "mode_system",
             "state_zone",
-            "v_cool_max",
-            "v_heat_max",
-            "v_min",
-            "v_sp",
+            "flow_volumetric_air_cool_max",
+            "flow_volumetric_air_heat_max",
+            "flow_volumetric_air_setpoint_min",
+            "flow_volumetric_air_setpoint",
         ]
 
         data = [

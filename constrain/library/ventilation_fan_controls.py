@@ -62,13 +62,13 @@ from constrain.checklib import RuleCheckBase
 
 
 class VentilationFanControl(RuleCheckBase):
-    points = ["q_sensible", "n_occupants", "p_power_fan"]
+    points = ["heat_sensible", "number_occupants", "power_fan"]
 
     def verify(self):
         self.result = ~(
-            (self.df["q_sensible"] == 0)
-            & (self.df["n_occupants"] == 0)
-            & (self.df["p_power_fan"] != 0)
+            (self.df["heat_sensible"] == 0)
+            & (self.df["number_occupants"] == 0)
+            & (self.df["power_fan"] != 0)
         )
 
     def calculate_plot_day(self):

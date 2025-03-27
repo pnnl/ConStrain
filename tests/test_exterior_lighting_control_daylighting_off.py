@@ -12,9 +12,9 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
     def test_exterior_lighting_control_occupancy_sensing_reduction_fail(self):
         points = [
             "flag_sun_up",
-            "val_daylight",
-            "val_daylight_sp",
-            "p_power_light_total",
+            "value_daylight",
+            "value_daylight_setpoint",
+            "power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -39,9 +39,9 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
     def test_exterior_lighting_control_occupancy_sensing_reduction_pass(self):
         points = [
             "flag_sun_up",
-            "val_daylight",
-            "val_daylight_sp",
-            "p_power_light_total",
+            "value_daylight",
+            "value_daylight_setpoint",
+            "power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -66,9 +66,9 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
     def test_exterior_lighting_control_occupancy_sensing_reduction_fail_daylight(self):
         points = [
             "flag_sun_up",
-            "val_daylight",
-            "val_daylight_sp",
-            "p_power_light_total",
+            "value_daylight",
+            "value_daylight_setpoint",
+            "power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -93,9 +93,9 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
     def test_exterior_lighting_control_occupancy_sensing_reduction_pass_daylight(self):
         points = [
             "flag_sun_up",
-            "val_daylight",
-            "val_daylight_sp",
-            "p_power_light_total",
+            "value_daylight",
+            "value_daylight_setpoint",
+            "power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),

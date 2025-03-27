@@ -9,12 +9,12 @@ import pandas as pd
 class TestG36ReturnAirDamperPositionForReturnFanAirflowTracking(unittest.TestCase):
     def test_return_air_damper_position_for_return_fan_airflow_tracking(self):
         points = [
-            "q_heat",
-            "q_cool",
-            "pos_damper_ra",
-            "pos_damper_ra_max",
+            "output_coil_heating",
+            "output_coil_cooling",
+            "position_damper_air_return",
+            "position_damper_air_return_max",
             "tol_pos_damper_ra",
-            "pos_damper_relief",
+            "position_damper_relief",
         ]
         data = [
             [1000, 0, 0.5, 1.0, 0.05, 1.0],  # False

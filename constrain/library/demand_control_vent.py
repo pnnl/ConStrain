@@ -31,7 +31,7 @@ if len(df_filtered) == 0:
     return "Untested"  # No valid samples
 
 # Calculate correlation between occupancy and outdoor air flow
-correlation, p_value = pearsonr(df_filtered["n_occupants"], df_filtered["v_oa"])
+correlation, p_value = pearsonr(df_filtered["number_occupants"], df_filtered["flow_volumetric_air_outdoor"])
 
 if p_value > 0.05:
     return "Untested"  # Correlation not statistically significant
@@ -74,10 +74,10 @@ from scipy.stats import pearsonr
 
 class DemandControlVentilation(CheckLibBase):
     points = [
-        "v_oa",
+        "flow_volumetric_air_outdoor",
         "status_ahu",
         "status_economizer",
-        "n_occupants",
+        "number_occupants",
     ]
 
     def verify(self):
@@ -92,7 +92,10 @@ class DemandControlVentilation(CheckLibBase):
                 "There is no samples with economizer off and AHU on, result: untested"
             )
         else:
-            corr, p_value = pearsonr(df_filtered["n_occupants"], df_filtered["v_oa"])
+            corr, p_value = pearsonr(
+                df_filtered["number_occupants"],
+                df_filtered["flow_volumetric_air_outdoor"],
+            )
             if p_value > 0.05:
                 self.bool_result = "Untested"
                 self.msg = "correlation p value too large, result: untested"

@@ -78,28 +78,35 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure(RuleCheckBase):
     points = [
-        "q_heat",
-        "q_cool",
-        "pos_damper_ra",
-        "pos_damper_ra_max",
+        "output_coil_heating",
+        "output_coil_cooling",
+        "position_damper_air_return",
+        "position_damper_air_return_max",
         "tol_pos_damper_ra",
     ]
 
     def return_air_damper(self, data):
-        if data["q_heat"] > 0:
+        if data["output_coil_heating"] > 0:
             if (
-                abs(data["pos_damper_ra"] - data["pos_damper_ra_max"])
+                abs(
+                    data["position_damper_air_return"]
+                    - data["position_damper_air_return_max"]
+                )
                 < data["tol_pos_damper_ra"]
             ):
                 return True
             else:
                 return False
-        elif data["q_cool"] > 0:
-            if data["pos_damper_ra"] < data["tol_pos_damper_ra"]:
+        elif data["output_coil_cooling"] > 0:
+            if data["position_damper_air_return"] < data["tol_pos_damper_ra"]:
                 return True
             else:
                 return False
-        elif 0 < data["pos_damper_ra"] < data["pos_damper_ra_max"]:
+        elif (
+            0
+            < data["position_damper_air_return"]
+            < data["position_damper_air_return_max"]
+        ):
             return True
         else:
             return False

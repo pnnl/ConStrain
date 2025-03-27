@@ -9,7 +9,12 @@ import pandas as pd
 
 class TestAppendixGHVACSystemFanOperation(unittest.TestCase):
     def test_hvac_system_fan_operation_no_oa_untested(self):
-        points = ["n_occupants", "frac_runtime_fan", "v_oa", "tol_occupants"]
+        points = [
+            "number_occupants",
+            "fraction_runtime_fan",
+            "flow_volumetric_air_outdoor",
+            "tol_occupants",
+        ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
             datetime(2023, 3, 1, 2, 5, 2),
@@ -26,7 +31,12 @@ class TestAppendixGHVACSystemFanOperation(unittest.TestCase):
         self.assertTrue(binaryflag is None)
 
     def test_hvac_system_fan_operation_oa_fail(self):
-        points = ["n_occupants", "frac_runtime_fan", "v_oa", "tol_occupants"]
+        points = [
+            "number_occupants",
+            "fraction_runtime_fan",
+            "flow_volumetric_air_outdoor",
+            "tol_occupants",
+        ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
             datetime(2023, 3, 1, 2, 5, 2),
@@ -48,7 +58,12 @@ class TestAppendixGHVACSystemFanOperation(unittest.TestCase):
         self.assertFalse(binaryflag)
 
     def test_hvac_system_fan_operation_oa_pass(self):
-        points = ["n_occupants", "frac_runtime_fan", "v_oa", "tol_occupants"]
+        points = [
+            "number_occupants",
+            "fraction_runtime_fan",
+            "flow_volumetric_air_outdoor",
+            "tol_occupants",
+        ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
             datetime(2023, 3, 1, 2, 5, 2),

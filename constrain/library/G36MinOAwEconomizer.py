@@ -82,12 +82,12 @@ from constrain.checklib import RuleCheckBase
 
 class G36MinOAwEconomizer(RuleCheckBase):
     points = [
-        "t_oa",
-        "t_economizer_limit",
-        "pos_damper_oa",
-        "pos_damper_oa_min",
-        "v_oa",
-        "v_oa_min_sp",
+        "temperature_air_outdoor",
+        "temperature_air_economizer_limit",
+        "position_damper_air_outdoor",
+        "position_damper_air_outdoor_min",
+        "flow_volumetric_air_outdoor",
+        "flow_volumetric_air_outdoor_setpoint_min",
         "mode_system",
     ]
 
@@ -98,11 +98,16 @@ class G36MinOAwEconomizer(RuleCheckBase):
             return False
 
     def ts_verify_logic(self, t):
-        if (not self.economizer_lockout(t["t_oa"], t["t_economizer_limit"])) and (
-            t["mode_system"].strip().lower() == "occupied"
-        ):
-            if (t["pos_damper_oa"] >= t["pos_damper_oa_min"]) and (
-                t["v_oa"] >= t["v_oa_min_sp"]
+        if (
+            not self.economizer_lockout(
+                t["temperature_air_outdoor"], t["temperature_air_economizer_limit"]
+            )
+        ) and (t["mode_system"].strip().lower() == "occupied"):
+            if (
+                t["position_damper_air_outdoor"] >= t["position_damper_air_outdoor_min"]
+            ) and (
+                t["flow_volumetric_air_outdoor"]
+                >= t["flow_volumetric_air_outdoor_setpoint_min"]
             ):
                 return True
             else:

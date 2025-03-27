@@ -66,25 +66,30 @@ from constrain.checklib import RuleCheckBase
 class MZSystemOccupiedStandbyVentilationZoneControl(RuleCheckBase):
     points = [
         "flag_zone_standby",
-        "v_oa_system_sp",
-        "v_oa_zone_req",
+        "flow_volumetric_air_outdoor_system_setpoint",
+        "flow_volumetric_air_outdoor_zone_req",
     ]
     last_non_standby_mode_requested_v_oa = None  # expects volumetric flow rate
 
     def occupied_standby_ventilation_zontrol_control(self, data):
         # initialization
         if self.last_non_standby_mode_requested_v_oa is None:
-            self.last_non_standby_mode_requested_v_oa = data["v_oa_system_sp"]
+            self.last_non_standby_mode_requested_v_oa = data[
+                "flow_volumetric_air_outdoor_system_setpoint"
+            ]
         # verification
         if data["flag_zone_standby"]:
             if (
-                self.last_non_standby_mode_requested_v_oa - data["v_oa_system_sp"]
-            ) >= data["v_oa_zone_req"]:
+                self.last_non_standby_mode_requested_v_oa
+                - data["flow_volumetric_air_outdoor_system_setpoint"]
+            ) >= data["flow_volumetric_air_outdoor_zone_req"]:
                 return True
             else:
                 return False
         else:
-            self.last_non_standby_mode_requested_v_oa = data["v_oa_system_sp"]
+            self.last_non_standby_mode_requested_v_oa = data[
+                "flow_volumetric_air_outdoor_system_setpoint"
+            ]
             return "Untested"
 
     def verify(self):

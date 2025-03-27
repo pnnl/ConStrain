@@ -71,7 +71,13 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
-    points = ["mode_system", "state_zone", "v_min", "v_sp", "tol_v"]
+    points = [
+        "mode_system",
+        "state_zone",
+        "flow_volumetric_air_setpoint_min",
+        "flow_volumetric_air_setpoint",
+        "tol_v",
+    ]
 
     def setpoint_at_minimum(self, mode_system, state_zone, v_min, v_sp, tol_v):
         if state_zone.lower().strip() != "deadband":
@@ -95,8 +101,8 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
             lambda t: self.setpoint_at_minimum(
                 t["mode_system"],
                 t["state_zone"],
-                t["v_min"],
-                t["v_sp"],
+                t["flow_volumetric_air_setpoint_min"],
+                t["flow_volumetric_air_setpoint"],
                 t["tol_v"],
             ),
             axis=1,

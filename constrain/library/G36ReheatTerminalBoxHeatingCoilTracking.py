@@ -81,14 +81,19 @@ from constrain.checklib import RuleCheckBase
 class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
     points = [
         "mode_system",
-        "cmd_coil_heat",
-        "t_discharge",
-        "t_discharge_sp",
+        "command_coil_heat",
+        "temperature_air_discharge",
+        "temperature_air_discharge_setpoint",
         "tol_t_tracking",
     ]
 
     def err_flag(self, t):
-        if abs(t["t_discharge_sp"] - t["t_discharge"]) >= t["tol_t_tracking"]:
+        if (
+            abs(
+                t["temperature_air_discharge_setpoint"] - t["temperature_air_discharge"]
+            )
+            >= t["tol_t_tracking"]
+        ):
             return True
         else:
             return False
@@ -122,15 +127,17 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
                     result_flag = "Untested"
                 elif err_time > 1:
                     if (
-                        cur["t_discharge"] - cur["t_discharge_sp"]
+                        cur["temperature_air_discharge"]
+                        - cur["temperature_air_discharge_setpoint"]
                         >= cur["tol_t_tracking"]
-                        and cur["cmd_coil_heat"] <= 1
+                        and cur["command_coil_heat"] <= 1
                     ):
                         result_flag = True
                     elif (
-                        cur["t_discharge_sp"] - cur["t_discharge"]
+                        cur["temperature_air_discharge_setpoint"]
+                        - cur["temperature_air_discharge"]
                         >= cur["tol_t_tracking"]
-                        and cur["cmd_coil_heat"] >= 99
+                        and cur["command_coil_heat"] >= 99
                     ):
                         result_flag = True
                     else:

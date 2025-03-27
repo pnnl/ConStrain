@@ -86,12 +86,12 @@ from constrain.checklib import RuleCheckBase
 
 class G36MinOAwoEconomizer(RuleCheckBase):
     points = [
-        "t_oa",
+        "temperature_air_outdoor",
         "t_oa_economizer_high_limit",
-        "pos_damper_oa",
-        "pos_damper_ra",
-        "v_oa",
-        "v_oa_min_sp",
+        "position_damper_air_outdoor",
+        "position_damper_air_return",
+        "flow_volumetric_air_outdoor",
+        "flow_volumetric_air_outdoor_setpoint_min",
         "mode_system",
     ]
 
@@ -103,16 +103,24 @@ class G36MinOAwoEconomizer(RuleCheckBase):
 
     def ts_verify_logic(self, t):
         if (
-            self.economizer_lockout(t["t_oa"], t["t_oa_economizer_high_limit"])
+            self.economizer_lockout(
+                t["temperature_air_outdoor"], t["t_oa_economizer_high_limit"]
+            )
             and t["mode_system"].strip().lower() == "occupied"
         ):
             if t["oaf_low_timer"] > 60:
-                if t["pos_damper_oa"] > 99 and t["pos_damper_ra"] < 1:
+                if (
+                    t["position_damper_air_outdoor"] > 99
+                    and t["position_damper_air_return"] < 1
+                ):
                     return True
                 else:
                     return False
             elif t["oaf_high_timer"] > 60:
-                if t["pos_damper_oa"] < 1 and t["pos_damper_ra"] > 99:
+                if (
+                    t["position_damper_air_outdoor"] < 1
+                    and t["position_damper_air_return"] > 99
+                ):
                     return True
                 else:
                     return False
@@ -128,11 +136,16 @@ class G36MinOAwoEconomizer(RuleCheckBase):
         high_timer_start = None
         for i, t in self.df.iterrows():
             if (
-                self.economizer_lockout(t["t_oa"], t["t_oa_economizer_high_limit"])
+                self.economizer_lockout(
+                    t["temperature_air_outdoor"], t["t_oa_economizer_high_limit"]
+                )
                 and t["mode_system"].strip().lower() == "occupied"
             ):
                 # only count the timers when it is in occupied mode with economizer lockout
-                if t["v_oa"] < t["v_oa_min_sp"]:
+                if (
+                    t["flow_volumetric_air_outdoor"]
+                    < t["flow_volumetric_air_outdoor_setpoint_min"]
+                ):
                     high_timer_start = None
                     high_timer_list.append(0)
                     if low_timer_start is None:
@@ -142,7 +155,10 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                         low_timer_list.append(
                             (i - low_timer_start).total_seconds() / 60
                         )
-                if t["v_oa"] > t["v_oa_min_sp"]:
+                if (
+                    t["flow_volumetric_air_outdoor"]
+                    > t["flow_volumetric_air_outdoor_setpoint_min"]
+                ):
                     low_timer_start = None
                     low_timer_list.append(0)
                     if high_timer_start is None:

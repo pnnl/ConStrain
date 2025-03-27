@@ -21,17 +21,17 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "n_occupants": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "v_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_BOTTOM VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "v_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
@@ -63,17 +63,17 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "n_occupants": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "v_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "v_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_TOP VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
@@ -108,17 +108,17 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "n_occupants": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "v_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_BOTTOM VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "v_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
@@ -150,17 +150,17 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "n_occupants": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "v_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "v_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_TOP VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",

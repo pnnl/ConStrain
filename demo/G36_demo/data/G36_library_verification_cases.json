@@ -13,12 +13,12 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "dev_settings": {
-                    "q_heat": "heating_output",
-                    "q_cool": "cooling_output",
-                    "pos_damper_ra": "ra_p",
-                    "pos_damper_ra_max": "max_ra_p",
-                    "pos_damper_oa": "oa_p",
-                    "pos_damper_oa_max": "max_oa_p"
+                    "output_coil_heating": "heating_output",
+                    "output_coil_cooling": "cooling_output",
+                    "position_damper_air_return": "ra_p",
+                    "position_damper_air_return_max": "max_ra_p",
+                    "position_damper_air_outdoor": "oa_p",
+                    "position_damper_air_outdoor_max": "max_oa_p"
                 },
                 "parameters": {
                     "tol_pos_damper_ra": 0.01,
@@ -40,13 +40,13 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "dev_settings": {
-                    "q_heat": "heating_output",
-                    "q_cool": "cooling_output",
-                    "pos_damper_ra": "ra_p",
-                    "pos_damper_ra_max": "max_ra_p",
-                    "pos_damper_oa": "oa_p",
-                    "pos_damper_oa_min": "min_oa_p",
-                    "pos_damper_oa_max": "max_oa_p",
+                    "output_coil_heating": "heating_output",
+                    "output_coil_cooling": "cooling_output",
+                    "position_damper_air_return": "ra_p",
+                    "position_damper_air_return_max": "max_ra_p",
+                    "position_damper_air_outdoor": "oa_p",
+                    "position_damper_air_outdoor_min": "min_oa_p",
+                    "position_damper_air_outdoor_max": "max_oa_p",
                     "flag_economizer_limit": "economizer_high_limit_reached"
                 },
                 "parameters": {
@@ -70,13 +70,13 @@
             "datapoints_source": {
                 "dev_settings": {
                     "mode_operation": "operation_mode",
-                    "t_oa": "oa_t",
-                    "t_sa_max": "t_max",
-                    "t_sa_sp": "sa_t_sp_ac",
-                    "t_oa_min": "oa_t_min",
-                    "t_oa_max": "oa_t_max",
-                    "t_sa_cool_min": "min_clg_sa_t_sp",
-                    "t_sa_cool_max": "max_clg_sa_t_sp"
+                    "temperature_air_outdoor": "oa_t",
+                    "temperature_air_supply_max": "t_max",
+                    "temperature_air_supply": "sa_t_sp_ac",
+                    "temperature_air_outdoor_min": "oa_t_min",
+                    "temperature_air_outdoor_max": "oa_t_max",
+                    "temperature_air_supply_cool_min": "min_clg_sa_t_sp",
+                    "temperature_air_supply_cool_max": "max_clg_sa_t_sp"
                 },
                 "parameters": {
                     "tol_t_sa": 0.1

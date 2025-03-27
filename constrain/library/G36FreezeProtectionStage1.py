@@ -59,18 +59,22 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36FreezeProtectionStage1(RuleCheckBase):
-    points = ["t_sa", "pos_damper_oa", "pos_damper_oa_min"]
+    points = [
+        "temperature_air_supply_setpoint",
+        "position_damper_air_outdoor",
+        "position_damper_air_outdoor_min",
+    ]
 
     def ts_verify_logic(self, t):
         if not t["freeze_status"]:
             return True
         if (t["sat_lowerthan_4.4_timer"] > 5) and (
-            t["pos_damper_oa"] > t["pos_damper_oa_min"]
+            t["position_damper_air_outdoor"] > t["position_damper_air_outdoor_min"]
         ):
             return False
-        elif (t["pos_damper_oa"] > t["pos_damper_oa_min"]) and (
-            not (t["sat_higherthan_7_timer"] >= 5)
-        ):
+        elif (
+            t["position_damper_air_outdoor"] > t["position_damper_air_outdoor_min"]
+        ) and (not (t["sat_higherthan_7_timer"] >= 5)):
             return False
         else:
             return True
@@ -83,7 +87,7 @@ class G36FreezeProtectionStage1(RuleCheckBase):
         ht7_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["t_sa"] < 4.4:
+            if t["temperature_air_supply_setpoint"] < 4.4:
                 if lt4p4_timer_start is None:
                     lt4p4_timer_start = i
                     lt4p4_timer_list.append(0)
@@ -96,7 +100,7 @@ class G36FreezeProtectionStage1(RuleCheckBase):
                 lt4p4_timer_start = None
                 lt4p4_timer_list.append(0)
 
-            if t["t_sa"] > 7:
+            if t["temperature_air_supply_setpoint"] > 7:
                 if ht7_timer_start is None:
                     ht7_timer_start = i
                     ht7_timer_list.append(0)

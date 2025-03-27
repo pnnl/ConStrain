@@ -12,8 +12,8 @@ class TestMZSystemOccupiedStandbyVentilationZoneControl(unittest.TestCase):
     def test_occupied_standby_ventilation_zontrol_control_fail(self):
         points = [
             "flag_zone_standby",
-            "v_oa_system_sp",
-            "v_oa_zone_req",
+            "flow_volumetric_air_outdoor_system_setpoint",
+            "flow_volumetric_air_outdoor_zone_req",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -38,8 +38,8 @@ class TestMZSystemOccupiedStandbyVentilationZoneControl(unittest.TestCase):
     def test_occupied_standby_ventilation_zontrol_control_pass(self):
         points = [
             "flag_zone_standby",
-            "v_oa_system_sp",
-            "v_oa_zone_req",
+            "flow_volumetric_air_outdoor_system_setpoint",
+            "flow_volumetric_air_outdoor_zone_req",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),

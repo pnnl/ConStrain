@@ -59,8 +59,8 @@ from constrain.checklib import RuleCheckBase
 class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     points = [
         "mode_system",
-        "cmd_coil_heat",
-        "t_discharge",
+        "command_coil_heat",
+        "temperature_air_discharge",
     ]
 
     def heating_coil_working(self, mode_system, cmd_coil_heat, t_discharge):
@@ -77,7 +77,7 @@ class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.heating_coil_working(
-                t["mode_system"], t["cmd_coil_heat"], t["t_discharge"]
+                t["mode_system"], t["command_coil_heat"], t["temperature_air_discharge"]
             ),
             axis=1,
         )

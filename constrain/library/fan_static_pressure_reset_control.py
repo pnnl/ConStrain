@@ -60,7 +60,7 @@ from constrain.checklib import RuleCheckBase
 
 class FanStaticPressureResetControl(RuleCheckBase):
     points = [
-        "p_press_static_sp",
+        "pressure_static_setpoint",
         "pos_damper_vav_1",
         "pos_damper_vav_2",
         "pos_damper_vav_3",
@@ -81,8 +81,8 @@ class FanStaticPressureResetControl(RuleCheckBase):
         for row_num, (index, row) in enumerate(self.df.iterrows()):
             if row_num != 0:
                 if (
-                    self.df.at[index, "p_press_static_sp"]
-                    < self.df.at[prev_index, "p_press_static_sp"]
+                    self.df.at[index, "pressure_static_setpoint"]
+                    < self.df.at[prev_index, "pressure_static_setpoint"]
                 ):
                     self.df.at[index, "result"] = True
                 elif (vav_df.loc[index] > 0.9).any():

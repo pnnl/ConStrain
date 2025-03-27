@@ -86,19 +86,24 @@ from constrain.checklib import RuleCheckBase
 
 
 class AppendixGHVACSystemFanOperation(RuleCheckBase):
-    points = ["n_occupants", "frac_runtime_fan", "v_oa", "tol_occupants"]
+    points = [
+        "number_occupants",
+        "fraction_runtime_fan",
+        "flow_volumetric_air_outdoor",
+        "tol_occupants",
+    ]
     potential_failures_counter = 0
     potential_pass_count = 0
 
     def hvac_system_fan_operation(self, data):
-        if data["n_occupants"] >= data["tol_occupants"]:
-            if data["frac_runtime_fan"] == 1:
+        if data["number_occupants"] >= data["tol_occupants"]:
+            if data["fraction_runtime_fan"] == 1:
                 return True
             else:
                 return False
         else:
             # the system could be "cycling" for the whole timestep
-            if data["frac_runtime_fan"] == 1:
+            if data["fraction_runtime_fan"] == 1:
                 self.potential_failures_counter += 1
                 return True  # assume that it passes, final failure/pass determination is handled by check_bool
             else:
@@ -107,7 +112,7 @@ class AppendixGHVACSystemFanOperation(RuleCheckBase):
 
     def check_system_oa(self, data):
         # check that the system does provide outdoor air
-        total_oa = sum(data["v_oa"])
+        total_oa = sum(data["flow_volumetric_air_outdoor"])
         if total_oa > 0:
             return True
         else:

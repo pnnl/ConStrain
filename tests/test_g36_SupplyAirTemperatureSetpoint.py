@@ -11,13 +11,13 @@ class TestG36SupplyAirTemperatureSetpoint(unittest.TestCase):
     def test_heating_cooling(self):
         points = [
             "mode_operation",
-            "t_sa_max",
-            "t_sa_cool_max",
-            "t_sa_cool_min",
-            "t_oa",
-            "t_oa_min",
-            "t_oa_max",
-            "t_sa_sp",
+            "temperature_air_supply_max",
+            "temperature_air_supply_cool_max",
+            "temperature_air_supply_cool_min",
+            "temperature_air_outdoor",
+            "temperature_air_outdoor_min",
+            "temperature_air_outdoor_max",
+            "temperature_air_supply",
             "tol_t_sa",
         ]
         data = [

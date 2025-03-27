@@ -11,7 +11,7 @@ from lib_unit_test_runner import *
 class TestFanStaticPressureResetControl(unittest.TestCase):
     def test_fan_static_pressure_reset_control_pass(self):
         points = [
-            "p_press_static_sp",
+            "pressure_static_setpoint",
             "pos_damper_vav_1",
             "pos_damper_vav_2",
             "pos_damper_vav_3",
@@ -55,7 +55,7 @@ class TestFanStaticPressureResetControl(unittest.TestCase):
 
     def test_fan_static_pressure_reset_control_fail(self):
         points = [
-            "p_press_static_sp",
+            "pressure_static_setpoint",
             "pos_damper_vav_1",
             "pos_damper_vav_2",
             "pos_damper_vav_3",

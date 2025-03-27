@@ -12,10 +12,10 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_reheat_coil_flag_untested(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "p_press_duct_sp",
+            "pressure_duct_setpoint",
             "tol_turndown",
             "tol_p_press",
         ]
@@ -47,10 +47,10 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_V_dot_max_zero_untested(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "p_press_duct_sp",
+            "pressure_duct_setpoint",
             "tol_turndown",
             "tol_p_press",
         ]
@@ -82,10 +82,10 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_P_set_same_untested(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "p_press_duct_sp",
+            "pressure_duct_setpoint",
             "tol_turndown",
             "tol_p_press",
         ]
@@ -117,10 +117,10 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_pass(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "p_press_duct_sp",
+            "pressure_duct_setpoint",
             "tol_turndown",
             "tol_p_press",
         ]
@@ -156,10 +156,10 @@ class TestVAVTurndown(unittest.TestCase):
     def test_vav_turndown_fail(self):
         points = [
             "flag_coil_reheat",
-            "v_vav",
-            "v_vav_max",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "p_press_duct_sp",
+            "pressure_duct_setpoint",
             "tol_turndown",
             "tol_p_press",
         ]

@@ -72,14 +72,19 @@ from constrain.checklib import RuleCheckBase
 
 
 class WLHPLoopHeatRejectionControl(RuleCheckBase):
-    points = ["t_heating_max", "t_cooling_min", "m_pump", "tol_t_loop"]
+    points = [
+        "temperature_water_heating_max",
+        "temperature_water_cooling_min",
+        "flow_mass_water_pump",
+        "tol_t_loop",
+    ]
 
     def verify(self):
         self.df["t_heating_max_max"] = (
-            self.df.query("m_pump >0")["t_heating_max"]
+            self.df.query("m_pump >0")["temperature_water_heating_max"]
         ).max()
         self.df["t_cooling_min_min"] = (
-            self.df.query("m_pump >0")["t_cooling_min"]
+            self.df.query("m_pump >0")["temperature_water_cooling_min"]
         ).min()
 
         self.result = (

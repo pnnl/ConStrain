@@ -76,7 +76,13 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
-    points = ["mode_system", "state_zone", "v_cool_max", "v_min", "v_sp"]
+    points = [
+        "mode_system",
+        "state_zone",
+        "flow_volumetric_air_cool_max",
+        "flow_volumetric_air_setpoint_min",
+        "flow_volumetric_air_setpoint",
+    ]
 
     def setpoint_in_range(self, mode_system, state_zone, v_cool_max, v_min, v_sp):
         if state_zone.lower().strip() != "cooling":
@@ -105,9 +111,9 @@ class G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
             lambda t: self.setpoint_in_range(
                 t["mode_system"],
                 t["state_zone"],
-                t["v_cool_max"],
-                t["v_min"],
-                t["v_sp"],
+                t["flow_volumetric_air_cool_max"],
+                t["flow_volumetric_air_setpoint_min"],
+                t["flow_volumetric_air_setpoint"],
             ),
             axis=1,
         )

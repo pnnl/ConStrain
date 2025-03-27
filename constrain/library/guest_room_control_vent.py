@@ -93,18 +93,20 @@ from constrain.checklib import CheckLibBase
 
 class GuestRoomControlVent(CheckLibBase):
     points = [
-        "v_oa",
+        "flow_volumetric_air_outdoor",
         "schedule_occupancy",
         "area_zone",
         "height_zone",
-        "v_oa_per_area",
+        "flow_volumetric_air_outdoor_per_area",
         "tol_occupants",
     ]
 
     def verify(self):
         tol_occupancy = self.df["tol_occupants"][0]
         zone_volume = self.df["area_zone"][0] * self.df["height_zone"][0]
-        v_oa_set = self.df["v_oa_per_area"][0] * self.df["area_zone"][0]
+        v_oa_set = (
+            self.df["flow_volumetric_air_outdoor_per_area"][0] * self.df["area_zone"][0]
+        )
 
         year_info = 2000
         result_repo = []
@@ -117,15 +119,16 @@ class GuestRoomControlVent(CheckLibBase):
                 if (
                     day["schedule_occupancy"] <= tol_occupancy
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["v_oa"] == 0).all():
+                    if (day["flow_volumetric_air_outdoor"] == 0).all():
                         result_repo.append(1)  # pass,
                     else:
                         result_repo.append(0)  # fail
                 else:  # room is rented out
-                    if (day["v_oa"] > 0).all():
+                    if (day["flow_volumetric_air_outdoor"] > 0).all():
                         if (
-                            day["v_oa"] == v_oa_set
-                            or day["v_oa"].sum(axis=1) == zone_volume
+                            day["flow_volumetric_air_outdoor"] == v_oa_set
+                            or day["flow_volumetric_air_outdoor"].sum(axis=1)
+                            == zone_volume
                         ):
                             result_repo.append(1)  # pass
                         else:

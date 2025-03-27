@@ -13,13 +13,13 @@ class TestG36ReheatTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
         points = [
             "mode_system",
             "state_zone",
-            "v_min",
-            "v_sp",
+            "flow_volumetric_air_setpoint_min",
+            "flow_volumetric_air_setpoint",
             "tol_v",
-            "cmd_coil_heat",
+            "command_coil_heat",
             "tol_cmd_coil_heat",
-            "t_discharge",
-            "t_discharge_min_sp",
+            "temperature_air_discharge",
+            "temperature_air_discharge_setpoint_min",
         ]
 
         data = [

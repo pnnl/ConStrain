@@ -71,21 +71,23 @@ from constrain.checklib import RuleCheckBase
 class VAVTurndownDuringReheat(RuleCheckBase):
     points = [
         "flag_coil_reheat",
-        "v_vav",
-        "v_vav_max",
+        "flow_volumetric_air_vav",
+        "flow_volumetric_air_max",
     ]
 
     def verify(self):
         # Make sure every value in `v_vav_max` is greater than 0
         assert (
-            self.df["v_vav_max"] > 0
+            self.df["flow_volumetric_air_max"] > 0
         ).all(), "Not all `v_vav_max` values are greater than 0"
 
         # Check if the `flag_coil_reheat` column has only False values
         if (self.df["flag_coil_reheat"] == False).all():
             self.df["result"] = "Untested"
         else:
-            self.df["v_vav_ratio"] = self.df["v_vav"] / self.df["v_vav_max"]
+            self.df["v_vav_ratio"] = (
+                self.df["flow_volumetric_air_vav"] / self.df["flow_volumetric_air_max"]
+            )
 
             # Calculate the mean ratios for reheat and no reheat conditions
             mean_reheat_ratio = self.df.loc[

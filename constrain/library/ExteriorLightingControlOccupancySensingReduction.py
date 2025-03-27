@@ -66,8 +66,8 @@ from constrain.checklib import RuleCheckBase
 
 class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
     points = [
-        "n_occupants",
-        "p_power_light_total",
+        "number_occupants",
+        "power_light_total",
         "tol_occupants",
     ]
     last_reported_occupancy = None
@@ -78,23 +78,23 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
             self.last_reported_occupancy = data.name
         date_diff = data.name - self.last_reported_occupancy
         if (
-            data["n_occupants"] < data["tol_occupants"]
+            data["number_occupants"] < data["tol_occupants"]
         ) and date_diff.total_seconds() / 60 > 15:
             # No activity detected or time since last activity exceeds 15 minutes
             # Therefore, the control requirement is met if the total lighting power is already reduced by at least 50%
-            if data["p_power_light_total"] <= 0.5 * self.design_lighting_power:
+            if data["power_light_total"] <= 0.5 * self.design_lighting_power:
                 check = True
             else:
                 check = False
         else:
             check = "Untested"
 
-        if data["n_occupants"] >= data["tol_occupants"]:
+        if data["number_occupants"] >= data["tol_occupants"]:
             self.last_reported_occupancy = data.name
         return check
 
     def verify(self):
-        self.design_lighting_power = self.df["p_power_light_total"].max()
+        self.design_lighting_power = self.df["power_light_total"].max()
         if self.design_lighting_power >= 1500:
             self.df["result"] = False
             self.result = self.df["result"]

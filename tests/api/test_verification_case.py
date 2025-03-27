@@ -21,7 +21,7 @@ class TestVerificationCase(unittest.TestCase):
         "expected_result": "pass",
         "datapoints_source": {
             "idf_output_variables": {
-                "T_sa_sp": {
+                "temperature_air_supply": {
                     "subject": "VAV_1 Supply Equipment Outlet Node",
                     "variable": "System Node Setpoint Temperature",
                     "frequency": "detailed",

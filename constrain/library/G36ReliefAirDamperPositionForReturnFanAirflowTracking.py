@@ -83,23 +83,23 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReliefAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):
     points = [
-        "q_heat",
-        "q_cool",
-        "pos_damper_relief",
-        "pos_damper_relief_max",
+        "output_coil_heating",
+        "output_coil_cooling",
+        "position_damper_relief",
+        "position_damper_relief_max",
         "tol_pos_damper_relief",
         "cmd_damper_ra",
     ]
 
     def relief_air_damper(self, data):
-        if data["q_heat"] > 0:
-            if data["pos_damper_relief"] < data["tol_pos_damper_relief"]:
+        if data["output_coil_heating"] > 0:
+            if data["position_damper_relief"] < data["tol_pos_damper_relief"]:
                 return True
             else:
                 return False
-        elif data["q_cool"] > 0:
+        elif data["output_coil_cooling"] > 0:
             if (
-                abs(data["pos_damper_relief"] - data["pos_damper_relief_max"])
+                abs(data["position_damper_relief"] - data["position_damper_relief_max"])
                 < data["tol_pos_damper_relief"]
             ):
                 return True
@@ -107,8 +107,8 @@ class G36ReliefAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):
                 return False
         elif (
             abs(
-                data["pos_damper_relief"]
-                - (1 - data["cmd_damper_ra"]) * data["pos_damper_relief_max"]
+                data["position_damper_relief"]
+                - (1 - data["cmd_damper_ra"]) * data["position_damper_relief_max"]
             )
             < data["tol_pos_damper_relief"]
         ):

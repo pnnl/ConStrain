@@ -13,12 +13,12 @@ import numpy as np
 class TestG36MinOAwEconomizer(unittest.TestCase):
     def test_minoa_wo_economizer_pass_untested_low(self):
         points = [
-            "t_oa",
+            "temperature_air_outdoor",
             "t_oa_economizer_high_limit",
-            "pos_damper_oa",
-            "pos_damper_ra",
-            "v_oa",
-            "v_oa_min_sp",
+            "position_damper_air_outdoor",
+            "position_damper_air_return",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_outdoor_setpoint_min",
             "mode_system",
         ]
 
@@ -49,12 +49,12 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_fail_untested_low(self):
         points = [
-            "t_oa",
+            "temperature_air_outdoor",
             "t_oa_economizer_high_limit",
-            "pos_damper_oa",
-            "pos_damper_ra",
-            "v_oa",
-            "v_oa_min_sp",
+            "position_damper_air_outdoor",
+            "position_damper_air_return",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_outdoor_setpoint_min",
             "mode_system",
         ]
 
@@ -85,12 +85,12 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_pass_untested_high(self):
         points = [
-            "t_oa",
+            "temperature_air_outdoor",
             "t_oa_economizer_high_limit",
-            "pos_damper_oa",
-            "pos_damper_ra",
-            "v_oa",
-            "v_oa_min_sp",
+            "position_damper_air_outdoor",
+            "position_damper_air_return",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_outdoor_setpoint_min",
             "mode_system",
         ]
 
@@ -121,12 +121,12 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_fail_untested_high(self):
         points = [
-            "t_oa",
+            "temperature_air_outdoor",
             "t_oa_economizer_high_limit",
-            "pos_damper_oa",
-            "pos_damper_ra",
-            "v_oa",
-            "v_oa_min_sp",
+            "position_damper_air_outdoor",
+            "position_damper_air_return",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_outdoor_setpoint_min",
             "mode_system",
         ]
 
