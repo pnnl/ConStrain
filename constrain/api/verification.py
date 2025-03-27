@@ -8,6 +8,7 @@ import sys, logging, multiprocessing, os
 import pandas as pd
 
 from typing import Dict, List, Tuple, Union
+from pathlib import Path
 
 sys.path.append("..")
 
@@ -19,6 +20,11 @@ from constrain.libcases import *
 
 class Verification:
     def __init__(self, verifications: VerificationCase = None):
+        """Instantiate a Verification object.
+
+        Args:
+            verficiations (VerificationCase, optional): a VerificationCase
+        """
         self.lib_classes_py_file = None
         self.preprocessed_data = None
         self.cases = None
@@ -55,6 +61,7 @@ class Verification:
         fig_size: tuple = (6.4, 4.8),
         num_threads: int = 1,
         preprocessed_data: pd.DataFrame = None,
+        path_to_custom_tolerance_file: str = None,
     ) -> None:
         """Configure verification environment.
 
@@ -148,6 +155,22 @@ class Verification:
             )
             return None
 
+        if isinstance(path_to_custom_tolerance_file, str):
+            if not os.path.isfile(path_to_custom_tolerance_file):
+                logging.error(
+                    "The path to the custom tolerance file is incorrect. The default tolerances will be used."
+                )
+                path_to_custom_tolerance_file = (
+                    Path(__file__).parent.parent / "tolerances.json"
+                )
+        else:
+            logging.error(
+                f"path_to_custom_tolerance_file should be a string. The default tolerances will be used."
+            )
+            path_to_custom_tolerance_file = (
+                Path(__file__).parent.parent / "tolerances.json"
+            )
+
         self.output_path = output_path
         self.lib_items_path = lib_items_path
         self.lib_classes_py_file = lib_classes_py_file
@@ -155,12 +178,15 @@ class Verification:
         self.fig_size = fig_size
         self.num_threads = num_threads
         self.preprocessed_data = preprocessed_data
+        with open(path_to_custom_tolerance_file) as f:
+            tolerances = json.load(f)
+        self.tolerances = tolerances
 
     def run_single_verification(self, case: dict = None) -> None:
         """Run a single verification and generate a json file containing markdown report string and other results info.
 
         Args:
-            case (dict): Verification case dictionary.
+            case (Dict): Verification case dictionary.
         """
         # Input validation
         if case is None:
@@ -184,6 +210,7 @@ class Verification:
             fig_size=self.fig_size,
             produce_outputs=True,
             preprocessed_data=self.preprocessed_data,
+            tolerances=self.tolerances,
         )
 
         # TODO: JXL to make this compatible with reporting API, save md json instead of md files directly.

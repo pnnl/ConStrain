@@ -7,7 +7,7 @@ sys.path.append("./constrain")
 from api import VerificationCase
 
 
-class TestVerificaqtionCase(unittest.TestCase):
+class TestVerificationCase(unittest.TestCase):
     case = {
         "no": 1,
         "run_simulation": True,

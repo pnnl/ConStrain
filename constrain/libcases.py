@@ -20,6 +20,7 @@ def run_libcase(
     fig_size=(6.4, 4.8),
     produce_outputs=False,
     preprocessed_data=None,
+    tolerances=None,
 ):
     """Library case runner
 
@@ -125,7 +126,7 @@ def run_libcase(
     else:
         cls = globals()[verification_class]
         verification_obj = cls(
-            df, parameters, f"{run_path}"
+            df, parameters, f"{run_path}", tolerances
         )  # verification is executed by CheckLibBase constructor
 
     if time_series_file_name is not None:

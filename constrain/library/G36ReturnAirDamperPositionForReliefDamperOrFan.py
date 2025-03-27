@@ -46,29 +46,33 @@ class G36ReturnAirDamperPositionForReliefDamperOrFan(RuleCheckBase):
         "cooling_output",
         "ra_p",
         "max_ra_p",
-        "ra_p_tol",
         "oa_p",
         "max_oa_p",
-        "oa_p_tol",
     ]
 
     def return_air_damper(self, data):
         if data["heating_output"] > 0:
-            if abs(data["ra_p"] - data["max_ra_p"]) < data["ra_p_tol"]:
+            if abs(data["ra_p"] - data["max_ra_p"]) < self.get_tolerance(
+                "damper", "position"
+            ):
                 return True
             else:
                 return False
         elif data["cooling_output"] > 0:
-            if data["ra_p"] < data["ra_p_tol"]:
+            if data["ra_p"] < self.get_tolerance("damper", "position"):
                 return True
             else:
                 return False
         elif data["oa_p"] < data["max_oa_p"]:
-            if abs(data["ra_p"] - data["max_ra_p"]) < data["ra_p_tol"]:
+            if abs(data["ra_p"] - data["max_ra_p"]) < self.get_tolerance(
+                "damper", "position"
+            ):
                 return True
             else:
                 return False
-        elif abs(data["oa_p"] - data["max_oa_p"]) < data["oa_p_tol"]:
+        elif abs(data["oa_p"] - data["max_oa_p"]) < self.get_tolerance(
+            "damper", "position"
+        ):
             if data["ra_p"] < data["max_ra_p"]:
                 return True
             else:

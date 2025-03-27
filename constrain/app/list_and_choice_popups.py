@@ -19,7 +19,7 @@ import json
 # mapping from object to its methods and its methods to its parameters for display in popup
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
-dependencies_path = os.path.join(script_directory, "dependencies.json")
+dependencies_path = os.path.join(script_directory, "schema.json")
 api_to_method_path = os.path.join(script_directory, "api_to_method.json")
 
 with open(dependencies_path) as f:

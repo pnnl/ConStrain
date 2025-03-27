@@ -1,21 +1,17 @@
-from constrain.checklib import CheckLibBase
+from constrain.checklib import RuleCheckBase
 import pandas as pd
 
 
-class GuestRoomControlVent(CheckLibBase):
+class GuestRoomControlVent(RuleCheckBase):
     points = [
         "m_z_oa",
         "O_sch",
         "area_z",
         "height_z",
         "v_outdoor_per_zone",
-        "tol_occ",
-        "tol_oa_flow",
     ]
 
     def verify(self):
-        tol_occ = self.df["tol_occ"][0]
-        tol_m = self.df["tol_oa_flow"][0]
         zone_volume = self.df["area_z"][0] * self.df["height_z"][0]
         m_z_oa_set = self.df["v_outdoor_per_zone"][0] * self.df["area_z"][0]
 
@@ -28,17 +24,25 @@ class GuestRoomControlVent(CheckLibBase):
                 pass
             else:
                 if (
-                    day["O_sch"] <= tol_occ
+                    day["O_sch"] <= self.get_tolerance("ratio", "occupancy")
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["m_z_oa"] == 0).all():
+                    if (
+                        abs(day["m_z_oa"])
+                        < self.get_tolerance("airflow", "outdoor_air")
+                    ).all():
                         result_repo.append(1)  # pass,
                     else:
                         result_repo.append(0)  # fail
                 else:  # room is rented out
-                    if (day["m_z_oa"] > 0).all():
-                        if (
-                            day["m_z_oa"] == m_z_oa_set
-                            or day["m_z_oa"].sum(axis=1) == zone_volume
+                    if (
+                        day["m_z_oa"] > self.get_tolerance("airflow", "outdoor_air")
+                    ).all():
+                        if abs(day["m_z_oa"] - m_z_oa_set) < self.get_tolerance(
+                            "airflow", "outdoor_air"
+                        ) or abs(
+                            day["m_z_oa"].sum(axis=1) - zone_volume
+                        ) < self.get_tolerance(
+                            "airflow", "outdoor_air"
                         ):
                             result_repo.append(1)  # pass
                         else:

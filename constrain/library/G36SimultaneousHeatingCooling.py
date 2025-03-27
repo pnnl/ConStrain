@@ -24,7 +24,9 @@ class G36SimultaneousHeatingCooling(RuleCheckBase):
     points = ["heating_output", "cooling_output"]
 
     def simultaneous_heating_and_cooling(self, data):
-        if data["heating_output"] > 0 and data["cooling_output"]:
+        if data["heating_output"] > self.get_tolerance("load", "coil") and data[
+            "cooling_output"
+        ] > self.get_tolerance("load", "coil"):
             return False
         else:
             return True

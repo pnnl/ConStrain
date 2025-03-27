@@ -11,6 +11,21 @@ import numpy as np
 
 
 class TestG36MinOAwEconomizer(unittest.TestCase):
+    tolerances = {
+        "damper": {
+            "unit": "%",
+            "types": {
+                "position": 0.01,
+                "command": 0.01,
+                "general": 0.01,
+            },
+        },
+        "airflow": {
+            "unit": "m3/s",
+            "types": {"outdoor_air": 0.0, "general": 0.0},
+        },
+    }
+
     def test_minoa_wo_economizer_pass_untested_low(self):
         points = [
             "outdoor_air_temp",
@@ -42,7 +57,11 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36MinOAwoEconomizer", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36MinOAwoEconomizer", df, tolerances=self.tolerances
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))
@@ -78,7 +97,11 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36MinOAwoEconomizer", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36MinOAwoEconomizer", df, tolerances=self.tolerances
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))
@@ -114,7 +137,11 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36MinOAwoEconomizer", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36MinOAwoEconomizer", df, tolerances=self.tolerances
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))
@@ -150,7 +177,11 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36MinOAwoEconomizer", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36MinOAwoEconomizer", df, tolerances=self.tolerances
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))
