@@ -6,7 +6,9 @@ This file contains the runner of verification cases to be called by the user wit
 from constrain.workflowsteps import *
 from constrain.library import *
 from constrain.datetimeep import DateTimeEP
-import sys, os
+import sys, os, pathlib
+
+path = pathlib.Path(__file__).parent.resolve()
 
 
 def run_libcase(
@@ -145,7 +147,7 @@ def main():
     num_argv = len(sys.argv)
     # NOTE: all relative paths in the json files should be based on "./" being "./constrain"
     cases_path = "../test_cases/verif_mtd_pp/verification_cases.json"
-    lib_items_path = "../schema/library.json"
+    lib_items_path = f"{path}/schema/library.json"
     items = assemble_verification_items(
         cases_path=cases_path, lib_items_path=lib_items_path
     )

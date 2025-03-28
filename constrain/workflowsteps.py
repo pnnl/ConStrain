@@ -10,7 +10,9 @@ from constrain.eprunner import EPRunner
 from constrain.testbuilder import Testbuilder
 import pandas as pd
 from datetime import datetime
-import json, logging
+import json, logging, pathlib
+
+path = pathlib.Path(__file__).parent.resolve()
 
 
 def read_json_file(jsonpath: str) -> List[dict]:
@@ -163,7 +165,7 @@ def assemble_verification_items(
     Returns:
         List: list of assembled verification items
     """
-    lib_items_path_list = ["./schema/library.json"]
+    lib_items_path_list = [f"{path}/schema/library.json"]
     if (
         lib_items_path is not None
     ):  # add user provided verification item list, if the default verification file path is passed in here (as in previous implementation, that is okay too).

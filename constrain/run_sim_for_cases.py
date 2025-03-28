@@ -1,11 +1,13 @@
 from constrain.workflowsteps import *
 from constrain.library import *
 from tqdm import tqdm
-import sys, shutil
+import sys, shutil, pathlib
+
+path = pathlib.Path(__file__).parent.resolve()
 
 
 def run_sim_for_cases(
-    cases_path, lib_items_path="../schema/library.json", batch_postfix=""
+    cases_path, lib_items_path="{path}/schema/library.json", batch_postfix=""
 ):
     items_dict = assemble_verification_items(
         cases_path=cases_path, lib_items_path=lib_items_path
@@ -82,7 +84,7 @@ def main():
         return
     if num_argv == 2:
         cases_path = sys.argv[1]
-        lib_items_path = "../schema/library.json"
+        lib_items_path = f"{path}/schema/library.json"
         print(
             f"One command line argument provided.\nRunning verification cases in {cases_path}\nUsing default verification library json at {lib_items_path}"
         )

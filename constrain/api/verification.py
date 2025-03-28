@@ -59,7 +59,7 @@ class Verification:
         lib_classes_py_file: str = None,
         plot_option: str = None,
         fig_size: tuple = (6.4, 4.8),
-        num_threads: int = 1,  # currently useless TODO: fix this
+        num_threads: int = 1,
         preprocessed_data: pd.DataFrame = None,
         path_to_custom_tolerance_file: str = None,
     ) -> None:
@@ -231,7 +231,5 @@ class Verification:
             return None
 
         # Run verifications
-        # with multiprocessing.Pool(self.num_threads) as c:
-        #     c.map(self.run_single_verification, self.cases.values())
-        for case in self.cases.values():
-            self.run_single_verification(case)
+        with multiprocessing.Pool(self.num_threads) as c:
+            c.map(self.run_single_verification, self.cases.values())
