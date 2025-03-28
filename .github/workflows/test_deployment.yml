@@ -24,7 +24,7 @@ jobs:
             - name: Build package
               run: poetry build
             - name: Install package
-              run: pip install --find-links=.\dist\ constrain
+              run: find ./dist/*.whl | xargs pip install
             - name: Run sample ConStrain scrip
               run: python -m .github\workflows\sample_constrain_run.py
             
