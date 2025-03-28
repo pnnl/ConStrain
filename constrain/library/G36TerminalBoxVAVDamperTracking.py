@@ -77,14 +77,12 @@ class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
         "command_damper_vav",
         "flow_volumetric_air_discharge",
         "flow_volumetric_air_setpoint",
-        "tol_v_tracking",
     ]
 
     def err_flag(self, t):
-        if (
-            abs(t["flow_volumetric_air_setpoint"] - t["flow_volumetric_air_discharge"])
-            >= t["tol_v_tracking"]
-        ):
+        if abs(
+            t["flow_volumetric_air_setpoint"] - t["flow_volumetric_air_discharge"]
+        ) >= self.get_tolerance("airflow", "general"):
             return True
         else:
             return False
@@ -115,15 +113,17 @@ class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
                 if (
                     cur["flow_volumetric_air_discharge"]
                     - cur["flow_volumetric_air_setpoint"]
-                    >= cur["tol_v_tracking"]
-                    and cur["command_damper_vav"] <= 1
+                    >= self.get_tolerance("airflow", "general")
+                    and cur["command_damper_vav"]
+                    <= self.get_tolerance("damper", "command") * 100
                 ):
                     result_flag = True
                 elif (
                     cur["flow_volumetric_air_setpoint"]
                     - cur["flow_volumetric_air_discharge"]
-                    >= cur["tol_v_tracking"]
-                    and cur["command_damper_vav"] >= 99
+                    >= self.get_tolerance("airflow", "general")
+                    and cur["command_damper_vav"]
+                    >= (1 - self.get_tolerance("damper", "command")) * 100
                 ):
                     result_flag = True
                 else:

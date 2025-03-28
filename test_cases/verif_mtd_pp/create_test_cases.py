@@ -223,7 +223,7 @@ def sat_reset(idf, idf_f, id, cases):
                         "frequency": "detailed",
                     }
                 },
-                "parameters": {"T_z_cool": tz_coo},
+                "parameters": {"T_z_coo": tz_coo},
             }
             cases["cases"].append(sat_case)
             id += 1

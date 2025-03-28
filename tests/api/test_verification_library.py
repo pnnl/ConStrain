@@ -1,4 +1,4 @@
-import unittest, sys, logging, json
+import unittest, sys, json
 
 sys.path.append("./constrain")
 from api import VerificationLibrary
@@ -166,7 +166,7 @@ class TestVerificationLibrary(unittest.TestCase):
 
         with self.assertLogs() as logobs:
             vl_obj.get_applicable_library_items_by_datapoints(
-                {"temperature_air_supply", "T_z_cool"}
+                {"temperature_air_supply", "temperature_air_zone_design_cool_setpoint"}
             )
             self.assertEqual(
                 "ERROR:root:datapoints' type must be List. It can't be <class 'set'>.",
@@ -182,7 +182,10 @@ class TestVerificationLibrary(unittest.TestCase):
 
         with self.assertLogs() as logobs:
             vl_obj.get_applicable_library_items_by_datapoints(
-                ["temperature_air_supply", {"T_z_cool"}]
+                [
+                    "temperature_air_supply",
+                    {"temperature_air_zone_design_cool_setpoint"},
+                ]
             )
             self.assertEqual(
                 "ERROR:root:element's type in the datapoints argument must be str. It can't be <class 'set'>.",

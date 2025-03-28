@@ -90,7 +90,6 @@ class HeatPumpSupplementalHeatLockout(RuleCheckBase):
         "C_t_mod",
         "C_ff_mod",
         "L_defrost",
-        "tol_L_op_capacity",
     ]
 
     def heating_coil_verification(self, data):
@@ -100,7 +99,9 @@ class HeatPumpSupplementalHeatLockout(RuleCheckBase):
             if data["L_defrost"] > 0:
                 data["result"] = 1
             else:
-                if data["C_op"] > data["L_operation"] + data["tol_L_op_capacity"]:
+                if data["C_op"] > (
+                    data["L_operation"] + self.get_tolerance("load", "general")
+                ):
                     data["result"] = 0  # False
                 else:
                     data["result"] = 1

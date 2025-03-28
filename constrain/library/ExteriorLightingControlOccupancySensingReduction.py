@@ -68,7 +68,6 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
     points = [
         "number_occupants",
         "power_light_total",
-        "tol_occupants",
     ]
     last_reported_occupancy = None
     design_lighting_power = None
@@ -78,7 +77,7 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
             self.last_reported_occupancy = data.name
         date_diff = data.name - self.last_reported_occupancy
         if (
-            data["number_occupants"] < data["tol_occupants"]
+            data["number_occupants"] < self.get_tolerance("ratio", "occupancy")
         ) and date_diff.total_seconds() / 60 > 15:
             # No activity detected or time since last activity exceeds 15 minutes
             # Therefore, the control requirement is met if the total lighting power is already reduced by at least 50%
@@ -89,7 +88,7 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
         else:
             check = "Untested"
 
-        if data["number_occupants"] >= data["tol_occupants"]:
+        if data["number_occupants"] >= self.get_tolerance("ratio", "occupancy"):
             self.last_reported_occupancy = data.name
         return check
 

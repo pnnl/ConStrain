@@ -79,7 +79,6 @@ else:
   - Data Value Unit: temperature
   - Data point Description: Room temperature
   - Data Point Affiliation: Zone monitoring
-
 """
 
 from constrain.checklib import RuleCheckBase
@@ -92,7 +91,6 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
         "flow_volumetric_air_setpoint_min",
         "temperature_air_supply_setpoint",
         "flow_volumetric_air_setpoint",
-        "tol_v",
         "temperature_air_room",
     ]
 
@@ -103,12 +101,11 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
         v_min,
         t_sa_sp,
         v_sp,
-        tol_v,
         t_room,
     ):
         if state_zone.lower().strip() != "cooling":
             return "Untested"
-        if t_sa_sp <= t_room:
+        if t_sa_sp <= t_room + self.get_tolerance("temperature", "general"):
             return "Untested"
         match mode_system.strip().lower():
             case "occupied":
@@ -119,7 +116,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
                 print("invalid operation mode value")
                 return "Untested"
 
-        if v_sp - tol_v > airflowmin:
+        if v_sp - self.get_tolerance("airflow", "general") > airflowmin:
             return False
         else:
             return True
@@ -132,7 +129,6 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
                 t["flow_volumetric_air_setpoint_min"],
                 t["temperature_air_supply_setpoint"],
                 t["flow_volumetric_air_setpoint"],
-                t["tol_v"],
                 t["temperature_air_room"],
             ),
             axis=1,

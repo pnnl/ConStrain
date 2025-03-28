@@ -96,6 +96,8 @@ class VAVTurndownDuringReheat(RuleCheckBase):
             mean_no_reheat_ratio = self.df.loc[
                 ~self.df["flag_coil_reheat"], "v_vav_ratio"
             ].mean()
-            self.df["result"] = mean_reheat_ratio < mean_no_reheat_ratio
+            self.df["result"] = mean_reheat_ratio < (
+                mean_no_reheat_ratio - self.get_tolerance("ratio", "flow")
+            )
 
         self.result = self.df["result"]

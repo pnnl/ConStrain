@@ -107,27 +107,31 @@ class HWReset(RuleCheckBase):
 
     def verify(self):
         self.result = (
-            (
-                self.df["flow_mass_water_hot"] <= 0
-            )  # add boundary relaxation in the rules for this one and chwreset
+            (self.df["flow_mass_water_hot"] <= self.get_tolerance("waterflow", "hot"))
             | (
                 (
                     self.df["temperature_air_outdoor"]
                     <= self.df["temperature_air_outdoor_min"]
+                    + self.get_tolerance("temperature", "outdoor_air")
                 )
                 & (
                     self.df["temperature_water_hot"]
-                    >= self.df["temperature_water_hot_setpoint_max"] * 0.99
+                    >= self.df["temperature_water_hot_setpoint_max"]
+                    - self.get_tolerance("temperature", "general")
                 )
             )
             | (
                 (
                     self.df["temperature_air_outdoor"]
-                    >= (self.df["temperature_air_outdoor_max"])
+                    >= (
+                        self.df["temperature_air_outdoor_max"]
+                        - self.get_tolerance("temperature", "outdoor_air")
+                    )
                 )
                 & (
                     self.df["temperature_water_hot"]
-                    <= self.df["temperature_water_hot_setpoint_min"] * 1.01
+                    <= self.df["temperature_water_hot_setpoint_min"]
+                    + self.get_tolerance("temperature", "general")
                 )
             )
             | (
@@ -135,20 +139,24 @@ class HWReset(RuleCheckBase):
                     (
                         self.df["temperature_air_outdoor"]
                         >= self.df["temperature_air_outdoor_min"]
+                        - self.get_tolerance("temperature", "outdoor_air")
                     )
                     & (
                         self.df["temperature_air_outdoor"]
                         <= self.df["temperature_air_outdoor_max"]
+                        + self.get_tolerance("temperature", "outdoor_air")
                     )
                 )
                 & (
                     (
                         self.df["temperature_water_hot"]
-                        >= self.df["temperature_water_hot_setpoint_min"] * 0.99
+                        >= self.df["temperature_water_hot_setpoint_min"]
+                        + self.get_tolerance("temperature", "general")
                     )
                     & (
                         self.df["temperature_water_hot"]
-                        <= self.df["temperature_water_hot_setpoint_max"] * 1.01
+                        <= self.df["temperature_water_hot_setpoint_max"]
+                        - self.get_tolerance("temperature", "general")
                     )
                 )
             )

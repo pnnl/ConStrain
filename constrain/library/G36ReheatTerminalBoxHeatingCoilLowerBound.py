@@ -66,10 +66,10 @@ class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     def heating_coil_working(self, mode_system, cmd_coil_heat, t_discharge):
         if mode_system.lower().strip() != "occupied":
             return "Untested"
-        if t_discharge >= 10:
+        if t_discharge >= (10 - self.get_tolerance("temperature", "discharge_air")):
             return True
         else:
-            if cmd_coil_heat < 99:
+            if cmd_coil_heat < 100 - self.get_tolerance("damper", "command") * 100:
                 return False
             else:
                 return True  # heating coil tried its best

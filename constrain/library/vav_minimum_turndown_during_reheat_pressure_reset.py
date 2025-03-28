@@ -49,7 +49,6 @@ else:
 ```
 
 ### Data requirements
-
 - flag_coil_reheat: VAV box reheat coil operation status
   - Data Value Unit: binary
   - Data point Description: Heating coil flag
@@ -98,24 +97,20 @@ class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
         "flow_volumetric_air_max",
         "ratio_turndown_min",
         "pressure_duct_setpoint",
-        "tol_turndown",
-        "tol_p_press",
     ]
 
     def vav_turndown_check(self, data):
         if data["flag_coil_reheat"]:
             if data["flow_volumetric_air_max"] == 0:
                 return "Untested"
-            elif (
-                data["flow_volumetric_air_vav"] / data["flow_volumetric_air_max"]
-                > data["ratio_turndown_min"] + data["tol_turndown"]
-            ):
+            elif data["flow_volumetric_air_vav"] / data[
+                "flow_volumetric_air_max"
+            ] > data["ratio_turndown_min"] + self.get_tolerance("ratio", "flow"):
                 if data["p_press_duct_sp_prev"] is None:
                     return "Untested"
-                elif (
-                    abs(data["pressure_duct_setpoint"] - data["p_press_duct_sp_prev"])
-                    > data["tol_p_press"]
-                ):
+                elif abs(
+                    data["pressure_duct_setpoint"] - data["p_press_duct_sp_prev"]
+                ) > self.get_tolerance("pressure", "static"):
                     return "Untested"
                 else:
                     return False

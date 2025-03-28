@@ -58,7 +58,8 @@ class G36FreezeProtectionStage2(RuleCheckBase):
         if not t["freeze_status"]:
             return True
         if (t["sat_lowerthan_3.3_timer"] > 5) and (
-            t["position_damper_air_outdoor"] > 1
+            t["position_damper_air_outdoor"]
+            > self.get_tolerance("damper", "command") * 100
         ):
             return False
         else:
@@ -72,7 +73,9 @@ class G36FreezeProtectionStage2(RuleCheckBase):
         freeze_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["temperature_air_supply_setpoint"] < 3.3:
+            if t["temperature_air_supply_setpoint"] < (
+                3.3 + self.get_tolerance("temperature", "supply_air")
+            ):
                 if lt3p3_timer_start is None:
                     lt3p3_timer_start = i
                     lt3p3_timer_list.append(0)

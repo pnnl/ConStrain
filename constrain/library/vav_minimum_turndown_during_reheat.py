@@ -68,7 +68,6 @@ else:
   - Data Value Unit: fraction
   - Data point Description: Turndown tolerance
   - Data Point Affiliation: System configuration
-
 """
 
 from constrain.checklib import RuleCheckBase
@@ -80,17 +79,15 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
         "flow_volumetric_air_vav",  # actual VAV volume flow
         "flow_volumetric_air_max",  # max VAV volume flow
         "ratio_turndown_min",
-        "tol_turndown",
     ]
 
     def vav_turndown_check(self, data):
         if data["flag_coil_reheat"]:
             if data["flow_volumetric_air_max"] == 0:
                 return "Untested"
-            elif (
-                data["flow_volumetric_air_vav"] / data["flow_volumetric_air_max"]
-                > data["ratio_turndown_min"] + data["tol_turndown"]
-            ):
+            elif data["flow_volumetric_air_vav"] / data[
+                "flow_volumetric_air_max"
+            ] > data["ratio_turndown_min"] + self.get_tolerance("ratio", "flow"):
                 return False
             else:
                 return True

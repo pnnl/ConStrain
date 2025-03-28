@@ -69,11 +69,15 @@ class G36FreezeProtectionStage1(RuleCheckBase):
         if not t["freeze_status"]:
             return True
         if (t["sat_lowerthan_4.4_timer"] > 5) and (
-            t["position_damper_air_outdoor"] > t["position_damper_air_outdoor_min"]
+            t["position_damper_air_outdoor"]
+            > t["position_damper_air_outdoor_min"]
+            - self.get_tolerance("damper", "position")
         ):
             return False
         elif (
-            t["position_damper_air_outdoor"] > t["position_damper_air_outdoor_min"]
+            t["position_damper_air_outdoor"]
+            > t["position_damper_air_outdoor_min"]
+            - self.get_tolerance("damper", "position")
         ) and (not (t["sat_higherthan_7_timer"] >= 5)):
             return False
         else:
@@ -87,7 +91,9 @@ class G36FreezeProtectionStage1(RuleCheckBase):
         ht7_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["temperature_air_supply_setpoint"] < 4.4:
+            if t["temperature_air_supply_setpoint"] < (
+                4.4 + self.get_tolerance("temperature", "supply_air")
+            ):
                 if lt4p4_timer_start is None:
                     lt4p4_timer_start = i
                     lt4p4_timer_list.append(0)
@@ -100,7 +106,9 @@ class G36FreezeProtectionStage1(RuleCheckBase):
                 lt4p4_timer_start = None
                 lt4p4_timer_list.append(0)
 
-            if t["temperature_air_supply_setpoint"] > 7:
+            if t["temperature_air_supply_setpoint"] > (
+                7 - self.get_tolerance("temperature", "supply_air")
+            ):
                 if ht7_timer_start is None:
                     ht7_timer_start = i
                     ht7_timer_list.append(0)

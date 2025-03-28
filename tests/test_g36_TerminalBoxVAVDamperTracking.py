@@ -6,16 +6,25 @@ from lib_unit_test_runner import *
 from library import *
 
 import pandas as pd
-import numpy as np
 
 
 class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
+    tolerances = {
+        "airflow": {
+            "unit": "m3/s",
+            "types": {
+                "general": 50,
+            },
+        },
+        "damper": {"unit": "%", "types": {"command": 0.01, "general": 0.01}},
+    }
+
     def test_g36_terminal_box_vav_damper_tracking0(self):
+
         points = [
             "command_damper_vav",
             "flow_volumetric_air_discharge",
             "flow_volumetric_air_setpoint",
-            "tol_v_tracking",
         ]
 
         timestamp = [
@@ -29,13 +38,13 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
         ]
 
         data = [
-            [90, 1110, 1100, 50],
-            [90, 1060, 1100, 50],
-            [95, 1000, 1100, 50],
-            [95, 1000, 1100, 50],
-            [95, 1000, 1100, 50],
-            [95, 1000, 1100, 50],
-            [99.5, 1000, 1100, 50],
+            [90, 1110, 1100],
+            [90, 1060, 1100],
+            [95, 1000, 1100],
+            [95, 1000, 1100],
+            [95, 1000, 1100],
+            [95, 1000, 1100],
+            [99.5, 1000, 1100],
         ]
 
         expected_results = pd.Series(
@@ -47,11 +56,10 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
         results = pd.Series(
             list(
                 run_test_verification_with_data(
-                    "G36TerminalBoxVAVDamperTracking", df
+                    "G36TerminalBoxVAVDamperTracking", df, tolerances=self.tolerances
                 ).result
             )
         )
-        print(results)
 
         self.assertTrue(results.equals(expected_results))
 
@@ -60,7 +68,6 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
             "command_damper_vav",
             "flow_volumetric_air_discharge",
             "flow_volumetric_air_setpoint",
-            "tol_v_tracking",
         ]
 
         timestamp = [
@@ -74,13 +81,13 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
         ]
 
         data = [
-            [90, 1110, 1100, 50],
-            [95, 1200, 1100, 50],
-            [95, 1200, 1100, 50],
-            [95, 1200, 1100, 50],
-            [5, 1200, 1100, 50],
-            [5, 1300, 1100, 50],
-            [0, 1300, 1100, 50],
+            [90, 1110, 1100],
+            [95, 1200, 1100],
+            [95, 1200, 1100],
+            [95, 1200, 1100],
+            [5, 1200, 1100],
+            [5, 1300, 1100],
+            [0, 1300, 1100],
         ]
 
         expected_results = pd.Series(
@@ -92,11 +99,10 @@ class TestG36TerminalBoxVAVDamperTracking(unittest.TestCase):
         results = pd.Series(
             list(
                 run_test_verification_with_data(
-                    "G36TerminalBoxVAVDamperTracking", df
+                    "G36TerminalBoxVAVDamperTracking", df, tolerances=self.tolerances
                 ).result
             )
         )
-        print(results)
 
         self.assertTrue(results.equals(expected_results))
 

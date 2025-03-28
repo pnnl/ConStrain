@@ -20,10 +20,7 @@
                     "position_damper_air_outdoor": "oa_p",
                     "position_damper_air_outdoor_max": "max_oa_p"
                 },
-                "parameters": {
-                    "tol_pos_damper_ra": 0.01,
-                    "tol_pos_damper_oa": 0.01
-                }
+                "parameters": {}
             },
             "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"
         },
@@ -72,15 +69,13 @@
                     "mode_operation": "operation_mode",
                     "temperature_air_outdoor": "oa_t",
                     "temperature_air_supply_max": "t_max",
-                    "temperature_air_supply": "sa_t_sp_ac",
-                    "temperature_air_outdoor_min": "oa_t_min",
-                    "temperature_air_outdoor_max": "oa_t_max",
+                    "temperature_air_supply_setpoint": "sa_t_sp_ac",
+                    "temperature_air_outdoor_supply_min": "oa_t_min",
+                    "temperature_air_outdoor_supply_max": "oa_t_max",
                     "temperature_air_supply_cool_min": "min_clg_sa_t_sp",
                     "temperature_air_supply_cool_max": "max_clg_sa_t_sp"
                 },
-                "parameters": {
-                    "tol_t_sa": 0.1
-                }
+                "parameters": {}
             },
             "verification_class": "G36SupplyAirTemperatureSetpoint"
         }

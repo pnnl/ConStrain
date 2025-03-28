@@ -5,7 +5,6 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 import pandas as pd
-import numpy as np
 
 
 class TestExteriorLightingControlDaylightOff(unittest.TestCase):

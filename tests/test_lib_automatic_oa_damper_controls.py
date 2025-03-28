@@ -4,36 +4,40 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 
-import json
 import pandas as pd
-import numpy as np
 
 
 class TestAutomaticOADamperControl(unittest.TestCase):
     def test_automatic_oa_damper_control(self):
+        tolerances = {
+            "airflow": {
+                "unit": "m3/s",
+                "types": {"exhaust_air": 50, "outdoor_air": 50, "general": 50},
+            },
+            "ratio": {"unit": "%", "types": {"occupancy": 0.001, "general": 0.001}},
+        }
         points = [
             "number_occupants",
             "status_economizer",
             "flow_volumetric_air_outdoor",
             "flow_volumetric_air_exhaust",
-            "tol_occupants",
-            "tol_v_oa",
-            "tol_v_ea",
         ]
         data = [
-            [1, 0, 0, 0, 0.001, 50, 50],
-            [0, 1, 0, 0, 0.001, 50, 50],
-            [0, 0, 1000, 0, 0.001, 50, 50],
-            [0, 0, 0, 1000, 0.001, 50, 50],
-            [0, 0, 1000, 1000, 0.001, 50, 50],
-            [1, 1, 0, 0, 0.001, 50, 50],
-            [1, 0, 1, 0, 0.001, 50, 50],
-            [1, 1, 1000, 0, 0.001, 50, 50],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1000],
+            [0, 0, 0, 1000],
+            [0, 0, 1000, 1000],
+            [1, 1, 0, 0],
+            [1, 0, 1, 0],
+            [1, 1, 1000, 0],
         ]
         df = pd.DataFrame(data, columns=points)
 
         results = list(
-            run_test_verification_with_data("AutomaticOADamperControl", df).result
+            run_test_verification_with_data(
+                "AutomaticOADamperControl", df, tolerances=tolerances
+            ).result
         )
         expected_results = [
             "Untested",

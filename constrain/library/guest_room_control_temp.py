@@ -85,8 +85,6 @@ class GuestRoomControlTemp(RuleCheckBase):
         "t_zone_heat_sp",
         "t_zone_cool_sp",
         "schedule_occupancy",
-        "tol_occupants",
-        "tol_t",
     ]
 
     def verify(self):
@@ -105,10 +103,15 @@ class GuestRoomControlTemp(RuleCheckBase):
                 pass
             else:
                 if (
-                    day["schedule_occupancy"] <= tol_occupancy
+                    day["schedule_occupancy"]
+                    <= self.get_tolerance("ratio", "occupancy")
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["t_zone_heat_sp"] < 15.6 + tol_temp).all() and (
-                        day["t_zone_cool_sp"] > 26.7 - tol_temp
+                    if (
+                        day["t_zone_heat_sp"]
+                        < 15.6 + self.get_tolerance("temperature", "zone")
+                    ).all() and (
+                        day["t_zone_cool_sp"]
+                        > 26.7 - self.get_tolerance("temperature", "zone")
                     ).all():
                         result_repo.append(
                             1
@@ -118,17 +121,23 @@ class GuestRoomControlTemp(RuleCheckBase):
                             0
                         )  # fail, zone temperature setpoint was not reset correctly
                 else:  # room is rented out
-                    t_zone_heat_occ_sp = day.query("schedule_occupancy > 0.0")[
+                    T_z_hea_occ_set = day.query("schedule_occupancy > 0.0")[
                         "t_zone_heat_sp"
                     ].max()
-                    t_zone_cool_occ_sp = day.query("schedule_occupancy > 0.0")[
+                    T_z_coo_occ_set = day.query("schedule_occupancy > 0.0")[
                         "t_zone_cool_sp"
                     ].min()
 
                     if (
-                        day["t_zone_heat_sp"] < t_zone_heat_occ_sp - 2.22 + tol_temp
+                        day["T_z_hea_set"]
+                        < T_z_hea_occ_set
+                        - 2.22
+                        + self.get_tolerance("temperature", "zone")
                     ).all() or (
-                        day["t_zone_cool_sp"] > t_zone_cool_occ_sp + 2.22 - tol_temp
+                        day["T_z_coo_set"]
+                        > T_z_coo_occ_set
+                        + 2.22
+                        - self.get_tolerance("temperature", "zone")
                     ).all():
                         result_repo.append(
                             1

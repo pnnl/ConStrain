@@ -5,9 +5,7 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 
-import json
 import pandas as pd
-import numpy as np
 
 
 class TestG36FreezeProtectionStage1(unittest.TestCase):

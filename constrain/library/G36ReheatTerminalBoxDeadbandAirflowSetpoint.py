@@ -88,7 +88,6 @@ else:
   - Data Value Unit: temperature
   - Data point Description: Minimum discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control
-
 """
 
 from constrain.checklib import RuleCheckBase
@@ -100,9 +99,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
         "state_zone",
         "flow_volumetric_air_setpoint_min",
         "flow_volumetric_air_setpoint",
-        "tol_v",
         "command_coil_heat",
-        "tol_cmd_coil_heat",
         "temperature_air_discharge",
         "temperature_air_discharge_setpoint_min",
     ]
@@ -113,15 +110,17 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
         state_zone,
         v_min,
         v_sp,
-        tol_v,
         cmd_coil_heat,
-        tol_cmd_coil_heat,
         t_discharge,
         t_discharge_min_sp,
     ):
         if state_zone.lower().strip() != "deadband":
             return "Untested"
-        if t_discharge > t_discharge_min_sp and cmd_coil_heat > tol_cmd_coil_heat:
+        if (
+            t_discharge
+            > t_discharge_min_sp - self.get_tolerance("temperature", "discharge_air")
+            and cmd_coil_heat > self.get_tolerance("damper", "command") * 100
+        ):
             return False
         match mode_system.strip().lower():
             case "occupied":
@@ -132,7 +131,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 print("invalid operation mode value")
                 return "Untested"
 
-        if abs(v_sp - dbmin) <= tol_v:
+        if abs(v_sp - dbmin) <= self.get_tolerance("airflow", "general"):
             return True
         else:
             return False
@@ -144,9 +143,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 t["state_zone"],
                 t["flow_volumetric_air_setpoint_min"],
                 t["flow_volumetric_air_setpoint"],
-                t["tol_v"],
                 t["command_coil_heat"],
-                t["tol_cmd_coil_heat"],
                 t["temperature_air_discharge"],
                 t["temperature_air_discharge_setpoint_min"],
             ),

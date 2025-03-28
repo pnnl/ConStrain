@@ -57,12 +57,16 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36ReliefDamperStatus(RuleCheckBase):
-    points = ["cmd_damper_relief", "status_fan_supply"]
+    points = ["position_damper_relief", "status_fan_supply"]
 
     def ts_verify_logic(self, t):
-        if t["cmd_damper_relief"] > 0 and bool(t["status_fan_supply"]):
+        if t["position_damper_relief"] > self.get_tolerance(
+            "damper", "command"
+        ) and bool(t["status_fan_supply"]):
             return True
-        elif t["cmd_damper_relief"] < 1 and (not bool(t["status_fan_supply"])):
+        elif t["position_damper_relief"] < (
+            (1 - self.get_tolerance("damper", "command")) * 100
+        ) and not bool(t["status_fan_supply"]):
             return True
         else:
             return False

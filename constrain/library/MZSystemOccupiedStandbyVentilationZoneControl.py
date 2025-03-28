@@ -82,7 +82,10 @@ class MZSystemOccupiedStandbyVentilationZoneControl(RuleCheckBase):
             if (
                 self.last_non_standby_mode_requested_v_oa
                 - data["flow_volumetric_air_outdoor_system_setpoint"]
-            ) >= data["flow_volumetric_air_outdoor_zone_req"]:
+            ) >= (
+                data["flow_volumetric_air_outdoor_zone_req"]
+                - self.get_tolerance("airflow", "outdoor_air")
+            ):
                 return True
             else:
                 return False

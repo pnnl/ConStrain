@@ -110,17 +110,17 @@ class G36MinOAwoEconomizer(RuleCheckBase):
         ):
             if t["oaf_low_timer"] > 60:
                 if (
-                    t["position_damper_air_outdoor"] > 99
-                    and t["position_damper_air_return"] < 1
+                    t["position_damper_air_outdoor"]
+                    > (100 - self.get_tolerance("damper", "command") * 100)
+                    and t["position_damper_air_return"] < 100
                 ):
                     return True
                 else:
                     return False
             elif t["oaf_high_timer"] > 60:
-                if (
-                    t["position_damper_air_outdoor"] < 1
-                    and t["position_damper_air_return"] > 99
-                ):
+                if t["position_damper_air_outdoor"] < 100 and t[
+                    "position_damper_air_return"
+                ] > (100 - self.get_tolerance("damper", "command") * 100):
                     return True
                 else:
                     return False
@@ -142,10 +142,9 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                 and t["mode_system"].strip().lower() == "occupied"
             ):
                 # only count the timers when it is in occupied mode with economizer lockout
-                if (
-                    t["flow_volumetric_air_outdoor"]
-                    < t["flow_volumetric_air_outdoor_setpoint_min"]
-                ):
+                if t["flow_volumetric_air_outdoor"] < t[
+                    "flow_volumetric_air_outdoor_setpoint_min"
+                ] - self.get_tolerance("airflow", "outdoor_air"):
                     high_timer_start = None
                     high_timer_list.append(0)
                     if low_timer_start is None:
@@ -155,10 +154,9 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                         low_timer_list.append(
                             (i - low_timer_start).total_seconds() / 60
                         )
-                if (
-                    t["flow_volumetric_air_outdoor"]
-                    > t["flow_volumetric_air_outdoor_setpoint_min"]
-                ):
+                if t["flow_volumetric_air_outdoor"] > t[
+                    "flow_volumetric_air_outdoor_setpoint_min"
+                ] + self.get_tolerance("airflow", "outdoor_air"):
                     low_timer_start = None
                     low_timer_list.append(0)
                     if high_timer_start is None:

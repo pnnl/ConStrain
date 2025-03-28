@@ -71,7 +71,6 @@ else:
   - Data Value Unit: temperature
   - Data point Description: Temperature tracking tolerance
   - Data Point Affiliation: Terminal box control
-
 """
 
 import pandas as pd
@@ -84,16 +83,12 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
         "command_coil_heat",
         "temperature_air_discharge",
         "temperature_air_discharge_setpoint",
-        "tol_t_tracking",
     ]
 
     def err_flag(self, t):
-        if (
-            abs(
-                t["temperature_air_discharge_setpoint"] - t["temperature_air_discharge"]
-            )
-            >= t["tol_t_tracking"]
-        ):
+        if abs(
+            t["temperature_air_discharge_setpoint"] - t["temperature_air_discharge"]
+        ) >= self.get_tolerance("temperature", "discharge_air"):
             return True
         else:
             return False
@@ -129,15 +124,17 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
                     if (
                         cur["temperature_air_discharge"]
                         - cur["temperature_air_discharge_setpoint"]
-                        >= cur["tol_t_tracking"]
-                        and cur["command_coil_heat"] <= 1
+                        >= self.get_tolerance("temperature", "discharge_air")
+                        and cur["command_coil_heat"]
+                        <= self.get_tolerance("damper", "command") * 100
                     ):
                         result_flag = True
                     elif (
                         cur["temperature_air_discharge_setpoint"]
                         - cur["temperature_air_discharge"]
-                        >= cur["tol_t_tracking"]
-                        and cur["command_coil_heat"] >= 99
+                        >= self.get_tolerance("temperature", "discharge_air")
+                        and cur["command_coil_heat"]
+                        >= 100 - self.get_tolerance("damper", "command") * 100
                     ):
                         result_flag = True
                     else:

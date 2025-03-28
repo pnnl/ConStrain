@@ -63,4 +63,4 @@ class ZoneTempControl(RuleCheckBase):
         self.result = (
             self.df["temperature_air_zone_cool_setpoint"]
             - self.df["temperature_air_zone_heat_setpoint"]
-        ) > 2.77
+        ) > (2.77 - self.get_tolerance("temperature", "zone"))

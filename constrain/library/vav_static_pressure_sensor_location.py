@@ -57,12 +57,11 @@ from constrain.checklib import RuleCheckBase
 
 
 class VAVStaticPressureSensorLocation(RuleCheckBase):
-    points = ["pressure_static_setpoint", "tol_p_press_static"]
+    points = ["pressure_static_setpoint"]
 
     def verify(self):
-        self.result = (
-            self.df["pressure_static_setpoint"]
-            < 298.608 + self.df["tol_p_press_static"]
+        self.result = self.df["pressure_static_setpoint"] < (
+            298.608 + self.get_tolerance("pressure", "static")
         )
 
     def calculate_plot_day(self):

@@ -76,17 +76,20 @@ class WLHPLoopHeatRejectionControl(RuleCheckBase):
         "temperature_water_heating_max",
         "temperature_water_cooling_min",
         "flow_mass_water_pump",
-        "tol_t_loop",
     ]
 
     def verify(self):
-        self.df["t_heating_max_max"] = (
-            self.df.query("m_pump >0")["temperature_water_heating_max"]
+        self.df["T_max_heating_loop_max"] = (
+            self.df.query(
+                f"flow_mass_water_pump > {self.get_tolerance('waterflow', 'general')}"
+            )["T_max_heating_loop"]
         ).max()
-        self.df["t_cooling_min_min"] = (
-            self.df.query("m_pump >0")["temperature_water_cooling_min"]
+        self.df["T_min_cooling_loop_min"] = (
+            self.df.query(
+                f"flow_mass_water_pump > {self.get_tolerance('waterflow', 'general')}"
+            )["T_min_cooling_loop"]
         ).min()
 
-        self.result = (
-            self.df["t_heating_max_max"] - self.df["t_cooling_min_min"]
-        ) > 11.11 + self.df["tol_t_loop"]
+        self.result = (self.df["t_heating_max_max"] - self.df["t_cooling_min_min"]) > (
+            11.11 + self.get_tolerance("temperature", "general")
+        )

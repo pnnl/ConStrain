@@ -116,10 +116,9 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
         "temperature_air_supply_cool_max",
         "temperature_air_supply_cool_min",
         "temperature_air_outdoor",
-        "temperature_air_outdoor_min",
-        "temperature_air_outdoor_max",
-        "temperature_air_supply",
-        "tol_t_sa",
+        "temperature_air_outdoor_supply_min",
+        "temperature_air_outdoor_supply_max",
+        "temperature_air_supply_setpoint",
     ]
 
     def supply_air_temperature_setpoint(self, data):
@@ -131,26 +130,35 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
         elif data["mode_operation"] in ["warmup", "setback"]:
             sa_t_sp = 35.0  # 95 deg. F
         elif data["mode_operation"] in ["occupied", "setup"]:
-            if data["temperature_air_outdoor"] <= data["temperature_air_outdoor_min"]:
+            if (
+                data["temperature_air_outdoor"]
+                <= data["temperature_air_outdoor_supply_min"]
+            ):
                 sa_t_sp = data["temperature_air_supply_max"]
-            elif data["temperature_air_outdoor"] >= data["temperature_air_outdoor_max"]:
+            elif (
+                data["temperature_air_outdoor"]
+                >= data["temperature_air_outdoor_supply_max"]
+            ):
                 sa_t_sp = data["temperature_air_supply_cool_min"]
             else:
                 sa_t_sp = (
                     data["temperature_air_outdoor"]
-                    - data["temperature_air_outdoor_min"]
+                    - data["temperature_air_outdoor_supply_min"]
                 ) * (
                     data["temperature_air_supply_max"]
                     - data["temperature_air_supply_cool_min"]
                 ) / (
-                    data["temperature_air_outdoor_min"]
-                    - data["temperature_air_outdoor_max"]
+                    data["temperature_air_outdoor_supply_min"]
+                    - data["temperature_air_outdoor_supply_max"]
                 ) + data[
                     "temperature_air_supply_max"
                 ]
         if sa_t_sp == -999:
             return "Untested"
-        if abs(sa_t_sp - data["temperature_air_supply"]) < data["tol_t_sa"]:
+
+        if abs(sa_t_sp - data["temperature_air_supply_setpoint"]) < self.get_tolerance(
+            "temperature", "supply_air"
+        ):
             return True
         else:
             return False

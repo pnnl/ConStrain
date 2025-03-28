@@ -7,17 +7,17 @@ from library import *
 import pandas as pd
 
 
-class TestG36FreezeProtectionStage3(unittest.TestCase):
-    def test_freeze_protection_3_pass(self):
+class TestG36FreezeProtectionStage2(unittest.TestCase):
+    def test_freeze_protection_2_pass(self):
         points = [
-            "flag_freeze",
-            "temperature_air_supply_setpoint",
-            "position_damper_air_outdoor",
-            "status_fan_supply",
-            "status_fan_return",
-            "status_fan_relief",
-            "command_coil_cool",
-            "command_coil_heat",
+            "freeze_stat",
+            "supply_air_temp",
+            "outdoor_damper_command",
+            "supply_fan_status",
+            "return_fan_status",
+            "relief_fan_status",
+            "cooling_coil_command",
+            "heating_coil_command",
         ]
 
         timestamp = [
@@ -51,16 +51,16 @@ class TestG36FreezeProtectionStage3(unittest.TestCase):
         self.assertTrue(results.equals(expected_results))
         self.assertTrue(binaryflag)
 
-    def test_freeze_protection_3_Fail(self):
+    def test_freeze_protection_2_Fail(self):
         points = [
-            "flag_freeze",
-            "temperature_air_supply_setpoint",
-            "position_damper_air_outdoor",
-            "status_fan_supply",
-            "status_fan_return",
-            "status_fan_relief",
-            "command_coil_cool",
-            "command_coil_heat",
+            "freeze_stat",
+            "supply_air_temp",
+            "outdoor_damper_command",
+            "supply_fan_status",
+            "return_fan_status",
+            "relief_fan_status",
+            "cooling_coil_command",
+            "heating_coil_command",
         ]
 
         timestamp = [
@@ -94,16 +94,16 @@ class TestG36FreezeProtectionStage3(unittest.TestCase):
         self.assertTrue(results.equals(expected_results))
         self.assertFalse(binaryflag)
 
-    def test_freeze_protection_3_untested(self):
+    def test_freeze_protection_2_pass(self):
         points = [
-            "flag_freeze",
-            "temperature_air_supply_setpoint",
-            "position_damper_air_outdoor",
-            "status_fan_supply",
-            "status_fan_return",
-            "status_fan_relief",
-            "command_coil_cool",
-            "command_coil_heat",
+            "freeze_stat",
+            "supply_air_temp",
+            "outdoor_damper_command",
+            "supply_fan_status",
+            "return_fan_status",
+            "relief_fan_status",
+            "cooling_coil_command",
+            "heating_coil_command",
         ]
 
         timestamp = [

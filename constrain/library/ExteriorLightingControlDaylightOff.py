@@ -90,7 +90,9 @@ class ExteriorLightingControlDaylightOff(RuleCheckBase):
 
         # perform verification
         if daylight_setpoint_met >= 1 or time_since_last_sun_up >= 30:
-            if data["power_light_total"] == 0:
+            if data["power_light_total"] <= self.get_tolerance(
+                "power", "exterior_lighting"
+            ):
                 return True
             else:
                 return False
