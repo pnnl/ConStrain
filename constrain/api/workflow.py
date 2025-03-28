@@ -171,11 +171,7 @@ class WorkflowEngine:
         """Import third party packages based on the "imports" element values of the workflow json.
         E.g.: {
         ...
-        "imports": [
-            "numpy as np",
-            "pandas as pd",
-            "datetime"
-        ],
+        "imports": ["numpy as np","pandas as pd","datetime"],
         ...
         }
         """

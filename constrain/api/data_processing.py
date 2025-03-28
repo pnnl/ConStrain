@@ -26,11 +26,10 @@ class DataProcessing:
         """Instantiate a data processing object to load datasets and manipulate data before feeding it to the verification process.
 
         Args:
-            data (str): Path to the data (CSV format) to be loaded for processing.
-            data_source (str): Data source name. Use `EnergyPlus` or `Other`.
-            timestamp_column_name (str): Name of the column header that contains the time series timestamps.
+            data (str, optional): Path to the data (CSV format) to be loaded for processing.
+            data_source (str, optional): Data source name. Use `EnergyPlus` or `Other`.
+            timestamp_column_name (str, optional): Name of the column header that contains the time series timestamps.
         """
-
         self.data = None
 
         if data_path is None:
@@ -44,13 +43,13 @@ class DataProcessing:
         # check if data file exists
         if os.path.isfile(data_path):
             try:
-                if data_source == "EnergyPlus":
+                if data_source.lower() == "energyplus":
                     # Use CSVReader to parse EnergyPlus timestamps
                     data = CSVReader(csv_file=data_path).getseries()
                     data = DateTimeEP(data, 2000).transform()
                     data.drop("Date/Time", inplace=True, axis=1)
 
-                elif data_source == "Other":
+                elif data_source.lower() == "bms":
                     if timestamp_column_name is None:
                         logging.error(
                             "timestamp_column_name is required when data_source = 'Other'"
@@ -65,7 +64,7 @@ class DataProcessing:
                         return None
                     data.set_index(timestamp_column_name, inplace=True)
                     try:
-                        data = pd.to_datetime(data.index)
+                        data.index = pd.to_datetime(data.index)
                     except:
                         logging.error(
                             f"The data in {timestamp_column_name} could not be converted to Python datetime object. Make sure that the data is consistent defined as a set of date strings."

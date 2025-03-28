@@ -1,6 +1,5 @@
 """Reader module is used to read information from EP artifacts"""
 
-
 from eppy.modeleditor import IDF
 import pandas as pd
 from fuzzywuzzy import fuzz

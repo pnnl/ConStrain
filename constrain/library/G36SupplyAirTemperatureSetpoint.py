@@ -32,9 +32,10 @@ if abs(sa_t_sp - sa_t_sp_ac) < sa_sp_tol
 else
     fail
 end
-``` 
+```
 
 """
+
 from constrain.checklib import RuleCheckBase
 import numpy as np
 
@@ -49,7 +50,6 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
         "oa_t_min",
         "oa_t_max",
         "sa_t_sp_ac",
-        "sa_sp_tol",
     ]
 
     def supply_air_temperature_setpoint(self, data):
@@ -70,8 +70,10 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
                     data["t_max"] - data["min_clg_sa_t_sp"]
                 ) / (data["oa_t_min"] - data["oa_t_max"]) + data["t_max"]
         if sa_t_sp == -999:
-            return np.nan
-        if abs(sa_t_sp - data["sa_t_sp_ac"]) < data["sa_sp_tol"]:
+            return "Untested"
+        if abs(sa_t_sp - data["sa_t_sp_ac"]) < self.get_tolerance(
+            "temperature", "supply_air"
+        ):
             return True
         else:
             return False

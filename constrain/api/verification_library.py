@@ -13,7 +13,7 @@ from constrain.library import *
 library_schema = {
     "library_item_id": (int, str, float),
     "description_brief": str,
-    "description_detail": str,
+    "description_detailed": str,
     "description_index": list,
     "description_datapoints": dict,
     "description_assertions": list,
@@ -120,10 +120,10 @@ class VerificationLibrary:
         """Check the validity of library items definition. This validity check includes checking the completeness of json specification (against library json schema) and Python verification class definition (against library class interface) and the match between the json and python implementation.
 
         Args:
-            items: list of str, default []. Library items to validate. `items` must be filled with valid verification item(s). If not, an error occurs.
+            items (List): Library items to validate. `items` must be filled with valid verification item(s). If not, an error occurs. Defaults to empty list.
 
         Returns:
-            Dict that contains validity information of library items.
+            Dict: Dict that contains validity information of library items.
         """
 
         # check `items` type
@@ -144,8 +144,8 @@ class VerificationLibrary:
 
             # verify the library.json file
             for lib_key in library_schema.keys():
-                # check if lib keys exist. "description_detail" key is optional
-                if lib_key not in ["description_detail"] and not self.lib_items[
+                # check if lib keys exist. "description_detailed" key is optional
+                if lib_key not in ["description_detailed"] and not self.lib_items[
                     item
                 ].get(lib_key):
                     logging.error(
@@ -169,7 +169,7 @@ class VerificationLibrary:
                         )
 
                 except KeyError:
-                    # if `description_detail` key doesn't exist, output a warning.
+                    # if `description_detailed` key doesn't exist, output a warning.
                     validity_info[item][lib_key] = None
                     logging.warning(f"{lib_key} doesn't exist.")
 
@@ -191,10 +191,10 @@ class VerificationLibrary:
         """Get the json definition and meta information of a list of specific library items.
 
         Args:
-            items:  list of str, default []. Library items to get. By default, get all library items loaded at instantiation.
+            items (List, optional): Library items to get. By default, get all library items loaded at instantiation. Defaults to empty list.
 
         Returns:
-            list of `Dict` with four specific keys:
+            List: list of `Dict` with four specific keys:
                 - `library_item_name`: unique str name of the library item.
                 - `library_json`: library item json definition in the library json file.
                 - `library_json_path`: path of the library json file that contains this library item.
@@ -226,10 +226,10 @@ class VerificationLibrary:
         """Based on provided datapoints lists, identify potentially applicable library items from all loaded items. Use this function with caution as it 1) requires aligned data points naming across all library items; 2) does not check the topological relationships between datapoints.
 
         Args:
-            datapoints: list of str datapoints names.
+            datapoints (List): Datapoints names.
 
         Returns:
-            Dict with keys being the library item names and values being the required datapoints for the corresponding keys.
+            Dict: Dict with keys being the library item names and values being the required datapoints for the corresponding keys.
         """
 
         # check `datapoints` type
@@ -271,10 +271,10 @@ class VerificationLibrary:
         """Summarize datapoints that need to be used to support specified library items. Use this function with caution as it 1) requires aligned data points naming across all library items; 2) does not check the topological relationships between datapoints.
 
         Args:
-            items: list of str, default []. Library items to summarize datapoints from. By default, summarize all library items loaded at instantiation.
+            items (List): Library items to summarize datapoints from. By default, summarize all library items loaded at instantiation. Defaults to empty list.
 
         Returns:
-            Dict with keys being the datapoint name and values being a sub Dict with the following keys:
+            Dict: Dict with keys being the datapoint name and values being a sub Dict with the following keys:
                 - number_of_items_using_this_datapoint: int, number of library items that use this datapoint.
                 - library_items_list: List, of library item names that use this datapoint.
         """

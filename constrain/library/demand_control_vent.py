@@ -1,11 +1,10 @@
 import numpy as np
 import pandas as pd
-
-from constrain.checklib import CheckLibBase
+from constrain.checklib import RuleCheckBase
 from scipy.stats import pearsonr
 
 
-class DemandControlVentilation(CheckLibBase):
+class DemandControlVentilation(RuleCheckBase):
     points = [
         "v_oa",
         "s_ahu",
@@ -20,14 +19,14 @@ class DemandControlVentilation(CheckLibBase):
         ]  # filter out data when economizer isn't enabled
 
         if len(df_filtered) == 0:
-            self.bool_result = np.nan
+            self.bool_result = "Untested"
             self.msg = (
                 "There is no samples with economizer off and AHU on, result: untested"
             )
         else:
             corr, p_value = pearsonr(df_filtered["no_of_occ"], df_filtered["v_oa"])
             if p_value > 0.05:
-                self.bool_result = np.nan
+                self.bool_result = "Untested"
                 self.msg = "correlation p value too large, result: untested"
             else:
                 if corr >= 0.3:

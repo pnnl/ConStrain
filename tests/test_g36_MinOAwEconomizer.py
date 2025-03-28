@@ -37,7 +37,9 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             list(run_test_verification_with_data("G36MinOAwEconomizer", df).result)
         )
 
-        expected_results = pd.Series([True, np.nan, np.nan, False, False, False])
+        expected_results = pd.Series(
+            [True, "Untested", "Untested", False, False, False]
+        )
 
         self.assertTrue(results.equals(expected_results))
 

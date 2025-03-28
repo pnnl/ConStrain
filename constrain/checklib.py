@@ -2,12 +2,7 @@
 This file containing the high level interface for implementing verificaiton item classes in library.py
 """
 
-# %% Supress future warning if needed
 import warnings
-
-warnings.simplefilter(action="ignore", category=FutureWarning)
-
-# %% import packages
 import datetime
 from datetime import timedelta, date
 from typing import List, Dict, Union
@@ -15,12 +10,11 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import seaborn as sns
 import glob, json, os
-
-# plt.style.use("ggplot")
 import pandas as pd
+from typing import Dict, List, Tuple, Union
 from pandas.plotting import register_matplotlib_converters
 
-# register_matplotlib_converters()
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 class CheckLibBase(ABC):
@@ -29,7 +23,9 @@ class CheckLibBase(ABC):
     points = None
     result = pd.DataFrame()
 
-    def __init__(self, df: pd.DataFrame, params=None, results_folder=None):
+    def __init__(
+        self, df: pd.DataFrame, params=None, results_folder=None, tolerances=None
+    ):
         full_df = df.copy(deep=True)
         if params is not None:
             for k, v in params.items():
@@ -43,8 +39,10 @@ class CheckLibBase(ABC):
         self.df.index = pd.to_datetime(self.df.index)
         self.df = self.df.sort_index()
         self.results_folder = results_folder
+        self.tolerances = tolerances
         self.verify()
         self.result.name = ""
+        self.df["Verification Result"] = self.result
 
     @property
     def points_list(self) -> List[str]:
@@ -137,6 +135,31 @@ class CheckLibBase(ABC):
             "verification_class": item_dict["verification_class"],
         }
 
+    def save_data(self, csv_path):
+        self.df.to_csv(csv_path)
+        return
+
+    def get_tolerance(
+        self, variable_type: str = None, variable_subtype: str = "general"
+    ) -> float:
+        """Get tolerance for a specific variable type.
+
+        Args:
+            variable_type (str): Type of variable. For example: "temperature".
+            variable_subtype (str): Variable subtype. For example: "outdoor_air".
+
+        Returns:
+            float tolerance
+        """
+        if self.tolerances is not None:
+            if variable_type in self.tolerances.keys():
+                print(self.tolerances[variable_type])
+                return self.tolerances[variable_type]["types"][variable_subtype]
+            else:
+                return 0.0
+        else:
+            return 0.0
+
     def plot(self, plot_option, plt_pts=None, fig_size=(6.4, 4.8)):
         """default plot function for showing result"""
         if plt_pts is None:
@@ -147,6 +170,8 @@ class CheckLibBase(ABC):
 
         plot_option = plot_option.strip().lower()
         plt.subplots()
+        # filter out "Untested" to prevent an error when plotting
+        self.result_filtered = self.result[self.result != "Untested"]
         if plot_option == "all-compact":
             self.all_plot_aio(plt_pts, fig_size)
         elif plot_option == "all-expand":
@@ -166,7 +191,9 @@ class CheckLibBase(ABC):
 
         # flag
         ax1 = plt.subplot(2, 1, 1)
-        sns.scatterplot(x=self.result.index, y=self.result, linewidth=0, s=1)
+        sns.scatterplot(
+            x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+        )
         plt.xlim([self.df.index[0], self.df.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
@@ -193,7 +220,9 @@ class CheckLibBase(ABC):
 
         # flag
         ax1 = plt.subplot(num_plots, 1, 1)
-        sns.scatterplot(x=self.result.index, y=self.result, linewidth=0, s=1)
+        sns.scatterplot(
+            x=self.result_filtered.index, y=self.result_filtered, linewidth=0, s=1
+        )
         plt.xlim([self.df.index[0], self.df.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"All samples Pass / Fail flag plot - {self.__class__.__name__}")
@@ -207,6 +236,9 @@ class CheckLibBase(ABC):
                 if pt_nan[pt]:
                     self.df[pt].plot(ax=axx, marker=".")
                 else:
+                    # check if values in the series are boolean
+                    if self.df[pt].apply(lambda x: isinstance(x, bool)).all():
+                        self.df[pt] = self.df[pt].astype(int)
                     self.df[pt].plot(ax=axx)
                 plt.title(f"All samples - {pt} - {self.__class__.__name__}")
                 i += 1
@@ -273,10 +305,11 @@ class CheckLibBase(ABC):
         plt.figure(figsize=fig_size)
 
         plotday, plotdaydf = self.calculate_plot_day()
+        plotday_filtered = plotday[plotday != "Untested"]
 
         # flag
         ax1 = plt.subplot(2, 1, 1)
-        sns.scatterplot(x=plotday.index, y=plotday)
+        sns.scatterplot(x=plotday_filtered.index, y=plotday_filtered)
         plt.xlim([plotday.index[0], plotday.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"Example day Pass / Fail flag - {self.__class__.__name__}")
@@ -302,10 +335,10 @@ class CheckLibBase(ABC):
         plt.figure(figsize=(fig_size[0], fig_size[1] * num_plots))
 
         plotday, plotdaydf = self.calculate_plot_day()
-
+        plotday_filtered = plotday[plotday != "Untested"]
         # flag
         ax1 = plt.subplot(num_plots, 1, 1)
-        sns.scatterplot(x=plotday.index, y=plotday)
+        sns.scatterplot(x=plotday_filtered.index, y=plotday_filtered)
         plt.xlim([plotday.index[0], plotday.index[-1]])
         plt.ylim([-0.2, 1.2])
         plt.title(f"Example day Pass / Fail flag plot - {self.__class__.__name__}")
@@ -319,6 +352,9 @@ class CheckLibBase(ABC):
                 if pt_nan[pt]:
                     plotdaydf[pt].plot(ax=axx, marker=".")
                 else:
+                    # check if values in the series are boolean
+                    if self.df[pt].apply(lambda x: isinstance(x, bool)).all():
+                        self.df[pt] = self.df[pt].astype(int)
                     plotdaydf[pt].plot(ax=axx)
                 plt.title(f"Example day - {pt} - {self.__class__.__name__}")
                 i += 1
@@ -348,6 +384,7 @@ class RuleCheckBase(CheckLibBase):
             "Sample #": len(self.result),
             "Pass #": len(self.result[self.result == True]),
             "Fail #": len(self.result[self.result == False]),
+            "Untested #": len(self.result[self.result == "Untested"]),
             "Verification Passed?": self.check_bool(),
         }
 

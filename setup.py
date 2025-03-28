@@ -6,7 +6,7 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 setup(
     name="constrain",
-    version="0.3.1",
+    version="0.5.0",
     description="ConStrain",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -38,5 +38,6 @@ setup(
         "pydash",
         "PyYAML",
         "pre-commit",
+        "jsonschema",
     ],
 )

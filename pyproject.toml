@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ConStrain"
-version = "0.3.2"
+version = "0.5.0"
 description = "ConStrain is a data-driven knowledge-integrated framework that automatically verifies that building system controls function as intended."
 authors = ["Lei, Xuechen <xuechen.lei@pnnl.gov>", "Chen, Yan <yan.chen@pnnl.gov>", "Lerond, Jeremy <jeremy.lerond@pnnl.gov>", "Jung, Yun Joon <yunjoon.jung@pnnl.gov>"]
 readme = "README.md"
@@ -26,7 +26,8 @@ pyyaml = "^6.0.1"
 pyqt6 = "^6.6.1"
 click = "^8.1.7"
 pre-commit = "^3.6.0"
-
+jsonschema= "^4.21.1"
+python-levenshtein = "^0.25.1"
 
 [build-system]
 requires = ["poetry-core"]

@@ -65,7 +65,7 @@ class TestVerificationLibrary(unittest.TestCase):
             [
                 "library_item_id",
                 "description_brief",
-                "description_detail",
+                "description_detailed",
                 "description_index",
                 "description_datapoints",
                 "description_assertions",

@@ -21,6 +21,7 @@ else:
 - max_rate_of_change_per_min: control loop output maximum rate of change, default to 25.
 
 """
+
 import pandas as pd
 from constrain.checklib import RuleCheckBase
 from datetime import datetime
@@ -35,7 +36,7 @@ class G36OutputChangeRateLimit(RuleCheckBase):
 
     def change_rate_check(self, cur, prev, cur_time, prev_time):
         if prev is None:
-            return np.nan
+            return "Untested"
         time_delta = cur_time - prev_time
         min_change = time_delta.total_seconds() / 60
         allowable_change = min_change * cur["max_rate_of_change_per_min"]
@@ -52,7 +53,7 @@ class G36OutputChangeRateLimit(RuleCheckBase):
         first_flag = True
         for cur_time, cur in self.df.iterrows():
             if first_flag:
-                self.result.loc[cur_time] = np.nan
+                self.result.loc[cur_time] = "Untested"
                 first_flag = False
             else:
                 self.result.loc[cur_time] = self.change_rate_check(
