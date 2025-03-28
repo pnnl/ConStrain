@@ -42,6 +42,13 @@
             "general": 2.5
         }
     },
+    "coil": {
+        "unit": "%",
+        "types": {
+            "command": 0.05,
+            "general": 0.05
+        }
+    },
     "power": {
         "unit": "W",
         "types": {

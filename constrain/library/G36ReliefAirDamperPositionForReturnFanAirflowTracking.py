@@ -87,31 +87,28 @@ class G36ReliefAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):
         "output_coil_cooling",
         "position_damper_relief",
         "position_damper_relief_max",
-        "tol_pos_damper_relief",
         "cmd_damper_ra",
     ]
 
     def relief_air_damper(self, data):
         if data["output_coil_heating"] > 0:
-            if data["position_damper_relief"] < data["tol_pos_damper_relief"]:
-                return True
-            else:
-                return False
-        elif data["output_coil_cooling"] > 0:
-            if (
-                abs(data["position_damper_relief"] - data["position_damper_relief_max"])
-                < data["tol_pos_damper_relief"]
+            if data["position_damper_relief"] < self.get_tolerance(
+                "damper", "position"
             ):
                 return True
             else:
                 return False
-        elif (
-            abs(
-                data["position_damper_relief"]
-                - (1 - data["cmd_damper_ra"]) * data["position_damper_relief_max"]
-            )
-            < data["tol_pos_damper_relief"]
-        ):
+        elif data["output_coil_cooling"] > 0:
+            if abs(
+                data["position_damper_relief"] - data["position_damper_relief_max"]
+            ) < self.get_tolerance("damper", "position"):
+                return True
+            else:
+                return False
+        elif abs(
+            data["position_damper_relief"]
+            - (1 - data["cmd_damper_ra"]) * data["position_damper_relief_max"]
+        ) < self.get_tolerance("damper", "position"):
             return True
         else:
             return False

@@ -50,10 +50,6 @@ Running Verifications using **ConStrain**
                       "max_ra_p": "max_ra_p",
                       "oa_p": "oa_p",
                       "max_oa_p": "max_oa_p"
-                  },
-                  "parameters": {
-                      "ra_p_tol": 0.01,
-                      "oa_p_tol": 0.01
                   }
               },
               "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"

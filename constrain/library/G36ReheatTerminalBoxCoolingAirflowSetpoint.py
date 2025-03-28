@@ -107,7 +107,6 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
         "flow_volumetric_air_setpoint_min",
         "flow_volumetric_air_setpoint",
         "command_coil_heat",
-        "tol_cmd_coil_heat",
         "temperature_air_discharge",
         "temperature_air_discharge_setpoint_min",
     ]
@@ -156,7 +155,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
                 t["flow_volumetric_air_setpoint_min"],
                 t["flow_volumetric_air_setpoint"],
                 t["command_coil_heat"],
-                t["tol_cmd_coil_heat"],
+                self.get_tolerance("coil", "command"),
                 t["temperature_air_discharge"],
                 t["temperature_air_discharge_setpoint_min"],
             ),

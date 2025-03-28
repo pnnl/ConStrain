@@ -9,25 +9,28 @@ import numpy as np
 
 
 class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
+    tolerances = {
+        "airflow": {"unit": "m3/s", "types": {"general": 0.01}},
+    }
+
     def test_g36_cooling_only_terminal_box_deadband_airflow_setpoint(self):
         points = [
             "mode_system",
             "state_zone",
             "flow_volumetric_air_setpoint_min",
             "flow_volumetric_air_setpoint",
-            "tol_v",
         ]
 
         data = [
-            ["occupied", "heating", 10, 90, 0.01],
-            ["occupied", "cooling", 10, 90, 0.01],
-            ["occupied", "deadband", 10, 10.1, 0.01],
-            ["occupied", "deadband", 10, 10.01, 0.01],
-            ["occupied", "deadband", 10, 10.001, 0.01],
-            ["cooldown", "deadband", 10, 10.001, 0.01],
-            ["cooldown", "deadband", 10, 0, 0.01],
-            ["occupied", "deadband", 10, 9.9, 0.01],
-            ["occupied", "deadband", 10, 9.99, 0.01],
+            ["occupied", "heating", 10, 90],
+            ["occupied", "cooling", 10, 90],
+            ["occupied", "deadband", 10, 10.1],
+            ["occupied", "deadband", 10, 10.01],
+            ["occupied", "deadband", 10, 10.001],
+            ["cooldown", "deadband", 10, 10.001],
+            ["cooldown", "deadband", 10, 0],
+            ["occupied", "deadband", 10, 9.9],
+            ["occupied", "deadband", 10, 9.99],
         ]
 
         expected_results = pd.Series(
@@ -39,7 +42,9 @@ class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
         results = pd.Series(
             list(
                 run_test_verification_with_data(
-                    "G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint", df
+                    "G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint",
+                    df,
+                    tolerances=self.tolerances,
                 ).result
             )
         )

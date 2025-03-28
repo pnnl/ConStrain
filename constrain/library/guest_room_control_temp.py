@@ -88,8 +88,6 @@ class GuestRoomControlTemp(RuleCheckBase):
     ]
 
     def verify(self):
-        tol_occupancy = self.df["tol_occupants"][0]
-        tol_temp = self.df["tol_t"][0]
         year_info = 2000
         result_repo = []
         for idx, day in self.df.groupby(self.df.index.date):
