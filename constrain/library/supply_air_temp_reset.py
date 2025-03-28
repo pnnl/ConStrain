@@ -1,7 +1,10 @@
 """
 ### Description
 
-This verification aims to check if the supply air temperature reset strategy provides adequate range of adjustment. The system should reset supply air temperature based on building loads to improve energy efficiency while maintaining comfort.
+Section 6.5.3.5 Supply Air Temperature Reset Controls
+- Multiple zone HVAC systems must include controls that automatically reset the supply air temperature in response to representative building loads, or to outdoor air temperature. The
+controls shall reset the supply air temperature at least 25% of the difference between the design supply air temperature and the design room air temperature. Controls that adjust the
+reset based on zone humidity are allowed. Zones that are expected to experience relatively constant loads, such as electronic equipment rooms, shall be designed for the fully reset supply temperature.
 
 ### Code requirement
 
@@ -30,9 +33,9 @@ The verification analyzes supply air temperature setpoint variation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-sat_range = max(t_sa_sp) - min(t_sa_sp)
-min_sat = min(t_sa_sp)
-required_range = (t_z_design_cool - min_sat) * 0.25 * 0.99
+sat_range = max(temperature_air_supply) - min(temperature_air_supply)
+min_sat = min(temperature_air_supply)
+required_range = (temperature_air_zone_design_cool_setpoint - min_sat) * 0.25 * 0.99
 
 if sat_range >= required_range:
     pass  # Adequate reset range
@@ -42,12 +45,12 @@ else:
 
 ### Data requirements
 
-- t_sa_sp: Supply air temperature setpoint
+- temperature_air_supply: Supply air temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: System control
 
-- t_z_design_cool: Design zone cooling temperature setpoint
+- temperature_air_zone_design_cool_setpoint: Design zone cooling temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Design zone cooling temperature setpoint
   - Data Point Affiliation: Zone control

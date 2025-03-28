@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if multiple-zone systems properly adjust their outdoor air setpoints when zones enter standby mode. The system should reduce outdoor air flow by at least the amount that would have been required for zones now in standby.
+Section 6.5.3.9.1 Occupied-Standby Control of Multiple-Zone Systems
+- Multi-zone systems with ventilation optimization shall reset their outdoor air setpoint assuming that all zones in standby mode don't require any outdoor air.
 
 ### Code requirement
 
@@ -30,14 +31,14 @@ The verification monitors outdoor air setpoint adjustments:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if zone_is_standby_mode:
-    oa_reduction = last_active_oa_setpoint - current_oa_setpoint
-    if oa_reduction >= zone_oa_requirement:
+if flag_zone_standby:
+    oa_reduction = last_active_oa_setpoint - flow_volumetric_air_outdoor_system_setpoint
+    if oa_reduction >= flow_volumetric_air_outdoor_zone_req:
         pass  # Proper setpoint reduction
     else:
         fail  # Insufficient reduction
 else:
-    last_active_oa_setpoint = current_oa_setpoint
+    last_active_oa_setpoint = flow_volumetric_air_outdoor_system_setpoint
     untested  # Cannot verify without standby condition
 ```
 
@@ -48,12 +49,12 @@ else:
   - Data point Description: Standby mode flag
   - Data Point Affiliation: Zone control
 
-- v_oa_system_sp: System OA setpoint
+- flow_volumetric_air_outdoor_system_setpoint: System OA setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: System outdoor air flow setpoint
   - Data Point Affiliation: System control
 
-- v_oa_zone_req: Zone OA requirement
+- flow_volumetric_air_outdoor_zone_req: Zone OA requirement
   - Data Value Unit: volumetric flow rate
   - Data point Description: Zone outdoor air flow requirement
   - Data Point Affiliation: Zone ventilation

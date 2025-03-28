@@ -1,8 +1,16 @@
 """
 ### Description
 
-This verification aims to check if the minimum outdoor air control operates correctly when the economizer is in lockout. The system should modulate dampers to maintain minimum outdoor air requirements without attempting free cooling.
-
+Section 5.16 interpretation:
+- With Relief damper or relief fan
+  - when economizer control is not in lockout, and actual damper positions are controlled by the SAT control loop. Above only set the lower limit for OA damper. Track MinOAsp with a reverse-acting loop and map output to
+    - OA (economizer) damper minimum position MinOA-P
+    - return air damper maximum position MaxRA-P
+  - when economizer is in lockout for more than 10 minutes (exceeding economizer high limit conditions in Section 5.1.17), the dampers are controlled to meet minimum OA requirements
+    - fully open RA damper
+    - set MaxOA-P = MinOA-P, control OA damper to meet MinOAsp
+    - modulate RA damper to maintain MinOAsp (return air damper position equals to MaxRA-P)
+    
 ### Code requirement
 
 - Code Name: ASHRAE Guideline 36
@@ -25,14 +33,14 @@ The verification checks that during occupied periods when economizer is in locko
 ### Verification Algorithm Pseudo Code
 
 ```python
-if economizer_lockout(t_oa, t_oa_economizer_high_limit) and mode_system == 'occupied':
-    if v_oa < v_oa_min_sp (continuously for 1 hour):
-        if pos_damper_oa == 100 and pos_damper_ra == 0:
+if economizer_lockout(temperature_air_outdoor, t_oa_economizer_high_limit) and mode_system == 'occupied':
+    if flow_volumetric_air_outdoor < flow_volumetric_air_outdoor_setpoint_min (continuously for 1 hour):
+        if position_damper_air_outdoor == 100 and position_damper_air_return == 0:
             pass
         else:
             fail
-    elif v_oa > v_oa_min_sp (continuously for 1 hour):
-        if pos_damper_oa == 0 and pos_damper_ra == 100:
+    elif flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min (continuously for 1 hour):
+        if position_damper_air_outdoor == 0 and position_damper_air_return == 100:
             pass
         else:
             fail
@@ -44,7 +52,7 @@ else:
 
 ### Data requirements
 
-- t_oa: Outdoor air temperature
+- temperature_air_outdoor: Outdoor air temperature
   - Data Value Unit: °C
   - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
@@ -54,22 +62,22 @@ else:
   - Data point Description: Economizer high limit temperature
   - Data Point Affiliation: Economizer control
 
-- pos_damper_oa: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_ra: Return air damper command
+- position_damper_air_return: Return air damper command
   - Data Value Unit: percent
   - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
 
-- v_oa: Outdoor airflow
+- flow_volumetric_air_outdoor: Outdoor airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Outdoor airflow
   - Data Point Affiliation: Air handling unit
 
-- v_oa_min_sp: Minimum outdoor airflow setpoint
+- flow_volumetric_air_outdoor_setpoint_min: Minimum outdoor airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Minimum outdoor airflow setpoint
   - Data Point Affiliation: Air handling unit

@@ -1,7 +1,9 @@
 """
 ### Description
 
-This verification aims to check if static pressure sensors in VAV systems are properly located to prevent excessive duct pressure. The system should maintain duct static pressure below 1.2 inches water gauge (298.608 Pa) to minimize energy use and avoid duct leakage.
+Section 6.5.3.2.2 VAV Static Pressure Sensor Location
+- Static pressure sensors used to control VAV fans shall be located such that the controller set point is no greater than 1.2 in. of water. If this results in the sensor being located downstream
+of major duct splits, sensors shall be installed in each major branch to ensure that static pressure can be maintained in each.
 
 ### Code requirement
 
@@ -31,7 +33,7 @@ The verification monitors duct static pressure setpoint:
 ```python
 max_pressure = 298.608  # Pa (1.2 inches w.g.)
 
-if pressure_setpoint < max_pressure + tolerance:
+if pressure_static_setpoint < max_pressure:
     pass  # Proper sensor location/control
 else:
     fail  # Excessive duct pressure
@@ -39,15 +41,10 @@ else:
 
 ### Data requirements
 
-- p_press_static_sp: Pressure setpoint
+- pressure_static_setpoint: Pressure setpoint
   - Data Value Unit: pressure
   - Data point Description: Fan pressure setpoint
   - Data Point Affiliation: System control
-
-- tol_p_press_static: Pressure tolerance
-  - Data Value Unit: pressure
-  - Data point Description: Fan pressure tolerance
-  - Data Point Affiliation: System configuration
 
 """
 

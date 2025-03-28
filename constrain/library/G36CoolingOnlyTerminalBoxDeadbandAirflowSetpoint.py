@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the cooling-only terminal box airflow control operates correctly when the zone is in deadband mode. The active airflow setpoint should be set to the minimum endpoint based on the system's operation mode.
+Section 5.5.5.2
+- When the Zone State is deadband, the active airflow setpoint shall be the minimum endpoint.
 
 ### Code requirement
 
@@ -27,11 +28,11 @@ The verification checks that when the zone is in deadband mode, the active airfl
 ```
 switch mode_system
 case 'occupied'
-    minimum = v_min
+    minimum = flow_volumetric_air_setpoint_min
 case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
     minimum = 0
 
-if abs(v_sp - minimum) <= tol_v
+if abs(flow_volumetric_air_setpoint - minimum) <= 0
     pass
 else
     fail
@@ -50,19 +51,14 @@ end
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_min: Minimum airflow
+- flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- v_sp: Airflow setpoint
+- flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
-  - Data Point Affiliation: Zone airflow control
-
-- tol_v: Airflow tolerance
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow tolerance
   - Data Point Affiliation: Zone airflow control
 
 """

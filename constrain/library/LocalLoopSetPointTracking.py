@@ -1,7 +1,7 @@
 """
 ### Description
 
-This verification aims to check if control loops maintain adequate setpoint tracking performance. The system should keep the controlled variable within an acceptable error band around setpoint for the majority of operation.
+- This verification checks the set point tracking ability of local control loops.
 
 ### Code requirement
 
@@ -23,7 +23,7 @@ The verification analyzes control error magnitude and frequency:
 ### Verification Applicability
 
 - Building Type(s): any
-- val_setpointace Type(s): any
+- Space Type(s): any
 - System(s): any control loop
 - Climate Zone(s): any
 - Component(s): sensors, actuators, controllers
@@ -31,12 +31,12 @@ The verification analyzes control error magnitude and frequency:
 ### Verification Algorithm Pseudo Code
 
 ```python
-error_threshold = max(0.01, abs(setpoint) * 0.05)
+error_threshold = max(0.01, abs(value_setpoint) * 0.05)
 excessive_error_count = 0
 total_samples = 0
 
 for each sample:
-    error = abs(feedback - setpoint)
+    error = abs(value_sensor - value_setpoint)
     if error > error_threshold:
         excessive_error_count += 1
     total_samples += 1
@@ -49,13 +49,13 @@ else:
 
 ### Data requirements
 
-- val_sensor: Process variable
+- value_sensor: Process variable
   - Data Value Unit: varies by application
   - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
-- val_setpoint: Control setpoint
-  - Data Value Unit: same as v_fb
+- value_setpoint: Control setpoint
+  - Data Value Unit: same as value_sensor
   - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 

@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if control loop outputs change at an appropriate rate to avoid abrupt changes in equipment operation. Each control loop output should be limited by a user-adjustable maximum rate of change.
+Section 5.1.9 
+- To avoid abrupt changes in equipment operation, the output of every control loop shall be capable of being limited by a user adjustable maximum rate of change, with a default of 25% per minute.
 
 ### Code requirement
 
@@ -27,7 +28,7 @@ The verification monitors the rate of change in control loop outputs by comparin
 ```python
 time_delta = current_time - previous_time
 allowed_change = rate_change_max * (time_delta_in_minutes)
-actual_change = abs(cmd_control(current_t) - cmd_control(prev_t))
+actual_change = abs(command_control(current_t) - command_control(prev_t))
 
 if actual_change > allowed_change:
     fail
@@ -37,7 +38,7 @@ else:
 
 ### Data requirements
 
-- cmd_control: Control loop output
+- command_control: Control loop output
   - Data Value Unit: percent
   - Data point Description: Control loop output (0-100)
   - Data Point Affiliation: Control loop

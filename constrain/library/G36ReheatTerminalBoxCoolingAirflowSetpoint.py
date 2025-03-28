@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the terminal box with reheat operates correctly when the zone is in cooling mode. The airflow setpoint should be properly mapped between minimum and maximum cooling endpoints, and the heating coil should remain disabled unless discharge air temperature falls below minimum.
+Section 5.6.5.1
+- When the Zone State is cooling, the cooling-loop output shall be mapped to the active airflow setpoint from the cooling minimum endpoint to the cooling maximum endpoint. Heating coil is disabled unless the DAT is below the minimum setpoint
 
 ### Code requirement
 
@@ -27,21 +28,21 @@ The verification checks two conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if t_discharge > t_discharge_min_sp and cmd_coil_heat > tol_cmd_coil_heat:
+if temperature_air_discharge > temperature_air_discharge_setpoint_min and command_coil_heat > 0:
     fail
 else:
     switch mode_system:
         case 'occupied':
-            cooling_maximum = v_cool_max
-            minimum = v_min
+            cooling_maximum = flow_volumetric_air_cool_max
+            minimum = flow_volumetric_air_setpoint_min
         case 'cooldown', 'setup':
-            cooling_maximum = v_cool_max
+            cooling_maximum = flow_volumetric_air_cool_max
             minimum = 0
         case 'warmup', 'setback', 'unoccupied':
             cooling_maximum = 0
             minimum = 0
 
-    if cooling_minimum <= v_sp <= cooling_maximum:
+    if cooling_minimum <= flow_volumetric_air_setpoint <= cooling_maximum:
         pass
     else:
         fail
@@ -59,37 +60,32 @@ else:
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_cool_max: Maximum cooling airflow
+- flow_volumetric_air_cool_max: Maximum cooling airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Maximum cooling airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_min: Minimum airflow
+- flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- v_sp: Airflow setpoint
+- flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- cmd_coil_heat: Heating coil command
+- command_coil_heat: Heating coil command
   - Data Value Unit: percent
   - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- tol_cmd_coil_heat: Heating coil command tolerance
-  - Data Value Unit: percent
-  - Data point Description: Heating coil command tolerance
-  - Data Point Affiliation: Terminal box control
-
-- t_discharge: Discharge air temperature
+- temperature_air_discharge: Discharge air temperature
   - Data Value Unit: temperature
   - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
-- t_discharge_min_sp: Minimum discharge air temperature setpoint
+- temperature_air_discharge_setpoint_min: Minimum discharge air temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Minimum discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control

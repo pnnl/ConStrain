@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if exterior lighting control operates correctly based on daylight availability. The system should automatically turn off exterior lighting when sufficient daylight is available or within 30 minutes of sunrise.
+Section 9.4.1.4.b Daylight OFF control
+- [Exterior] Lighting shall automatically turn off when sufficient daylight is available or within 30 minutes of sunrise.
 
 ### Code requirement
 
@@ -28,7 +29,7 @@ The verification checks if the exterior lighting is turned off when either suffi
 daylight_setpoint_met = data["value_daylight"] / data["value_daylight_setpoint"]
 
 If daylight_setpoint_met >= 1 or time_since_last_sun_up >= 30: # min
-    If p_power_light_total == 0:
+    If power_light_total == 0:
         Pass
     Else
         Fail
@@ -45,17 +46,17 @@ Endif
   - Data point Description: Sun position flag
   - Data Point Affiliation: Environmental conditions
 
-- val_daylight: Measured daylight level
+- value_daylight: Measured daylight level
   - Data Value Unit: illuminance
   - Data point Description: Measured daylight level
   - Data Point Affiliation: Lighting control
 
-- val_daylight_sp: Daylight threshold
+- value_daylight_setpoint: Daylight threshold
   - Data Value Unit: illuminance
   - Data point Description: Daylight setpoint
   - Data Point Affiliation: Lighting control
 
-- p_power_light_total: Lighting power
+- power_light_total: Lighting power
   - Data Value Unit: power
   - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system

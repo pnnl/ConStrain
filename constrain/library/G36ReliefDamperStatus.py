@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if relief dampers are properly interlocked with their associated supply fans. Relief dampers should only be enabled when their corresponding supply fan is proven to be running.
+Section 5.16.8.1. 
+- Relief dampers shall be enabled when the associated supply fan is proven ON, and disabled otherwise.
 
 ### Code requirement
 
@@ -28,9 +29,9 @@ The test is considered untested if supply fan status doesn't show both ON and OF
 ### Verification Algorithm Pseudo Code
 
 ```python
-if cmd_damper_relief > 0 and status_fan_supply == 'on':
+if position_damper_relief > 0 and status_fan_supply == 'on':
     pass
-elif status_fan_supply == 'off' and cmd_damper_relief == 0:
+elif status_fan_supply == 'off' and position_damper_relief == 0:
     pass
 else:
     fail
@@ -41,7 +42,7 @@ if not ['on', 'off'] in status_fan_supply:
 
 ### Data requirements
 
-- cmd_damper_relief: Relief damper command
+- position_damper_relief: Relief damper command
   - Data Value Unit: percent
   - Data point Description: Relief damper command
   - Data Point Affiliation: Air handling unit

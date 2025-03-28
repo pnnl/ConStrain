@@ -1,7 +1,9 @@
 """
 ### Description
 
-This verification aims to check if water-loop heat pump (WLHP) systems maintain proper temperature differential between heating and cooling loops. The system should maintain at least 20°F (11.11°C) difference between maximum heating loop temperature and minimum cooling loop temperature.
+section 6.5.2.2.3 Hydronic (Water Loop) Heat Pump Systems
+- Hydronic heat pumps connected to a common heat pump water loop with central devices for heat rejection (e.g., cooling tower) and heat addition (e.g., boiler) shall have the following:
+a. Controls that are capable of and configured to provide a heat pump water supply temperature dead band of at least 20°F between initiation of heat rejection and heat addition by the central devices (e.g., tower and boiler).
 
 ### Code requirement
 
@@ -32,13 +34,13 @@ The verification analyzes loop temperature separation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if m_pump > 0:
-    max_heating_temp = max(heating_loop_temperature)
-    min_cooling_temp = min(cooling_loop_temperature)
+if flow_mass_water_pump > 0:
+    max_heating_temp = max(temperature_water_heating_max)
+    min_cooling_temp = min(temperature_water_cooling_min)
     
     temp_differential = max_heating_temp - min_cooling_temp
     
-    if temp_differential > 11.11 + tolerance:  # 20°F = 11.11°C
+    if temp_differential > 11.11:  # 20°F = 11.11°C
         pass  # Proper temperature separation
     else:
         fail  # Insufficient separation
@@ -46,25 +48,20 @@ if m_pump > 0:
 
 ### Data requirements
 
-- t_heating_max: Heating loop temperature
+- temperature_water_heating_max: Heating loop temperature
   - Data Value Unit: temperature
   - Data point Description: Maximum heating loop temperature
   - Data Point Affiliation: System monitoring
 
-- t_cooling_min: Cooling loop temperature
+- temperature_water_cooling_min: Cooling loop temperature
   - Data Value Unit: temperature
   - Data point Description: Minimum cooling loop temperature
   - Data Point Affiliation: System monitoring
 
-- m_pump: Pump flow
-  - Data Value Unit: volumetric flow rate
+- flow_mass_water_pump: Pump flow
+  - Data Value Unit: mass flow rate
   - Data point Description: Pump flow rate
   - Data Point Affiliation: System monitoring
-
-- tol_t_loop: Temperature tolerance
-  - Data Value Unit: temperature
-  - Data point Description: Temperature tolerance
-  - Data Point Affiliation: System configuration
 
 """
 
@@ -82,14 +79,14 @@ class WLHPLoopHeatRejectionControl(RuleCheckBase):
         self.df["T_max_heating_loop_max"] = (
             self.df.query(
                 f"flow_mass_water_pump > {self.get_tolerance('waterflow', 'general')}"
-            )["T_max_heating_loop"]
+            )["temperature_water_heating_max"]
         ).max()
         self.df["T_min_cooling_loop_min"] = (
             self.df.query(
                 f"flow_mass_water_pump > {self.get_tolerance('waterflow', 'general')}"
-            )["T_min_cooling_loop"]
+            )["temperature_water_cooling_min"]
         ).min()
 
-        self.result = (self.df["t_heating_max_max"] - self.df["t_cooling_min_min"]) > (
-            11.11 + self.get_tolerance("temperature", "general")
-        )
+        self.result = (
+            self.df["T_max_heating_loop_max"] - self.df["T_min_cooling_loop_min"]
+        ) > (11.11 + self.get_tolerance("temperature", "general"))

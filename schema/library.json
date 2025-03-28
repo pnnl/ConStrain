@@ -438,15 +438,15 @@
             "Section 6.4.3.5 Heat Pump Auxiliary Heat Control and 6.3.2.h Criteria in 90.1-2016"
         ],
         "description_datapoints": {
-            "C_ref": "Heating Coil Reference Capacity",
-            "L_operation": "Heating Coil Runtime Fraction",
-            "C_t_mod": "Heating Coil Heating Rate",
-            "P_supp_ht": "Heating Coil Gas Rate",
-            "C_ff_mod": "Heating Capacity Function of Flow Fraction Curve",
-            "L_defrost": "Defrost load on the heating coil"
+            "capacity_full_load": "Heating Coil Reference Capacity",
+            "load_operation": "Heating Coil Runtime Fraction",
+            "capacity_modifier_temperature": "Heating Coil Heating Rate",
+            "power_heating_supplemental": "Heating Coil Gas Rate",
+            "capacity_modifier_fraction_flow": "Heating Capacity Function of Flow Fraction Curve",
+            "load_defrost": "Defrost load on the heating coil"
         },
         "description_assertions": [
-            "If C_ref * C_t_mod >= L_operation and P_supp_ht == 0 then pass else fail"
+            "If capacity_full_load * capacity_modifier_temperature >= load_operation and power_heating_supplemental == 0 then pass else fail"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"

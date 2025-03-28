@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if ventilation fans are properly controlled based on space occupancy and load conditions. The system should shut off ventilation fans when zones are unoccupied and have no load requirements.
+section 6.4.3.4.4 Ventilation Fan Controls
+- Fans with motors greater than 0.75 hp shall have automatic controls complying with Section 6.4.3.3.1 that are capable of and configured to shut off fans when not required.
 
 ### Code requirement
 
@@ -31,7 +32,7 @@ The verification monitors three key conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if q_sensible == 0 and n_occupants == 0 and p_power_fan != 0:
+if heat_sensible == 0 and number_occupants == 0 and power_fan != 0:
     fail
 else:
     pass
@@ -39,17 +40,17 @@ else:
 
 ### Data requirements
 
-- q_sensible: Zone sensible heat load
+- heat_sensible: Zone sensible heat load
   - Data Value Unit: power
   - Data point Description: Zone load
   - Data Point Affiliation: Zone monitoring
 
-- n_occupants: Occupancy count
+- number_occupants: Occupancy count
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone monitoring
 
-- p_power_fan: Fan power
+- power_fan: Fan power
   - Data Value Unit: power
   - Data point Description: Fan power
   - Data Point Affiliation: Equipment monitoring

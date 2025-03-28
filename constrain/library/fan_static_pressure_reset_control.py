@@ -1,7 +1,9 @@
 """
 ### Description
 
-This verification aims to check if the static pressure setpoint is properly reset based on VAV damper positions. The setpoint should be reset lower until at least one zone damper is nearly wide open.
+Section 6.5.3.2.3 VAV Set-Point Reset
+- For multiple-zone VAV systems having a total fan system motor nameplate horsepower exceeding 5 hp with DDC of individual zones reporting to the central control panel, static pressure set 
+point shall be reset based on the zone requiring the most pressure; i.e., the set point is reset lower until one zone damper is nearly wide open.
 
 ### Code requirement
 
@@ -29,10 +31,10 @@ for each timestep:
     if first timestep:
         return "Untested"
     else:
-        if current_p_press_static_sp < previous_p_press_static_sp:
+        if current_pressure_static_setpoint < previous_pressure_static_setpoint:
             # Setpoint is being reduced
             return True
-        elif any cmd_damper_vav > 90%:
+        elif any pos_damper_vav_* > 90%:
             # At least one damper is nearly wide open
             return True
         else:
@@ -43,14 +45,34 @@ for each timestep:
 
 ### Data requirements
 
-- p_press_static_sp: Duct static pressure setpoint
+- pressure_static_setpoint: Duct static pressure setpoint
   - Data Value Unit: pressure
   - Data point Description: Duct static pressure setpoint
   - Data Point Affiliation: Fan control
 
-- cmd_damper_vav: VAV damper command
+- pos_damper_vav_1: VAV damper position 1
   - Data Value Unit: percent
-  - Data point Description: VAV damper command
+  - Data point Description: VAV damper position
+  - Data Point Affiliation: Zone control
+
+- pos_damper_vav_2: VAV damper position 2
+  - Data Value Unit: percent
+  - Data point Description: VAV damper position
+  - Data Point Affiliation: Zone control
+
+- pos_damper_vav_3: VAV damper position 3
+  - Data Value Unit: percent
+  - Data point Description: VAV damper position
+  - Data Point Affiliation: Zone control
+
+- pos_damper_vav_4: VAV damper position 4
+  - Data Value Unit: percent
+  - Data point Description: VAV damper position
+  - Data Point Affiliation: Zone control
+
+- pos_damper_vav_5: VAV damper position 5
+  - Data Value Unit: percent
+  - Data point Description: VAV damper position
   - Data Point Affiliation: Zone control
 
 """

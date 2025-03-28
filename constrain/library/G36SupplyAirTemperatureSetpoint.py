@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the supply air temperature setpoint is properly calculated based on system operation mode and outdoor air conditions. The setpoint should adjust according to specific rules for each mode while maintaining appropriate limits.
+Section 5.16.2.3
+- Supply air temperature shall be controlled to setpoint using a control loop whose output is mapped to sequence the heating coil (if applicable), outdoor air damper, return air damper, and cooling coil
 
 ### Code requirement
 
@@ -32,26 +33,26 @@ The verification checks supply air temperature setpoint calculation in multiple 
 
 ```python
 # First check maximum temperature limit
-if t_sa_max > t_sa_cool_max:
+if temperature_air_supply_max > temperature_air_supply_cool_max:
     fail
 
 # Calculate setpoint based on mode
-match mode_sys:
+match mode_operation:
     case "cooldown":
-        t_sa_sp_calc = t_sa_cool_min
+        t_sa_sp_calc = temperature_air_supply_cool_min
     case "warmup" | "setback":
         t_sa_sp_calc = 35.0  # 95°F
     case "occupied" | "setup":
-        if t_oa <= t_oa_min:
-            t_sa_sp_calc = t_sa_max
-        elif t_oa >= t_oa_max:
-            t_sa_sp_calc = t_sa_cool_min
+        if temperature_air_outdoor <= temperature_air_outdoor_supply_min:
+            t_sa_sp_calc = temperature_air_supply_max
+        elif temperature_air_outdoor >= temperature_air_outdoor_supply_max:
+            t_sa_sp_calc = temperature_air_supply_cool_min
         else:
             # Linear interpolation
-            t_sa_sp_calc = (t_oa - t_oa_min) * (t_sa_max - t_sa_cool_min) / (t_oa_min - t_oa_max) + t_sa_max
+            t_sa_sp_calc = (temperature_air_outdoor - temperature_air_outdoor_supply_min) * (temperature_air_supply_max - temperature_air_supply_cool_min) / (temperature_air_outdoor_supply_min - temperature_air_outdoor_supply_max) + temperature_air_supply_max
 
 # Verify setpoint matches calculated value
-if abs(t_sa_sp_calc - sp_t_sa) < tol_t_sa:
+if abs(t_sa_sp_calc - temperature_air_supply_setpoint) < 0:
     pass
 else:
     fail
@@ -64,45 +65,40 @@ else:
   - Data point Description: System mode
   - Data Point Affiliation: System control
 
-- t_sa_max: Maximum supply air temperature
+- temperature_air_supply_max: Maximum supply air temperature
   - Data Value Unit: temperature
   - Data point Description: Maximum supply air temperature
   - Data Point Affiliation: System configuration
 
-- t_sa_cool_max: Maximum cooling supply air temperature
+- temperature_air_supply_cool_max: Maximum cooling supply air temperature
   - Data Value Unit: temperature
   - Data point Description: Maximum cooling supply air temperature
   - Data Point Affiliation: System configuration
 
-- t_sa_cool_min: Minimum cooling supply air temperature
+- temperature_air_supply_cool_min: Minimum cooling supply air temperature
   - Data Value Unit: temperature
   - Data point Description: Minimum cooling supply air temperature
   - Data Point Affiliation: System configuration
 
-- t_oa: Outdoor air temperature
+- temperature_air_outdoor: Outdoor air temperature
   - Data Value Unit: temperature
   - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
-- t_oa_min: Minimum outdoor air temperature
+- temperature_air_outdoor_supply_min: Minimum outdoor air temperature
   - Data Value Unit: temperature
   - Data point Description: Minimum outdoor air temperature
   - Data Point Affiliation: System configuration
 
-- t_oa_max: Maximum outdoor air temperature
+- temperature_air_outdoor_supply_max: Maximum outdoor air temperature
   - Data Value Unit: temperature
   - Data point Description: Maximum outdoor air temperature
   - Data Point Affiliation: System configuration
 
-- t_sa_sp: Supply air temperature setpoint
+- temperature_air_supply_setpoint: Supply air temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: System control
-
-- tol_t_sa: Supply air temperature tolerance
-  - Data Value Unit: temperature
-  - Data point Description: Supply air temperature tolerance
-  - Data Point Affiliation: System configuration
 
 """
 

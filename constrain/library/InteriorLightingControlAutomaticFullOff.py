@@ -1,7 +1,14 @@
 """
 ### Description
 
-This verification aims to check if interior lighting systems automatically turn off when spaces are unoccupied. The system should shut off all non-exempt lighting within 20 minutes of occupants leaving, while respecting area limitations and exceptions.
+Section 9.4.1.1.h Automatic full OFF control
+- All lighting in the space, including lighting connected to emergency circuits,shall be automatically shut off within 20 minutes of all occupants leaving the space. A control device meeting this requirement shall control no more than 5000 ft2.
+- Exceptions:
+  - The following lighting is not required to be automatically shut off:
+    1. Lighting required for 24/7 continuous operation.
+    2. Lighting in spaces where patient care is rendered.
+    3. General lighting and task lighting in spaces where automatic shutoff would endanger the safety or security of the room or building occupants.
+    4. Lighting load not exceeding 0.02 W/ft2 multiplied by the gross lighted floor area of the building.
 
 ### Code requirement
 
@@ -34,14 +41,14 @@ Exceptions not verified:
 
 ```python
 # Check control area limitation
-if area_lit_lit >= 5000:
+if area_lit >= 5000:
     fail  # Exceeds maximum area per control device
 
 # Check shutoff timing and power
 time_since_occupancy = current_time - last_occupancy_time
 
-if occupancy < occupancy_threshold and time_since_occupancy > 20_minutes:
-    if p_power_light_total / area_lit <= 0.02:
+if number_occupants < occupancy_threshold and time_since_occupancy > 20_minutes:
+    if power_light_total / area_lit <= 0.02:
         pass  # Proper shutoff or within exemption
     else:
         fail  # Lights still on above exemption threshold
@@ -51,12 +58,12 @@ else:
 
 ### Data requirements
 
-- n_occupants: Occupancy count
+- number_occupants: Occupancy count
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- p_power_light_total: Lighting power
+- power_light_total: Lighting power
   - Data Value Unit: power
   - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system
@@ -65,11 +72,6 @@ else:
   - Data Value Unit: area
   - Data point Description: Lighted floor area
   - Data Point Affiliation: Space configuration
-
-- tol_occupants: Occupancy threshold
-  - Data Value Unit: count
-  - Data point Description: Occupancy tolerance
-  - Data Point Affiliation: Zone occupancy
 
 """
 

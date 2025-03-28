@@ -1,7 +1,9 @@
 """
 ### Description
 
-This verification aims to verify HVAC system fan operation as per ASHRAE 90.1 Appendix G rules. The system fan must run continuously during occupied periods and cycle on/off to meet heating and cooling loads during unoccupied hours.
+Section G3.1.4 HVAC System Fan Schedules
+- Schedules for HVAC system fans that provide outdoor air for ventilation shall run continuously whenever spaces are occupied and shall be cycled ON and OFF to meet heating and cooling loads during unoccupied hours.
+Note: exceptions to this requirement are not capture since they depend on system design which is not related to system control.
 
 ### Code requirement
 
@@ -27,21 +29,21 @@ The verification checks if the system provides outdoor air and then verifies tha
 ```
 # Check that the system provide OA
 # This is a one-time check, do not perform further checks if None is returned
-If sum(m_oa) == 0
+If sum(flow_volumetric_air_outdoor) == 0
   return None
 Endif
 
 # This assumes that the system does provide OA to the space as per the first check
 potential_failures_count = 0
 potential_pass_count = 0
-If o
-  If fan_runtime_fraction == 1
+If number_occupants
+  If fraction_runtime_fan == 1
     return True
   Else
     return False
   Endif
 Else
-  If fan_runtime_fraction == 1 # the system could be "cycling" for the whole timestep so add to counter
+  If fraction_runtime_fan == 1 # the system could be "cycling" for the whole timestep so add to counter
     potential_failures_count += 1
     return None
   Else
@@ -60,17 +62,17 @@ Endif
 
 ### Data requirements
 
-- n_occupants: Number of occupants
+- number_occupants: Number of occupants
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- frac_runtime_fan: Fan runtime fraction
+- fraction_runtime_fan: Fan runtime fraction
   - Data Value Unit: fraction
   - Data point Description: Fan runtime fraction
   - Data Point Affiliation: System operation
 
-- v_oa: Outdoor air flow rate
+- flow_volumetric_air_outdoor: Outdoor air flow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Outdoor air flow rate
   - Data Point Affiliation: System ventilation

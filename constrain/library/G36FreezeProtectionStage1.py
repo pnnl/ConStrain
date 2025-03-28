@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the first stage of freeze protection control operates correctly. When supply air temperature drops below a critical threshold, the system should override outdoor air damper position and activate heating to prevent freezing conditions.
+Section 5.16.12.1.
+- If the supply air temperature drops below 4.4°C (40°F) for 5 minutes, send two (or more, as required to ensure that heating plant is active) heating hot-water plant requests, override the outdoor air damper to the minimum position, and modulate the heating coil to maintain a supply air temperature of at least 6°C (42°F). Disable this function when supply air temperature rises above 7°C (45°F) for 5 minutes.
 
 ### Code requirement
 
@@ -25,30 +26,30 @@ The verification monitors supply air temperature and outdoor air damper position
 ### Verification Algorithm Pseudo Code
 
 ```python
-if t_sa < 4.4 (continuously 5 minutes) and pos_damper_oa > pos_damper_oa_min:
+if temperature_air_supply_setpoint < 4.4 (continuously 5 minutes) and position_damper_air_outdoor > position_damper_air_outdoor_min:
     fail
-elif pos_damper_oa > pos_damper_oa_min and not (t_sa > 7 (continuously 5 minutes)):
+elif position_damper_air_outdoor > position_damper_air_outdoor_min and not (temperature_air_supply_setpoint > 7 (continuously 5 minutes)):
     fail
 else:
     pass
 
-if never (t_sa < 4.4 (continuously 5 minutes)):
+if never (temperature_air_supply_setpoint < 4.4 (continuously 5 minutes)):
     untested
 ```
 
 ### Data requirements
 
-- t_sa: Supply air temperature
+- temperature_air_supply_setpoint: Supply air temperature
   - Data Value Unit: °C
   - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa_min: Minimum outdoor air damper command
+- position_damper_air_outdoor_min: Minimum outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Minimum outdoor air damper command
   - Data Point Affiliation: Air handling unit

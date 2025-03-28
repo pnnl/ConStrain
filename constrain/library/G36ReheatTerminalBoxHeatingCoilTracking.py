@@ -1,7 +1,9 @@
 """
 ### Description
 
-This verification aims to check if the terminal box heating coil properly tracks its discharge air temperature setpoint during heating mode. The control should modulate the heating coil to maintain the discharge temperature while the VAV damper maintains airflow.
+Section 5.6.5.3.
+- When the Zone State is heating, the Heating Loop shall maintain space temperature at the heating setpoint as follows:
+    c.The heating coil shall be modulated to maintain the discharge temperature at setpoint. The VAV damper shall be modulated by a control loop to maintain the measured airflow at the active setpoint.
 
 ### Code requirement
 
@@ -31,18 +33,18 @@ The verification monitors discharge air temperature tracking performance:
 
 ```python
 # Only check when in heating mode
-if abs(t_discharge_sp - t_discharge) >= tol_t_tracking:
+if abs(t_discharge_sp - t_discharge) >= 0:
     if tracking_error_duration < 1_hour:
         pass  # Brief deviation acceptable
     else:
-        if (t_discharge - t_discharge_sp >= tol_t_tracking) and cmd_coil_heat <= 1:
+        if (t_discharge - t_discharge_sp >= 0) and cmd_coil_heat <= 1:
             pass  # Too hot, coil at minimum
-        elif (t_discharge_sp - t_discharge >= tol_t_tracking) and cmd_coil_heat >= 99:
+        elif (t_discharge_sp - t_discharge >= 0) and cmd_coil_heat >= 99:
             pass  # Too cold, coil at maximum
         else:
             fail  # Sustained deviation without appropriate response
 else:
-    pass  # Within tolerance
+    pass
 ```
 
 ### Data requirements
@@ -52,24 +54,19 @@ else:
   - Data point Description: System mode
   - Data Point Affiliation: System control
 
-- cmd_coil_heat: Heating coil command
+- command_coil_heat: Heating coil command
   - Data Value Unit: percent
   - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- t_discharge: Discharge air temperature
+- temperature_air_discharge: Discharge air temperature
   - Data Value Unit: temperature
   - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
-- t_discharge_sp: Discharge air temperature setpoint
+- temperature_air_discharge_setpoint: Discharge air temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Discharge air temperature setpoint
-  - Data Point Affiliation: Terminal box control
-
-- tol_t_tracking: Temperature tracking tolerance
-  - Data Value Unit: temperature
-  - Data point Description: Temperature tracking tolerance
   - Data Point Affiliation: Terminal box control
 """
 

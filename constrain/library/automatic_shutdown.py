@@ -1,7 +1,9 @@
 """
 ### Description
 
-This verification aims to check if the HVAC systems is programmed to come on and turn off under different time schedules.
+Section 6.4.3.3.1 Automatic Shutdown
+- Controls that can start and stop the system under different time schedules for seven different day types per week, are capable of retaining programming and time setting
+during loss of power for a period of at least ten hours, and include an accessible manual override or equivalent function that allows temporary operation of the system for up to two hours.
 
 ### Code requirement
 
@@ -25,7 +27,7 @@ We aim to identify when the system comes on and when it is being turned off ever
 
 ### Verification Algorithm Pseudo Code
 
-The first step is to create data that represents the difference in system status (using `hvac_set`) from timesteps to the previous ones. This can be done by using `pandas.DataFrame.diff`. Then, we need to filter out all values equal to 0 which represent to change in system status (meaning that the system is still off or still on when compared with the previous timestep). Finally, we need retrieve the first and last value for each day, see [here](https://stackoverflow.com/questions/52909610/pandas-getting-first-and-last-value-from-each-day-in-a-datetime-dataframe) for an example, and store the data in a dataframe with two columns: `start_time` and `end_time`. Once this is done, proceed with the following evaluation:
+The first step is to create data that represents the difference in system status (using `status_hvac`) from timesteps to the previous ones. This can be done by using `pandas.DataFrame.diff`. Then, we need to filter out all values equal to 0 which represent to change in system status (meaning that the system is still off or still on when compared with the previous timestep). Finally, we need retrieve the first and last value for each day, see [here](https://stackoverflow.com/questions/52909610/pandas-getting-first-and-last-value-from-each-day-in-a-datetime-dataframe) for an example, and store the data in a dataframe with two columns: `start_time` and `end_time`. Once this is done, proceed with the following evaluation:
 
 ```python
 if min(start_time) != max(start_time) and min(end_time) != max(end_time)
@@ -37,7 +39,7 @@ end
 
 ### Data requirements
 
--  schedule_hvac: HVAC operation schedule
+-  status_hvac: HVAC operation status
   - Data Value Unit: binary
   - Data point Description: HVAC system status
   - Data Point Affiliation: HVAC operation schedule

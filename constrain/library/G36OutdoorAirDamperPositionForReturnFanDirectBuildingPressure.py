@@ -12,7 +12,8 @@ This verification aims to check if the outdoor air damper operates correctly in 
 
 ### Verification Approach
 
-The verification checks that the outdoor air damper maintains its maximum position within an acceptable tolerance. This position allows the return fan to directly control building pressure through its speed modulation.
+Section 5.16.2.3
+- Supply air temperature shall be controlled to setpoint using a control loop whose output is mapped to sequence the heating coil (if applicable), outdoor air damper, return air damper, and cooling coil.
 
 ### Verification Applicability
 
@@ -25,7 +26,7 @@ The verification checks that the outdoor air damper maintains its maximum positi
 ### Verification Algorithm Pseudo Code
 
 ```python
-if abs(cmd_damper_oa - cmd_damper_oa_max) < tol_cmd_damper_oa:
+if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0:
     pass
 else:
     fail
@@ -33,19 +34,14 @@ else:
 
 ### Data requirements
 
-- cmd_damper_oa: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- cmd_damper_oa_max: Maximum outdoor air damper command
+- position_damper_air_outdoor_max: Maximum outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Maximum outdoor air damper command
-  - Data Point Affiliation: Air handling unit
-
-- tol_cmd_damper_oa: Outdoor air damper command tolerance
-  - Data Value Unit: percent
-  - Data point Description: Outdoor air damper command tolerance
   - Data Point Affiliation: Air handling unit
 
 """
@@ -55,14 +51,15 @@ from constrain.checklib import RuleCheckBase
 
 class G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure(RuleCheckBase):
     points = [
-        "cmd_damper_oa",
-        "cmd_damper_oa_max",
+        "position_damper_air_outdoor",
+        "position_damper_air_outdoor_max",
     ]
 
     def outdoor_air_damper(self, data):
-        if abs(data["cmd_damper_oa"] - data["cmd_damper_oa_max"]) < self.get_tolerance(
-            "damper", "command"
-        ):
+        if abs(
+            data["position_damper_air_outdoor"]
+            - data["position_damper_air_outdoor_max"]
+        ) < self.get_tolerance("damper", "command"):
             return True
         else:
             return False

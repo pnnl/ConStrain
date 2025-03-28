@@ -1,7 +1,7 @@
 """
 ### Description
 
-This verification aims to check if control loops maintain setpoint tracking over time by analyzing unmet hours. The system should keep the controlled variable within an acceptable error band around setpoint for at least 95% of operating time.
+- This verification checks the set point tracking ability of local control loops.
 
 ### Code requirement
 
@@ -23,7 +23,7 @@ The verification analyzes duration of control errors:
 ### Verification Applicability
 
 - Building Type(s): any
-- val_setpointace Type(s): any
+- Space Type(s): any
 - System(s): any control loop
 - Climate Zone(s): any
 - Component(s): sensors, actuators, controllers
@@ -31,12 +31,12 @@ The verification analyzes duration of control errors:
 ### Verification Algorithm Pseudo Code
 
 ```python
-error_threshold = max(0.01, abs(setpoint) * 0.05)
+error_threshold = max(0.01, abs(value_setpoint) * 0.05)
 unmet_hours = 0
 total_hours = 0
 
 for each timestep:
-    error = abs(feedback - setpoint)
+    error = abs(value_sensor - value_setpoint)
     if error > error_threshold:
         if previous_timestep also exceeded threshold:
             unmet_hours += timestep_duration
@@ -50,13 +50,13 @@ else:
 
 ### Data requirements
 
-- val_sensor: Process variable
+- value_sensor: Process variable
   - Data Value Unit: varies by application
   - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
-- val_setpoint: Control setpoint
-  - Data Value Unit: same as v_fb
+- value_setpoint: Control setpoint
+  - Data Value Unit: same as value_sensor
   - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 

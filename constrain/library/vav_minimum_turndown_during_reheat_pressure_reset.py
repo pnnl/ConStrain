@@ -1,7 +1,12 @@
 """
 ### Description
 
-This verification aims to check if VAV boxes maintain proper minimum turndown ratios during reheat operation while ensuring stable duct pressure setpoints. The system should limit airflow and maintain consistent pressure control to prevent energy waste.
+Section 6.5.2.1 Zone Controls
+- Zone thermostatic controls shall prevent
+a. reheating;
+b. recooling;
+c. mixing or simultaneously supplying air that has been previously mechanically heated and air that has been previously cooled, either by mechanical cooling or by economizer systems; 
+d. other simultaneous operation of heating and cooling systems to the same zone.
 
 ### Code requirement
 
@@ -32,13 +37,13 @@ The verification checks two conditions during reheat operation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if flag_coil_htg:
-  if v_vav_max == 0:
+if flag_coil_reheat:
+  if flow_volumetric_air_max == 0:
      Untested
-  if v_vav_max > 0.0 and v_vav / v_vav_max > ratio_turndown_min + tol_turndown:
-    if sp_p_press_duct_prev is None:
+  if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:
+    if p_press_duct_sp_prev is None:
         Untested
-    elif abs(sp_p_press_duct - sp_p_press_duct_prev) > tol_p_press:
+    elif abs(pressure_duct_setpoint - p_press_duct_sp_prev) > 0:
         Untested
     else:
         fail
@@ -54,12 +59,12 @@ else:
   - Data point Description: Heating coil flag
   - Data Point Affiliation: Terminal unit control
 
-- v_vav: VAV airflow rate
+- flow_volumetric_air_vav: VAV airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Box volume flow rate
   - Data Point Affiliation: Terminal unit monitoring
 
-- v_vav_max: VAV maximum airflow rate
+- flow_volumetric_air_max: VAV maximum airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Box maximum volume flow rate
   - Data Point Affiliation: Terminal unit configuration
@@ -69,7 +74,7 @@ else:
   - Data point Description: Minimum turndown ratio
   - Data Point Affiliation: Terminal unit configuration
 
-- p_press_duct_sp: Duct static pressure setpoint
+- pressure_duct_setpoint: Duct static pressure setpoint
   - Data Value Unit: pressure
   - Data point Description: Duct pressure setpoint
   - Data Point Affiliation: System control

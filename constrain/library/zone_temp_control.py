@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if zone temperature control maintains proper deadband between heating and cooling setpoints. The system should maintain at least 5°F (2.77°C) separation between setpoints.
+section 6.4.3.1.2 Dead Band
+- Where used to control both heating and cooling, zone thermostatic controls shall be capable of and configured to provide a temperature range or dead band of at least 5°F within which the supply of heating and cooling energy to the zone is shut off or reduced to a minimum.
 
 ### Code requirement
 
@@ -38,12 +39,12 @@ else:
 
 ### Data requirements
 
-- t_z_cool_sp: Cooling setpoint
+- temperature_air_zone_cool_setpoint: Cooling setpoint
   - Data Value Unit: temperature
   - Data point Description: Zone cooling temperature setpoint
   - Data Point Affiliation: Zone control
 
-- t_z_heat_sp: Heating setpoint
+- temperature_air_zone_heat_setpoint: Heating setpoint
   - Data Value Unit: temperature
   - Data point Description: Zone heating temperature setpoint
   - Data Point Affiliation: Zone control

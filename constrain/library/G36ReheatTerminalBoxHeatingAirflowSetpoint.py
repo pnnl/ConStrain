@@ -1,7 +1,10 @@
 """
 ### Description
 
-This verification aims to check if the terminal box with reheat operates correctly when the zone is in heating mode. The control sequence involves two stages based on heating loop output: first adjusting discharge temperature while maintaining minimum airflow, then increasing airflow if more heating is needed.
+Section 5.6.5.3
+- When the Zone State is heating, the Heating Loop shall maintain space temperature at the heating setpoint as follows:
+    - a. From 0% to 50%, the heating-loop output shall reset the discharge temperature setpoint from the current AHU SAT setpoint to a maximum of Max Delta T above space temperature setpoint. The active airflow setpoint shall be the heating minimum endpoint.
+    - b. From 51% to 100%, if the DAT is greater than room temperature plus 3°C (5°F), the heating-loop output shall reset the active airflow setpoint from the heating minimum endpoint to the heating maximum endpoint.
 
 ### Code requirement
 
@@ -33,25 +36,25 @@ The verification checks the control sequence in two stages:
 ```python
 switch mode_system:
     case 'occupied':
-        heating_maximum = max(v_heat_min, v_min)
-        heating_minimum = max(v_heat_min, v_min)
+        heating_maximum = max(flow_volumetric_air_heat_min, flow_volumetric_air_setpoint_min)
+        heating_minimum = max(flow_volumetric_air_heat_min, flow_volumetric_air_setpoint_min)
     case 'cooldown':
-        heating_maximum = v_heat_max
-        heating_minimum = v_heat_min
+        heating_maximum = flow_volumetric_air_heat_max
+        heating_minimum = flow_volumetric_air_heat_min
     case 'setup', 'unoccupied':
         heating_maximum = 0
         heating_minimum = 0
     case 'warmup', 'setback':
-        heating_maximum = v_heat_max
-        heating_minimum = v_cool_max
+        heating_maximum = flow_volumetric_air_heat_max
+        heating_minimum = flow_volumetric_air_cool_max
 
 if 0 < signal_heat <= 50:
-    if abs(v_sp - heating_minimum) <= tol_v and t_sa_sp <= t_discharge_sp <= 11 + t_space_sp:
+    if abs(flow_volumetric_air_setpoint - heating_minimum) <= tolerance and temperature_air_supply <= temperature_air_discharge_setpoint <= 11 + temperature_air_space_setpoint:
         pass
     else:
         fail
 elif 50 < signal_heat <= 100:
-    if t_discharge > t_room + 3 and heating_minimum <= v_sp <= heating_maximum:
+    if temperature_air_discharge > temperature_air_room + 3 and heating_minimum <= flow_volumetric_air_setpoint <= heating_maximum:
         pass
     else:
         untested
@@ -69,34 +72,29 @@ elif 50 < signal_heat <= 100:
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_cool_max: Maximum cooling airflow
+- flow_volumetric_air_cool_max: Maximum cooling airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Maximum cooling airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_heat_max: Maximum heating airflow
+- flow_volumetric_air_heat_max: Maximum heating airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Maximum heating airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_heat_min: Minimum heating airflow
+- flow_volumetric_air_heat_min: Minimum heating airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Minimum heating airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_min: Minimum airflow
+- flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- v_sp: Airflow setpoint
+- flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
-  - Data Point Affiliation: Zone airflow control
-
-- tol_v: Airflow tolerance
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow tolerance
   - Data Point Affiliation: Zone airflow control
 
 - signal_heat: Zone heating loop signal
@@ -104,27 +102,27 @@ elif 50 < signal_heat <= 100:
   - Data point Description: Zone heating loop signal (0-100)
   - Data Point Affiliation: Zone temperature control
 
-- t_room: Room temperature
+- temperature_air_room: Room temperature
   - Data Value Unit: temperature
   - Data point Description: Room temperature
   - Data Point Affiliation: Zone monitoring
 
-- t_space_sp: Space temperature setpoint
+- temperature_air_space_setpoint: Space temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Space temperature setpoint
   - Data Point Affiliation: Zone control
 
-- t_sa_sp: Supply air temperature setpoint
+- temperature_air_supply: Supply air temperature
   - Data Value Unit: temperature
-  - Data point Description: Supply air temperature setpoint
+  - Data point Description: Supply air temperature
   - Data Point Affiliation: AHU control
 
-- t_discharge: Discharge air temperature
+- temperature_air_discharge: Discharge air temperature
   - Data Value Unit: temperature
   - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
-- t_discharge_sp: Discharge air temperature setpoint
+- temperature_air_discharge_setpoint: Discharge air temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control

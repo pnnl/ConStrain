@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the cooling-only terminal box airflow control operates correctly when the zone is in cooling mode. The active airflow setpoint should be properly mapped between minimum and maximum cooling endpoints based on the system's operation mode.
+Section 5.5.5.1   
+- When the Zone State is cooling, the cooling-loop output shall be mapped to the active airflow setpoint from the minimum endpoint to the cooling maximum endpoint.
 
 ### Code requirement
 
@@ -27,16 +28,16 @@ The verification checks that when the zone is in cooling mode, the active airflo
 ```
 switch mode_system
 case 'occupied'
-    cooling_maximum = v_cool_max
-    minimum = v_min
+    cooling_maximum = flow_volumetric_air_cool_max
+    minimum = flow_volumetric_air_setpoint_min
 case 'cooldown', 'setup'
-    cooling_maximum = v_cool_max
+    cooling_maximum = flow_volumetric_air_cool_max
     minimum = 0
 case 'warmup', 'setback', 'unoccupied'
     cooling_maximum = 0
     minimum = 0
 
-if minimum <= v_sp <= cooling_maximum
+if minimum <= flow_volumetric_air_setpoint <= cooling_maximum
     pass
 else
     fail
@@ -55,17 +56,17 @@ end
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_cool_max: Maximum cooling airflow
+- flow_volumetric_air_cool_max: Maximum cooling airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Maximum cooling airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- v_min: Minimum airflow
+- flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- v_sp: Airflow setpoint
+- flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control

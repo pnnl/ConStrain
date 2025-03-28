@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the second stage of freeze protection control operates correctly. When supply air temperature drops below a more critical threshold, the system should completely close outdoor air dampers for a specified duration to prevent freezing conditions.
+Section 5.16.12.2.	
+- If the supply air temperature drops below 3.3°C (38°F) for 5 minutes, fully close both the economizer damper and the minimum outdoor air damper for 1 hour and set a Level 3 alarm noting that minimum ventilation was interrupted. After 1 hour, the unit shall resume minimum outdoor air ventilation and enter the previous stage of freeze protection.
 
 ### Code requirement
 
@@ -25,23 +26,23 @@ The verification monitors supply air temperature and outdoor air damper position
 ### Verification Algorithm Pseudo Code
 
 ```python
-if t_sa < 3.3 (continuously 5 minutes) and pos_damper_oa > 0 (ever in the following hour):
+if temperature_air_supply_setpoint < 3.3 (continuously 5 minutes) and position_damper_air_outdoor > 0 (ever in the following hour):
     fail
 else:
     pass
 
-if never (t_sa < 3.3 (continuously 5 minutes)):
+if never (temperature_air_supply_setpoint < 3.3 (continuously 5 minutes)):
     untested
 ```
 
 ### Data requirements
 
-- t_sa: Supply air temperature
+- temperature_air_supply_setpoint: Supply air temperature
   - Data Value Unit: °C
   - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit

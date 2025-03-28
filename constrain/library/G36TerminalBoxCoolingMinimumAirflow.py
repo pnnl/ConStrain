@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the terminal box maintains appropriate minimum airflow setpoints during cooling operation. When supply air is warmer than room temperature, the airflow should be limited to prevent unnecessary heating.
+Section 5.5.5.1.a and Section 5.6.5.1.a
+- If supply air temperature from the air handler is greater than room temperature, the active airflow setpoint shall be no higher than the minimum endpoint.
 
 ### Code requirement
 
@@ -28,16 +29,16 @@ The test is considered untested if supply air temperature is not above room temp
 ### Verification Algorithm Pseudo Code
 
 ```python
-if t_sa_sp <= t_room:
+if temperature_air_supply_setpoint <= temperature_air_room:
     untested
 else:
     match mode_system:
         case 'occupied':
-            minimum = v_min
+            minimum = flow_volumetric_air_setpoint_min
         case 'cooldown' | 'setup' | 'warmup' | 'setback' | 'unoccupied':
             minimum = 0
 
-    if v_sp - tol_v > minimum:
+    if flow_volumetric_air_setpoint > minimum:
         fail
     else:
         pass
@@ -55,27 +56,22 @@ else:
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_min: Minimum airflow
+- flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- t_sa_sp: Supply air temperature setpoint
+- temperature_air_supply_setpoint: Supply air temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: AHU control
 
-- v_sp: Airflow setpoint
+- flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- tol_v: Airflow tolerance
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow tolerance
-  - Data Point Affiliation: Zone airflow control
-
-- t_room: Room temperature
+- temperature_air_room: Room temperature
   - Data Value Unit: temperature
   - Data point Description: Room temperature
   - Data Point Affiliation: Zone monitoring

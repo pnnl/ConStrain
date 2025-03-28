@@ -1,13 +1,15 @@
 """
 ### Description
 
-This verification aims to check if guest room ventilation rates are properly controlled based on occupancy status. The system should automatically turn off ventilation during unrented periods and provide appropriate ventilation when rooms are rented.
+Section 6.4.3.3.5.2 Guest Room Ventilation Control
+Within 30 minutes of all occupants leaving the guest room, ventilation and exhaust fans shall automatically be turned off, or isolation devices serving each guest room shall automatically 
+shut off the supply of outdoor air to the guest room and shut off exhaust air from the guest room.
 
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
 - Code Year: 2016
-- Code Section: 6.4.3.3.5 Automatic Control of HVAC in Hotel/Motel Guest Rooms
+- Code Section: 6.4.3.3.5.2 Guest Room Ventilation Control
 
 ### Verification Approach
 
@@ -32,15 +34,15 @@ The verification checks two scenarios:
 
 ```python
 for each day:
-    if room_not_rented (occupancy ≈ 0 all day):
-        if outdoor_air_flow == 0:
+    if room_not_rented (schedule_occupancy ≈ 0 all day):
+        if flow_volumetric_air_outdoor == 0:
             pass  # Proper ventilation shutoff
         else:
             fail  # Ventilation not shut off
     else:  # room is rented
-        if outdoor_air_flow > 0:
-            if outdoor_air_flow == area_based_minimum or
-               daily_total_flow == zone_volume:
+        if flow_volumetric_air_outdoor > 0:
+            if flow_volumetric_air_outdoor == flow_volumetric_air_outdoor_per_area * area_zone or
+               daily_total_flow == area_zone * height_zone:
                 pass  # Proper ventilation provided
             else:
                 fail  # Incorrect ventilation rate
@@ -50,7 +52,7 @@ for each day:
 
 ### Data requirements
 
-- v_oa: Outdoor air flow rate
+- flow_volumetric_air_outdoor: Outdoor air flow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: Zone ventilation
@@ -70,19 +72,9 @@ for each day:
   - Data point Description: Zone height
   - Data Point Affiliation: Zone configuration
 
-- v_oa_per_area: Outdoor air requirement
+- flow_volumetric_air_outdoor_per_area: Outdoor air requirement
   - Data Value Unit: volumetric flow rate per area
   - Data point Description: Zone outdoor air requirement
-  - Data Point Affiliation: Zone ventilation
-
-- tol_occupants: Occupancy tolerance
-  - Data Value Unit: fraction
-  - Data point Description: Occupancy schedule tolerance
-  - Data Point Affiliation: Zone occupancy
-
-- tol_v_oa: Flow tolerance
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor air volume flow rate tolerance
   - Data Point Affiliation: Zone ventilation
 
 """
@@ -102,7 +94,9 @@ class GuestRoomControlVent(CheckLibBase):
 
     def verify(self):
         zone_volume = self.df["area_zone"][0] * self.df["height_zone"][0]
-        m_z_oa_set = self.df["v_outdoor_per_zone"][0] * self.df["area_z"][0]
+        m_z_oa_set = (
+            self.df["flow_volumetric_air_outdoor_per_area"][0] * self.df["area_zone"][0]
+        )
 
         year_info = 2000
         result_repo = []

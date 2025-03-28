@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if heat pump supplemental heating is properly locked out when the heat pump's capacity exceeds the heating load. Supplemental heating should only operate during defrost cycles or when the heat pump alone cannot meet the load.
+Section 6.4.3.5 Heat Pump Auxiliary Heat Control
+- Heat pumps equipped with internal electric resistance heaters shall have controls that prevent supplemental heater operation when the heating load can be met by the heat pump alone during both steady-state operation and setback recovery. Supplemental heater operation is permitted during outdoor coil defrost cycles.
 
 ### Code requirement
 
@@ -28,13 +29,13 @@ The verification checks three conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-operating_capacity = heating coil ref capacity * heating capacity fractions
+operating_capacity = capacity_full_load * capacity_modifier_temperature * capacity_modifier_fraction_flow
 
-if heating coil gas rate == 0:
+if power_heating_supplemental == 0:
     pass
-elif defrost_active > 0:
+elif load_defrost > 0:
     pass
-elif operating_capacity > heating runtime fraction + tolerance:
+elif operating_capacity > load_operation + tolerance:
     fail 
 else:
     pass  
@@ -42,40 +43,35 @@ else:
 
 ### Data requirements
 
-- C_ref: Heating coil reference capacity
+- capacity_full_load: Heating coil reference capacity
   - Data Value Unit: power
   - Data point Description: Reference capacity
   - Data Point Affiliation: Equipment specifications
 
-- L_op: Heating coil runtime fraction
+- load_operation: Heating coil runtime fraction
   - Data Value Unit: power
   - Data point Description: Operating load
   - Data Point Affiliation: System monitoring
 
-- C_t_mod: heating coil heating rate
+- capacity_modifier_temperature: heating coil heating rate
   - Data Value Unit: power
   - Data point Description: Supplemental heating power
   - Data Point Affiliation: System monitoring
 
-- P_supp_ht: Heating coil gas rate
+- power_heating_supplemental: Heating coil gas rate
   - Data Value Unit: fraction
   - Data point Description: Temperature capacity modifier
   - Data Point Affiliation: Equipment performance
 
-- C_ff_mod: Heating capacity function of flow fraction curve
+- capacity_modifier_fraction_flow: Heating capacity function of flow fraction curve
   - Data Value Unit: fraction
   - Data point Description: Flow capacity modifier
   - Data Point Affiliation: Equipment performance
 
-- L_defrost: Defrost load on the heating coil
+- load_defrost: Defrost load on the heating coil
   - Data Value Unit: binary
   - Data point Description: Defrost flag
   - Data Point Affiliation: System operation
-
-- tol_L_op_capacity: Heating coil runtime fraction tolerance
-  - Data Value Unit: unitless
-  - Data point Description: tolerance
-  - Data Point Affiliation: System configuration
 
 """
 
@@ -84,23 +80,23 @@ from constrain.checklib import RuleCheckBase
 
 class HeatPumpSupplementalHeatLockout(RuleCheckBase):
     points = [
-        "C_ref",
-        "L_operation",
-        "P_supp_ht",
-        "C_t_mod",
-        "C_ff_mod",
-        "L_defrost",
+        "capacity_full_load",
+        "load_operation",
+        "power_heating_supplemental",
+        "capacity_modifier_temperature",
+        "capacity_modifier_fraction_flow",
+        "load_defrost",
     ]
 
     def heating_coil_verification(self, data):
-        if data["P_supp_ht"] == 0:
+        if data["power_heating_supplemental"] == 0:
             data["result"] = 1  # True
         else:
-            if data["L_defrost"] > 0:
+            if data["load_defrost"] > 0:
                 data["result"] = 1
             else:
                 if data["C_op"] > (
-                    data["L_operation"] + self.get_tolerance("load", "general")
+                    data["load_operation"] + self.get_tolerance("load", "general")
                 ):
                     data["result"] = 0  # False
                 else:
@@ -108,7 +104,7 @@ class HeatPumpSupplementalHeatLockout(RuleCheckBase):
         return data
 
     def verify(self):
-        self.df["C_op"] = self.df["C_ref"] * self.df["C_t_mod"] * self.df["C_ff_mod"]
+        self.df["C_op"] = self.df["capacity_full_load"] * self.df["capacity_modifier_temperature"] * self.df["capacity_modifier_fraction_flow"]
         self.df["result"] = "Untested"
         self.df = self.df.apply(lambda r: self.heating_coil_verification(r), axis=1)
         self.result = self.df["result"]

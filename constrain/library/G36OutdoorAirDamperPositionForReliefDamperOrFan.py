@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the outdoor air damper operates correctly in systems with relief dampers or fans. The damper position should respond appropriately to heating/cooling modes and economizer status while coordinating with return air damper position.
+Section 5.16.2.3
+- Supply air temperature shall be controlled to setpoint using a control loop whose output is mapped to sequence the heating coil (if applicable), outdoor air damper, return air damper, and cooling coil.
 
 ### Code requirement
 
@@ -29,29 +30,29 @@ The verification checks outdoor air damper position under various operating cond
 ### Verification Algorithm Pseudo Code
 
 ```python
-if q_heat > 0:
-    if abs(pos_damper_oa - pos_damper_oa_min) < tol_pos_damper_oa:
+if output_coil_heating > 0:
+    if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) < 0:
         pass
     else:
         fail
-elif q_cool > 0:
+elif output_coil_cooling > 0:
     if flag_economizer_limit:
-        if abs(pos_damper_oa - pos_damper_oa_min) < tol_pos_damper_oa:
+        if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) < 0:
             pass
         else:
             fail
     else:
-        if abs(pos_damper_oa - pos_damper_oa_max) < tol_pos_damper_oa:
+        if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0:
             pass
         else:
             fail
-elif pos_damper_ra < pos_damper_ra_max:
-    if abs(pos_damper_oa - pos_damper_oa_max) < tol_pos_damper_ra:
+elif position_damper_air_return < position_damper_air_return_max:
+    if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0:
         pass
     else:
         fail
-elif abs(pos_damper_ra - pos_damper_ra_max) < tol_pos_damper_ra:
-    if pos_damper_oa_min < pos_damper_oa < pos_damper_oa_max:
+elif abs(position_damper_air_return - position_damper_air_return_max) < 0:
+    if position_damper_air_outdoor_min < position_damper_air_outdoor < position_damper_air_outdoor_max:
         pass
     else:
         fail
@@ -61,49 +62,39 @@ else:
 
 ### Data requirements
 
-- q_heat: Heating signal
+- output_coil_heating: Heating signal
   - Data Value Unit: percent
   - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: Air handling unit
 
-- q_cool: Cooling signal
+- output_coil_cooling: Cooling signal
   - Data Value Unit: percent
   - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_ra: Return air damper command
+- position_damper_air_return: Return air damper command
   - Data Value Unit: percent
   - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_ra_max: Maximum return air damper command
+- position_damper_air_return_max: Maximum return air damper command
   - Data Value Unit: percent
   - Data point Description: Maximum return air damper command
   - Data Point Affiliation: Air handling unit
 
-- tol_pos_damper_ra: Return air damper command tolerance
-  - Data Value Unit: percent
-  - Data point Description: Return air damper command tolerance
-  - Data Point Affiliation: Air handling unit
-
-- pos_damper_oa: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa_min: Minimum outdoor air damper command
+- position_damper_air_outdoor_min: Minimum outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Minimum outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa_max: Maximum outdoor air damper command
+- position_damper_air_outdoor_max: Maximum outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Maximum outdoor air damper command
-  - Data Point Affiliation: Air handling unit
-
-- tol_pos_damper_oa: Outdoor air damper command tolerance
-  - Data Value Unit: percent
-  - Data point Description: Outdoor air damper command tolerance
   - Data Point Affiliation: Air handling unit
 
 - flag_economizer_limit: Economizer high limit flag

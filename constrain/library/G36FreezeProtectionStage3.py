@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the third (highest) stage of freeze protection control operates correctly. When severe freezing conditions are detected, the system should shut down fans, close outdoor air dampers, and adjust coil valves to prevent damage.
+Section 5.16.12.3.	
+- Upon signal from the freeze-stat (if installed), or if supply air temperature drops below 3.3°C (38°F) for 15 minutes or below 1°C (34°F) for 5 minutes, shut down supply and return/relief fan(s), close outdoor air damper, open the cooling-coil valve to 100%, and energize the CHW pump system. Also send two (or more, as required to ensure that heating plant is active) heating hot-water plant requests, modulate the heating coil to maintain the higher of the supply air temperature or the mixed air temperature at 27°C (80°F), and set a Level 2 alarm indicating the unit is shut down by freeze protection.
 
 ### Code requirement
 
@@ -25,67 +26,67 @@ The verification monitors multiple conditions that can trigger stage 3 protectio
 ### Verification Algorithm Pseudo Code
 
 ```python
-if t_sa < 3.3 (continuously 15 minutes) or
-  t_sa < 1 (continuously 5 minutes) or
-  flag_freeze == True:
+if supply_air_temp < 3.3 (continuously 15 minutes) or
+  supply_air_temp < 1 (continuously 5 minutes) or
+  freeze_stat == True:
     if not (
-        pos_damper_oa == 0 and
-        status_fan_supply == 'off' and
-        status_fan_return == 'off' and
-        status_fan_relief == 'off' and
-        cmd_coil_cool == 100 and
-        cmd_coil_heat > 0
+        outdoor_damper_command == 0 and
+        supply_fan_status == 'off' and
+        return_fan_status == 'off' and
+        relief_fan_status == 'off' and
+        cooling_coil_command == 100 and
+        heating_coil_command > 0
     ):
         fail
     else:
         pass
 
 if never (
-    t_sa < 3.3 (continuously 15 minutes) or
-    t_sa < 1 (continuously 5 minutes) or
-    flag_freeze == True
+    supply_air_temp < 3.3 (continuously 15 minutes) or
+    supply_air_temp < 1 (continuously 5 minutes) or
+    freeze_stat == True
 ):
     untested
 ```
 
 ### Data requirements
 
-- flag_freeze: Freeze protection flag
+- freeze_stat: Freeze protection flag
   - Data Value Unit: binary
   - Data point Description: Freeze protection flag
   - Data Point Affiliation: Air handling unit
 
-- t_sa: Supply air temperature
+- supply_air_temp: Supply air temperature
   - Data Value Unit: °C
   - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_oa: Outdoor air damper command
+- outdoor_damper_command: Outdoor air damper command
   - Data Value Unit: percent
   - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
-- status_fan_supply: Supply fan status
+- supply_fan_status: Supply fan status
   - Data Value Unit: binary
   - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
 
-- status_fan_return: Return fan status
+- return_fan_status: Return fan status
   - Data Value Unit: binary
   - Data point Description: Return fan status
   - Data Point Affiliation: Air handling unit
 
-- status_fan_relief: Relief fan status
+- relief_fan_status: Relief fan status
   - Data Value Unit: binary
   - Data point Description: Relief fan status
   - Data Point Affiliation: Air handling unit
 
-- cmd_coil_cool: Cooling valve command
+- cooling_coil_command: Cooling valve command
   - Data Value Unit: percent
   - Data point Description: Cooling valve command
   - Data Point Affiliation: Air handling unit
 
-- cmd_coil_heat: Heating valve command
+- heating_coil_command: Heating valve command
   - Data Value Unit: percent
   - Data point Description: Heating valve command
   - Data Point Affiliation: Air handling unit

@@ -1,7 +1,12 @@
 """
 ### Description
 
-This verification aims to check if VAV boxes maintain proper minimum turndown ratios during reheat operation. The system should limit airflow to prevent excessive simultaneous heating and cooling while ensuring adequate ventilation.
+Section 6.5.2.1 Zone Controls
+- Zone thermostatic controls shall prevent
+a. reheating;
+b. recooling;
+c. mixing or simultaneously supplying air that has been previously mechanically heated and air that has been previously cooled, either by mechanical cooling or by economizer systems; 
+d. other simultaneous operation of heating and cooling systems to the same zone.
 
 ### Code requirement
 
@@ -31,10 +36,10 @@ The verification monitors airflow during reheat operation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if flag_coil_htg:
-  if v_vav_max == 0:
+if flag_coil_reheat:
+  if flow_volumetric_air_max == 0:
      Untested
-  if v_vav_max > 0.0 and v_vav / v_vav_max > ratio_turndown_min + tol_turndown:
+  if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:
      fail
   else:
      pass
@@ -49,12 +54,12 @@ else:
   - Data point Description: Heating coil flag
   - Data Point Affiliation: Terminal unit control
 
-- v_vav: VAV airflow rate
+- flow_volumetric_air_vav: VAV airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Box volume flow rate
   - Data Point Affiliation: Terminal unit monitoring
 
-- v_vav_max: VAV maximum airflow rate
+- flow_volumetric_air_max: VAV maximum airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Box maximum volume flow rate
   - Data Point Affiliation: Terminal unit configuration
@@ -64,10 +69,6 @@ else:
   - Data point Description: Minimum turndown ratio
   - Data Point Affiliation: Terminal unit configuration
 
-- tol_turndown: Turndown tolerance
-  - Data Value Unit: fraction
-  - Data point Description: Turndown tolerance
-  - Data Point Affiliation: System configuration
 """
 
 from constrain.checklib import RuleCheckBase

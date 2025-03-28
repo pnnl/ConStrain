@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the VAV terminal box damper properly tracks its airflow setpoint. The damper should modulate to maintain measured airflow at the active setpoint within acceptable tolerances.
+Section 5.5.5.4
+- The VAV damper shall be modulated by a control loop to maintain the measured airflow at the active setpoint.
 
 ### Code requirement
 
@@ -30,40 +31,35 @@ The verification monitors airflow tracking performance:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if abs(v_sp - v) >= tol_v_tracking:
+if abs(flow_volumetric_air_setpoint - flow_volumetric_air_discharge) >= 0:
     if tracking_error_duration < 1_hour:
         pass  # Brief deviation acceptable
     else:
-        if (v - v_sp >= tol_v_tracking) and cmd_damper_vav <= 1:
+        if (flow_volumetric_air_discharge - flow_volumetric_air_setpoint >= 0) and command_damper_vav <= 1:
             pass  # Flow too high, damper at minimum
-        elif (v_sp - v >= tol_v_tracking) and cmd_damper_vav >= 99:
+        elif (flow_volumetric_air_setpoint - flow_volumetric_air_discharge >= 0) and command_damper_vav >= 99:
             pass  # Flow too low, damper at maximum
         else:
             fail  # Sustained deviation without appropriate response
 else:
-    pass  # Within tolerance
+    pass
 ```
 
 ### Data requirements
 
-- cmd_damper_vav: Damper command
+- command_damper_vav: Damper command
   - Data Value Unit: percent
   - Data point Description: Damper command
   - Data Point Affiliation: Terminal box control
 
-- v: Airflow rate
+- flow_volumetric_air_discharge: Airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow rate
   - Data Point Affiliation: Terminal box monitoring
 
-- v_sp: Airflow setpoint
+- flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
-  - Data Point Affiliation: Terminal box control
-
-- tol_v_tracking: Airflow tolerance
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow tolerance
   - Data Point Affiliation: Terminal box control
 
 """

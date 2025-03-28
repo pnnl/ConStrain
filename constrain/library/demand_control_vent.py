@@ -1,7 +1,12 @@
 """
 ### Description
 
-This verification aims to check demand control ventilation functionality for high-occupancy areas. The system should adjust outdoor air ventilation based on actual occupancy levels.
+Section 6.4.3.8 Ventilation Controls for High-Occupancy Areas
+- Demand control ventilation (DCV) is required for spaces larger than 500 ft2 and with a design occupancy for ventilation of 25 people per 1000 ft2 of floor area and served by systems with one or more of the following:
+a. Air economizer.
+b. Automatic modulating control of outdoor air damper.
+c. Design outdoor airflow greater than 3000 cfm.
+
 
 ### Code requirement
 
@@ -45,7 +50,7 @@ else:
 
 ### Data requirements
 
-- v_oa: Zone Air Terminal Outdoor Air Volume Flow Rate
+- flow_volumetric_air_outdoor: Zone Air Terminal Outdoor Air Volume Flow Rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: Zone ventilation
@@ -60,7 +65,7 @@ else:
   - Data point Description: Economizer flag
   - Data Point Affiliation: System operation
 
-- n_occupants: People Occupant Count
+- number_occupants: People Occupant Count
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
@@ -102,13 +107,13 @@ class DemandControlVentilation(CheckLibBase):
             else:
                 if corr >= 0.3:
                     self.bool_result = True
-                    self.msg = "positive correlation between v_oa and n_occupants observed, result: pass"
+                    self.msg = "positive correlation between flow_volumetric_air_outdoor and number_occupants observed, result: pass"
                 elif corr < 0.3 and corr > 0:
                     self.bool_result = False
-                    self.msg = "positive correlation between v_oa and n_occupants is too small, result: fail"
+                    self.msg = "positive correlation between flow_volumetric_air_outdoor and number_occupants is too small, result: fail"
                 else:
                     self.bool_result = False
-                    self.msg = "negative correlation between v_oa and n_occupants observed, result: fail"
+                    self.msg = "negative correlation between flow_volumetric_air_outdoor and number_occupants observed, result: fail"
 
         self.result = pd.Series(data=self.bool_result, index=self.df.index)
 

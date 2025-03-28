@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if exterior lighting control operates correctly based on occupancy sensing. The system should automatically reduce lighting power when no activity is detected in the illuminated area.
+Section 9.4.1.4.e Occupancy-sensing light reduction control
+- Occupancy-sensing light reduction control: Lighting shall be controlled to automatically reduce the connected lighting power by a minimum of 50% when no activity has been detected in the area illuminated by the controlled luminaires for a time of no longer than 15 minutes. No more than 1500 W of lighting power shall be controlled together.
 
 ### Code requirement
 
@@ -25,7 +26,7 @@ The verification checks that when no activity is detected for more than 15 minut
 ### Verification Algorithm Pseudo Code
 
 ```
-design_lighting_power = max(p_power_light_total)
+design_lighting_power = max(power_light_total)
 
 # First check maximum power limit
 if design_lighting_power >= 1500:
@@ -33,8 +34,8 @@ if design_lighting_power >= 1500:
 
 # Then check power reduction on no occupancy
 date_diff = current_date - last_reported_occupancy # in min
-if n_occupants < tol_occupants and date_diff > 15:
-    if p_power_light_total <= 0.5 * design_lighting_power:
+if number_occupants < 0 and date_diff > 15:
+    if power_light_total <= 0.5 * design_lighting_power:
         return True
     else:
         return False
@@ -44,20 +45,15 @@ else:
 
 ### Data requirements
 
-- n_occupants: Number of occupants
+- number_occupants: Number of occupants
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- p_power_light_total: Lighting power
+- power_light_total: Lighting power
   - Data Value Unit: power
   - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system
-
-- tol_occupants: Occupancy threshold
-  - Data Value Unit: count
-  - Data point Description: Occupancy tolerance
-  - Data Point Affiliation: Zone occupancy
 
 """
 

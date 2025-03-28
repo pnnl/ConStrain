@@ -1,7 +1,12 @@
 """
 ### Description
 
-This verification aims to check if VAV boxes properly reduce airflow during reheat operation compared to normal cooling operation. The system should maintain lower airflow rates during reheat to minimize simultaneous heating and cooling.
+section 6.5.2.1 Zone Controls
+Zone thermostatic controls shall prevent
+a. reheating;
+b. recooling;
+c. mixing or simultaneously supplying air that has been previously mechanically heated and air that has been previously cooled, either by mechanical cooling or by economizer systems;
+d. other simultaneous operation of heating and cooling systems to the same zone.
 
 ### Code requirement
 
@@ -35,10 +40,10 @@ The verification compares average airflow ratios:
 if no_reheat_periods_exist:
     untested  # Cannot verify without reheat operation
 else:
-    flow_ratio = v_vav / v_vav_max
+    flow_ratio = flow_volumetric_air_vav / flow_volumetric_air_max
     
-    reheat_avg = mean(flow_ratio[flag_coil_htg])
-    normal_avg = mean(flow_ratio[not flag_coil_htg])
+    reheat_avg = mean(flow_ratio[flag_coil_reheat])
+    normal_avg = mean(flow_ratio[not flag_coil_reheat])
     
     if reheat_avg < normal_avg:
         pass  # Proper turndown during reheat
@@ -53,12 +58,12 @@ else:
   - Data point Description: Heating coil flag
   - Data Point Affiliation: Terminal unit control
 
-- v_vav: VAV airflow rate
+- flow_volumetric_air_vav: VAV airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Box volume flow rate
   - Data Point Affiliation: Terminal unit monitoring
 
-- v_vav_max: VAV maximum airflow rate
+- flow_volumetric_air_max: VAV maximum airflow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Box maximum volume flow rate
   - Data Point Affiliation: Terminal unit configuration

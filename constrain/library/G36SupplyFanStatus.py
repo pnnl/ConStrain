@@ -1,7 +1,9 @@
 """
 ### Description
 
-This verification aims to check if the supply fan operates correctly based on system mode and zone configuration. The fan operation requirements vary depending on whether the system serves VAV reheat boxes in perimeter zones.
+Section 5.16.1.1
+- a. Supply fan shall run when system is in the Cooldown Mode, Setup Mode, or Occupied Mode.
+- b. If there are any VAV-reheat boxes on perimeter zones, supply fan shall also run when system is in Setback Mode or Warmup Mode (i.e., all modes except unoccupied).
 
 ### Code requirement
 

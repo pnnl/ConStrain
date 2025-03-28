@@ -1,7 +1,7 @@
 """
 ### Description
 
-This verification aims to check if a direct-acting control loop properly saturates its actuator to minimum position when the controlled variable remains consistently below setpoint. This behavior is essential for maintaining proper control response and system stability.
+- This verification checks that a direct acting control loop would saturate its actuator to minimum when the error is consistently below the set point.
 
 ### Code requirement
 
@@ -32,10 +32,10 @@ The verification monitors control loop behavior when error persists:
 ```python
 error_duration = 0
 for each timestep:
-    if feedback_sensor < setpoint:  # Negative error
+    if value_sensor < value_setpoint:  # Negative error
         error_duration += timestep_size
         if error_duration >= 1_hour:
-            if cmd - cmd_min <= 0.01:  # Within 1% of minimum
+            if command_control - command_min <= 0.01:  # Within 1% of minimum
                 pass  # Proper saturation
             else:
                 fail  # Should be at minimum
@@ -45,22 +45,22 @@ for each timestep:
 
 ### Data requirements
 
-- val_sensor: Process variable
+- value_sensor: Process variable
   - Data Value Unit: varies by application
   - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
-- val_setpoint: Control setpoint
-  - Data Value Unit: same as val_sensor
+- value_setpoint: Control setpoint
+  - Data Value Unit: same as value_sensor
   - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 
-- cmd: Actuator command
+- command_control: Actuator command
   - Data Value Unit: percent
   - Data point Description: Control output
   - Data Point Affiliation: Control loop output
 
-- cmd_min: Minimum command
+- command_min: Minimum command
   - Data Value Unit: percent
   - Data point Description: Minimum output
   - Data Point Affiliation: Control loop configuration

@@ -1,7 +1,10 @@
 """
 ### Description
 
-This verification aims to check if heat rejection fan power varies appropriately with flow rate in variable flow systems. The fan power should follow a cubic relationship with flow rate to achieve energy savings at part-load conditions.
+Section 6.5.5.2.1
+The fan system on a heat-rejection device powered by an individual motor or an array of motors with a connected power, including the motor service factor, totaling 5 hp or more 
+shall have controls and/or devices (such as variable-speed control) that shall result in fan motor demand of no more than 30% of design wattage at 50% of the design airflow and that 
+shall automatically modulate the fan speed to control the leaving fluid temperature or condensing temperature/pressure of the heat-rejection device.
 
 ### Code requirement
 
@@ -31,8 +34,9 @@ The verification analyzes the relationship between normalized fan power and norm
 
 ```python
 # Normalize data
-normalized_flow = fan_flow / design_flow
-normalized_power = fan_power / design_power
+fan_flow = ratio_flow_coolingtower * flow_volumetric_air_coolingtower_design
+normalized_flow = fan_flow / flow_volumetric_air_coolingtower_design
+normalized_power = power_fan_coolingtower / power_fan_coolingtower_design
 
 # Transform data for analysis
 transformed_flow = normalized_flow - 1
@@ -52,22 +56,22 @@ else:
 
 ### Data requirements
 
-- p_power_fan_ct: Fan power
+- power_fan_coolingtower: Fan power
   - Data Value Unit: power
   - Data point Description: Cooling tower fan power
   - Data Point Affiliation: Fan monitoring
 
-- ratio_flow_ct: Flow ratio
+- ratio_flow_coolingtower: Flow ratio
   - Data Value Unit: fraction
   - Data point Description: Cooling tower fan flow ratio
   - Data Point Affiliation: Fan control
 
-- p_power_fan_ct_design: Design power
+- power_fan_coolingtower_design: Design power
   - Data Value Unit: power
   - Data point Description: Cooling tower fan design power
   - Data Point Affiliation: Equipment specifications
 
-- v_ct_design: Design flow
+- flow_volumetric_air_coolingtower_design: Design flow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Cooling tower fan design flow rate
   - Data Point Affiliation: Equipment specifications

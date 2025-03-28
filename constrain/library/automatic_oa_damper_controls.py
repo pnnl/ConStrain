@@ -1,7 +1,9 @@
 """
 ### Description
 
-This verification aims to check if the outdoor air damper control operates correctly based on occupancy. The system should close outdoor air dampers when spaces are not occupied, except during economizer operation.
+Section 6.4.3.4.2 Shutoff Damper Controls 
+- All outdoor air intake and exhaust systems shall be equipped with motorized dampers that will automatically shut when the systems or spaces served are not in use. 
+Ventilation outdoor air and exhaust/relief dampers shall be capable of and configured to automatically shut off during preoccupancy building warm-up, cooldown, and setback, except when ventilation reduces energy costs or when ventilation must be supplied to meet code requirements.
 
 ### Code requirement
 
@@ -24,7 +26,7 @@ The verification checks that when a space is unoccupied and the economizer is no
 ### Verification Algorithm Pseudo Code
 
 ```
-if n_occupants <= 0 + tol and v_ea + v_oa > 0 and status_economizer = 0
+if number_occupants <= 0 and flow_volumetric_air_exhaust + flow_volumetric_air_outdoor > 0 and status_economizer = 0
     return false
 else
     return pass
@@ -32,17 +34,17 @@ else
 
 ### Data requirements
 
-- n_occupants: Number of occupants
+- number_occupants: Number of occupants
   - Data Value Unit: count
   - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
-- v_oa: System outdoor air volume flow rate
+- flow_volumetric_air_outdoor: System outdoor air volume flow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: System ventilation
 
-- v_ea: System exhaust air volume flow rate
+- flow_volumetric_air_exhaust: System exhaust air volume flow rate
   - Data Value Unit: volumetric flow rate
   - Data point Description: Exhaust air volume flow rate
   - Data Point Affiliation: System ventilation
@@ -51,21 +53,6 @@ else
   - Data Value Unit: binary
   - Data point Description: Economizer flag
   - Data Point Affiliation: System operation
-
-- tol_occupants: Tolerance for occupancy
-  - Data Value Unit: count
-  - Data point Description: Occupancy tolerance
-  - Data Point Affiliation: Zone occupancy
-
-- tol_v_oa: Tolerance for outdoor air flow
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor air volume flow rate tolerance
-  - Data Point Affiliation: System ventilation
-
-- tol_v_ea: Tolerance for exhaust air flow
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Exhaust air volume flow rate tolerance
-  - Data Point Affiliation: System ventilation
 
 """
 

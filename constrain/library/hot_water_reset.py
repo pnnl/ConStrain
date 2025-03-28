@@ -1,7 +1,10 @@
 """
 ### Description
 
-This verification aims to check if the hot water temperature reset control operates correctly based on outdoor air temperature. The system should adjust hot water temperature setpoints to optimize energy efficiency while maintaining comfort.
+6.5.4.4 Chilled- and Hot-Water Temperature Reset Controls
+- Chilled- and hot-water systems with a design capacity exceeding 300,000 Btu/h supplying chilled or heated water to comfort conditioning systems shall include controls that automatically
+reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. Where DDC is used to control valves, the
+set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached.
 
 ### Code requirement
 
@@ -31,20 +34,20 @@ Note: Verification is bypassed when there is no hot water flow.
 ### Verification Algorithm Pseudo Code
 
 ```python
-if hot_water_flow <= 0:
+if flow_mass_water_hot <= 0:
     pass  # No flow condition
-elif outdoor_temp <= outdoor_min:
-    if hot_water_temp >= hot_water_max_sp * 0.99:
+elif temperature_air_outdoor <= temperature_air_outdoor_min:
+    if temperature_water_hot >= temperature_water_hot_setpoint_max * 0.99:
         pass  # Proper reset at low outdoor temp
     else:
         fail
-elif outdoor_temp >= outdoor_max:
-    if hot_water_temp <= hot_water_min_sp * 1.01:
+elif temperature_air_outdoor >= temperature_air_outdoor_max:
+    if temperature_water_hot <= temperature_water_hot_setpoint_min * 1.01:
         pass  # Proper reset at high outdoor temp
     else:
         fail
-elif outdoor_min < outdoor_temp < outdoor_max:
-    if hot_water_min_sp * 0.99 <= hot_water_temp <= hot_water_max_sp * 1.01:
+elif temperature_air_outdoor_min < temperature_air_outdoor < temperature_air_outdoor_max:
+    if temperature_water_hot_setpoint_min * 0.99 <= temperature_water_hot <= temperature_water_hot_setpoint_max * 1.01:
         pass  # Proper reset during intermediate conditions
     else:
         fail
@@ -52,37 +55,37 @@ elif outdoor_min < outdoor_temp < outdoor_max:
 
 ### Data requirements
 
-- t_oa: Outdoor temperature
+- temperature_air_outdoor: Outdoor temperature
   - Data Value Unit: °C
   - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
-- t_oa_max: Maximum outdoor temperature
+- temperature_air_outdoor_max: Maximum outdoor temperature
   - Data Value Unit: °C
   - Data point Description: Maximum outdoor air temperature
   - Data Point Affiliation: System configuration
 
-- t_oa_min: Minimum outdoor temperature
+- temperature_air_outdoor_min: Minimum outdoor temperature
   - Data Value Unit: °C
   - Data point Description: Minimum outdoor air temperature
   - Data Point Affiliation: System configuration
 
-- t_hw: Hot water temperature
+- temperature_water_hot: Hot water temperature
   - Data Value Unit: °C
   - Data point Description: Hot water temperature
   - Data Point Affiliation: System monitoring
 
-- m_hw: Hot water flow
+- flow_mass_water_hot: Hot water flow
   - Data Value Unit: mass flow rate
   - Data point Description: Hot water mass flow rate
   - Data Point Affiliation: System monitoring
 
-- t_hw_max_sp: Maximum temperature setpoint
+- temperature_water_hot_setpoint_max: Maximum temperature setpoint
   - Data Value Unit: °C
   - Data point Description: Hot water maximum temperature setpoint
   - Data Point Affiliation: System control
 
-- t_hw_min_sp: Minimum temperature setpoint
+- temperature_water_hot_setpoint_min: Minimum temperature setpoint
   - Data Value Unit: °C
   - Data point Description: Hot water minimum temperature setpoint
   - Data Point Affiliation: System control

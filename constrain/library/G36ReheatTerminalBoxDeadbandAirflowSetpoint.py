@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the terminal box with reheat operates correctly when the zone is in deadband mode. The airflow setpoint should be at minimum endpoint, and the heating coil should remain disabled unless discharge air temperature falls below minimum.
+Section 5.6.5.2
+- When the Zone State is deadband, the active airflow setpoint shall be the minimum endpoint. Heating coil is disabled unless the DAT is below the minimum setpoint
 
 ### Code requirement
 
@@ -27,16 +28,16 @@ The verification checks two conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if t_discharge > t_discharge_min_sp and cmd_coil_heat > tol_cmd_coil_heat:
+if temperature_air_discharge > temperature_air_discharge_setpoint_min and command_coil_heat > 0:
     fail
 else:
     switch mode_system:
         case 'occupied':
-            minimum = v_min
+            minimum = flow_volumetric_air_setpoint_min
         case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied':
             minimum = 0
 
-    if abs(v_sp - minimum) <= tol_v:
+    if abs(flow_volumetric_air_setpoint - minimum) <= 0:
         pass
     else:
         fail
@@ -54,37 +55,27 @@ else:
   - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
-- v_min: Minimum airflow
+- flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
   - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
-- v_sp: Airflow setpoint
+- flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
-- tol_v: Airflow tolerance
-  - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow tolerance
-  - Data Point Affiliation: Zone airflow control
-
-- cmd_coil_heat: Heating coil command
+- command_coil_heat: Heating coil command
   - Data Value Unit: percent
   - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- tol_cmd_coil_heat: Heating coil command tolerance
-  - Data Value Unit: percent
-  - Data point Description: Heating coil command tolerance
-  - Data Point Affiliation: Terminal box control
-
-- t_discharge: Discharge air temperature
+- temperature_air_discharge: Discharge air temperature
   - Data Value Unit: temperature
   - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
-- t_discharge_min_sp: Minimum discharge air temperature setpoint
+- temperature_air_discharge_setpoint_min: Minimum discharge air temperature setpoint
   - Data Value Unit: temperature
   - Data point Description: Minimum discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control

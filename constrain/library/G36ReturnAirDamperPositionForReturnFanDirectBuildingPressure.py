@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the return air damper operates correctly in systems with return fan direct building pressure control. The damper position should respond appropriately to heating/cooling modes while allowing the return fan to maintain building pressure through speed control.
+Section 5.16.2.3
+- Supply air temperature shall be controlled to setpoint using a control loop whose output is mapped to sequence the heating coil (if applicable), outdoor air damper, return air damper, and cooling coil
 
 ### Code requirement
 
@@ -28,17 +29,17 @@ The verification checks return air damper position under three conditions:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if q_heat > 0:
-    if abs(pos_damper_ra - pos_damper_ra_max) < tol_pos_damper_ra:
+if output_coil_heating > 0:
+    if abs(position_damper_air_return - position_damper_air_return_max) < 0:
         pass
     else:
         fail
-elif q_cool > 0:
-    if abs(pos_damper_ra - 0) < tol_pos_damper_ra:
+elif output_coil_cooling > 0:
+    if abs(position_damper_air_return - 0) < 0:
         pass
     else:
         fail
-elif 0 < pos_damper_ra < pos_damper_ra_max:
+elif 0 < position_damper_air_return < position_damper_air_return_max:
     pass
 else:
     fail
@@ -46,29 +47,24 @@ else:
 
 ### Data requirements
 
-- q_heat: Heating signal
+- output_coil_heating: Heating signal
   - Data Value Unit: percent
   - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: System control
 
-- q_cool: Cooling signal
+- output_coil_cooling: Cooling signal
   - Data Value Unit: percent
   - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: System control
 
-- pos_damper_ra: Return air damper command
+- position_damper_air_return: Return air damper command
   - Data Value Unit: percent
   - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
 
-- pos_damper_ra_max: Maximum return air damper command
+- position_damper_air_return_max: Maximum return air damper command
   - Data Value Unit: percent
   - Data point Description: Maximum return air damper command
-  - Data Point Affiliation: Air handling unit
-
-- tol_pos_damper_ra: Return air damper command tolerance
-  - Data Value Unit: percent
-  - Data point Description: Return air damper command tolerance
   - Data Point Affiliation: Air handling unit
 
 """

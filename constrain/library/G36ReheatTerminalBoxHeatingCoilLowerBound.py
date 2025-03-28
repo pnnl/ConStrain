@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the terminal box heating coil maintains the minimum discharge air temperature requirement during occupied mode. The heating coil should modulate to prevent the discharge air temperature from falling below the specified minimum.
+Section 5.6.5.4.
+- In Occupied Mode, the heating coil shall be modulated to maintain a DAT no lower than 10°C.
 
 ### Code requirement
 
@@ -28,7 +29,7 @@ The verification checks that during occupied mode, if the discharge air temperat
 if mode_system != 'occupied':
     untested
 else:
-    if t_discharge < 10 and cmd_coil_heat < 99:
+    if temperature_air_discharge < 10 and command_coil_heat < 99:
         fail
     else:
         pass
@@ -41,12 +42,12 @@ else:
   - Data point Description: System mode
   - Data Point Affiliation: System control
 
-- cmd_coil_heat: Heating coil command
+- command_coil_heat: Heating coil command
   - Data Value Unit: percent
   - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
-- t_discharge: Discharge air temperature
+- temperature_air_discharge: Discharge air temperature
   - Data Value Unit: temperature
   - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring

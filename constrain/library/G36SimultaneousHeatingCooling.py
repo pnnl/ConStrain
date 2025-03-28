@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the system prevents simultaneous heating and cooling operation. The heating and cooling outputs should never be active at the same time to avoid energy waste and ensure proper system operation.
+Section 5.16.2.3
+- Supply air temperature shall be controlled to setpoint using a control loop whose output is mapped to sequence the heating coil (if applicable), outdoor air damper, return air damper, and cooling coil
 
 ### Code requirement
 
@@ -25,7 +26,7 @@ The verification monitors heating and cooling outputs to ensure they are not act
 ### Verification Algorithm Pseudo Code
 
 ```python
-if q_heat > 0 and q_cool > 0:
+if output_coil_heating > 0 and output_coil_cooling > 0:
     fail  # Simultaneous heating and cooling detected
 else:
     pass  # Normal operation
@@ -33,12 +34,12 @@ else:
 
 ### Data requirements
 
-- q_heat: Heating signal
+- output_coil_heating: Heating signal
   - Data Value Unit: percent
   - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: System control
 
-- q_cool: Cooling signal
+- output_coil_cooling: Cooling signal
   - Data Value Unit: percent
   - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: System control

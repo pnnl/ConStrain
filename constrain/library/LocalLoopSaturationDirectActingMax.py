@@ -1,7 +1,7 @@
 """
 ### Description
 
-This verification aims to check if a direct-acting control loop properly saturates its actuator to maximum position when the controlled variable remains consistently above setpoint. This behavior is essential for maintaining proper control response and system stability.
+- This verification checks that a direct acting control loop would saturate its actuator to maximum when the error is consistently above the set point.
 
 ### Code requirement
 
@@ -32,10 +32,10 @@ The verification monitors control loop behavior when error persists:
 ```python
 error_duration = 0
 for each timestep:
-    if feedback_sensor > setpoint:  # Positive error
+    if value_sensor > value_setpoint:  # Positive error
         error_duration += timestep_size
         if error_duration >= 1_hour:
-            if cmd_max - cmd <= 0.01:  # Within 1% of maximum
+            if command_max - command_control <= 0.01:  # Within 1% of maximum
                 pass  # Proper saturation
             else:
                 fail  # Should be at maximum
@@ -45,22 +45,22 @@ for each timestep:
 
 ### Data requirements
 
-- val_sensor: Process variable
+- value_sensor: Process variable
   - Data Value Unit: varies by application
   - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
-- sp: Control setpoint
-  - Data Value Unit: same as val_sensor
+- value_setpoint: Control setpoint
+  - Data Value Unit: same as value_sensor
   - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 
-- cmd: Actuator command
+- command_control: Actuator command
   - Data Value Unit: percent
   - Data point Description: Control output
   - Data Point Affiliation: Control loop output
 
-- cmd_max: Maximum command
+- command_max: Maximum command
   - Data Value Unit: percent
   - Data point Description: Maximum output
   - Data Point Affiliation: Control loop configuration
