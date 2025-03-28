@@ -18,9 +18,9 @@ class TestG36OutdoorAirDamperPositionForReturnFanAirflowTracking(unittest.TestCa
 
     def test_outdoor_air_damper_position(self):
         points = [
-        "position_damper_air_outdoor",
-        "position_damper_air_outdoor_max",
-    ]
+            "position_damper_air_outdoor",
+            "position_damper_air_outdoor_max",
+        ]
         data = [
             [0.1, 1],  # False
             [0.98, 1],  # True

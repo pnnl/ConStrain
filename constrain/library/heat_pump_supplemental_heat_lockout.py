@@ -104,7 +104,11 @@ class HeatPumpSupplementalHeatLockout(RuleCheckBase):
         return data
 
     def verify(self):
-        self.df["C_op"] = self.df["capacity_full_load"] * self.df["capacity_modifier_temperature"] * self.df["capacity_modifier_fraction_flow"]
+        self.df["C_op"] = (
+            self.df["capacity_full_load"]
+            * self.df["capacity_modifier_temperature"]
+            * self.df["capacity_modifier_fraction_flow"]
+        )
         self.df["result"] = "Untested"
         self.df = self.df.apply(lambda r: self.heating_coil_verification(r), axis=1)
         self.result = self.df["result"]
