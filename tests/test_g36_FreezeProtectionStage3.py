@@ -8,6 +8,17 @@ import pandas as pd
 
 
 class TestG36FreezeProtectionStage2(unittest.TestCase):
+    tolerances = {
+        "damper": {
+            "unit": "%",
+            "types": {"position": 0.0, "command": 0.01, "general": 0.0},
+        },
+        "temperature": {
+            "unit": "deg. C",
+            "types": {"supply_air": 0.0, "general": 0.0},
+        },
+    }
+
     def test_freeze_protection_2_pass(self):
         points = [
             "freeze_stat",
@@ -43,7 +54,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         expected_results = pd.Series([True, True, True, True, True, True])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage3", df
+            "G36FreezeProtectionStage3", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -86,7 +97,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         expected_results = pd.Series([True, False, False, False, False, False])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage3", df
+            "G36FreezeProtectionStage3", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -129,7 +140,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         expected_results = pd.Series([True, True, True, True, True, True])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage3", df
+            "G36FreezeProtectionStage3", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()

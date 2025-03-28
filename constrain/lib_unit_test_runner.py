@@ -1,7 +1,9 @@
 from constrain.workflowsteps import *
 from constrain.library import *
+from pathlib import Path
 import json
 import pandas as pd
+
 
 items_json = "./library/library.json"
 
@@ -15,6 +17,10 @@ def get_verification_cases(cases_json):
 
 def run_test_verification_with_data(verification_class, df, tolerances=None):
     cls = globals()[verification_class]
+    if tolerances is None:
+        path_to_custom_tolerance_file = Path(__file__).parent / "tolerances.json"
+        with open(path_to_custom_tolerance_file) as f:
+            tolerances = json.load(f)
     verification_obj = cls(df, None, tolerances=tolerances)
     return verification_obj
 
