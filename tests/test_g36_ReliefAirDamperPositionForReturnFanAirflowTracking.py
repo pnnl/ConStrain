@@ -22,7 +22,7 @@ class TestG36ReliefAirDamperPositionForReturnFanAirflowTracking(unittest.TestCas
             "output_coil_cooling",
             "position_damper_relief",
             "position_damper_relief_max",
-            "cmd_damper_ra",
+            "position_damper_air_return",
         ]
         data = [
             [1000, 0, 0.5, 1.0, 1.0],  # False

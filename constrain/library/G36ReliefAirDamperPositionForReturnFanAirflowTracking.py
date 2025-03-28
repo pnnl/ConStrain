@@ -39,7 +39,7 @@ elif output_coil_cooling > 0:
         pass
     else:
         fail
-elif abs(position_damper_relief - (1 - cmd_damper_ra) * position_damper_relief_max) < 0:
+elif abs(position_damper_relief - (1 - position_damper_air_return) * position_damper_relief_max) < 0:
     pass
 else:
     fail
@@ -67,7 +67,7 @@ else:
   - Data point Description: Maximum relief air damper command
   - Data Point Affiliation: Air handling unit
 
-- cmd_damper_ra: Return air damper command
+- position_damper_air_return: Return air damper command
   - Data Value Unit: percent
   - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
@@ -83,7 +83,7 @@ class G36ReliefAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):
         "output_coil_cooling",
         "position_damper_relief",
         "position_damper_relief_max",
-        "cmd_damper_ra",
+        "position_damper_air_return",
     ]
 
     def relief_air_damper(self, data):
@@ -103,7 +103,8 @@ class G36ReliefAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):
                 return False
         elif abs(
             data["position_damper_relief"]
-            - (1 - data["cmd_damper_ra"]) * data["position_damper_relief_max"]
+            - (1 - data["position_damper_air_return"])
+            * data["position_damper_relief_max"]
         ) < self.get_tolerance("damper", "position"):
             return True
         else:

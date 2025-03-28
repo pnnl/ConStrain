@@ -33,7 +33,7 @@ The verification checks that during occupied periods when economizer is in locko
 ### Verification Algorithm Pseudo Code
 
 ```python
-if economizer_lockout(temperature_air_outdoor, t_oa_economizer_high_limit) and mode_system == 'occupied':
+if economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_system == 'occupied':
     if flow_volumetric_air_outdoor < flow_volumetric_air_outdoor_setpoint_min (continuously for 1 hour):
         if position_damper_air_outdoor == 100 and position_damper_air_return == 0:
             pass
@@ -57,7 +57,7 @@ else:
   - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
-- t_oa_economizer_high_limit: Economizer high limit temperature
+- temperature_air_economizer_limit: Economizer high limit temperature
   - Data Value Unit: °C
   - Data point Description: Economizer high limit temperature
   - Data Point Affiliation: Economizer control
@@ -95,7 +95,7 @@ from constrain.checklib import RuleCheckBase
 class G36MinOAwoEconomizer(RuleCheckBase):
     points = [
         "temperature_air_outdoor",
-        "t_oa_economizer_high_limit",
+        "temperature_air_economizer_limit",
         "position_damper_air_outdoor",
         "position_damper_air_return",
         "flow_volumetric_air_outdoor",
@@ -103,8 +103,10 @@ class G36MinOAwoEconomizer(RuleCheckBase):
         "mode_system",
     ]
 
-    def economizer_lockout(self, t_oa, t_oa_economizer_high_limit):
-        if t_oa > t_oa_economizer_high_limit:
+    def economizer_lockout(
+        self, temperature_air_outdoor, temperature_air_economizer_limit
+    ):
+        if temperature_air_outdoor > temperature_air_economizer_limit:
             return True
         else:
             return False
@@ -112,7 +114,7 @@ class G36MinOAwoEconomizer(RuleCheckBase):
     def ts_verify_logic(self, t):
         if (
             self.economizer_lockout(
-                t["temperature_air_outdoor"], t["t_oa_economizer_high_limit"]
+                t["temperature_air_outdoor"], t["temperature_air_economizer_limit"]
             )
             and t["mode_system"].strip().lower() == "occupied"
         ):
@@ -145,7 +147,7 @@ class G36MinOAwoEconomizer(RuleCheckBase):
         for i, t in self.df.iterrows():
             if (
                 self.economizer_lockout(
-                    t["temperature_air_outdoor"], t["t_oa_economizer_high_limit"]
+                    t["temperature_air_outdoor"], t["temperature_air_economizer_limit"]
                 )
                 and t["mode_system"].strip().lower() == "occupied"
             ):

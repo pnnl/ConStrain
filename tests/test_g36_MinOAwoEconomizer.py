@@ -5,9 +5,7 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 
-import json
 import pandas as pd
-import numpy as np
 
 
 class TestG36MinOAwEconomizer(unittest.TestCase):
@@ -29,7 +27,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
     def test_minoa_wo_economizer_pass_untested_low(self):
         points = [
             "temperature_air_outdoor",
-            "t_oa_economizer_high_limit",
+            "temperature_air_economizer_limit",
             "position_damper_air_outdoor",
             "position_damper_air_return",
             "flow_volumetric_air_outdoor",
@@ -69,7 +67,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
     def test_minoa_wo_economizer_fail_untested_low(self):
         points = [
             "temperature_air_outdoor",
-            "t_oa_economizer_high_limit",
+            "temperature_air_economizer_limit",
             "position_damper_air_outdoor",
             "position_damper_air_return",
             "flow_volumetric_air_outdoor",
@@ -109,7 +107,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
     def test_minoa_wo_economizer_pass_untested_high(self):
         points = [
             "temperature_air_outdoor",
-            "t_oa_economizer_high_limit",
+            "temperature_air_economizer_limit",
             "position_damper_air_outdoor",
             "position_damper_air_return",
             "flow_volumetric_air_outdoor",
@@ -149,7 +147,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
     def test_minoa_wo_economizer_fail_untested_high(self):
         points = [
             "temperature_air_outdoor",
-            "t_oa_economizer_high_limit",
+            "temperature_air_economizer_limit",
             "position_damper_air_outdoor",
             "position_damper_air_return",
             "flow_volumetric_air_outdoor",

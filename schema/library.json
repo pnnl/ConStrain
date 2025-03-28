@@ -441,7 +441,7 @@
             "capacity_full_load": "Heating Coil Reference Capacity",
             "load_operation": "Heating Coil Runtime Fraction",
             "capacity_modifier_temperature": "Heating Coil Heating Rate",
-            "power_heating_supplemental": "Heating Coil Gas Rate",
+            "power_heating_supplemental": "Supplemental Heating Rate",
             "capacity_modifier_fraction_flow": "Heating Capacity Function of Flow Fraction Curve",
             "load_defrost": "Defrost load on the heating coil"
         },

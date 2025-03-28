@@ -33,13 +33,13 @@ The verification monitors discharge air temperature tracking performance:
 
 ```python
 # Only check when in heating mode
-if abs(t_discharge_sp - t_discharge) >= 0:
+if abs(temperature_air_discharge_setpoint - temperature_air_discharge) >= 0:
     if tracking_error_duration < 1_hour:
         pass  # Brief deviation acceptable
     else:
-        if (t_discharge - t_discharge_sp >= 0) and cmd_coil_heat <= 1:
+        if (temperature_air_discharge - temperature_air_discharge_setpoint >= 0) and command_coil_heat <= 1:
             pass  # Too hot, coil at minimum
-        elif (t_discharge_sp - t_discharge >= 0) and cmd_coil_heat >= 99:
+        elif (temperature_air_discharge_setpoint - temperature_air_discharge >= 0) and command_coil_heat >= 99:
             pass  # Too cold, coil at maximum
         else:
             fail  # Sustained deviation without appropriate response

@@ -49,19 +49,19 @@ else:
   - Data Point Affiliation: Equipment specifications
 
 - load_operation: Heating coil runtime fraction
-  - Data Value Unit: power
+  - Data Value Unit: fraction
   - Data point Description: Operating load
   - Data Point Affiliation: System monitoring
 
-- capacity_modifier_temperature: heating coil heating rate
-  - Data Value Unit: power
-  - Data point Description: Supplemental heating power
-  - Data Point Affiliation: System monitoring
-
-- power_heating_supplemental: Heating coil gas rate
+- capacity_modifier_temperature: Temperature capacity modifier
   - Data Value Unit: fraction
   - Data point Description: Temperature capacity modifier
   - Data Point Affiliation: Equipment performance
+
+- power_heating_supplemental: Supplemental heating power
+  - Data Value Unit: power
+  - Data point Description: Supplemental heating power
+  - Data Point Affiliation: System monitoring
 
 - capacity_modifier_fraction_flow: Heating capacity function of flow fraction curve
   - Data Value Unit: fraction
@@ -69,8 +69,8 @@ else:
   - Data Point Affiliation: Equipment performance
 
 - load_defrost: Defrost load on the heating coil
-  - Data Value Unit: binary
-  - Data point Description: Defrost flag
+  - Data Value Unit: power
+  - Data point Description: Defrost heating power
   - Data Point Affiliation: System operation
 
 """
