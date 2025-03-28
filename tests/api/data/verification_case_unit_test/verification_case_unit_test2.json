@@ -62,9 +62,7 @@
                         "frequency": "Timestep"
                     }
                 },
-                "parameters": {
-                    "tol": 0.556
-                }
+                "parameters": {}
             },
             "verification_class": "WLHPLoopHeatRejectionControl"
         }

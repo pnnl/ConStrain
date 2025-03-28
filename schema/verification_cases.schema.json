@@ -761,14 +761,10 @@
                             "properties": {
                                 "C_ref": {
                                     "type": "number"
-                                },
-                                "tol": {
-                                    "type": "number"
                                 }
                             },
                             "required": [
-                                "C_ref",
-                                "tol"
+                                "C_ref"
                             ]
                         }
                     }

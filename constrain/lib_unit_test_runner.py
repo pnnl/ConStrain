@@ -21,7 +21,7 @@ def run_test_verification_with_data(verification_class, df, tolerances=None):
 
 def main():
     # for dev test only
-    points = ["o", "m_oa", "eco_onoff", "tol"]
+    points = ["number_occupants", "flow_volumetric_air_outdoor", "flow_volumetric_air_exhaust", "status_economizer"]
     data = [[0, 1, 0, 0.001]]
     df = pd.DataFrame(data, columns=points)
     case_str = """
@@ -29,13 +29,12 @@ def main():
         "expected_result": "pass",
         "datapoints_source": {
             "test_variables": {
-                "o": {},
-                "m_oa": {},
-                "eco_onoff": {}
+                "number_occupants": {},
+                "flow_volumetric_air_outdoor": {},
+                "flow_volumetric_air_exhaust": {},
+                "status_economizer": {}
             },
-            "parameters": {
-                "tol": 24.0
-            }
+            "parameters": {}
         },
         "verification_class": "AutomaticOADamperControl"
     }

@@ -15,7 +15,6 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "tol_turndown",
         ]
 
         timestamp = [
@@ -24,8 +23,8 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [False, 0.005, 0.01, 0.3, 0.01],
-            [False, 0.005, 0.01, 0.3, 0.01],
+            [False, 0.005, 0.01, 0.3],
+            [False, 0.005, 0.01, 0.3],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
@@ -48,7 +47,6 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "tol_turndown",
         ]
 
         timestamp = [
@@ -57,8 +55,8 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [True, 0.005, 0.0, 0.3, 0.01],
-            [True, 0.005, 0.0, 0.3, 0.01],
+            [True, 0.005, 0.0, 0.3],
+            [True, 0.005, 0.0, 0.3],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
@@ -81,7 +79,6 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "tol_turndown",
         ]
 
         timestamp = [
@@ -90,8 +87,8 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [True, 0.005, 0.06, 0.3, 0.01],
-            [True, 0.005, 0.06, 0.3, 0.01],
+            [True, 0.005, 0.06, 0.3],
+            [True, 0.005, 0.06, 0.3],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
@@ -118,7 +115,6 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "tol_turndown",
         ]
 
         timestamp = [
@@ -127,8 +123,8 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [True, 0.005, 0.01, 0.3, 0.01],
-            [True, 0.005, 0.01, 0.3, 0.01],
+            [True, 0.005, 0.01, 0.3],
+            [True, 0.005, 0.01, 0.3],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)

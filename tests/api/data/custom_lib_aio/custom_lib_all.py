@@ -341,7 +341,7 @@ class RuleCheckBase(CheckLibBase):
         return output
 
 
-from constrain import CheckLibBase, RuleCheckBase
+from constrain import RuleCheckBase
 
 
 class UserProvidedVerificationItem1(RuleCheckBase):

@@ -466,9 +466,7 @@
                         "frequency": "TimeStep"
                     }
                 },
-                "parameters": {
-                    "tol": 0.03
-                }
+                "parameters": {}
             },
             "verification_class": "AutomaticOADamperControl"
         },
@@ -664,9 +662,7 @@
                         "frequency": "Timestep"
                     }
                 },
-                "parameters": {
-                    "tol": 0.556
-                }
+                "parameters": {}
             },
             "verification_class": "WLHPLoopHeatRejectionControl"
         },
@@ -733,8 +729,7 @@
                     }
                 },
                 "parameters": {
-                    "C_ref": 5091.29,
-                    "tol": 0.01
+                    "C_ref": 5091.29
                 }
             },
             "verification_class": "HeatPumpSupplementalHeatLockout"
