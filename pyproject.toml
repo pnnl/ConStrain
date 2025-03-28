@@ -27,7 +27,7 @@ pyqt6 = "^6.6.1"
 click = "^8.1.7"
 pre-commit = "^3.6.0"
 jsonschema= "^4.21.1"
-python-levenshtein = "^0.25.1"
+#python-levenshtein = "^0.25.1"
 black = "24.3.0"
 
 [build-system]
