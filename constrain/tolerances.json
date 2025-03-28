@@ -75,5 +75,17 @@
             "temperature": 0.01,
             "general": 0.05
         }
+    },
+    "command": {
+        "unit": "%",
+        "types": {
+            "general": 0.01
+        }
+    },
+    "setpoint": {
+        "unit": "any",
+        "types": {
+            "general": 0.0
+        }
     }
 }

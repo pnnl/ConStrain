@@ -75,7 +75,11 @@ class LocalLoopSaturationDirectActingMin(RuleCheckBase):
     points = ["value_sensor", "value_setpoint", "command_control", "command_min"]
 
     def saturation_flag(self, t):
-        if 0 <= t["command_control"] - t["command_min"] <= 0.01:
+        if (
+            0
+            <= t["command_control"] - t["command_min"]
+            <= self.get_tolerance("command", "general")
+        ):
             return True
         else:
             return False

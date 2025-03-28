@@ -8,6 +8,15 @@ import pandas as pd
 
 
 class TestExteriorLightingControlDaylightOff(unittest.TestCase):
+    tolerances = {
+        "power": {
+            "unit": "W",
+            "types": {
+                "lighting_exterior": 0.0,
+            },
+        },
+    }
+
     def test_exterior_lighting_control_occupancy_sensing_reduction_fail(self):
         points = [
             "flag_sun_up",
@@ -28,7 +37,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series(["Untested", "Untested", False])
         verification_obj = run_test_verification_with_data(
-            "ExteriorLightingControlDaylightOff", df
+            "ExteriorLightingControlDaylightOff", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -55,7 +64,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series(["Untested", "Untested", True])
         verification_obj = run_test_verification_with_data(
-            "ExteriorLightingControlDaylightOff", df
+            "ExteriorLightingControlDaylightOff", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -82,7 +91,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series(["Untested", "Untested", False])
         verification_obj = run_test_verification_with_data(
-            "ExteriorLightingControlDaylightOff", df
+            "ExteriorLightingControlDaylightOff", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -109,7 +118,7 @@ class TestExteriorLightingControlDaylightOff(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series(["Untested", "Untested", True])
         verification_obj = run_test_verification_with_data(
-            "ExteriorLightingControlDaylightOff", df
+            "ExteriorLightingControlDaylightOff", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()

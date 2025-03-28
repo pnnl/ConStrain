@@ -9,7 +9,6 @@ import pandas as pd
 
 
 class TestG36FreezeProtectionStage1(unittest.TestCase):
-
     tolerances = {
         "damper": {
             "unit": "%",
