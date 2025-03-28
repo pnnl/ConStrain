@@ -31,7 +31,7 @@ setup(
         "seaborn",
         "scipy",
         "eppy",
-        "fuzzywuzzy",
+#        "fuzzywuzzy",
         "tqdm",
         "scikit-learn",
         "uuid",

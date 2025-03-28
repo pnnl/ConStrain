@@ -2,7 +2,7 @@ name: Deployment Test
 on: workflow_dispatch
 jobs:
     main:
-        name: Build package with Poetry and run example Constrin script
+        name: Build package with Poetry and run example Constrain script
         runs-on: ['macos-latest']
         steps:
             - uses: actions/checkout@v3
