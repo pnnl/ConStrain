@@ -76,7 +76,6 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
         "state_zone",
         "flow_volumetric_air_setpoint_min",
         "flow_volumetric_air_setpoint",
-        "tol_v",
     ]
 
     def setpoint_at_minimum(self, mode_system, state_zone, v_min, v_sp, tol_v):
@@ -103,7 +102,7 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
                 t["state_zone"],
                 t["flow_volumetric_air_setpoint_min"],
                 t["flow_volumetric_air_setpoint"],
-                t["tol_v"],
+                self.get_tolerance("airflow", "general"),
             ),
             axis=1,
         )

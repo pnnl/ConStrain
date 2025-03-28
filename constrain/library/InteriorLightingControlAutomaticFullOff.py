@@ -81,7 +81,6 @@ class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
         "number_occupants",
         "power_light_total",
         "area_lit",
-        "tol_occupants",
     ]
     min_lighting_power_density = 0
     last_reported_occupancy = None
@@ -98,7 +97,7 @@ class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
         # verification based on power
         date_diff = data.name - self.last_reported_occupancy
         if (
-            data["number_occupants"] < data["tol_occupants"]
+            data["number_occupants"] < self.get_tolerance("ratio", "occupancy")
         ) and date_diff.total_seconds() / 60 > 20:
             if (data["power_light_total"] / data["area_lit"]) <= 0.02:
                 check = True
@@ -108,7 +107,7 @@ class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
             check = "Untested"
 
         # update last identified occupancy flag if applicable
-        if data["number_occupants"] >= data["tol_occupants"]:
+        if data["number_occupants"] >= self.get_tolerance("ratio", "occupancy"):
             self.last_reported_occupancy = data.name
         return check
 

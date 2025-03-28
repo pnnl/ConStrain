@@ -75,11 +75,6 @@ Endif
   - Data point Description: Outdoor air flow rate
   - Data Point Affiliation: System ventilation
 
-- tol_occupants: Occupancy threshold
-  - Data Value Unit: count
-  - Data point Description: Occupancy tolerance
-  - Data Point Affiliation: Zone occupancy
-
 """
 
 from constrain.checklib import RuleCheckBase
@@ -90,13 +85,12 @@ class AppendixGHVACSystemFanOperation(RuleCheckBase):
         "number_occupants",
         "fraction_runtime_fan",
         "flow_volumetric_air_outdoor",
-        "tol_occupants",
     ]
     potential_failures_counter = 0
     potential_pass_count = 0
 
     def hvac_system_fan_operation(self, data):
-        if data["number_occupants"] >= data["tol_occupants"]:
+        if data["number_occupants"] >= self.get_tolerance("ratio", "occupancy"):
             if data["fraction_runtime_fan"] == 1:
                 return True
             else:

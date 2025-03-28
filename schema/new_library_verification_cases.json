@@ -598,9 +598,6 @@
                         "variable": "static_pressure_setpoint",
                         "frequency": "detailed"
                     }
-                },
-                "parameters": {
-                    "tol_P_fan": 2.98
                 }
             },
             "verification_class": "VAVStaticPressureSensorLocation"
@@ -800,9 +797,7 @@
                 "parameters": {
                     "area_z": 39.02,
                     "height_z": 3.05,
-                    "v_outdoor_per_zone": 0.000395372,
-                    "tol_occ": 0.05,
-                    "tol_oa_flow": 0.0003
+                    "v_outdoor_per_zone": 0.000395372
                 }
             },
             "verification_class": "GuestRoomControlVent"
@@ -835,10 +830,6 @@
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     }
-                },
-                "parameters": {
-                    "tol_occ": 0.05,
-                    "tol_temp": 1.0
                 }
             },
             "verification_class": "GuestRoomControlTemp"

@@ -472,25 +472,6 @@
                                 "flow_volumetric_air_outdoor",
                                 "status_economizer"
                             ]
-                        },
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "tol_occupants": {
-                                    "type": "number"
-                                },
-								"tol_v_oa": {
-                                    "type": "number"
-                                },
-								"tol_v_ea": {
-                                    "type": "number"
-                                }
-                            },
-                            "required": [
-                                "tol_occupants",
-								"tol_v_oa",
-								"tol_v_ea"
-                            ]
                         }
                     }
                 },
@@ -640,17 +621,6 @@
                             "required": [
                                 "pressure_static_setpoint"
                             ]
-                        },
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "tol_p_press_static": {
-                                    "type": "number"
-                                }
-                            },
-                            "required": [
-                                "tol_p_press_static"
-                            ]
                         }
                     }
                 },
@@ -717,17 +687,6 @@
                                 "temperature_water_heating_max",
                                 "temperature_water_cooling_min",
                                 "flow_mass_water_pump"
-                            ]
-                        },
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "tol_t_loop": {
-                                    "type": "number"
-                                }
-                            },
-                            "required": [
-                                "tol_t_loop"
                             ]
                         }
                     }
@@ -894,16 +853,12 @@
                                 },
                                 "flow_volumetric_air_outdoor_per_area": {
                                     "type": "number"
-                                },
-                                "tol_occupants": {
-                                    "type": "number"
                                 }
                             },
                             "required": [
                                 "area_zone",
                                 "height_zone",
-                                "flow_volumetric_air_outdoor_per_area",
-                                "tol_occupants"
+                                "flow_volumetric_air_outdoor_per_area"
                             ]
                         }
                     }
@@ -936,21 +891,6 @@
                                 "temperature_air_zone_heat_setpoint",
                                 "temperature_air_zone_cool_setpoint",
                                 "schedule_occupancy"
-                            ]
-                        },
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "tol_occupants": {
-                                    "type": "number"
-                                },
-                                "tol_t": {
-                                    "type": "number"
-                                }
-                            },
-                            "required": [
-                                "tol_occupants",
-                                "tol_t"
                             ]
                         }
                     }

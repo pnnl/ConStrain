@@ -57,13 +57,11 @@ class G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure(RuleCheckBas
     points = [
         "cmd_damper_oa",
         "cmd_damper_oa_max",
-        "tol_cmd_damper_oa",
     ]
 
     def outdoor_air_damper(self, data):
-        if (
-            abs(data["cmd_damper_oa"] - data["cmd_damper_oa_max"])
-            < data["tol_cmd_damper_oa"]
+        if abs(data["cmd_damper_oa"] - data["cmd_damper_oa_max"]) < self.get_tolerance(
+            "damper", "command"
         ):
             return True
         else:

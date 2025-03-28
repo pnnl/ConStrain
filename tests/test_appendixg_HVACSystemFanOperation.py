@@ -8,24 +8,34 @@ import pandas as pd
 
 
 class TestAppendixGHVACSystemFanOperation(unittest.TestCase):
+    tolerances = {
+        "ratio": {
+            "unit": "%",
+            "types": {
+                "flow": 0.05,
+                "efficiency": 0.02,
+                "occupancy": 0.1,
+            },
+        }
+    }
+
     def test_hvac_system_fan_operation_no_oa_untested(self):
         points = [
             "number_occupants",
             "fraction_runtime_fan",
             "flow_volumetric_air_outdoor",
-            "tol_occupants",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
             datetime(2023, 3, 1, 2, 5, 2),
         ]
         data = [
-            [0.05, 1, 0, 0.1],
-            [0.15, 0, 0, 0.1],
+            [0.05, 1, 0],
+            [0.15, 0, 0],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         verification_obj = run_test_verification_with_data(
-            "AppendixGHVACSystemFanOperation", df
+            "AppendixGHVACSystemFanOperation", df, tolerances=self.tolerances
         )
         binaryflag = verification_obj.check_bool()
         self.assertTrue(binaryflag is None)
@@ -35,7 +45,6 @@ class TestAppendixGHVACSystemFanOperation(unittest.TestCase):
             "number_occupants",
             "fraction_runtime_fan",
             "flow_volumetric_air_outdoor",
-            "tol_occupants",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -43,14 +52,14 @@ class TestAppendixGHVACSystemFanOperation(unittest.TestCase):
             datetime(2023, 3, 1, 2, 10, 2),
         ]
         data = [
-            [0.1, 1, 0.5, 0.1],
-            [0.1, 0.5, 0, 0.1],
-            [0.05, 1, 0.5, 0.1],
+            [0.1, 1, 0.5],
+            [0.1, 0.5, 0],
+            [0.05, 1, 0.5],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series([True, False, True])
         verification_obj = run_test_verification_with_data(
-            "AppendixGHVACSystemFanOperation", df
+            "AppendixGHVACSystemFanOperation", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -62,7 +71,6 @@ class TestAppendixGHVACSystemFanOperation(unittest.TestCase):
             "number_occupants",
             "fraction_runtime_fan",
             "flow_volumetric_air_outdoor",
-            "tol_occupants",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -70,14 +78,14 @@ class TestAppendixGHVACSystemFanOperation(unittest.TestCase):
             datetime(2023, 3, 1, 2, 10, 2),
         ]
         data = [
-            [0.1, 1, 0.5, 0.1],
-            [0.1, 0.5, 0, 0.1],
-            [0.05, 0, 0.5, 0.1],
+            [0.1, 1, 0.5],
+            [0.1, 0.5, 0],
+            [0.05, 0, 0.5],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series([True, False, True])
         verification_obj = run_test_verification_with_data(
-            "AppendixGHVACSystemFanOperation", df
+            "AppendixGHVACSystemFanOperation", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
