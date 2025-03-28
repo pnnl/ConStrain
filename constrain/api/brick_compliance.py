@@ -524,9 +524,9 @@ class BrickCompliance:
 
             # feed in the default values if exist
             if default_verification_case_values is not None:
-                verification_case_dict_copy["run_simulation"] = (
-                    default_verification_case_values["run_simulation"]
-                )
+                verification_case_dict_copy[
+                    "run_simulation"
+                ] = default_verification_case_values["run_simulation"]
 
                 for key_name in (
                     "idf",
@@ -535,16 +535,16 @@ class BrickCompliance:
                     "output",
                     "ep_path",
                 ):
-                    verification_case_dict_copy["simulation_IO"][key_name] = (
-                        default_verification_case_values["simulation_IO"][key_name]
-                    )
+                    verification_case_dict_copy["simulation_IO"][
+                        key_name
+                    ] = default_verification_case_values["simulation_IO"][key_name]
 
-                verification_case_dict_copy["expected_result"] = (
-                    default_verification_case_values["expected_result"]
-                )
-                verification_case_dict_copy["datapoints_source"]["parameters"] = (
-                    default_verification_case_values["parameters"]
-                )
+                verification_case_dict_copy[
+                    "expected_result"
+                ] = default_verification_case_values["expected_result"]
+                verification_case_dict_copy["datapoints_source"][
+                    "parameters"
+                ] = default_verification_case_values["parameters"]
 
             verification_case_saving_list.append(verification_case_dict_copy)
 

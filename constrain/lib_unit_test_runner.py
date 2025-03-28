@@ -21,7 +21,12 @@ def run_test_verification_with_data(verification_class, df, tolerances=None):
 
 def main():
     # for dev test only
-    points = ["number_occupants", "flow_volumetric_air_outdoor", "flow_volumetric_air_exhaust", "status_economizer"]
+    points = [
+        "number_occupants",
+        "flow_volumetric_air_outdoor",
+        "flow_volumetric_air_exhaust",
+        "status_economizer",
+    ]
     data = [[0, 1, 0, 0.001]]
     df = pd.DataFrame(data, columns=points)
     case_str = """
