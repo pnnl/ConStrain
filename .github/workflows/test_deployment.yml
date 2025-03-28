@@ -26,5 +26,5 @@ jobs:
             - name: Install package
               run: find ./dist/*.whl | xargs pip install
             - name: Run sample ConStrain scrip
-              run: python -m .github\workflows\sample_constrain_run.py
+              run: python .github\workflows\sample_constrain_run.py
             
