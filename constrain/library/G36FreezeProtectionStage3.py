@@ -97,32 +97,33 @@ from constrain.checklib import RuleCheckBase
 
 class G36FreezeProtectionStage3(RuleCheckBase):
     points = [
-        "freeze_stat",
-        "supply_air_temp",
-        "outdoor_damper_command",
-        "supply_fan_status",
-        "return_fan_status",
-        "relief_fan_status",
-        "cooling_coil_command",
-        "heating_coil_command",
+        "status_freeze",
+        "temperature_air_supply",
+        "position_damper_air_outdoor",
+        "status_fan_supply",
+        "status_fan_return",
+        "status_fan_relief",
+        "command_coil_cool",
+        "command_coil_heat",
     ]
 
     def ts_verify_logic(self, t):
-        if not (t["freeze_status"] or bool(t["freeze_stat"])):
+        if not (t["freeze_status"] or bool(t["status_freeze"])):
             return True
         if (
             (t["sat_lowerthan_3.3_timer"] > 15)
             or (t["sat_lowerthan_1_timer"] > 5)
-            or t["freeze_stat"]
+            or t["status_freeze"]
         ):
             if not (
-                t["outdoor_damper_command"] < self.get_tolerance("damper", "command")
-                and (not bool(t["supply_fan_status"]))
-                and (not bool(t["return_fan_status"]))
-                and (not bool(t["relief_fan_status"]))
-                and t["cooling_coil_command"]
+                t["position_damper_air_outdoor"]
+                < self.get_tolerance("damper", "command")
+                and (not bool(t["status_fan_supply"]))
+                and (not bool(t["status_fan_return"]))
+                and (not bool(t["status_fan_relief"]))
+                and t["command_coil_cool"]
                 >= 100 - self.get_tolerance("damper", "command") * 100
-                and t["heating_coil_command"] > 0
+                and t["command_coil_heat"] > 0
             ):
                 return False
         return True
@@ -135,7 +136,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
         lt1_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["supply_air_temp"] < (
+            if t["temperature_air_supply"] < (
                 3.3 - self.get_tolerance("temperature", "supply_air")
             ):
                 if lt3p3_timer_start is None:
@@ -151,7 +152,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
                 lt3p3_timer_start = None
                 lt3p3_timer_list.append(0)
 
-            if t["supply_air_temp"] < (
+            if t["temperature_air_supply"] < (
                 1 - self.get_tolerance("temperature", "supply_air")
             ):
                 if lt1_timer_start is None:
@@ -177,7 +178,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
         self.result = self.df.apply(lambda t: self.ts_verify_logic(t), axis=1)
 
     def check_bool(self):
-        free_stat_bool_list = [bool(x) for x in self.df["freeze_stat"]]
+        free_stat_bool_list = [bool(x) for x in self.df["status_freeze"]]
         if len(self.result[self.result == False] > 0):
             return False
         else:

@@ -21,14 +21,14 @@ class TestG36FreezeProtectionStage3(unittest.TestCase):
 
     def test_freeze_protection_3_pass(self):
         points = [
-            "freeze_stat",
-            "supply_air_temp",
-            "outdoor_damper_command",
-            "supply_fan_status",
-            "return_fan_status",
-            "relief_fan_status",
-            "cooling_coil_command",
-            "heating_coil_command",
+            "status_freeze",
+            "temperature_air_supply",
+            "position_damper_air_outdoor",
+            "status_fan_supply",
+            "status_fan_return",
+            "status_fan_relief",
+            "command_coil_cool",
+            "command_coil_heat",
         ]
 
         timestamp = [
@@ -64,14 +64,14 @@ class TestG36FreezeProtectionStage3(unittest.TestCase):
 
     def test_freeze_protection_3_Fail(self):
         points = [
-            "freeze_stat",
-            "supply_air_temp",
-            "outdoor_damper_command",
-            "supply_fan_status",
-            "return_fan_status",
-            "relief_fan_status",
-            "cooling_coil_command",
-            "heating_coil_command",
+            "status_freeze",
+            "temperature_air_supply",
+            "position_damper_air_outdoor",
+            "status_fan_supply",
+            "status_fan_return",
+            "status_fan_relief",
+            "command_coil_cool",
+            "command_coil_heat",
         ]
 
         timestamp = [
@@ -107,14 +107,14 @@ class TestG36FreezeProtectionStage3(unittest.TestCase):
 
     def test_freeze_protection_3_untested(self):
         points = [
-            "freeze_stat",
-            "supply_air_temp",
-            "outdoor_damper_command",
-            "supply_fan_status",
-            "return_fan_status",
-            "relief_fan_status",
-            "cooling_coil_command",
-            "heating_coil_command",
+            "status_freeze",
+            "temperature_air_supply",
+            "position_damper_air_outdoor",
+            "status_fan_supply",
+            "status_fan_return",
+            "status_fan_relief",
+            "command_coil_cool",
+            "command_coil_heat",
         ]
 
         timestamp = [
