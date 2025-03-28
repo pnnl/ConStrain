@@ -31,6 +31,6 @@ jobs:
               run: poetry build
             - name: Install package
               run: python -c "import glob, subprocess; [subprocess.call(['pip', 'install', f]) for f in glob.glob('./dist/*.whl')]"
-            - name: Run sample ConStrain scrip
-              run: python .github/workflows/sample_constrain_run.py
+            - name: Run sample ConStrain script
+              run: cd ..; python ./constrain/.github/workflows/sample_constrain_run.py
             
