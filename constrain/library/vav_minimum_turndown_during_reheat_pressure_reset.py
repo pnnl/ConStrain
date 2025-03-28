@@ -79,16 +79,6 @@ else:
   - Data point Description: Duct pressure setpoint
   - Data Point Affiliation: System control
 
-- tol_turndown: Turndown tolerance
-  - Data Value Unit: fraction
-  - Data point Description: Turndown tolerance
-  - Data Point Affiliation: System configuration
-
-- tol_p_press: Pressure tolerance
-  - Data Value Unit: pressure
-  - Data point Description: Duct pressure tolerance
-  - Data Point Affiliation: System configuration
-
 """
 
 import numpy as np
