@@ -3,7 +3,10 @@ on: workflow_dispatch
 jobs:
     main:
         name: Build package with Poetry and run example Constrain script
-        runs-on: ['macos-latest']
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, windows-latest]
         steps:
             - uses: actions/checkout@v3
             - name: Install Python
@@ -24,7 +27,6 @@ jobs:
             - name: Build package
               run: poetry build
             - name: Install package
-              #run: find ./dist/*.whl | xargs pip install
               run: python -c "import glob, subprocess; [subprocess.call(['pip', 'install', f]) for f in glob.glob('./dist/*.whl')]"
             - name: Run sample ConStrain scrip
               run: python .github/workflows/sample_constrain_run.py
