@@ -1,8 +1,8 @@
-name: Test installation of ConStrain on different OS
+name: Deployment Test
 on: workflow_dispatch
 jobs:
     main:
-        name: Build package with Poetry and run example
+        name: Build package with Poetry and run example Constrin script
         runs-on: ['ubuntu-latest', 'windows-latest', 'macos-latest']
         steps:
             - uses: actions/checkout@v3
