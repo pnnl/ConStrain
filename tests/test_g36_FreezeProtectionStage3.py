@@ -7,7 +7,7 @@ from library import *
 import pandas as pd
 
 
-class TestG36FreezeProtectionStage2(unittest.TestCase):
+class TestG36FreezeProtectionStage3(unittest.TestCase):
     tolerances = {
         "damper": {
             "unit": "%",
@@ -19,7 +19,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         },
     }
 
-    def test_freeze_protection_2_pass(self):
+    def test_freeze_protection_3_pass(self):
         points = [
             "freeze_stat",
             "supply_air_temp",
@@ -62,7 +62,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         self.assertTrue(results.equals(expected_results))
         self.assertTrue(binaryflag)
 
-    def test_freeze_protection_2_Fail(self):
+    def test_freeze_protection_3_Fail(self):
         points = [
             "freeze_stat",
             "supply_air_temp",
@@ -105,7 +105,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         self.assertTrue(results.equals(expected_results))
         self.assertFalse(binaryflag)
 
-    def test_freeze_protection_2_pass(self):
+    def test_freeze_protection_3_untested(self):
         points = [
             "freeze_stat",
             "supply_air_temp",
