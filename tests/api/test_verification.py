@@ -1,9 +1,11 @@
-import unittest, sys, os
+import unittest, sys, os, pathlib
 
 sys.path.append("./constrain")
 from api import VerificationCase
 from api import Verification
 from api import DataProcessing
+
+path = pathlib.Path(__file__).parent.resolve()
 
 
 class TestVerification(unittest.TestCase):
@@ -256,7 +258,7 @@ class TestVerification(unittest.TestCase):
             # Valid plot_option
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option="test",
             )
             self.assertEqual(
@@ -267,7 +269,7 @@ class TestVerification(unittest.TestCase):
             # Valid fig_size
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size=("a", 5),
             )
@@ -277,7 +279,7 @@ class TestVerification(unittest.TestCase):
             )
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size="test",
             )
@@ -289,7 +291,7 @@ class TestVerification(unittest.TestCase):
             # Valid num_threads
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size=(6, 5),
                 num_threads=0,
@@ -303,7 +305,7 @@ class TestVerification(unittest.TestCase):
             df = {}
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size=(6, 5),
                 num_threads=1,
@@ -319,7 +321,7 @@ class TestVerification(unittest.TestCase):
             df = DataProcessing(data_path=filep, data_source="EnergyPlus")
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size=(6, 5),
                 num_threads=1,
@@ -334,7 +336,7 @@ class TestVerification(unittest.TestCase):
         v_obj = Verification(verifications=vc)
         v_obj.configure(
             output_path="./tests/api",
-            lib_items_path="./schema/library.json",
+            lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=1,
@@ -356,7 +358,7 @@ class TestVerification(unittest.TestCase):
 
         v_obj.configure(
             output_path="./tests/api",
-            lib_items_path="./schema/library.json",
+            lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=1,
@@ -371,7 +373,7 @@ class TestVerification(unittest.TestCase):
         v_obj = Verification(verifications=vc)
         v_obj.configure(
             output_path="./tests/api",
-            lib_items_path="./schema/library.json",
+            lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=2,
@@ -405,7 +407,7 @@ class TestVerification(unittest.TestCase):
         v_obj.configure(
             output_path="./tests/api",
             time_series_csv_export_name="test_df_dump.csv",
-            lib_items_path="./schema/library.json",
+            lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=2,
