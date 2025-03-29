@@ -30,9 +30,8 @@ response = requests.get(url)
 data = json.loads(response.content)
 
 # Change data path
-print(str(Path(__file__).parent.parent.parent / "demo/G36_demo/data/G36_Modelica_Jan.csv"))
-data["states"]["load data"]["Parameters"]["data_path"] = str(Path(__file__).parent.parent.parent / "demo/G36_demo/data/G36_Modelica_Jan.csv")
-data["states"]["load verification cases"]["Parameters"]["json_case_path"] = str(Path(__file__).parent.parent.parent / "demo/G36_demo/data/G36_library_verification_cases.json")
+data["states"]["load data"]["Parameters"]["data_path"] = str(Path(__file__).parent.parent.parent / "constrain/demo/G36_demo/data/G36_Modelica_Jan.csv")
+data["states"]["load verification cases"]["Parameters"]["json_case_path"] = str(Path(__file__).parent.parent.parent / "constrain/demo/G36_demo/data/G36_library_verification_cases.json")
 data["states"]["configure verification runner"]["Parameters"]["output_path"] = "./"
 data["states"]["configure verification runner"]["Parameters"]["lib_items_path"] = str(Path(__file__).parent.parent.parent / "constrain/schema/library.json")
 data["states"]["check results"]["Parameters"][0] = "./*_md.json"
