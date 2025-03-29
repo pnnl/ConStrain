@@ -1,5 +1,7 @@
 name: Deployment Test
-on: workflow_dispatch
+on:
+    push:
+      branches: [ '*' ]
 jobs:
     main:
         name: Build package with Poetry and run example Constrain script
