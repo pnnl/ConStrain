@@ -24,7 +24,7 @@ if __name__ == "__main__":
         report_format="markdown",
     )
     reporting.report_multiple_cases()
-    
+
     # B) Workflow
     # 1 - Get workflow file
     url = "https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/G36_demo_workflow.json"
