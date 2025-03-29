@@ -55,17 +55,14 @@ else:
 
 - flag_coil_reheat: VAV box reheat coil operation status
   - Data Value Unit: binary
-  - Data point Description: Heating coil flag
   - Data Point Affiliation: Terminal unit control
 
 - flow_volumetric_air_vav: VAV airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Box volume flow rate
   - Data Point Affiliation: Terminal unit monitoring
 
 - flow_volumetric_air_max: VAV maximum airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Box maximum volume flow rate
   - Data Point Affiliation: Terminal unit configuration
 
 """

@@ -47,12 +47,10 @@ else:
 
 - number_occupants: Number of occupants
   - Data Value Unit: count
-  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
 - power_light_total: Lighting power
   - Data Value Unit: power
-  - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system
 
 """

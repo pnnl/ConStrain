@@ -51,22 +51,18 @@ else:
 
 - mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - command_coil_heat: Heating coil command
   - Data Value Unit: percent
-  - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
 - temperature_air_discharge: Discharge air temperature
   - Data Value Unit: temperature
-  - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
 - temperature_air_discharge_setpoint: Discharge air temperature setpoint
   - Data Value Unit: temperature
-  - Data point Description: Discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control
   
 """

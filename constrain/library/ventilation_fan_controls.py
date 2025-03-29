@@ -42,17 +42,14 @@ else:
 
 - heat_sensible: Zone sensible heat load
   - Data Value Unit: power
-  - Data point Description: Zone load
   - Data Point Affiliation: Zone monitoring
 
 - number_occupants: Occupancy count
   - Data Value Unit: count
-  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone monitoring
 
 - power_fan: Fan power
   - Data Value Unit: power
-  - Data point Description: Fan power
   - Data Point Affiliation: Equipment monitoring
 
 """

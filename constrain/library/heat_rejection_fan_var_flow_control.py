@@ -58,22 +58,18 @@ else:
 
 - power_fan_coolingtower: Fan power
   - Data Value Unit: power
-  - Data point Description: Cooling tower fan power
   - Data Point Affiliation: Fan monitoring
 
 - ratio_flow_coolingtower: Flow ratio
   - Data Value Unit: fraction
-  - Data point Description: Cooling tower fan flow ratio
   - Data Point Affiliation: Fan control
 
 - power_fan_coolingtower_design: Design power
   - Data Value Unit: power
-  - Data point Description: Cooling tower fan design power
   - Data Point Affiliation: Equipment specifications
 
 - flow_volumetric_air_coolingtower_design: Design flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Cooling tower fan design flow rate
   - Data Point Affiliation: Equipment specifications
 
 """

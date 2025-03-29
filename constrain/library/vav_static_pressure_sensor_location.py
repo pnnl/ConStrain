@@ -43,7 +43,6 @@ else:
 
 - pressure_static_setpoint: Pressure setpoint
   - Data Value Unit: pressure
-  - Data point Description: Fan pressure setpoint
   - Data Point Affiliation: System control
 
 """

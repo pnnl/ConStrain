@@ -53,42 +53,34 @@ if never (
 
 - freeze_stat: Freeze protection flag
   - Data Value Unit: binary
-  - Data point Description: Freeze protection flag
   - Data Point Affiliation: Air handling unit
 
 - supply_air_temp: Supply air temperature
   - Data Value Unit: °C
-  - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
 - outdoor_damper_command: Outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 - supply_fan_status: Supply fan status
   - Data Value Unit: binary
-  - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
 
 - return_fan_status: Return fan status
   - Data Value Unit: binary
-  - Data point Description: Return fan status
   - Data Point Affiliation: Air handling unit
 
 - relief_fan_status: Relief fan status
   - Data Value Unit: binary
-  - Data point Description: Relief fan status
   - Data Point Affiliation: Air handling unit
 
 - cooling_coil_command: Cooling valve command
   - Data Value Unit: percent
-  - Data point Description: Cooling valve command
   - Data Point Affiliation: Air handling unit
 
 - heating_coil_command: Heating valve command
   - Data Value Unit: percent
-  - Data point Description: Heating valve command
   - Data Point Affiliation: Air handling unit
 
 """

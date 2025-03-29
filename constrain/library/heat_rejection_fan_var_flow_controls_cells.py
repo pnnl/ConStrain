@@ -50,32 +50,26 @@ if power_fan_coolingtower > 0:  # System is running
 
 - number_cells_coolingtower_operation: Operating cells
   - Data Value Unit: count
-  - Data point Description: Number of operating cooling tower cells
   - Data Point Affiliation: System control
 
 - number_cells_coolingtower: Total cells
   - Data Value Unit: count
-  - Data point Description: Number of cooling tower cells
   - Data Point Affiliation: Equipment configuration
 
 - flow_mass_coolingtower: Current flow
   - Data Value Unit: mass flow rate
-  - Data point Description: Cooling tower mass flow rate
   - Data Point Affiliation: System monitoring
 
 - power_fan_coolingtower: Fan power
   - Data Value Unit: power
-  - Data point Description: Cooling tower fan power
   - Data Point Affiliation: Fan monitoring
 
 - flow_mass_coolingtower_design: Design flow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Cooling tower design flow rate
   - Data Point Affiliation: Equipment specifications
 
 - fraction_flow_min_cell: Minimum flow fraction
   - Data Value Unit: fraction
-  - Data point Description: Minimum cell flow ratio
   - Data Point Affiliation: Equipment specifications
 
 """

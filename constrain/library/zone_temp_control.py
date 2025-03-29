@@ -41,12 +41,10 @@ else:
 
 - temperature_air_zone_cool_setpoint: Cooling setpoint
   - Data Value Unit: temperature
-  - Data point Description: Zone cooling temperature setpoint
   - Data Point Affiliation: Zone control
 
 - temperature_air_zone_heat_setpoint: Heating setpoint
   - Data Value Unit: temperature
-  - Data point Description: Zone heating temperature setpoint
   - Data Point Affiliation: Zone control
 
 """

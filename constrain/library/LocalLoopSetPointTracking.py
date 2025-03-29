@@ -51,12 +51,10 @@ else:
 
 - value_sensor: Process variable
   - Data Value Unit: varies by application
-  - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
 - value_setpoint: Control setpoint
   - Data Value Unit: same as value_sensor
-  - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 
 """

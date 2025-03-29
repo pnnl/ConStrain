@@ -50,17 +50,14 @@ if flow_mass_water_pump > 0:
 
 - temperature_water_heating_max: Heating loop temperature
   - Data Value Unit: temperature
-  - Data point Description: Maximum heating loop temperature
   - Data Point Affiliation: System monitoring
 
 - temperature_water_cooling_min: Cooling loop temperature
   - Data Value Unit: temperature
-  - Data point Description: Minimum cooling loop temperature
   - Data Point Affiliation: System monitoring
 
 - flow_mass_water_pump: Pump flow
   - Data Value Unit: mass flow rate
-  - Data point Description: Pump flow rate
   - Data Point Affiliation: System monitoring
 
 """

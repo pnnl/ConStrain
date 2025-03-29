@@ -53,17 +53,14 @@ for each day:
 
 - temperature_air_zone_heat_setpoint: Heating setpoint
   - Data Value Unit: °C
-  - Data point Description: Zone heating temperature setpoint
   - Data Point Affiliation: Zone temperature control
 
 - temperature_air_zone_cool_setpoint: Cooling setpoint
   - Data Value Unit: °C
-  - Data point Description: Zone cooling temperature setpoint
   - Data Point Affiliation: Zone temperature control
 
 - schedule_occupancy: Occupancy schedule
   - Data Value Unit: fraction (0-1)
-  - Data point Description: Occupancy schedule
   - Data Point Affiliation: Zone occupancy
 
 """

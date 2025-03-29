@@ -43,22 +43,18 @@ end
 
 - mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - state_zone: Zone state
   - Data Value Unit: enumeration
-  - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
 - flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
 - flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
 """

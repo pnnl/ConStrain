@@ -52,22 +52,18 @@ else:
 
 - flow_volumetric_air_outdoor: Zone Air Terminal Outdoor Air Volume Flow Rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: Zone ventilation
 
 - status_ahu: HVAC System Operation Status
   - Data Value Unit: binary
-  - Data point Description: HVAC system status
   - Data Point Affiliation: System operation
 
 - status_economizer: Air System Outdoor Air Economizer Status
   - Data Value Unit: binary
-  - Data point Description: Economizer flag
   - Data Point Affiliation: System operation
 
 - number_occupants: People Occupant Count
   - Data Value Unit: count
-  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
 """

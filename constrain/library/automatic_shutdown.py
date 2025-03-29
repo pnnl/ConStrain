@@ -41,7 +41,6 @@ end
 
 -  status_hvac: HVAC operation status
   - Data Value Unit: binary
-  - Data point Description: HVAC system status
   - Data Point Affiliation: HVAC operation schedule
 
 """

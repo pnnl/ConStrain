@@ -64,67 +64,54 @@ elif 50 < signal_heat <= 100:
 
 - mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - state_zone: Zone state
   - Data Value Unit: enumeration
-  - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
 - flow_volumetric_air_cool_max: Maximum cooling airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Maximum cooling airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
 - flow_volumetric_air_heat_max: Maximum heating airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Maximum heating airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
 - flow_volumetric_air_heat_min: Minimum heating airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum heating airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
 - flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
 - flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
 - signal_heat: Zone heating loop signal
   - Data Value Unit: percent
-  - Data point Description: Zone heating loop signal (0-100)
   - Data Point Affiliation: Zone temperature control
 
 - temperature_air_room: Room temperature
   - Data Value Unit: temperature
-  - Data point Description: Room temperature
   - Data Point Affiliation: Zone monitoring
 
 - temperature_air_space_setpoint: Space temperature setpoint
   - Data Value Unit: temperature
-  - Data point Description: Space temperature setpoint
   - Data Point Affiliation: Zone control
 
 - temperature_air_supply: Supply air temperature
   - Data Value Unit: temperature
-  - Data point Description: Supply air temperature
   - Data Point Affiliation: AHU control
 
 - temperature_air_discharge: Discharge air temperature
   - Data Value Unit: temperature
-  - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
 - temperature_air_discharge_setpoint: Discharge air temperature setpoint
   - Data Value Unit: temperature
-  - Data point Description: Discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control
 
 """

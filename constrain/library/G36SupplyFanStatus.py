@@ -51,17 +51,14 @@ if not ('occupied' in mode_system and 'unoccupied' in mode_system):
 
 - mode_system: System mode
   - Data Value Unit: enumeration
-  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - flag_reheat_perimeter: Zone configuration
   - Data Value Unit: binary
-  - Data point Description: VAV reheat perimeter zones flag
   - Data Point Affiliation: System configuration
 
 - status_fan_supply: Supply fan status
   - Data Value Unit: binary
-  - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
 
 """

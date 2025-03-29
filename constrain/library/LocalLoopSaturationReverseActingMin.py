@@ -46,22 +46,18 @@ for each timestep:
 
 - value_sensor: Process variable
   - Data Value Unit: varies by application
-  - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
 - value_setpoint: Control setpoint
   - Data Value Unit: same as value_sensor
-  - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 
 - command_control: Actuator command
   - Data Value Unit: percent
-  - Data point Description: Control output
   - Data Point Affiliation: Control loop output
 
 - command_min: Minimum command
   - Data Value Unit: percent
-  - Data point Description: Minimum output
   - Data Point Affiliation: Control loop configuration
 
 """

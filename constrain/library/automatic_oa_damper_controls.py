@@ -36,22 +36,18 @@ else
 
 - number_occupants: Number of occupants
   - Data Value Unit: count
-  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
 - flow_volumetric_air_outdoor: System outdoor air volume flow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: System ventilation
 
 - flow_volumetric_air_exhaust: System exhaust air volume flow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Exhaust air volume flow rate
   - Data Point Affiliation: System ventilation
 
 - status_economizer: System air-side economizer status
   - Data Value Unit: binary
-  - Data point Description: Economizer flag
   - Data Point Affiliation: System operation
 
 """

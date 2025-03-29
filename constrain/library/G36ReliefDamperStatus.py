@@ -44,12 +44,10 @@ if not ['on', 'off'] in status_fan_supply:
 
 - position_damper_relief: Relief damper command
   - Data Value Unit: percent
-  - Data point Description: Relief damper command
   - Data Point Affiliation: Air handling unit
 
 - status_fan_supply: Supply fan status
   - Data Value Unit: binary
-  - Data point Description: Supply fan status
   - Data Point Affiliation: Air handling unit
 
 """

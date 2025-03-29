@@ -64,17 +64,14 @@ Endif
 
 - number_occupants: Number of occupants
   - Data Value Unit: count
-  - Data point Description: Number of occupants
   - Data Point Affiliation: Zone occupancy
 
 - fraction_runtime_fan: Fan runtime fraction
   - Data Value Unit: fraction
-  - Data point Description: Fan runtime fraction
   - Data Point Affiliation: System operation
 
 - flow_volumetric_air_outdoor: Outdoor air flow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor air flow rate
   - Data Point Affiliation: System ventilation
 
 """

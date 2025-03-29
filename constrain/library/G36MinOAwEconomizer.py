@@ -46,37 +46,30 @@ else:
 
 - temperature_air_outdoor: Outdoor air temperature
   - Data Value Unit: °C
-  - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
 - temperature_air_economizer_limit: Economizer high limit temperature
   - Data Value Unit: °C
-  - Data point Description: Economizer high limit temperature
   - Data Point Affiliation: Economizer control
 
 - position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_outdoor_min: Minimum outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Minimum outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 - flow_volumetric_air_outdoor_setpoint_min: Minimum outdoor airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum outdoor airflow setpoint
   - Data Point Affiliation: Air handling unit
 
 - flow_volumetric_air_outdoor: Outdoor airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor airflow
   - Data Point Affiliation: Air handling unit
 
 - mode_system: System mode
   - Data Value Unit: enumeration
-  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 """

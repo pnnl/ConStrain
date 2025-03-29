@@ -47,32 +47,10 @@ for each timestep:
 
 - pressure_static_setpoint: Duct static pressure setpoint
   - Data Value Unit: pressure
-  - Data point Description: Duct static pressure setpoint
   - Data Point Affiliation: Fan control
 
-- pos_damper_vav_1: VAV damper position 1
+- pos_damper_vav_x: VAV damper position
   - Data Value Unit: percent
-  - Data point Description: VAV damper position
-  - Data Point Affiliation: Zone control
-
-- pos_damper_vav_2: VAV damper position 2
-  - Data Value Unit: percent
-  - Data point Description: VAV damper position
-  - Data Point Affiliation: Zone control
-
-- pos_damper_vav_3: VAV damper position 3
-  - Data Value Unit: percent
-  - Data point Description: VAV damper position
-  - Data Point Affiliation: Zone control
-
-- pos_damper_vav_4: VAV damper position 4
-  - Data Value Unit: percent
-  - Data point Description: VAV damper position
-  - Data Point Affiliation: Zone control
-
-- pos_damper_vav_5: VAV damper position 5
-  - Data Value Unit: percent
-  - Data point Description: VAV damper position
   - Data Point Affiliation: Zone control
 
 """

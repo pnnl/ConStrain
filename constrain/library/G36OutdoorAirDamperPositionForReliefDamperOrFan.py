@@ -64,42 +64,34 @@ else:
 
 - output_coil_heating: Heating signal
   - Data Value Unit: percent
-  - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: Air handling unit
 
 - output_coil_cooling: Cooling signal
   - Data Value Unit: percent
-  - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_return: Return air damper command
   - Data Value Unit: percent
-  - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_return_max: Maximum return air damper command
   - Data Value Unit: percent
-  - Data point Description: Maximum return air damper command
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_outdoor_min: Minimum outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Minimum outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_outdoor_max: Maximum outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Maximum outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 - flag_economizer_limit: Economizer high limit flag
   - Data Value Unit: binary
-  - Data point Description: Economizer high limit flag
   - Data Point Affiliation: Economizer control
 
 """

@@ -8,7 +8,6 @@
 - Code Name: N/A
 - Code Year: N/A
 - Code Section: N/A
-- Code Subsection: N/A
 
 ### Verification Approach
 
@@ -47,22 +46,18 @@ for each timestep:
 
 - value_sensor: Process variable
   - Data Value Unit: varies by application
-  - Data point Description: Feedback value
   - Data Point Affiliation: Control loop input
 
 - value_setpoint: Control setpoint
   - Data Value Unit: same as value_sensor
-  - Data point Description: Setpoint
   - Data Point Affiliation: Control loop configuration
 
 - command_control: Actuator command
   - Data Value Unit: percent
-  - Data point Description: Control output
   - Data Point Affiliation: Control loop output
 
 - command_max: Maximum command
   - Data Value Unit: percent
-  - Data point Description: Maximum output
   - Data Point Affiliation: Control loop configuration
 
 """

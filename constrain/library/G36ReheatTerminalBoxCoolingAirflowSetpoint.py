@@ -52,42 +52,34 @@ else:
 
 - mode_system: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - state_zone: Zone state
   - Data Value Unit: enumeration
-  - Data point Description: Zone state (heating, cooling, or deadband)
   - Data Point Affiliation: Zone control
 
 - flow_volumetric_air_cool_max: Maximum cooling airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Maximum cooling airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
 - flow_volumetric_air_setpoint_min: Minimum airflow
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Minimum airflow setpoint during occupied mode
   - Data Point Affiliation: Zone airflow control
 
 - flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow setpoint
   - Data Point Affiliation: Zone airflow control
 
 - command_coil_heat: Heating coil command
   - Data Value Unit: percent
-  - Data point Description: Heating coil command
   - Data Point Affiliation: Terminal box control
 
 - temperature_air_discharge: Discharge air temperature
   - Data Value Unit: temperature
-  - Data point Description: Discharge air temperature
   - Data Point Affiliation: Terminal box monitoring
 
 - temperature_air_discharge_setpoint_min: Minimum discharge air temperature setpoint
   - Data Value Unit: temperature
-  - Data point Description: Minimum discharge air temperature setpoint
   - Data Point Affiliation: Terminal box control
 
 """

@@ -36,12 +36,10 @@ else:
 
 - output_coil_heating: Heating signal
   - Data Value Unit: percent
-  - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: System control
 
 - output_coil_cooling: Cooling signal
   - Data Value Unit: percent
-  - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: System control
 
 """

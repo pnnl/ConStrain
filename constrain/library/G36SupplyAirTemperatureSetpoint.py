@@ -62,42 +62,34 @@ else:
 
 - mode_operation: System operation mode
   - Data Value Unit: enumeration
-  - Data point Description: System mode
   - Data Point Affiliation: System control
 
 - temperature_air_supply_max: Maximum supply air temperature
   - Data Value Unit: temperature
-  - Data point Description: Maximum supply air temperature
   - Data Point Affiliation: System configuration
 
 - temperature_air_supply_cool_max: Maximum cooling supply air temperature
   - Data Value Unit: temperature
-  - Data point Description: Maximum cooling supply air temperature
   - Data Point Affiliation: System configuration
 
 - temperature_air_supply_cool_min: Minimum cooling supply air temperature
   - Data Value Unit: temperature
-  - Data point Description: Minimum cooling supply air temperature
   - Data Point Affiliation: System configuration
 
 - temperature_air_outdoor: Outdoor air temperature
   - Data Value Unit: temperature
-  - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
 - temperature_air_outdoor_supply_min: Minimum outdoor air temperature
   - Data Value Unit: temperature
-  - Data point Description: Minimum outdoor air temperature
   - Data Point Affiliation: System configuration
 
 - temperature_air_outdoor_supply_max: Maximum outdoor air temperature
   - Data Value Unit: temperature
-  - Data point Description: Maximum outdoor air temperature
   - Data Point Affiliation: System configuration
 
 - temperature_air_supply_setpoint: Supply air temperature setpoint
   - Data Value Unit: temperature
-  - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: System control
 
 """

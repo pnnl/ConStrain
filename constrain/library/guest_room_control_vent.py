@@ -54,27 +54,22 @@ for each day:
 
 - flow_volumetric_air_outdoor: Outdoor air flow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Outdoor air volume flow rate
   - Data Point Affiliation: Zone ventilation
 
 - schedule_occupancy: Occupancy schedule
   - Data Value Unit: fraction (0-1)
-  - Data point Description: Occupancy schedule
   - Data Point Affiliation: Zone occupancy
 
 - area_zone: Zone area
   - Data Value Unit: area
-  - Data point Description: Zone floor area
   - Data Point Affiliation: Zone configuration
 
 - height_zone: Zone height
   - Data Value Unit: length
-  - Data point Description: Zone height
   - Data Point Affiliation: Zone configuration
 
 - flow_volumetric_air_outdoor_per_area: Outdoor air requirement
   - Data Value Unit: volumetric flow rate per area
-  - Data point Description: Zone outdoor air requirement
   - Data Point Affiliation: Zone ventilation
 
 """

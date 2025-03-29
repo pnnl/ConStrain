@@ -49,17 +49,14 @@ else:
 
 - command_damper_vav: Damper command
   - Data Value Unit: percent
-  - Data point Description: Damper command
   - Data Point Affiliation: Terminal box control
 
 - flow_volumetric_air_discharge: Airflow rate
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow rate
   - Data Point Affiliation: Terminal box monitoring
 
 - flow_volumetric_air_setpoint: Airflow setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Airflow setpoint
   - Data Point Affiliation: Terminal box control
 
 """

@@ -56,32 +56,26 @@ elif abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0:
 
 - output_coil_heating: Heating signal
   - Data Value Unit: percent
-  - Data point Description: Heating signal (0-100)
   - Data Point Affiliation: System control
 
 - output_coil_cooling: Cooling signal
   - Data Value Unit: percent
-  - Data point Description: Cooling signal (0-100)
   - Data Point Affiliation: System control
 
 - position_damper_air_return: Return air damper command
   - Data Value Unit: percent
-  - Data point Description: Return air damper command
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_return_max: Maximum return air damper command
   - Data Value Unit: percent
-  - Data point Description: Maximum return air damper command
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_outdoor_max: Maximum outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Maximum outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 """

@@ -39,12 +39,10 @@ if never (temperature_air_supply_setpoint < 3.3 (continuously 5 minutes)):
 
 - temperature_air_supply_setpoint: Supply air temperature
   - Data Value Unit: °C
-  - Data point Description: Supply air temperature
   - Data Point Affiliation: Air handling unit
 
 - position_damper_air_outdoor: Outdoor air damper command
   - Data Value Unit: percent
-  - Data point Description: Outdoor air damper command
   - Data Point Affiliation: Air handling unit
 
 """

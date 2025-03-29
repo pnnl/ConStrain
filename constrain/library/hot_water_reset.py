@@ -57,37 +57,30 @@ elif temperature_air_outdoor_min < temperature_air_outdoor < temperature_air_out
 
 - temperature_air_outdoor: Outdoor temperature
   - Data Value Unit: °C
-  - Data point Description: Outdoor air temperature
   - Data Point Affiliation: Environmental conditions
 
 - temperature_air_outdoor_max: Maximum outdoor temperature
   - Data Value Unit: °C
-  - Data point Description: Maximum outdoor air temperature
   - Data Point Affiliation: System configuration
 
 - temperature_air_outdoor_min: Minimum outdoor temperature
   - Data Value Unit: °C
-  - Data point Description: Minimum outdoor air temperature
   - Data Point Affiliation: System configuration
 
 - temperature_water_hot: Hot water temperature
   - Data Value Unit: °C
-  - Data point Description: Hot water temperature
   - Data Point Affiliation: System monitoring
 
 - flow_mass_water_hot: Hot water flow
   - Data Value Unit: mass flow rate
-  - Data point Description: Hot water mass flow rate
   - Data Point Affiliation: System monitoring
 
 - temperature_water_hot_setpoint_max: Maximum temperature setpoint
   - Data Value Unit: °C
-  - Data point Description: Hot water maximum temperature setpoint
   - Data Point Affiliation: System control
 
 - temperature_water_hot_setpoint_min: Minimum temperature setpoint
   - Data Value Unit: °C
-  - Data point Description: Hot water minimum temperature setpoint
   - Data Point Affiliation: System control
 
 """

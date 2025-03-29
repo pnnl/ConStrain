@@ -43,22 +43,18 @@ Endif
 
 - flag_sun_up: Sun position flag
   - Data Value Unit: binary
-  - Data point Description: Sun position flag
   - Data Point Affiliation: Environmental conditions
 
 - value_daylight: Measured daylight level
   - Data Value Unit: illuminance
-  - Data point Description: Measured daylight level
   - Data Point Affiliation: Lighting control
 
 - value_daylight_setpoint: Daylight threshold
   - Data Value Unit: illuminance
-  - Data point Description: Daylight setpoint
   - Data Point Affiliation: Lighting control
 
 - power_light_total: Lighting power
   - Data Value Unit: power
-  - Data point Description: Total lighting power
   - Data Point Affiliation: Lighting system
 
 """

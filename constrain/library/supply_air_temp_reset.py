@@ -47,12 +47,10 @@ else:
 
 - temperature_air_supply: Supply air temperature setpoint
   - Data Value Unit: temperature
-  - Data point Description: Supply air temperature setpoint
   - Data Point Affiliation: System control
 
 - temperature_air_zone_design_cool_setpoint: Design zone cooling temperature setpoint
   - Data Value Unit: temperature
-  - Data point Description: Design zone cooling temperature setpoint
   - Data Point Affiliation: Zone control
 
 """

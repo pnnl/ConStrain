@@ -46,17 +46,14 @@ else:
 
 - flag_zone_standby: Standby status
   - Data Value Unit: binary
-  - Data point Description: Standby mode flag
   - Data Point Affiliation: Zone control
 
 - flow_volumetric_air_outdoor_system_setpoint: System OA setpoint
   - Data Value Unit: volumetric flow rate
-  - Data point Description: System outdoor air flow setpoint
   - Data Point Affiliation: System control
 
 - flow_volumetric_air_outdoor_zone_req: Zone OA requirement
   - Data Value Unit: volumetric flow rate
-  - Data point Description: Zone outdoor air flow requirement
   - Data Point Affiliation: Zone ventilation
 
 """

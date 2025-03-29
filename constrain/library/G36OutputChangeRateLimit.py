@@ -40,12 +40,10 @@ else:
 
 - command_control: Control loop output
   - Data Value Unit: percent
-  - Data point Description: Control loop output (0-100)
   - Data Point Affiliation: Control loop
 
 - rate_change_max: Maximum rate of change per minute
   - Data Value Unit: percent per minute
-  - Data point Description: Maximum rate of change per minute
   - Data Point Affiliation: Control loop configuration
 
 """
