@@ -16,7 +16,6 @@ during loss of power for a period of at least ten hours, and include an accessib
 
 We aim to identify when the system comes on and when it is being turned off every day. The verification passes if we observed different start and end time for the whole simulation period.
 
-
 ### Verification Applicability
 
 - Building Type(s): any

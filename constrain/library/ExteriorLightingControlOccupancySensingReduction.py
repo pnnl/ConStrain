@@ -34,7 +34,7 @@ if design_lighting_power >= 1500:
 
 # Then check power reduction on no occupancy
 date_diff = current_date - last_reported_occupancy # in min
-if number_occupants < 0 and date_diff > 15:
+if number_occupants == 0 and date_diff > 15:
     if power_light_total <= 0.5 * design_lighting_power:
         return True
     else:
