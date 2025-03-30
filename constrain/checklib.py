@@ -1,5 +1,5 @@
 """
-This file containing the high level interface for implementing verificaiton item classes in library.py
+This file containing the high level interface for implementing verification item classes in library.py
 """
 
 import warnings
@@ -55,7 +55,7 @@ class CheckLibBase(ABC):
 
     @abstractmethod
     def check_detail(self) -> Dict:
-        """implementaion of the checking detailed return in Dict"""
+        """implementation of the checking detailed return in Dict"""
         pass
 
     @abstractmethod

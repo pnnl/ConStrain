@@ -106,7 +106,7 @@ class WorkflowEngine:
                         )
                         os.chdir(self.workflow_dict["working_dir"])
                     except Exception as e:
-                        # If an invalid escapse sequence string is specified. E.g. ".\tests\api\test"
+                        # If an invalid escape sequence string is specified. E.g. ".\tests\api\test"
                         if e.winerror == 123:
                             # The error is : OSError: [WinError 123] The filename, directory name, or volume label syntax is incorrect.
                             logging.error(
@@ -509,7 +509,7 @@ class MethodCall:
             elif v[:3] == "+x ":  # unique prefix for evaluate the rest of the string
                 return eval(v[3:])
             else:
-                # in all other string param value, we consider it is a string. This is for clarity and security. More complicated parameter should use embedded methodcall
+                # in all other string param value, we consider it is a string. This is for clarity and security. More complicated parameter should use embedded method call
                 return v
 
     def run(self):

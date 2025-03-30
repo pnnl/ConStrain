@@ -219,7 +219,7 @@ class BrickCompliance:
         else:
             verification_lib_items = list(self.query_statement)
 
-        # find if queried datapoints are the same as the datapoints in the library.json. If not, warning meesage shows up
+        # find if queried datapoints are the same as the datapoints in the library.json. If not, warning message shows up
         available_verification_item_list = []
         for verification_lib_item in verification_lib_items:
             for query_result in self.query_verification_case_datapoints(
