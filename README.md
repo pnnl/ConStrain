@@ -68,7 +68,7 @@ See the Publications section for more information and example of uses of the fra
 
 ## Publications
 
-- Chen Y., M. Wetter, X. Lei, J. Lerond, P.K. Anand, Y. Jung, P. Ehrlich, and D.L. Vrabie. 2023. "Control Performance Verification – The Hidden Opportunity of Ensuring High Performance of Building Control System." In Building Simulation 2023 Conference
+- [Chen Y., M. Wetter, X. Lei, J. Lerond, P.K. Anand, Y. Jung, P. Ehrlich, and D.L. Vrabie. 2023. "Control Performance Verification – The Hidden Opportunity of Ensuring High Performance of Building Control System." In Building Simulation 2023 Conference](https://publications.ibpsa.org/conference/paper/?id=bs2023_1660)
 - Lei X., J. Lerond, Y. Jung, and Y. Chen. 2023. "Development of an Application Programming Interface for a Building Systems Control Performance Verification Framework." In 2023 ASHRAE Annual Conference
 - [Chen Y., J. Lerond, X. Lei, and M.I. Rosenberg. 2021. "A Knowledge-based Framework for Building Energy Model Performance Verification." In Building Simulation 2021 Conference](https://publications.ibpsa.org/conference/paper/?id=bs2021_30725)
 
