@@ -279,10 +279,7 @@ class TestFlexibleCalling(unittest.TestCase):
             os.chdir("../../../../")
 
             # then delete this path.
-            # print(os.getcwd())
-
-            # But I always get error deleting this directory:
-            # os.remove("./tests/api/result/not_existing_path")
+            os.rmdir("./tests/api/result/not_existing_path")
 
             self.assertEqual(
                 logobs.output[1],
