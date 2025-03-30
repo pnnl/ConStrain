@@ -3,7 +3,7 @@ import unittest, sys, logging, json
 sys.path.append("./constrain")
 from api import VerificationLibrary
 
-lib_path = "./schema/library.json"
+lib_path = "./constrain/schema/library.json"
 
 
 class TestVerificationLibrary(unittest.TestCase):

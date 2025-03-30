@@ -30,7 +30,6 @@ else:
 - v_min: Occupied zone minimum airflow setpoint
 - ahu_sat_spt: AHU supply air temperature setpoint
 - v_spt: Active airflow setpoint
-- v_spt_tol: Airflow setpoint tolerance
 - room_temp: Room temperature
 
 """
@@ -46,7 +45,6 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
         "v_min",
         "ahu_sat_spt",
         "v_spt",
-        "v_spt_tol",
         "room_temp",
     ]
 
@@ -57,12 +55,11 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
         v_min,
         ahu_sat_spt,
         v_spt,
-        v_spt_tol,
         room_temp,
     ):
         if zone_state.lower().strip() != "cooling":
             return "Untested"
-        if ahu_sat_spt <= room_temp:
+        if ahu_sat_spt <= room_temp + self.get_tolerance("temperature", "general"):
             return "Untested"
         match operation_mode.strip().lower():
             case "occupied":
@@ -73,7 +70,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
                 print("invalid operation mode value")
                 return "Untested"
 
-        if v_spt - v_spt_tol > airflowmin:
+        if v_spt - self.get_tolerance("airflow", "general") > airflowmin:
             return False
         else:
             return True
@@ -86,7 +83,6 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
                 t["v_min"],
                 t["ahu_sat_spt"],
                 t["v_spt"],
-                t["v_spt_tol"],
                 t["room_temp"],
             ),
             axis=1,

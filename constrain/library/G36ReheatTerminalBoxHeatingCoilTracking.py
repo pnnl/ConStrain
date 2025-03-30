@@ -30,7 +30,6 @@ end
 - heating_coil_command: Heating coil command
 - dat: Discharge air temperature
 - dat_spt: Discharge air temperature setpoint
-- dat_tracking_tol: Temperature tracking tolerance
 
 """
 
@@ -40,16 +39,12 @@ import pandas as pd
 
 
 class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
-    points = [
-        "operation_mode",
-        "heating_coil_command",
-        "dat",
-        "dat_spt",
-        "dat_tracking_tol",
-    ]
+    points = ["operation_mode", "heating_coil_command", "dat", "dat_spt"]
 
     def err_flag(self, t):
-        if abs(t["dat_spt"] - t["dat"]) >= t["dat_tracking_tol"]:
+        if abs(t["dat_spt"] - t["dat"]) >= self.get_tolerance(
+            "temperature", "discharge_air"
+        ):
             return True
         else:
             return False
@@ -83,13 +78,17 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
                     result_flag = "Untested"
                 elif err_time > 1:
                     if (
-                        cur["dat"] - cur["dat_spt"] >= cur["dat_tracking_tol"]
-                        and cur["heating_coil_command"] <= 1
+                        cur["dat"] - cur["dat_spt"]
+                        >= self.get_tolerance("temperature", "discharge_air")
+                        and cur["heating_coil_command"]
+                        <= self.get_tolerance("damper", "command") * 100
                     ):
                         result_flag = True
                     elif (
-                        cur["dat_spt"] - cur["dat"] >= cur["dat_tracking_tol"]
-                        and cur["heating_coil_command"] >= 99
+                        cur["dat_spt"] - cur["dat"]
+                        >= self.get_tolerance("temperature", "discharge_air")
+                        and cur["heating_coil_command"]
+                        >= 100 - self.get_tolerance("damper", "command") * 100
                     ):
                         result_flag = True
                     else:

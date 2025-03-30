@@ -77,12 +77,18 @@ class G36MinOAwoEconomizer(RuleCheckBase):
             and t["sys_mode"].strip().lower() == "occupied"
         ):
             if t["oaf_low_timer"] > 60:
-                if t["outdoor_damper_command"] > 99 and t["return_damper_command"] < 1:
+                if (
+                    t["outdoor_damper_command"]
+                    > (100 - self.get_tolerance("damper", "command") * 100)
+                    and t["return_damper_command"] < 100
+                ):
                     return True
                 else:
                     return False
             elif t["oaf_high_timer"] > 60:
-                if t["outdoor_damper_command"] < 1 and t["return_damper_command"] > 99:
+                if t["outdoor_damper_command"] < 100 and t["return_damper_command"] > (
+                    100 - self.get_tolerance("damper", "command") * 100
+                ):
                     return True
                 else:
                     return False
@@ -104,7 +110,9 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                 and t["sys_mode"].strip().lower() == "occupied"
             ):
                 # only count the timers when it is in occupied mode with economizer lockout
-                if t["outdoor_air_flow"] < t["min_oa_sp"]:
+                if t["outdoor_air_flow"] < t["min_oa_sp"] - self.get_tolerance(
+                    "airflow", "outdoor_air"
+                ):
                     high_timer_start = None
                     high_timer_list.append(0)
                     if low_timer_start is None:
@@ -114,7 +122,9 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                         low_timer_list.append(
                             (i - low_timer_start).total_seconds() / 60
                         )
-                if t["outdoor_air_flow"] > t["min_oa_sp"]:
+                if t["outdoor_air_flow"] > t["min_oa_sp"] + self.get_tolerance(
+                    "airflow", "outdoor_air"
+                ):
                     low_timer_start = None
                     low_timer_list.append(0)
                     if high_timer_start is None:

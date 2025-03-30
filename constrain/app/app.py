@@ -16,8 +16,8 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QMessageBox,
 )
-from PyQt6.QtCore import Qt, QRectF
-from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor
+from PyQt6.QtCore import Qt, QRectF, QUrl
+from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor, QDesktopServices
 
 from constrain.app.import_form import ImportForm
 from constrain.app.meta_form import MetaForm
@@ -51,6 +51,17 @@ class GUI(QMainWindow):
             "QListWidget::item:selected { background-color: #145369; }"
         )
         self.column_list.setCurrentItem(self.column_list.item(0))
+
+        meta_item = self.column_list.item(0)
+        meta_item.setToolTip("Metadata about the workflow")
+
+        import_item = self.column_list.item(1)
+        import_item.setToolTip("Python package import needed to run the workflow")
+
+        state_item = self.column_list.item(2)
+        state_item.setToolTip(
+            "Sequential steps to follow to perform the verification; 'states' can either be 'MethodCall' which represent a method call to one of ConStrain’s APIs or a 'Choice' which can be used to help define alternative steps in a workflow based on the result (referred to as payloads in a workflow)."
+        )
 
         # make and reposition frame containing meta, imports, and state
         self.column_frame = QFrame()
@@ -140,8 +151,26 @@ class GUI(QMainWindow):
 
         settings_menu.addMenu(popup_settings_menu)
 
+        help_menu = QMenu("Help", self)
+
+        open_github_action = QAction("GitHub Repository", self)
+        open_github_action.triggered.connect(self.open_github)
+
+        open_docs_action = QAction("Documentation", self)
+        open_docs_action.triggered.connect(self.open_docs)
+
+        help_menu.addAction(open_github_action)
+        help_menu.addAction(open_docs_action)
+
         toolbar.addAction(file_menu.menuAction())
         toolbar.addAction(settings_menu.menuAction())
+        toolbar.addAction(help_menu.menuAction())
+
+    def open_docs(self):
+        QDesktopServices.openUrl(QUrl("https://pnnl.github.io/ConStrain/index.html"))
+
+    def open_github(self):
+        QDesktopServices.openUrl(QUrl("https://github.com/pnnl/ConStrain"))
 
     def basicPopupSetting(self):
         self.states_form.setting = "basic"
