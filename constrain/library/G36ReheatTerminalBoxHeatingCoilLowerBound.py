@@ -29,7 +29,7 @@ The verification checks that during occupied mode, if the discharge air temperat
 if mode_system != 'occupied':
     untested
 else:
-    if temperature_air_discharge < 10 and command_coil_heat < 99:
+    if temperature_air_discharge >= 10 and command_coil_heat < 100:
         fail
     else:
         pass

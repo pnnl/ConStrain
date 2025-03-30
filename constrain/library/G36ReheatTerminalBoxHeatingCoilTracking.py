@@ -39,7 +39,7 @@ if abs(temperature_air_discharge_setpoint - temperature_air_discharge) >= 0:
     else:
         if (temperature_air_discharge - temperature_air_discharge_setpoint >= 0) and command_coil_heat <= 1:
             pass  # Too hot, coil at minimum
-        elif (temperature_air_discharge_setpoint - temperature_air_discharge >= 0) and command_coil_heat >= 99:
+        elif (temperature_air_discharge_setpoint - temperature_air_discharge >= 0) and command_coil_heat >= 100:
             pass  # Too cold, coil at maximum
         else:
             fail  # Sustained deviation without appropriate response
