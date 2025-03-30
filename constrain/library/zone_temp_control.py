@@ -31,7 +31,7 @@ The verification checks temperature setpoint separation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-if (cooling_setpoint - heating_setpoint) > 2.77:  # 5°F = 2.77°C
+if (temperature_air_zone_cool_setpoint - temperature_air_zone_heat_setpoint) > 2.77:  # 5°F = 2.77°C
     pass
 else:
     fail
