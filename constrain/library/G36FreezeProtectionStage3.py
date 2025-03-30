@@ -51,35 +51,35 @@ if never (
 
 ### Data requirements
 
-- freeze_stat: (optional, set to False if system does not have it) Binary freeze-stat
+- status_freeze: (optional, set to False if system does not have it) Binary freeze-stat
   - Data Value Unit: binary
   - Data Point Affiliation: Air handling unit
 
-- supply_air_temp: Supply air temperature
+- temperature_air_supply: Supply air temperature
   - Data Value Unit: °C
   - Data Point Affiliation: Air handling unit
 
-- outdoor_damper_command: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
-- supply_fan_status: Supply fan status
+- status_fan_supply: Supply fan status
   - Data Value Unit: binary
   - Data Point Affiliation: Air handling unit
 
-- return_fan_status: Return fan status
+- status_fan_return: Return fan status
   - Data Value Unit: binary
   - Data Point Affiliation: Air handling unit
 
-- relief_fan_status: Relief fan status
+- status_fan_relief: Relief fan status
   - Data Value Unit: binary
   - Data Point Affiliation: Air handling unit
 
-- cooling_coil_command: Cooling valve command
+- command_coil_cool: Cooling valve command
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
-- heating_coil_command: Heating valve command
+- command_coil_heat: Heating valve command
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
