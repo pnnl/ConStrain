@@ -17,7 +17,7 @@ class SupplyAirTempReset(RuleCheckBase):
 
         self.result = (t_sa_set_max - t_sa_set_min) >= (
             self.df["T_z_coo"] - t_sa_set_min
-        ) * 0.25 * 0.99  # 0.99 being the numeric threshold
+        ) * 0.25 * (100 - self.get_tolerance("ratio", "temperature") * 100)
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
         print(

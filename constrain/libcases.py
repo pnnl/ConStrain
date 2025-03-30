@@ -6,7 +6,9 @@ This file contains the runner of verification cases to be called by the user wit
 from constrain.workflowsteps import *
 from constrain.library import *
 from constrain.datetimeep import DateTimeEP
-import sys, os
+import sys, os, pathlib
+
+path = pathlib.Path(__file__).parent.resolve()
 
 
 def run_libcase(
@@ -14,9 +16,11 @@ def run_libcase(
     user_lib_file=None,
     plot_option="all-compact",
     output_path="./",
+    time_series_file_name=None,
     fig_size=(6.4, 4.8),
     produce_outputs=False,
     preprocessed_data=None,
+    tolerances=None,
 ):
     """Library case runner
 
@@ -121,7 +125,14 @@ def run_libcase(
             )
     else:
         cls = globals()[verification_class]
-        verification_obj = cls(df, parameters, f"{run_path}")
+        verification_obj = cls(
+            df, parameters, f"{run_path}", tolerances
+        )  # verification is executed by CheckLibBase constructor
+
+    if time_series_file_name is not None:
+        csv_path = f"{output_path}/{time_series_file_name}.csv"
+        verification_obj.save_data(csv_path)
+
     if produce_outputs:
         md_content = verification_obj.add_md(
             None, output_path, "./", item_dict, plot_option, fig_size
@@ -136,7 +147,7 @@ def main():
     num_argv = len(sys.argv)
     # NOTE: all relative paths in the json files should be based on "./" being "./constrain"
     cases_path = "../test_cases/verif_mtd_pp/verification_cases.json"
-    lib_items_path = "../schema/library.json"
+    lib_items_path = f"{path}/schema/library.json"
     items = assemble_verification_items(
         cases_path=cases_path, lib_items_path=lib_items_path
     )

@@ -50,7 +50,7 @@ class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
             [0.05, 50, 500, 0.1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, np.nan, False])
+        expected_results = pd.Series(["Untested", "Untested", False])
         verification_obj = run_test_verification_with_data(
             "InteriorLightingControlAutomaticFullOff", df
         )
@@ -77,7 +77,7 @@ class TestInteriorLightingControlAutomaticFullOff(unittest.TestCase):
             [0.05, 9, 500, 0.1],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([np.nan, np.nan, True])
+        expected_results = pd.Series(["Untested", "Untested", True])
         verification_obj = run_test_verification_with_data(
             "InteriorLightingControlAutomaticFullOff", df
         )

@@ -8,6 +8,7 @@ import sys, logging, multiprocessing, os
 import pandas as pd
 
 from typing import Dict, List, Tuple, Union
+from pathlib import Path
 
 sys.path.append("..")
 
@@ -19,6 +20,11 @@ from constrain.libcases import *
 
 class Verification:
     def __init__(self, verifications: VerificationCase = None):
+        """Instantiate a Verification object.
+
+        Args:
+            verficiations (VerificationCase, optional): a VerificationCase
+        """
         self.lib_classes_py_file = None
         self.preprocessed_data = None
         self.cases = None
@@ -48,17 +54,20 @@ class Verification:
     def configure(
         self,
         output_path: str = None,
+        time_series_csv_export_name: str = None,
         lib_items_path: str = None,
         lib_classes_py_file: str = None,
         plot_option: str = None,
         fig_size: tuple = (6.4, 4.8),
         num_threads: int = 1,
         preprocessed_data: pd.DataFrame = None,
+        path_to_custom_tolerance_file: str = None,
     ) -> None:
         """Configure verification environment.
 
         Args:
             output_path (str): Verification results output path.
+            time_series_csv_export_name (str, optional): CSV file name for saving a complete data csv file with verification result flags. Defaults to None, which will not save any time series data archives.
             lib_items_path (str, optional): User provided verification item json path (include name of the file with extension).
             lib_classes_py_file (str, optional): User provided verification item python classes file.
             plot_option (str, optional): Type of plots to include. It should either be all-compact, all-expand, day-compact, or day-expand. It can also be None, which will plot all types. Default to None.
@@ -78,6 +87,17 @@ class Verification:
             logging.error("The specificed output directory does not exist.")
             return None
 
+        if time_series_csv_export_name is None:
+            self.time_series_csv_export_name = time_series_csv_export_name
+        else:
+            if not isinstance(time_series_csv_export_name, str):
+                logging.error("time_series_csv_export_name should be a string.")
+                return None
+            if time_series_csv_export_name[-4:] == ".csv":
+                self.time_series_csv_export_name = time_series_csv_export_name[:-4]
+
+        # TODO: lib_items_path now only needed when user provides their own lib items, and the default lib items from
+        #  ConStrain will be loaded without user inputs. This is no longer an error to be logged.
         if lib_items_path is None:
             logging.error(
                 "A path to the library of verification cases should be provided."
@@ -135,6 +155,22 @@ class Verification:
             )
             return None
 
+        if isinstance(path_to_custom_tolerance_file, str):
+            if not os.path.isfile(path_to_custom_tolerance_file):
+                logging.error(
+                    "The path to the custom tolerance file is incorrect. The default tolerances will be used."
+                )
+                path_to_custom_tolerance_file = (
+                    Path(__file__).parent.parent / "tolerances.json"
+                )
+        else:
+            logging.error(
+                f"path_to_custom_tolerance_file should be a string. The default tolerances will be used."
+            )
+            path_to_custom_tolerance_file = (
+                Path(__file__).parent.parent / "tolerances.json"
+            )
+
         self.output_path = output_path
         self.lib_items_path = lib_items_path
         self.lib_classes_py_file = lib_classes_py_file
@@ -142,12 +178,15 @@ class Verification:
         self.fig_size = fig_size
         self.num_threads = num_threads
         self.preprocessed_data = preprocessed_data
+        with open(path_to_custom_tolerance_file) as f:
+            tolerances = json.load(f)
+        self.tolerances = tolerances
 
     def run_single_verification(self, case: dict = None) -> None:
         """Run a single verification and generate a json file containing markdown report string and other results info.
 
         Args:
-            case (dict): Verification case dictionary.
+            case (Dict): Verification case dictionary.
         """
         # Input validation
         if case is None:
@@ -167,9 +206,11 @@ class Verification:
             user_lib_file=self.lib_classes_py_file,
             plot_option=self.plot_option,
             output_path=self.output_path,
+            time_series_file_name=self.time_series_csv_export_name,
             fig_size=self.fig_size,
             produce_outputs=True,
             preprocessed_data=self.preprocessed_data,
+            tolerances=self.tolerances,
         )
 
         # TODO: JXL to make this compatible with reporting API, save md json instead of md files directly.
@@ -190,7 +231,5 @@ class Verification:
             return None
 
         # Run verifications
-        # with multiprocessing.Pool(self.num_threads) as c:
-        #     c.map(self.run_single_verification, self.cases.values())
-        for case in self.cases.values():
-            self.run_single_verification(case)
+        with multiprocessing.Pool(self.num_threads) as c:
+            c.map(self.run_single_verification, self.cases.values())

@@ -1,6 +1,6 @@
 """
 ### Description
-When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio
+When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio and the pressure setpoint must remain the same
 
 ### Code requirement
 
@@ -18,9 +18,12 @@ if reheat_coil_flag:
   if V_dot_VAV_max == 0
      Untested
   if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol
-     fail
-  else:
-     pass
+     if P_set_prev is None:
+        return Untested
+    elif abs(P_set - P_set_prev) > P_set_tol:
+        return Untested
+    else:
+        return False
 else
     Untested
 ```
@@ -29,18 +32,21 @@ else
 - V_dot_VAV: actual VAV volume flow
 - V_dot_VAV_max: max VAV volume flow
 - VAV_min_turndown_design: design VAV box min turndown ratio
+- P_set: duct pressure setpoint
 
 """
 
+import numpy as np
 from constrain.checklib import RuleCheckBase
 
 
-class VAVMinimumTurndownDuringReheat(RuleCheckBase):
+class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
     points = [
-        "reheat_coil_flag",  # boolean
-        "V_dot_VAV",  # actual VAV volume flow
-        "V_dot_VAV_max",  # max VAV volume flow
+        "reheat_coil_flag",
+        "V_dot_VAV",
+        "V_dot_VAV_max",
         "VAV_min_turndown_design",
+        "P_set",
     ]
 
     def vav_turndown_check(self, data):
@@ -50,13 +56,22 @@ class VAVMinimumTurndownDuringReheat(RuleCheckBase):
             elif data["V_dot_VAV"] / data["V_dot_VAV_max"] > data[
                 "VAV_min_turndown_design"
             ] + self.get_tolerance("ratio", "flow"):
-                return False
+                if data["P_set_prev"] is None:
+                    return "Untested"
+                elif abs(data["P_set"] - data["P_set_prev"]) > self.get_tolerance(
+                    "pressure", "static"
+                ):
+                    return "Untested"
+                else:
+                    return False
             else:
                 return True
         else:
             return "Untested"
 
     def verify(self):
+        # Copy the previous row's value in 'P_set' column to the current row
+        self.df["P_set_prev"] = self.df["P_set"].shift(1).replace({np.nan: None})
         if (self.df["V_dot_VAV_max"] != 0).all():
             self.df["V_dot_ratio"] = (
                 self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]

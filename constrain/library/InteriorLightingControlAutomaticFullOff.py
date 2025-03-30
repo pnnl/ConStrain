@@ -1,5 +1,5 @@
 """
-ASHRAE 90.1-2022 
+ASHRAE 90.1-2022
 ### Description
 
 Section 9.4.1.1.h Automatic full OFF control
@@ -73,7 +73,7 @@ class InteriorLightingControlAutomaticFullOff(RuleCheckBase):
             else:
                 check = False
         else:
-            check = np.nan
+            check = "Untested"
 
         # update last identified occupancy flag if applicable
         if data["o"] >= data["tol_o"]:

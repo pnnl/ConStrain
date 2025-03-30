@@ -1,5 +1,5 @@
 """
-ASHRAE 90.1-2022 
+ASHRAE 90.1-2022
 ### Description
 
 Section 9.4.1.4.e Occupancy-sensing light reduction control
@@ -30,7 +30,6 @@ Endif
 ### Data requirements
 - o: number of occupants sensed in the zones served by the system.
 - total_lighting_power: reported total lighting power (not the design total lighting power)
-- tol_o: occupancy threshold; below that value the zones are considered unoccupied.
 
 """
 
@@ -42,7 +41,6 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
     points = [
         "o",
         "total_lighting_power",
-        "tol_o",
     ]
     last_reported_occupancy = None
     design_total_lighting_power = None
@@ -51,7 +49,9 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
         if self.last_reported_occupancy is None:
             self.last_reported_occupancy = data.name
         date_diff = data.name - self.last_reported_occupancy
-        if (data["o"] < data["tol_o"]) and date_diff.total_seconds() / 60 > 15:
+        if (
+            data["o"] < self.get_tolerance("ratio", "occupancy")
+        ) and date_diff.total_seconds() / 60 > 15:
             # No activity detected or time since last activity exceeds 15 minutes
             # Therefore, the control requirement is met if the total lighting power is already reduced by at least 50%
             if data["total_lighting_power"] <= 0.5 * self.design_total_lighting_power:
@@ -59,9 +59,9 @@ class ExteriorLightingControlOccupancySensingReduction(RuleCheckBase):
             else:
                 check = False
         else:
-            check = np.nan  # untested
+            check = "Untested"
 
-        if data["o"] >= data["tol_o"]:
+        if data["o"] >= self.get_tolerance("ratio", "occupancy"):
             self.last_reported_occupancy = data.name
         return check
 

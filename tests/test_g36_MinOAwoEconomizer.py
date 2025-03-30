@@ -11,6 +11,21 @@ import numpy as np
 
 
 class TestG36MinOAwEconomizer(unittest.TestCase):
+    tolerances = {
+        "damper": {
+            "unit": "%",
+            "types": {
+                "position": 0.01,
+                "command": 0.01,
+                "general": 0.01,
+            },
+        },
+        "airflow": {
+            "unit": "m3/s",
+            "types": {"outdoor_air": 0.0, "general": 0.0},
+        },
+    }
+
     def test_minoa_wo_economizer_pass_untested_low(self):
         points = [
             "outdoor_air_temp",
@@ -37,12 +52,16 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             [20, 24, 100, 0, 1600, 2000, "occupied"],
         ]
 
-        expected_results = pd.Series([np.nan, np.nan, True, True, np.nan])
+        expected_results = pd.Series(["Untested", "Untested", True, True, "Untested"])
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36MinOAwoEconomizer", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36MinOAwoEconomizer", df, tolerances=self.tolerances
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))
@@ -73,12 +92,16 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             [20, 24, 0, 20, 1600, 2000, "occupied"],
         ]
 
-        expected_results = pd.Series([np.nan, np.nan, False, False, np.nan])
+        expected_results = pd.Series(["Untested", "Untested", False, False, "Untested"])
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36MinOAwoEconomizer", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36MinOAwoEconomizer", df, tolerances=self.tolerances
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))
@@ -109,12 +132,16 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             [20, 24, 100, 0, 2600, 2000, "occupied"],
         ]
 
-        expected_results = pd.Series([np.nan, np.nan, True, True, np.nan])
+        expected_results = pd.Series(["Untested", "Untested", True, True, "Untested"])
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36MinOAwoEconomizer", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36MinOAwoEconomizer", df, tolerances=self.tolerances
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))
@@ -145,12 +172,16 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             [20, 24, 0, 20, 2600, 2000, "occupied"],
         ]
 
-        expected_results = pd.Series([np.nan, np.nan, True, False, np.nan])
+        expected_results = pd.Series(["Untested", "Untested", True, False, "Untested"])
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         results = pd.Series(
-            list(run_test_verification_with_data("G36MinOAwoEconomizer", df).result)
+            list(
+                run_test_verification_with_data(
+                    "G36MinOAwoEconomizer", df, tolerances=self.tolerances
+                ).result
+            )
         )
 
         self.assertTrue(results.equals(expected_results))

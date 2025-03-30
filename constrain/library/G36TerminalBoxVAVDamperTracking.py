@@ -38,10 +38,10 @@ import pandas as pd
 
 
 class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
-    points = ["vav_damper_command", "v", "v_spt", "v_tracking_tol"]
+    points = ["vav_damper_command", "v", "v_spt"]
 
     def err_flag(self, t):
-        if abs(t["v_spt"] - t["v"]) >= t["v_tracking_tol"]:
+        if abs(t["v_spt"] - t["v"]) >= self.get_tolerance("airflow", "general"):
             return True
         else:
             return False
@@ -67,16 +67,18 @@ class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
             if err_time == 0:
                 result_flag = True
             elif err_time <= 1:
-                result_flag = np.nan
+                result_flag = "Untested"
             elif err_time > 1:
                 if (
-                    cur["v"] - cur["v_spt"] >= cur["v_tracking_tol"]
-                    and cur["vav_damper_command"] <= 1
+                    cur["v"] - cur["v_spt"] >= self.get_tolerance("airflow", "general")
+                    and cur["vav_damper_command"]
+                    <= self.get_tolerance("damper", "command") * 100
                 ):
                     result_flag = True
                 elif (
-                    cur["v_spt"] - cur["v"] >= cur["v_tracking_tol"]
-                    and cur["vav_damper_command"] >= 99
+                    cur["v_spt"] - cur["v"] >= self.get_tolerance("airflow", "general")
+                    and cur["vav_damper_command"]
+                    >= (1 - self.get_tolerance("damper", "command")) * 100
                 ):
                     result_flag = True
                 else:
