@@ -110,7 +110,10 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
     ]
 
     def supply_air_temperature_setpoint(self, data):
-        if data["temperature_air_supply_max"] > data["temperature_air_supply_setpoint_cool_max"]:
+        if (
+            data["temperature_air_supply_max"]
+            > data["temperature_air_supply_setpoint_cool_max"]
+        ):
             return False
         sa_t_sp = -999
         if data["mode_operation"] == "cooldown":
