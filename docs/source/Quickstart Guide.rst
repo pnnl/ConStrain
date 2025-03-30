@@ -85,7 +85,7 @@ First, let's import the package.
 
     import constrain as cs
 
-**ConStrain** includes an :python:`Examples` module which contains sample data and examples of verifications. Information about each example can be obtained by running the following command. A dictionary is returned which shows information about each example. 
+**ConStrain** includes an :python:`Examples` module which contains sample data and examples of verifications. Information about each example can be obtained by running the following command. A dictionary is returned which shows information about each example.
 
 .. sourcecode:: python
 
@@ -115,7 +115,7 @@ Next, we want to validate :python:`cases` by calling :meth:`api.verification_cas
 
     cases.validate()
 
-Then, we'll want to instantiate a verification and configure it, and run the verifications.
+Then, we'll want to instantiate a verification and configure it, and run the verifications. Note that if you are using `num_thread > 1` you will need to wrap your code under the following statement `if __name__ == "__main__":`.
 
 .. sourcecode:: python
     

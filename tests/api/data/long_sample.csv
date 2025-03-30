@@ -1,0 +1,22 @@
+Timestamp,Building,System,Equipment,Sensor,Value
+2023-01-01 00:00:00,Building_A,HVAC,AC_Unit_1,Temperature,22.5
+2023-01-01 00:00:00,Building_B,Lighting,Main_Hall_Lights,Brightness,80
+2023-01-01 00:00:00,Building_C,Security,Main_Entrance_Camera,Status,On
+2023-01-01 01:00:00,Building_A,HVAC,AC_Unit_1,Temperature,21.8
+2023-01-01 01:00:00,Building_B,Lighting,Main_Hall_Lights,Brightness,75
+2023-01-01 01:00:00,Building_C,Security,Main_Entrance_Camera,Status,Off
+2023-01-01 02:00:00,Building_A,HVAC,AC_Unit_2,Temperature,23.0
+2023-01-01 02:00:00,Building_B,Lighting,Conference_Room_Lights,Brightness,90
+2023-01-01 02:00:00,Building_C,Security,Main_Entrance_Camera,Status,On
+2023-01-01 03:00:00,Building_A,HVAC,AC_Unit_1,Temperature,22.0
+2023-01-01 03:00:00,Building_B,Lighting,Main_Hall_Lights,Brightness,70
+2023-01-01 03:00:00,Building_C,Security,Rear_Exit_Camera,Status,On
+2023-01-01 04:00:00,Building_A,HVAC,AC_Unit_2,Temperature,22.7
+2023-01-01 04:00:00,Building_B,Lighting,Conference_Room_Lights,Brightness,85
+2023-01-01 04:00:00,Building_C,Security,Surveillance_System,Alarm,Activated
+2023-01-01 05:00:00,Building_A,HVAC,AC_Unit_1,Temperature,21.5
+2023-01-01 05:00:00,Building_B,Lighting,Main_Hall_Lights,Brightness,65
+2023-01-01 05:00:00,Building_C,Security,Surveillance_System,Alarm,Deactivated
+2023-01-01 06:00:00,Building_A,HVAC,AC_Unit_2,Temperature,22.2
+2023-01-01 06:00:00,Building_B,Lighting,Parking_Lot_Lights,Brightness,60
+2023-01-01 06:00:00,Building_C,Security,Main_Entrance_Camera,Status,On

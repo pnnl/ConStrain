@@ -1,13 +1,21 @@
 name: Deployment Test
-on: workflow_dispatch
+on:
+    push:
+      branches: [ '*' ]
 jobs:
     main:
-        name: Build package with Poetry and run example Constrin script
-        runs-on: ['ubuntu-latest']
+        name: Build package with Poetry and run example Constrain script
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest] #, windows-latest, macos-latest]
+                python-version: ["3.10"]
         steps:
             - uses: actions/checkout@v3
-            - name: Install Python
+            - name: Set up Python ${{ matrix.python-version }}
               uses: actions/setup-python@v4
+              with:
+                python-version: ${{ matrix.python-version }}
             - name: Install poetry
               uses: abatilo/actions-poetry@v2
             - name: Setup a local virtual environment (if no poetry.toml file)
@@ -24,7 +32,7 @@ jobs:
             - name: Build package
               run: poetry build
             - name: Install package
-              run: python -m pip install --find-links=.\dist\ constrain
-            - name: Run sample ConStrain scrip
-              run: python -m .\sample_constrain_run.py
+              run: python -c "import glob, subprocess; [subprocess.call(['pip', 'install', f]) for f in glob.glob('./dist/*.whl')]"
+            - name: Run sample ConStrain script
+              run: cd ..; python ./ConStrain/.github/workflows/sample_constrain_run.py
             

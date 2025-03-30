@@ -2,7 +2,6 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QWidget,
-    QPushButton,
     QGraphicsView,
     QGraphicsTextItem,
     QGraphicsRectItem,
@@ -23,6 +22,7 @@ from constrain.app.popup_window import PopupWindow
 from constrain.app.advanced_popup import AdvancedPopup
 from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
 from constrain.app.utils import send_error
+from constrain.app.components.button import StandardButton
 import json
 from collections import Counter
 
@@ -59,6 +59,8 @@ class Zoom(QGraphicsView):
         self.selection_rect = None
 
         self.max_x = 0
+
+        self.setBackgroundBrush(QBrush(QColor(255, 255, 255)))
 
     def wheelEvent(self, event: QWheelEvent):
         """Zooms in or out on view"""
@@ -249,21 +251,13 @@ class WorkflowDiagram(QWidget):
         add_buttons = QHBoxLayout()
         reformat_button_layout = QHBoxLayout()
 
-        basic_button = QPushButton("Add Basic")
-        basic_button.setToolTip("Create a state using the basic popup")
-        basic_button.setFixedSize(100, 23)
-        basic_button.clicked.connect(self.call_popup)
-        add_buttons.addWidget(basic_button)
+        add_state_button = StandardButton("Add State")
+        add_state_button.setToolTip("Create a state to add to your workflow")
+        add_state_button.clicked.connect(self.add_state)
+        add_buttons.addWidget(add_state_button)
 
-        advanced_button = QPushButton("Add Advanced")
-        advanced_button.setToolTip("Create a state using the advanced popup")
-        advanced_button.setFixedSize(100, 23)
-        advanced_button.clicked.connect(self.call_advanced_popup)
-        add_buttons.addWidget(advanced_button)
-
-        reformat_button = QPushButton("Rearrange")
+        reformat_button = StandardButton("Rearrange")
         reformat_button.setToolTip("Rearrange diagram to a tree layout")
-        reformat_button.setFixedSize(100, 23)
         reformat_button.clicked.connect(self.get_workflow)
         reformat_button_layout.addWidget(reformat_button)
 
@@ -279,7 +273,7 @@ class WorkflowDiagram(QWidget):
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.setLayout(layout)
 
-    def add_state(self):
+    def check_popup_and_add_state(self):
         """Creates CustomItem based on state described in self.popup if there was no error"""
         if self.popup.error:
             return
@@ -420,6 +414,12 @@ class WorkflowDiagram(QWidget):
                 dfs_helper(root, [])
             root.setBrush("green")
 
+    def add_state(self):
+        if self.setting == "basic":
+            self.call_popup(None, False)
+        elif self.setting == "advanced":
+            self.call_advanced_popup(None, False)
+
     def call_popup(self, rect=None, edit=False):
         """Calls popup on click of CustomItem, or if 'Add Basic' button is pressed
 
@@ -444,11 +444,13 @@ class WorkflowDiagram(QWidget):
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.add_state)
+                self.popup.save_button.clicked.disconnect(
+                    self.check_popup_and_add_state
+                )
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
-            self.popup.save_button.clicked.connect(self.add_state)
+            self.popup.save_button.clicked.connect(self.check_popup_and_add_state)
         self.popup.exec()
 
     def call_advanced_popup(self, rect=None, edit=False):
@@ -458,11 +460,13 @@ class WorkflowDiagram(QWidget):
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.add_state)
+                self.popup.save_button.clicked.disconnect(
+                    self.check_popup_and_add_state
+                )
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
-            self.popup.save_button.clicked.connect(self.add_state)
+            self.popup.save_button.clicked.connect(self.check_popup_and_add_state)
         self.popup.exec()
 
     def item_clicked(self):
