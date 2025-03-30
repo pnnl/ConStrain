@@ -56,7 +56,7 @@ class G36OutputChangeRateLimit(RuleCheckBase):
     points = [
         "command_control",
         "rate_change_max",
-    ]  # cmd_control is expected to have a data range of 100
+    ]  # command_control is expected to have a data range of 100
 
     def change_rate_check(self, cur, prev, cur_time, prev_time):
         if prev is None:

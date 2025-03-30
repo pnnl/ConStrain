@@ -33,23 +33,23 @@ The verification checks supply air temperature setpoint calculation in multiple 
 
 ```python
 # First check maximum temperature limit
-if temperature_air_supply_max > temperature_air_supply_cool_max:
+if temperature_air_supply_max > temperature_air_supply_setpoint_cool_max:
     fail
 
 # Calculate setpoint based on mode
 match mode_operation:
     case "cooldown":
-        t_sa_sp_calc = temperature_air_supply_cool_min
+        t_sa_sp_calc = temperature_air_supply_setpoint_cool_min
     case "warmup" | "setback":
         t_sa_sp_calc = 35.0  # 95°F
     case "occupied" | "setup":
         if temperature_air_outdoor <= temperature_air_outdoor_supply_min:
             t_sa_sp_calc = temperature_air_supply_max
         elif temperature_air_outdoor >= temperature_air_outdoor_supply_max:
-            t_sa_sp_calc = temperature_air_supply_cool_min
+            t_sa_sp_calc = temperature_air_supply_setpoint_cool_min
         else:
             # Linear interpolation
-            t_sa_sp_calc = (temperature_air_outdoor - temperature_air_outdoor_supply_min) * (temperature_air_supply_max - temperature_air_supply_cool_min) / (temperature_air_outdoor_supply_min - temperature_air_outdoor_supply_max) + temperature_air_supply_max
+            t_sa_sp_calc = (temperature_air_outdoor - temperature_air_outdoor_supply_min) * (temperature_air_supply_max - temperature_air_supply_setpoint_cool_min) / (temperature_air_outdoor_supply_min - temperature_air_outdoor_supply_max) + temperature_air_supply_max
 
 # Verify setpoint matches calculated value
 if abs(t_sa_sp_calc - temperature_air_supply_setpoint) = 0:
@@ -68,11 +68,11 @@ else:
   - Data Value Unit: temperature
   - Data Point Affiliation: System configuration
 
-- temperature_air_supply_cool_max: Maximum cooling supply air temperature
+- temperature_air_supply_setpoint_cool_max: Maximum cooling supply air temperature setpoint
   - Data Value Unit: temperature
   - Data Point Affiliation: System configuration
 
-- temperature_air_supply_cool_min: Minimum cooling supply air temperature
+- temperature_air_supply_setpoint_cool_min: Minimum cooling supply air temperature setpoint
   - Data Value Unit: temperature
   - Data Point Affiliation: System configuration
 
@@ -101,8 +101,8 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
     points = [
         "mode_operation",
         "temperature_air_supply_max",
-        "temperature_air_supply_cool_max",
-        "temperature_air_supply_cool_min",
+        "temperature_air_supply_setpoint_cool_max",
+        "temperature_air_supply_setpoint_cool_min",
         "temperature_air_outdoor",
         "temperature_air_outdoor_supply_min",
         "temperature_air_outdoor_supply_max",
@@ -110,11 +110,11 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
     ]
 
     def supply_air_temperature_setpoint(self, data):
-        if data["temperature_air_supply_max"] > data["temperature_air_supply_cool_max"]:
+        if data["temperature_air_supply_max"] > data["temperature_air_supply_setpoint_cool_max"]:
             return False
         sa_t_sp = -999
         if data["mode_operation"] == "cooldown":
-            sa_t_sp = data["temperature_air_supply_cool_min"]
+            sa_t_sp = data["temperature_air_supply_setpoint_cool_min"]
         elif data["mode_operation"] in ["warmup", "setback"]:
             sa_t_sp = 35.0  # 95 deg. F
         elif data["mode_operation"] in ["occupied", "setup"]:
@@ -127,14 +127,14 @@ class G36SupplyAirTemperatureSetpoint(RuleCheckBase):
                 data["temperature_air_outdoor"]
                 >= data["temperature_air_outdoor_supply_max"]
             ):
-                sa_t_sp = data["temperature_air_supply_cool_min"]
+                sa_t_sp = data["temperature_air_supply_setpoint_cool_min"]
             else:
                 sa_t_sp = (
                     data["temperature_air_outdoor"]
                     - data["temperature_air_outdoor_supply_min"]
                 ) * (
                     data["temperature_air_supply_max"]
-                    - data["temperature_air_supply_cool_min"]
+                    - data["temperature_air_supply_setpoint_cool_min"]
                 ) / (
                     data["temperature_air_outdoor_supply_min"]
                     - data["temperature_air_outdoor_supply_max"]

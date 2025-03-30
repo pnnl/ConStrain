@@ -68,8 +68,8 @@
                     "temperature_air_supply_setpoint": "sa_t_sp_ac",
                     "temperature_air_outdoor_supply_min": "oa_t_min",
                     "temperature_air_outdoor_supply_max": "oa_t_max",
-                    "temperature_air_supply_cool_min": "min_clg_sa_t_sp",
-                    "temperature_air_supply_cool_max": "max_clg_sa_t_sp"
+                    "temperature_air_supply_setpoint_cool_min": "min_clg_sa_t_sp",
+                    "temperature_air_supply_setpoint_cool_max": "max_clg_sa_t_sp"
                 },
                 "parameters": {}
             },

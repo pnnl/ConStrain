@@ -21,8 +21,8 @@ class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
         points = [
             "mode_operation",
             "temperature_air_supply_max",
-            "temperature_air_supply_cool_max",
-            "temperature_air_supply_cool_min",
+            "temperature_air_supply_setpoint_cool_max",
+            "temperature_air_supply_setpoint_cool_min",
             "temperature_air_outdoor",
             "temperature_air_outdoor_supply_min",
             "temperature_air_outdoor_supply_max",
