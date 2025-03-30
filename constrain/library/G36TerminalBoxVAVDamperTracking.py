@@ -35,9 +35,9 @@ if abs(flow_volumetric_air_setpoint - flow_volumetric_air_discharge) >= 0:
     if tracking_error_duration < 1_hour:
         pass  # Brief deviation acceptable
     else:
-        if (flow_volumetric_air_discharge - flow_volumetric_air_setpoint >= 0) and command_damper_vav <= 1:
+        if (flow_volumetric_air_discharge - flow_volumetric_air_setpoint >= 0) and command_damper_vav = 0:
             pass  # Flow too high, damper at minimum
-        elif (flow_volumetric_air_setpoint - flow_volumetric_air_discharge >= 0) and command_damper_vav >= 99:
+        elif (flow_volumetric_air_setpoint - flow_volumetric_air_discharge >= 0) and command_damper_vav = 100:
             pass  # Flow too low, damper at maximum
         else:
             fail  # Sustained deviation without appropriate response

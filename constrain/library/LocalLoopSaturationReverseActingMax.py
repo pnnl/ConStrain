@@ -15,7 +15,7 @@ The verification monitors control loop behavior when error persists:
 1. Track duration of negative control error (feedback < setpoint)
 2. After 1 hour of continuous error:
    - Verify actuator command reaches maximum position
-   - Allow small tolerance (1%) from maximum
+   - Allow small tolerance from maximum
 3. Pass if actuator saturates, fail if it doesn't respond properly
 
 ### Verification Applicability
@@ -34,7 +34,7 @@ for each timestep:
     if value_sensor < value_setpoint:  # Negative error
         error_duration += timestep_size
         if error_duration >= 1_hour:
-            if command_max - command_control <= 0.01:  # Within 1% of maximum
+            if command_max - command_control <= 0:
                 pass  # Proper saturation
             else:
                 fail  # Should be at maximum

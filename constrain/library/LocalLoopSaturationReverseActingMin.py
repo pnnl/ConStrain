@@ -15,7 +15,7 @@ The verification monitors control loop behavior when error persists:
 1. Track duration of positive control error (feedback > setpoint)
 2. After 1 hour of continuous error:
    - Verify actuator command reaches minimum position
-   - Allow small tolerance (1%) from minimum
+   - Allow small tolerance from minimum
 3. Pass if actuator saturates, fail if it doesn't respond properly
 
 ### Verification Applicability
@@ -34,7 +34,7 @@ for each timestep:
     if value_sensor > value_setpoint:  # Positive error
         error_duration += timestep_size
         if error_duration >= 1_hour:
-            if command_control - command_min <= 0.01:  # Within 1% of minimum
+            if command_control - command_min <= 0:
                 pass  # Proper saturation
             else:
                 fail  # Should be at minimum
