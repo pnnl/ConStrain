@@ -69,7 +69,7 @@ class MZSystemOccupiedStandbyVentilationZoneControl(RuleCheckBase):
     ]
     last_non_standby_mode_requested_v_oa = None  # expects volumetric flow rate
 
-    def occupied_standby_ventilation_zontrol_control(self, data):
+    def occupied_standby_ventilation_zone_control(self, data):
         # initialization
         if self.last_non_standby_mode_requested_v_oa is None:
             self.last_non_standby_mode_requested_v_oa = data[
@@ -95,5 +95,5 @@ class MZSystemOccupiedStandbyVentilationZoneControl(RuleCheckBase):
 
     def verify(self):
         self.result = self.df.apply(
-            lambda d: self.occupied_standby_ventilation_zontrol_control(d), axis=1
+            lambda d: self.occupied_standby_ventilation_zone_control(d), axis=1
         )
