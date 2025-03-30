@@ -53,7 +53,7 @@ if not ('occupied' in mode_system and 'unoccupied' in mode_system):
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
-- flag_reheat_perimeter: Zone configuration
+- flag_reheat_perimeter: Zone configuration flag
   - Data Value Unit: binary
   - Data Point Affiliation: System configuration
 

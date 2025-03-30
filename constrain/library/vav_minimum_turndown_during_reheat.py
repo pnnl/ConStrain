@@ -49,7 +49,7 @@ else:
 
 ### Data requirements
 
-- flag_coil_reheat: VAV box reheat coil operation status
+- flag_coil_reheat: VAV box reheat coil operation flag
   - Data Value Unit: binary
   - Data Point Affiliation: Terminal unit control
 

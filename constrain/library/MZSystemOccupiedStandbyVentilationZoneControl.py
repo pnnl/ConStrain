@@ -44,7 +44,7 @@ else:
 
 ### Data requirements
 
-- flag_zone_standby: Standby status
+- flag_zone_standby: Standby flag
   - Data Value Unit: binary
   - Data Point Affiliation: Zone control
 
