@@ -47,11 +47,18 @@ class WorkflowEngine:
 
         self.load_states()
         # change working dir
+
+        word_dir_before_run = os.getcwd()
+
         self.change_work_dir()
 
         # run workflow now
         if run_workflow_now:
             self.run_workflow()
+
+        os.chdir(word_dir_before_run)
+
+
 
     def change_work_dir(self) -> None:
         # First, check if the workflow_dict has "working_dir"

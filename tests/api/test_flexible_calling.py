@@ -63,6 +63,9 @@ class TestFlexibleCalling(unittest.TestCase):
                 json.dump(workflow_dict, f)
 
             workflow = Workflow(workflow=json_case_path)
+
+            current_dir = os.getcwd()
+
             # change current working directory back
             os.chdir("../../..")
 
@@ -75,6 +78,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
     def test_Win_path(self):
         """This test check if the program can detect the working path provided is in WIN format."""
@@ -90,6 +95,9 @@ class TestFlexibleCalling(unittest.TestCase):
                 json.dump(workflow_dict, f)
 
             workflow = Workflow(workflow=json_case_path)
+
+            current_dir = os.getcwd()
+
             # change current working directory back
             os.chdir("../../..")
 
@@ -101,6 +109,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
     def test_valid_dir(self):
         """This test checks when a working directory is provided and it also points to the correct path,
@@ -118,6 +128,8 @@ class TestFlexibleCalling(unittest.TestCase):
 
             workflow = Workflow(workflow=json_case_path)
 
+            current_dir = os.getcwd()
+
             # change current working directory back
             os.chdir("../../..")
 
@@ -125,6 +137,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
         with self.assertLogs() as logobs:
             # Change working_dir value in the json file to a valid path in Win format
@@ -137,6 +151,8 @@ class TestFlexibleCalling(unittest.TestCase):
 
             workflow = Workflow(workflow=json_case_path)
 
+            current_dir = os.getcwd()
+
             # Change current working directory back
             os.chdir("../../..")
 
@@ -144,6 +160,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
     def test_dir_with_space(self):
         """This test checks when a working directory with space is provided and it also points to the correct path,
@@ -161,6 +179,8 @@ class TestFlexibleCalling(unittest.TestCase):
 
             workflow = Workflow(workflow=json_case_path)
 
+            current_dir = os.getcwd()
+
             # change current working directory back
             os.chdir("../../../../")
 
@@ -168,6 +188,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
         with self.assertLogs() as logobs:
             # Change working_dir value in the json file to a valid path in Win format with space
@@ -180,6 +202,8 @@ class TestFlexibleCalling(unittest.TestCase):
 
             workflow = Workflow(workflow=json_case_path)
 
+            current_dir = os.getcwd()
+
             # Change current working directory back
             os.chdir("../../../../")
 
@@ -187,6 +211,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
     def test_dir_simple(self):
         """This test checks when a simple working directory without any "\\" or "/" is provided and it also points to the correct path,
@@ -204,6 +230,8 @@ class TestFlexibleCalling(unittest.TestCase):
 
             workflow = Workflow(workflow=json_case_path)
 
+            current_dir = os.getcwd()
+
             # change current working directory back
             os.chdir("../")
 
@@ -211,6 +239,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
         with self.assertLogs() as logobs:
             # Change working_dir value in the json file to a valid path in Win format
@@ -223,6 +253,8 @@ class TestFlexibleCalling(unittest.TestCase):
 
             workflow = Workflow(workflow=json_case_path)
 
+            current_dir = os.getcwd()
+
             # Change current working directory back
             os.chdir("../")
 
@@ -230,6 +262,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
     def test_valid_absolute_dir(self):
         """This test checks when a absolute working directory is provided and it also points to the correct path,
@@ -252,6 +286,8 @@ class TestFlexibleCalling(unittest.TestCase):
 
             workflow = Workflow(workflow=json_case_path)
 
+            current_dir = os.getcwd()
+
             # change current working directory back
             os.chdir("../../..")
 
@@ -259,6 +295,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[1],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
     def test_dir_not_exist(self):
         """This test checks when a valid wd is provided but it doesn't exist,
@@ -275,16 +313,16 @@ class TestFlexibleCalling(unittest.TestCase):
                 json.dump(workflow_dict, f)
 
             workflow = Workflow(workflow=json_case_path)
-            # change current working directory back
-            os.chdir("../../../../")
 
-            # then delete this path.
-            os.rmdir("./tests/api/result/not_existing_path")
+            current_dir = os.getcwd()
 
             self.assertEqual(
                 logobs.output[1],
                 "INFO:root:working directory specified does not exist and create a new director.",
             )
+
+            # then delete this path.
+            os.rmdir("./tests/api/result/not_existing_path")
 
     def test_dir_without_seperator(self):
         """This test checks when a working directory without any "/" or "\\" is provided and it also points to the correct path,
@@ -302,6 +340,8 @@ class TestFlexibleCalling(unittest.TestCase):
 
             workflow = Workflow(workflow=json_case_path)
 
+            current_dir = os.getcwd()
+
             # change current working directory back
             os.chdir("../")
 
@@ -309,6 +349,8 @@ class TestFlexibleCalling(unittest.TestCase):
                 logobs.output[0],
                 "INFO:root:Change current working path to the specified path.",
             )
+
+            os.chdir(current_dir)
 
 
 if __name__ == "__main__":
