@@ -13,14 +13,14 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply_setpoint": {
                         "subject": "VAV_1 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -38,14 +38,14 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply_setpoint": {
                         "subject": "VAV_1 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"

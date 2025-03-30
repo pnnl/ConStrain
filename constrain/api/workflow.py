@@ -350,7 +350,7 @@ class Workflow:
 
     @staticmethod
     def create_workflow_engine(
-        workflow: Union[str, dict]
+        workflow: Union[str, dict],
     ) -> Union[None, WorkflowEngine]:
         """Instantiate a WorkflowEngine object with specified workflow definition.
 

@@ -19,12 +19,12 @@ class TestG36ReturnAirDamperPositionForReliefDamperOrFan(unittest.TestCase):
 
     def test_return_air_damper_position(self):
         points = [
-            "heating_output",
-            "cooling_output",
-            "ra_p",
-            "max_ra_p",
-            "oa_p",
-            "max_oa_p",
+            "output_coil_heating",
+            "output_coil_cooling",
+            "position_damper_air_return",
+            "position_damper_air_return_max",
+            "position_damper_air_outdoor",
+            "position_damper_air_outdoor_max",
         ]
         data = [
             [

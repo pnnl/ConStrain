@@ -23,31 +23,31 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "o": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "m_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_BOTTOM VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "m_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "eco_onoff": {
+                    "status_economizer": {
                         "subject": "PACU_VAV_BOT",
                         "variable": "Air System Outdoor Air Economizer Status",
                         "frequency": "TimeStep",
                     },
                 },
                 "parameters": {
-                    "tol_o": 0.03,
-                    "tol_m_ea": 50,
-                    "tol_m_oa": 50,
+                    "tol_occupants": 0.03,
+                    "tol_v_ea": 50,
+                    "tol_v_oa": 50,
                 },
             },
             "verification_class": "AutomaticOADamperControl",
@@ -65,31 +65,31 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "o": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "m_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "m_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_TOP VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "eco_onoff": {
+                    "status_economizer": {
                         "subject": "PACU_VAV_MID",
                         "variable": "Air System Outdoor Air Economizer Status",
                         "frequency": "TimeStep",
                     },
                 },
                 "parameters": {
-                    "tol_o": 0.03,
-                    "tol_m_ea": 50,
-                    "tol_m_oa": 50,
+                    "tol_occupants": 0.03,
+                    "tol_v_ea": 50,
+                    "tol_v_oa": 50,
                 },
             },
             "verification_class": "AutomaticOADamperControl",
@@ -110,31 +110,31 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "o": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "m_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_BOTTOM VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "m_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "eco_onoff": {
+                    "status_economizer": {
                         "subject": "PACU_VAV_BOT",
                         "variable": "Air System Outdoor Air Economizer Status",
                         "frequency": "TimeStep",
                     },
                 },
                 "parameters": {
-                    "tol_o": 0.03,
-                    "tol_m_ea": 50,
-                    "tol_m_oa": 50,
+                    "tol_occupants": 0.03,
+                    "tol_v_ea": 50,
+                    "tol_v_oa": 50,
                 },
             },
             "verification_class": "UserProvidedVerificationItem1",
@@ -152,31 +152,31 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "o": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "m_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "m_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_TOP VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "eco_onoff": {
+                    "status_economizer": {
                         "subject": "PACU_VAV_MID",
                         "variable": "Air System Outdoor Air Economizer Status",
                         "frequency": "TimeStep",
                     },
                 },
                 "parameters": {
-                    "tol_o": 0.03,
-                    "tol_m_ea": 50,
-                    "tol_m_oa": 50,
+                    "tol_occupants": 0.03,
+                    "tol_v_ea": 50,
+                    "tol_v_oa": 50,
                 },
             },
             "verification_class": "UserProvidedVerificationItem_Beta",

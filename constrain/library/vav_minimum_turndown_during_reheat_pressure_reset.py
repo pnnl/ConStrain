@@ -1,38 +1,78 @@
 """
 ### Description
-When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio and the pressure setpoint must remain the same
+
+Section 6.5.2.1 Zone Controls
+- Zone thermostatic controls shall prevent
+a. reheating;
+b. recooling;
+c. mixing or simultaneously supplying air that has been previously mechanically heated and air that has been previously cooled, either by mechanical cooling or by economizer systems; 
+d. other simultaneous operation of heating and cooling systems to the same zone.
 
 ### Code requirement
 
 - Code Name: ASHRAE 90.1
 - Code Year: 2016
-- Code Section: 6.5.2 Simultaneous Heating and Cooling Limitation
-- Code Subsection: 6.5.2.1 Zone Controls
+- Code Section: 6.5.2.1 Zone Controls
 
 ### Verification Approach
-- We aim to identify how VAV airflow rate varies when the VAV box is and isn't in reheat mode.
 
-### Verification logic
-```
-if reheat_coil_flag:
-  if V_dot_VAV_max == 0
+The verification checks two conditions during reheat operation:
+1. Airflow turndown ratio:
+   - Calculate actual ratio (current flow / maximum flow)
+   - Compare to minimum design turndown requirement
+   - Allow small tolerance in comparison
+2. Pressure setpoint stability:
+   - Track changes in duct pressure setpoint
+   - Verify setpoint remains constant during reheat
+   - Allow small tolerance for measurement noise
+
+### Verification Applicability
+
+- Building Type(s): any with VAV systems
+- Space Type(s): any with reheat capability
+- System(s): VAV terminal units
+- Climate Zone(s): any
+- Component(s): VAV boxes, reheat coils, pressure sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if flag_coil_reheat:
+  if flow_volumetric_air_max == 0:
      Untested
-  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol
-     if P_set_prev is None:
-        return Untested
-    elif abs(P_set - P_set_prev) > P_set_tol:
-        return Untested
+  if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:
+    if p_press_duct_sp_prev is None:
+        Untested
+    elif abs(pressure_duct_setpoint - p_press_duct_sp_prev) = 0:
+        Untested
     else:
-        return False
-else
+        fail
+  else:
+     pass
+else: 
     Untested
 ```
+
 ### Data requirements
-- reheat_coil_flag: VAV box reheat coil operation status
-- V_dot_VAV: actual VAV volume flow
-- V_dot_VAV_max: max VAV volume flow
-- VAV_min_turndown_design: design VAV box min turndown ratio
-- P_set: duct pressure setpoint
+- flag_coil_reheat: VAV box reheat coil operation flag
+  - Data Value Unit: binary
+  - Data Point Affiliation: Terminal unit control
+
+- flow_volumetric_air_vav: VAV airflow rate
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Terminal unit monitoring
+
+- flow_volumetric_air_max: VAV maximum airflow rate
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Terminal unit configuration
+
+- ratio_turndown_min: Minimum VAV turndown ratio
+  - Data Value Unit: fraction
+  - Data Point Affiliation: Terminal unit configuration
+
+- pressure_duct_setpoint: Duct static pressure setpoint
+  - Data Value Unit: pressure
+  - Data Point Affiliation: System control
 
 """
 
@@ -42,25 +82,25 @@ from constrain.checklib import RuleCheckBase
 
 class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
     points = [
-        "reheat_coil_flag",
-        "V_dot_VAV",
-        "V_dot_VAV_max",
-        "VAV_min_turndown_design",
-        "P_set",
+        "flag_coil_reheat",
+        "flow_volumetric_air_vav",
+        "flow_volumetric_air_max",
+        "ratio_turndown_min",
+        "pressure_duct_setpoint",
     ]
 
     def vav_turndown_check(self, data):
-        if data["reheat_coil_flag"]:
-            if data["V_dot_VAV_max"] == 0:
+        if data["flag_coil_reheat"]:
+            if data["flow_volumetric_air_max"] == 0:
                 return "Untested"
-            elif data["V_dot_VAV"] / data["V_dot_VAV_max"] > data[
-                "VAV_min_turndown_design"
-            ] + self.get_tolerance("ratio", "flow"):
-                if data["P_set_prev"] is None:
+            elif data["flow_volumetric_air_vav"] / data[
+                "flow_volumetric_air_max"
+            ] > data["ratio_turndown_min"] + self.get_tolerance("ratio", "flow"):
+                if data["p_press_duct_sp_prev"] is None:
                     return "Untested"
-                elif abs(data["P_set"] - data["P_set_prev"]) > self.get_tolerance(
-                    "pressure", "static"
-                ):
+                elif abs(
+                    data["pressure_duct_setpoint"] - data["p_press_duct_sp_prev"]
+                ) > self.get_tolerance("pressure", "static"):
                     return "Untested"
                 else:
                     return False
@@ -70,10 +110,12 @@ class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
             return "Untested"
 
     def verify(self):
-        # Copy the previous row's value in 'P_set' column to the current row
-        self.df["P_set_prev"] = self.df["P_set"].shift(1).replace({np.nan: None})
-        if (self.df["V_dot_VAV_max"] != 0).all():
-            self.df["V_dot_ratio"] = (
-                self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
+        # Copy the previous row's value in 'p_press_duct_sp' column to the current row
+        self.df["p_press_duct_sp_prev"] = (
+            self.df["pressure_duct_setpoint"].shift(1).replace({np.nan: None})
+        )
+        if (self.df["flow_volumetric_air_max"] != 0).all():
+            self.df["v_vav_ratio"] = (
+                self.df["flow_volumetric_air_vav"] / self.df["flow_volumetric_air_max"]
             )  # for plotting
         self.result = self.df.apply(lambda d: self.vav_turndown_check(d), axis=1)

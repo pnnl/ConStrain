@@ -1,31 +1,71 @@
 """
-G36 2021
-
 ### Description
 
 Section 5.16.2.3
+- Supply air temperature shall be controlled to setpoint using a control loop whose output is mapped to sequence the heating coil (if applicable), outdoor air damper, return air damper, and cooling coil
 
-### Verification Logic
+### Code requirement
 
-```
-if heating_output > 0
-    if abs(rea_p - 0) < rea_p_tol
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.2 Supply Air Temperature Control
+- Code Subsection: 5.16.2.3 Relief Air Damper Control with Return Fan Airflow Tracking
+
+### Verification Approach
+
+The verification checks relief air damper position under three conditions:
+1. During heating: damper should be fully closed
+2. During cooling: damper should be at maximum position
+3. Otherwise: damper position should complement return air damper position
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units with return fans using airflow tracking
+- Climate Zone(s): any
+- Component(s): relief air dampers, return fans, airflow sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if output_coil_heating > 0:
+    if abs(position_damper_relief - 0) = 0:
         pass
-    else
+    else:
         fail
-    end
-else if cooling_output > 0
-    if abs(rea_p - max_rea_p) < rea_p_tol
+elif output_coil_cooling > 0:
+    if abs(position_damper_relief - position_damper_relief_max) = 0:
         pass
-    else
+    else:
         fail
-    end
-else if abs(rea_p - (1 - ra_p) * max_rea_p) < rea_p_tol
+elif abs(position_damper_relief - (1 - position_damper_air_return) * position_damper_relief_max) = 0:
     pass
-else
+else:
     fail
-end
 ```
+
+### Data requirements
+
+- output_coil_heating: Heating signal
+  - Data Value Unit: percent
+  - Data Point Affiliation: System control
+
+- output_coil_cooling: Cooling signal
+  - Data Value Unit: percent
+  - Data Point Affiliation: System control
+
+- position_damper_relief: Relief air damper position
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
+
+- position_damper_relief_max: Maximum relief air damper position
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
+
+- position_damper_air_return: Return air damper position
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
 
 """
 
@@ -34,29 +74,33 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReliefAirDamperPositionForReturnFanAirflowTracking(RuleCheckBase):
     points = [
-        "heating_output",
-        "cooling_output",
-        "rea_p",
-        "max_rea_p",
-        "rea_p_tol",
-        "ra_p",
+        "output_coil_heating",
+        "output_coil_cooling",
+        "position_damper_relief",
+        "position_damper_relief_max",
+        "position_damper_air_return",
     ]
 
     def relief_air_damper(self, data):
-        if data["heating_output"] > 0:
-            if data["rea_p"] < data["rea_p_tol"]:
+        if data["output_coil_heating"] > 0:
+            if data["position_damper_relief"] < self.get_tolerance(
+                "damper", "position"
+            ):
                 return True
             else:
                 return False
-        elif data["cooling_output"] > 0:
-            if abs(data["rea_p"] - data["max_rea_p"]) < data["rea_p_tol"]:
+        elif data["output_coil_cooling"] > 0:
+            if abs(
+                data["position_damper_relief"] - data["position_damper_relief_max"]
+            ) < self.get_tolerance("damper", "position"):
                 return True
             else:
                 return False
-        elif (
-            abs(data["rea_p"] - (1 - data["ra_p"]) * data["max_rea_p"])
-            < data["rea_p_tol"]
-        ):
+        elif abs(
+            data["position_damper_relief"]
+            - (1 - data["position_damper_air_return"])
+            * data["position_damper_relief_max"]
+        ) < self.get_tolerance("damper", "position"):
             return True
         else:
             return False

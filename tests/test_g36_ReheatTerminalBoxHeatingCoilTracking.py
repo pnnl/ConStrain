@@ -6,7 +6,6 @@ from lib_unit_test_runner import *
 from library import *
 
 import pandas as pd
-import numpy as np
 
 
 class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
@@ -22,12 +21,11 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
     }
 
     def test_g36_reheat_terminal_box_heating_coil_tracking0(self):
-
         points = [
-            "operation_mode",
-            "heating_coil_command",
-            "dat",
-            "dat_spt",
+            "mode_system",
+            "command_coil_heat",
+            "temperature_air_discharge",
+            "temperature_air_discharge_setpoint",
         ]
 
         timestamp = [
@@ -84,10 +82,10 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
 
     def test_g36_reheat_terminal_box_heating_coil_tracking1(self):
         points = [
-            "operation_mode",
-            "heating_coil_command",
-            "dat",
-            "dat_spt",
+            "mode_system",
+            "command_coil_heat",
+            "temperature_air_discharge",
+            "temperature_air_discharge_setpoint",
         ]
 
         timestamp = [

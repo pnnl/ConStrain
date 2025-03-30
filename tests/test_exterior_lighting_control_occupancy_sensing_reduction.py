@@ -5,7 +5,6 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 import pandas as pd
-import numpy as np
 
 
 class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
@@ -13,8 +12,8 @@ class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_power_too_high(self):
         points = [
-            "o",
-            "total_lighting_power",
+            "number_occupants",
+            "power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -33,8 +32,8 @@ class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_pass(self):
         points = [
-            "o",
-            "total_lighting_power",
+            "number_occupants",
+            "power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -56,8 +55,8 @@ class TestExteriorLightingControlOccupancySensingReduction(unittest.TestCase):
 
     def test_exterior_lighting_control_occupancy_sensing_reduction_fail(self):
         points = [
-            "o",
-            "total_lighting_power",
+            "number_occupants",
+            "power_light_total",
         ]
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),

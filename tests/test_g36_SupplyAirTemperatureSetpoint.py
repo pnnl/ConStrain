@@ -4,11 +4,9 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 
 import pandas as pd
-import numpy as np
 
 
 class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
-
     tolerances = {
         "temperature": {
             "unit": "deg. C",
@@ -21,14 +19,14 @@ class TestG36SupplyAirTemperatureSetpointg(unittest.TestCase):
 
     def test_heating_cooling(self):
         points = [
-            "operation_mode",
-            "t_max",
-            "max_clg_sa_t_sp",
-            "min_clg_sa_t_sp",
-            "oa_t",
-            "oa_t_min",
-            "oa_t_max",
-            "sa_t_sp_ac",
+            "mode_operation",
+            "temperature_air_supply_max",
+            "temperature_air_supply_setpoint_cool_max",
+            "temperature_air_supply_setpoint_cool_min",
+            "temperature_air_outdoor",
+            "temperature_air_outdoor_supply_min",
+            "temperature_air_outdoor_supply_max",
+            "temperature_air_supply_setpoint",
         ]
         data = [
             ["cooldown", 14, 13, 12, 9, 10, 21, 12],  # False

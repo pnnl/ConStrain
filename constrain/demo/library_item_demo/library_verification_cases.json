@@ -76,10 +76,10 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
+                    "temperature_air_supply_setpoint": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)",
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -112,7 +112,7 @@
                 "idf_output_variables": {
                     "oa_flow": "PSZ-AC:1_OAInlet Node:System Node Standard Density Volume Flow Rate [m3/s](TimeStep)",
                     "oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
-                    "ret_a_temp": "PSZ-AC:1 Supply Equipment Inlet Node:System Node Temperature [C](TimeStep)"
+                    "temperature_air_return": "PSZ-AC:1 Supply Equipment Inlet Node:System Node Temperature [C](TimeStep)"
                 },
                 "parameters": {
                     "oa_min_flow": 0.23157
@@ -168,8 +168,8 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_z_set_cool": "CORE_RETAIL:Zone Thermostat Cooling Setpoint Temperature [C](Each Call)",
-                    "T_z_set_heat": "CORE_RETAIL:Zone Thermostat Heating Setpoint Temperature [C](Each Call)"
+                    "temperature_air_zone_cool_setpoint": "CORE_RETAIL:Zone Thermostat Cooling Setpoint Temperature [C](Each Call)",
+                    "temperature_air_zone_heat_setpoint": "CORE_RETAIL:Zone Thermostat Heating Setpoint Temperature [C](Each Call)"
                 }
             },
             "verification_class": "ZoneTempControl"
@@ -183,12 +183,12 @@
             "datapoints_source": {
                 "idf_output_variables": {
                     "T_oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
-                    "T_hw": "HeatSys1 Supply Outlet Node:System Node Temperature [C](TimeStep)",
-                    "m_hw": "HeatSys1 Supply Outlet Node:System Node Mass Flow Rate [kg/s](TimeStep)"
+                    "temperature_water_hot": "HeatSys1 Supply Outlet Node:System Node Temperature [C](TimeStep)",
+                    "flow_mass_water_hot": "HeatSys1 Supply Outlet Node:System Node Mass Flow Rate [kg/s](TimeStep)"
                 },
                 "parameters": {
-                    "T_oa_max": 10,
-                    "T_oa_min": -6.7,
+                    "temperature_air_outdoor_max": 10,
+                    "temperature_air_outdoor_min": -6.7,
                     "T_hw_max_st": 60.0,
                     "T_hw_min_st": 48.89
                 }
@@ -204,12 +204,12 @@
             "datapoints_source": {
                 "idf_output_variables": {
                     "T_oa_db": "Environment:Site Outdoor Air Drybulb Temperature [C](TimeStep)",
-                    "T_chw": "CoolSys1 Supply Outlet Node:System Node Temperature [C](TimeStep)",
-                    "m_chw": "CoolSys1 Supply Outlet Node:System Node Mass Flow Rate [kg/s](TimeStep)"
+                    "temperature_water_chilled": "CoolSys1 Supply Outlet Node:System Node Temperature [C](TimeStep)",
+                    "flow_mass_water_chilled": "CoolSys1 Supply Outlet Node:System Node Mass Flow Rate [kg/s](TimeStep)"
                 },
                 "parameters": {
-                    "T_oa_max": 21.11,
-                    "T_oa_min": 12.78,
+                    "temperature_air_outdoor_max": 21.11,
+                    "temperature_air_outdoor_min": 12.78,
                     "T_chw_max_st": 8.89,
                     "T_chw_min_st": 6.7
                 }
@@ -258,10 +258,10 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
+                    "temperature_air_supply_setpoint": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"

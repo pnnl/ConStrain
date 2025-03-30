@@ -7,11 +7,11 @@
             "Section 6.5.3.5 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_sa_set": "AHU supply air temperature setpoint",
-            "T_z_coo": "Design zone cooling air temperature"
+            "temperature_air_supply_setpoint": "Supply air temperature setpoint",
+            "temperature_air_zone_design_cool_setpoint": "Design zone cooling temperature setpoint"
         },
         "description_assertions": [
-            "Max(T_sa_set) - Min(T_sa_set) >= (T_z_coo - Min(T_sa_set)) * 0.25"
+            "Max(temperature_air_supply_setpoint) - Min(temperature_air_supply_setpoint) >= (temperature_air_zone_design_cool_setpoint - Min(temperature_air_supply)) * 0.25"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -24,13 +24,13 @@
             "Table 6.5.1.1.3 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_oa_db": "OA dry bulb temperature",
-            "oa_threshold": "OA dry bulb threshold",
-            "oa_min_flow": "OA minimum airflow setpoint",
-            "oa_flow": "OA airflow"
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_outdoor_threshold": "Outdoor air temperature threshold",
+            "flow_volumetric_air_outdoor_setpoint_min": "Minimum outdoor air volume flow setpoint",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow"
         },
         "description_assertions": [
-            "(oa_flow > oa_min_flow) AND (T_oa_db > oa_threshold)"
+            "(flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min) AND (temperature_air_outdoor > temperature_air_outdoor_threshold)"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "fail"
@@ -43,13 +43,13 @@
             "Table 6.5.1.1.3 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_oa_db": "OA dry bulb temperature",
-            "ret_a_temp": "Return air temperature",
-            "oa_min_flow": "OA minimum airflow setpoint",
-            "oa_flow": "OA airflow"
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_return": "Return air temperature",
+            "flow_volumetric_air_outdoor_setpoint_min": "Minimum outdoor air volume flow setpoint",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow"
         },
         "description_assertions": [
-            "(oa_flow > oa_min_flow) AND (ret_a_temp < T_oa_db)"
+            "(flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min) AND (temperature_air_return < temperature_air_outdoor)"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "fail"
@@ -62,15 +62,15 @@
             "Table 6.5.1.1.3 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_oa_db": "OA dry bulb temperature",
-            "oa_threshold": "OA dry bulb threshold",
-            "oa_min_flow": "OA minimum airflow setpoint",
-            "oa_flow": "OA airflow",
-            "oa_enth": "OA enthalpy",
-            "oa_enth_threshold": "OA enthalpy threshold"
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_outdoor_threshold": "Outdoor air temperature threshold",
+            "flow_volumetric_air_outdoor_setpoint_min": "Minimum outdoor air volume flow setpoint",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "enthalpy_air_outdoor": "Outdoor air enthalpy",
+            "enthalpy_air_outdoor_threshold": "Outdoor air enthalpy threshold"
         },
         "description_assertions": [
-            "(oa_flow > oa_min_flow) AND ((T_oa_db > oa_threshold) OR (oa_enth > oa_enth_threshold))"
+            "(flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min) AND ((temperature_air_outdoor > temperature_air_outdoor_threshold) OR (enthalpy_air_outdoor > enthalpy_air_outdoor_threshold))"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "fail"
@@ -83,15 +83,15 @@
             "Table 6.5.1.1.3 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_oa_db": "OA dry bulb temperature",
-            "oa_threshold": "OA dry bulb threshold",
-            "oa_min_flow": "OA minimum airflow setpoint",
-            "oa_flow": "OA airflow",
-            "oa_enth": "OA enthalpy",
-            "ret_a_enth": "Return air enthalpy"
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_outdoor_threshold": "Outdoor air temperature threshold",
+            "flow_volumetric_air_outdoor_setpoint_min": "Minimum outdoor air volume flow setpoint",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "enthalpy_air_outdoor": "Outdoor air enthalpy",
+            "enthalpy_air_return": "Return air enthalpy"
         },
         "description_assertions": [
-            "oa_flow > oa_min_flow) AND ((ret_a_enth < oa_enth) OR (T_oa_db > oa_threshold))"
+            "(flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min) AND ((enthalpy_air_return < enthalpy_air_outdoor) OR (temperature_air_outdoor > temperature_air_outdoor_threshold))"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "fail"
@@ -104,12 +104,12 @@
             "Section 6.5.1.3 in 90.1-2016"
         ],
         "description_datapoints": {
-            "oa_min_flow": "OA minimum airflow setpoint",
-            "oa_flow": "OA airflow",
-            "ccoil_out": "Cooling coil transfer"
+            "flow_volumetric_air_outdoor_setpoint_min": "Minimum outdoor air volume flow setpoint",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "output_coil_cooling": "Cooling coil heat transfer rate"
         },
         "description_assertions": [
-            "((oa_flow > oa_min_flow) AND (ccoil_out > 0)) never happens"
+            "((flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min) AND (output_coil_cooling > 0)) never happens"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "fail"
@@ -122,12 +122,12 @@
             "Section 6.5.6.1 in 90.1-2016"
         ],
         "description_datapoints": {
-            "oa_enth": "OA enthalpy",
-            "ret_enth": "Return air enthalpy",
-            "oa_enth_ERV": "OA enthalpy after ERV"
+            "enthalpy_air_outdoor": "Outdoor air enthalpy",
+            "enthalpy_air_return": "Return air enthalpy",
+            "enthalpy_air_outdoor_erv": "Outdoor air enthalpy after ERV"
         },
         "description_assertions": [
-            "(oa_enth_ERV - oa_enth)/(ret_enth - oa_enth) > = 50%  happens at least once in winter design day"
+            "(enthalpy_air_outdoor_erv - enthalpy_air_outdoor)/(enthalpy_air_return - enthalpy_air_outdoor) >= 50%  happens at least once in winter design day"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -140,11 +140,11 @@
             "Section 6.4.3.1.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_set_cool": "Zone cooling temperature setpoint",
-            "T_set_heat": "Zone heating temperature setpoint"
+            "temperature_air_zone_cool_setpoint": "Zone cooling temperature setpoint",
+            "temperature_air_zone_heat_setpoint": "Zone heating temperature setpoint"
         },
         "description_assertions": [
-            "T_set_cool - T_set_heat > 5F (2.77C)"
+            "temperature_air_zone_cool_setpoint - temperature_air_zone_heat_setpoint > 5F (2.77C)"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -157,16 +157,16 @@
             "Section 6.5.4.4 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_oa_db": "OA dry-bulb temperature",
-            "T_oa_max": "OA dry-bulb upper threshold",
-            "T_oa_min": "OA dry-bulb lower threshold",
-            "T_hw": "Hot water temp observed from the system node",
-            "m_hw": "Hot water flow rate",
-            "T_hw_max_set": "Hot water maximum temp setpoint",
-            "T_hw_min_set": "Hot water minimum temp setpoint"
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_outdoor_max": "Outdoor air temperature upper threshold",
+            "temperature_air_outdoor_min": "Outdoor air temperature lower threshold",
+            "temperature_water_hot": "Hot water temperature",
+            "flow_mass_water_hot": "Hot water mass flow rate",
+            "temperature_water_hot_setpoint_max": "Hot water maximum temperature setpoint",
+            "temperature_water_hot_setpoint_min": "Hot water minimum temperature setpoint"
         },
         "description_assertions": [
-            "When m_hw > 0, T_hw <= T_hw_max_set and T_hw >= T_hw_min_set; When m_hw < 0, always pass"
+            "When flow_mass_water_hot > 0, temperature_water_hot <= temperature_water_hot_setpoint_max and temperature_water_hot >= temperature_water_hot_setpoint_min; When flow_mass_water_hot < 0, always pass"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -179,16 +179,16 @@
             "Section 6.5.4.4 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_oa_db": "OA dry-bulb temperature",
-            "T_oa_max": "OA dry-bulb upper threshold",
-            "T_oa_min": "OA dry-bulb lower threshold",
-            "T_chw": "Chilled water temp observed from the system node",
-            "m_chw": "Chilled water flow rate",
-            "T_chw_max_set": "Chilled water maximum temp setpoint",
-            "T_chw_min_set": "Chilled water minimum temp setpoint"
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_outdoor_max": "Outdoor air temperature upper threshold",
+            "temperature_air_outdoor_min": "Outdoor air temperature lower threshold",
+            "temperature_water_chilled": "Chilled water temperature",
+            "flow_mass_water_chilled": "Chilled water mass flow rate",
+            "temperature_water_chilled_setpoint_max": "Chilled water maximum temperature setpoint",
+            "temperature_water_chilled_setpoint_min": "Chilled water minimum temperature setpoint"
         },
         "description_assertions": [
-            "When m_chw > 0, T_chw <= T_chw_max_set and T_chw >= T_chw_min_set; When m_chw <= 0 , always pass"
+            "When flow_mass_water_chilled > 0, temperature_water_chilled <= temperature_water_chilled_setpoint_max and temperature_water_chilled >= temperature_water_chilled_setpoint_min; When flow_mass_water_chilled <= 0 , always pass"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -201,10 +201,10 @@
             "Section 6.4.3.2.2 in 90.1-2004"
         ],
         "description_datapoints": {
-            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature"
+            "temperature_air_zone_heat_setpoint": "Zone heating temperature setpoint"
         },
         "description_assertions": [
-            "if min(T_heat_set) <= 55°F, then pass"
+            "if min(temperature_air_zone_heat_setpoint) <= 55°F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -216,10 +216,10 @@
             "Section 6.4.3.2.2 in 90.1-2004"
         ],
         "description_datapoints": {
-            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature"
+            "temperature_air_zone_cool_setpoint": "Zone cooling temperature setpoint"
         },
         "description_assertions": [
-            "if max(T_cool_set) >= 90F, then pass"
+            "if max(temperature_air_zone_cool_setpoint) >= 90F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -231,10 +231,10 @@
             "Section 6.4.3.3.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature"
+            "temperature_air_zone_heat_setpoint": "Zone heating temperature setpoint"
         },
         "description_assertions": [
-            "if max(T_heat_set) - min(T_heat_set) >= 10F, then pass"
+            "if max(temperature_air_zone_heat_setpoint) - min(temperature_air_zone_heat_setpoint) >= 10F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -246,10 +246,10 @@
             "Section 6.4.3.3.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature"
+            "temperature_air_zone_cool_setpoint": "Zone cooling temperature setpoint"
         },
         "description_assertions": [
-            "if max(T_cool_set) - min(T_cool_set) >= 5F, then pass"
+            "if max(temperature_air_zone_cool_setpoint) - min(temperature_air_zone_cool_setpoint) >= 5F, then pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -261,14 +261,14 @@
             null
         ],
         "description_datapoints": {
-            "T_zone": "Zone Air Temperature",
-            "HVAC_operation_sch": "HVAC Operation Schedule",
-            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature",
-            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature",
-            "Fan_elec_rate": "Fan Electricity Rate"
+            "temperature_air_zone": "Zone air temperature",
+            "status_hvac": "HVAC operation schedule",
+            "temperature_air_zone_heat_setpoint": "Zone heating temperature setpoint",
+            "temperature_air_zone_cool_setpoint": "Zone cooling temperature setpoint",
+            "power_fan": "Fan power"
         },
         "description_assertions": [
-            "if T_heat_set <= T_zone <= T_cool_set and Fan_elec_rate ==0 then x1=0 else x1=1, if (T_zone > T_cool_set and Fan_elec_rate >= 0) and (T_zone < T_heat_set and Fan_elec_rate>0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
+            "if temperature_air_zone_heat_setpoint <= temperature_air_zone <= temperature_air_zone_cool_setpoint and power_fan == 0 then x1=0 else x1=1, if (temperature_air_zone > temperature_air_zone_cool_setpoint and power_fan >= 0) and (temperature_air_zone < temperature_air_zone_heat_setpoint and p_power_fan > 0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -280,20 +280,20 @@
             null
         ],
         "description_datapoints": {
-            "MIN_OA_FLOW": "Minimum outdoor air flow rate",
-            "OA_FLOW": "Outdoor air flow rate",
-            "NOM_FLOW": "Heat exchanger's norminal flow rate",
-            "HX_DSN_EFF_HTG": "Heat exchanger heating effectiveness at the nominal air flow rate",
-            "HX_DSN_EFF_HTG_75_PCT": "Heat exchanger heating effectiveness at 75% of the nominal air flow rate",
-            "HX_DSN_EFF_CLG": "Heat exchanger cooling effectiveness at the nominal air flow rate",
-            "HX_DSN_EFF_CLG_75_PCT": "Heat exchanger cooling effectiveness at 75% of the nominal air flow rate",
-            "T_OA": "Outdoor air dry-bulb temperature",
-            "T_SO": "Supply air temperature",
-            "T_SO_SP": "Supply air temperature setpoint",
-            "T_EI": "Zone air temperature"
+            "flow_volumetric_air_outdoor_setpoint_min": "Minimum outdoor air volume flow",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "flow_volumetric_air_heatexchanger_nom": "Heat exchanger nominal volume flow",
+            "effectiveness_heatexchanger_heat": "Heat exchanger heating effectiveness at nominal flow",
+            "effectiveness_heatexchanger_heat_75": "Heat exchanger heating effectiveness at 75% flow",
+            "effectiveness_heatexchanger_cool": "Heat exchanger cooling effectiveness at nominal flow",
+            "effectiveness_heatexchanger_cool_75": "Heat exchanger cooling effectiveness at 75% flow",
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_supply_setpoint": "Supply air temperature",
+            "temperature_air_supply": "Supply air temperature setpoint",
+            "temperature_air_zone": "Zone air temperature"
         },
         "description_assertions": [
-            "Check that the ERV is bypassed during economizer operation; During non-economizer operation, if the outdoor air flow rate, 1) if T_SO > T_SO_SP the ERV is not operating correctly if T_OA < T_EI and the ERV is running, T_OA > T_EI and the ERV is NOT running and the operating sensible efficiency of the ERV is NOT close to the operating design value, 2) if T_SO < T_SO_SP the ERV is NOT running and the operating sensible efficiency of the ERV is NOT close to the operating design value"
+            "Check that the ERV is bypassed during economizer operation; During non-economizer operation, if the outdoor air flow rate, 1) if t_sa > t_sa_sp the ERV is not operating correctly if t_oa < t_z and the ERV is running, t_oa > t_z and the ERV is NOT running and the operating sensible efficiency of the ERV is NOT close to the operating design value, 2) if t_sa < t_sa_sp the ERV is NOT running and the operating sensible efficiency of the ERV is NOT close to the operating design value"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -305,13 +305,13 @@
             "Section 6.4.3.4.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "o": "Number of occupants",
-            "m_oa": "System outdoor air volume flow rate",
-            "m_ea": "System exhaust air volume flow rate",
-            "eco_onoff": "System air-side economizer status"
+            "number_occupants": "Number of occupants",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "flow_volumetric_air_exhaust": "Exhaust air volume flow",
+            "status_economizer": "Economizer status"
         },
         "description_assertions": [
-            "if no_of_occ <= 0 + tol and m_ea + m_oa > 0 and eco_onoff = 0, then false else pass"
+            "if number_occupants = 0 and flow_volumetric_air_exhaust + flow_volumetric_air_outdoor > 0 and status_economizer = 0, then false else pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -323,11 +323,11 @@
             "Section 6.5.3.2.3 in 90.1-2016"
         ],
         "description_datapoints": {
-            "p_set": "Static pressure setpoint",
-            "d_VAV_x": "VAV Damper x Position (includes all VAV dampers served by the system under test"
+            "pressure_static_setpoint": "Static pressure setpoint",
+            "position_damper_vav": "VAV damper position"
         },
         "description_assertions": [
-            "if d_VAV(n) (n=1,2,...,N) < 0.9 and p_set(t) > p_set(t-1), then fail else pass"
+            "if position_damper_vav(n) (n=1,2,...,N) < 0.9 and pressure_static_setpoint(t) > pressure_static_setpoint(t-1), then fail else pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -339,12 +339,12 @@
             "Section 6.5.5.2.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "ct_op_cells": "Number of operating cooling tower cells",
-            "ct_cells": "Number of cooling tower cells",
-            "ct_m": "Cooling tower mass flow rate",
-            "ct_m_des": "Cooling tower design mass flow rate",
-            "min_flow_frac_per_cell": "Minimum flow fraction per cooling tower cell",
-            "ct_P_fan": "Cooling tower fan power"
+            "number_cells_coolingtower_operation": "Number of operating cooling tower cells",
+            "number_cells_coolingtower": "Number of cooling tower cells",
+            "flow_mass_coolingtower": "Cooling tower mass flow rate",
+            "flow_mass_coolingtower_design": "Cooling tower design mass flow rate",
+            "fraction_flow_min_cell": "Minimum flow fraction per cooling tower cell",
+            "power_fan_coolingtower": "Cooling tower fan power"
         },
         "description_assertions": [
             "if the number of operating cooling tower cells is equal to the maximum number of cooling tower cells then pass else fail"
@@ -359,10 +359,10 @@
             "Section 7.4.4.3 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_wh_inlet": "Water temperature on demand side from the water heater"
+            "temperature_water_inlet": "Water heater inlet temperature"
         },
         "description_assertions": [
-            "if maximum(T_wh_inlet) < 43.33 °C Then pass else fail"
+            "if maximum(temperature_water_inlet) < 43.33 °C Then pass else fail"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -374,7 +374,7 @@
             "Section 6.5.3.2.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "p_fan_set": "Static pressure setpoint"
+            "pressure_static_setpoint": "Static pressure setpoint"
         },
         "description_assertions": [
             "if static pressure setpoint is no greater than 1.2 in of water (298.608 Pa) then pass else fail"
@@ -389,12 +389,12 @@
             "Section 6.4.3.4.4 in 90.1-2016"
         ],
         "description_datapoints": {
-            "no_of_occ": "People Occupant Count",
-            "Q_load": "Zone Predicted Sensible Load to Setpoint Heat Transfer Rate",
-            "P_fan": "Fan Electric Power"
+            "number_occupants": "Number of occupants",
+            "heat_sensible": "Zone sensible heat load",
+            "power_fan": "Fan power"
         },
         "description_assertions": [
-            "if Q_load = 0 and no_of_occ = 0 and P_fan != 0 then fail else pass"
+            "if heat_sensible = 0 and number_occupants = 0 and power_fan != 0 then fail else pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -406,9 +406,9 @@
             "Section 6.5.2.2.3 (a) in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_max_heating_loop": "maximum temperature of heating loop",
-            "T_min_cooling_loop": "minimum temperature of cooling loop",
-            "m_pump": "Pump Mass Flow Rate"
+            "temperature_water_heating_max": "Maximum heating loop temperature",
+            "temperature_water_cooling_min": "Minimum cooling loop temperature",
+            "flow_mass_water_pump": "Pump mass flow rate"
         },
         "description_assertions": [
             "If the temperature difference between the maximum heating loop and minimum heating loop when the pump runs is greater than 11.11 °C, then pass else fail"
@@ -423,7 +423,7 @@
             null
         ],
         "description_datapoints": {
-            "hvac_set": "HVAC Operation Schedule"
+            "status_hvac": "HVAC operation schedule"
         },
         "description_assertions": [
             "if minimum start_time != maximum start_time and minimum end_time != maximum end_time then pass else fail"
@@ -438,15 +438,15 @@
             "Section 6.4.3.5 Heat Pump Auxiliary Heat Control and 6.3.2.h Criteria in 90.1-2016"
         ],
         "description_datapoints": {
-            "C_ref": "DX heating coil reference capacity",
-            "L_op": "DX heating coil load",
-            "C_t_mod": "DX heating coil reference capacity modifier as a function of temperature",
-            "P_supp_ht": "HP Supplemental heating coil heating rate",
-            "C_ff_mod": "DX heating coil reference capacity modifier as a function of flow ratio",
-            "L_defrost": "Defrost load on the heating coil"
+            "capacity_full_load": "Heating Coil Reference Capacity",
+            "load_operation": "Heating Coil Runtime Fraction",
+            "capacity_modifier_temperature": "Heating Coil Heating Rate",
+            "power_heating_supplemental": "Supplemental Heating Rate",
+            "capacity_modifier_fraction_flow": "Heating Capacity Function of Flow Fraction Curve",
+            "load_defrost": "Defrost load on the heating coil"
         },
         "description_assertions": [
-            "If C_ref * C_t_mod >= L_op and P_supp_ht == 0 then pass else fail"
+            "If capacity_full_load * capacity_modifier_temperature >= load_operation and power_heating_supplemental == 0 then pass else fail"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -458,10 +458,10 @@
             "Section 6.5.5.2.1 in 90.1-2016"
         ],
         "description_datapoints": {
-            "ct_P_fan": "Cooling Tower Fan Power",
-            "ct_P_fan_dsgn": "Cooling Tower Design Fan Power",
-            "ct_m_fan_ratio": "Cooling Tower Air Flow Rate Ratio",
-            "ct_m_fan_dsgn": "Cooling Tower Design Air Flow"
+            "power_fan_coolingtower": "Cooling tower fan power",
+            "power_fan_coolingtower_design": "Cooling tower design fan power",
+            "ratio_flow_coolingtower": "Cooling tower airflow ratio",
+            "flow_volumetric_air_coolingtower_design": "Cooling tower design airflow"
         },
         "description_assertions": [
             "Verify that at 5% flow, the cooling tower fan power is 30% of the design value. Since simulation results might not include that exact point, we use a regression based approach to determining if the code requirement is met"
@@ -476,13 +476,13 @@
             "Section 6.4.3.8 in 90.1-2016"
         ],
         "description_datapoints": {
-            "v_oa": "Zone Air Terminal Outdoor Air Volume Flow Rate",
-            "s_ahu": "status of HVAC system operation",
-            "s_eco": "Air System Outdoor Air Economizer Status",
-            "no_of_occ": "People Occupant Count"
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "status_ahu": "HVAC system operation status",
+            "status_economizer": "Economizer status",
+            "number_occupants": "Number of occupants"
         },
         "description_assertions": [
-            "i) If v_oa is constant over time, NO DCV presents. ii) If v_oa has two clusters, DCV with hbinary control presents. iii) v_oa is linearly correlated to o_ahu, DCV with occupant-counting based control presents"
+            "i) If flow_volumetric_air_outdoor is constant over time, NO DCV presents. ii) If flow_volumetric_air_outdoor has two clusters, DCV with hbinary control presents. iii) flow_volumetric_air_outdoor is linearly correlated to status_ahu, DCV with occupant-counting based control presents"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"
@@ -494,9 +494,9 @@
             "Section 6.4.3.3.5 in 90.1-2016"
         ],
         "description_datapoints": {
-            "T_heat_set": "Zone Thermostat Heating Setpoint Temperature",
-            "T_cool_set": "Zone Thermostat Cooling Setpoint Temperature",
-            "O_sch": "Occupant Schedule"
+            "temperature_air_zone_heat_setpoint": "Zone heating temperature setpoint",
+            "temperature_air_zone_cool_setpoint": "Zone cooling temperature setpoint",
+            "schedule_occupancy": "Occupancy schedule"
         },
         "description_assertions": [
             "Check the two different temperature control logics when the room is/isn't rented out"
@@ -511,13 +511,11 @@
             "Section 6.4.3.3.5.2 in 90.1-2016"
         ],
         "description_datapoints": {
-            "damper_sch": "Damper Schdule",
-            "m_oa_fraction": "Air System Outdoor Air Flow Fraction",
-            "O_sch": "Occupant schedule",
-            "m_oa_heat_design": "Design Heating Air Flow Rate",
-            "m_oa_cool_design": "Design Cooling Air Flow Rate",
-            "volume": "Zone Volume",
-            "v_outdoor_per_zone": "Outdoor Air Flow per Zone Floor Area"
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "schedule_occupancy": "Occupancy schedule",
+            "area_zone": "Thermal zone area",
+            "height_zone": "Thermal zone height",
+            "flow_volumetric_air_outdoor_per_area": "Outdoor air volume flow per zone area"
         },
         "description_assertions": [
             "Check the two different airflow control logics when the room is/isn't rented out"
@@ -533,39 +531,39 @@
             "Section 5.16.2.2 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "oa_t": "Outdoor air temperature",
-            "t_max": "Maximum supply air temperature setpoint based on requests",
-            "sa_t_sp_ac": "Actual supply air temperature setpoint",
-            "oa_t_min": "Minimum outdoor air temperature for linear SAT reset",
-            "oa_t_max": "Maximum outdoor air temperature for linear SAT reset",
-            "min_clg_sa_t_sp": "Minimum cooling supply air temperature setpoint",
-            "max_clg_sa_t_sp": "Maximum cooling supply air temperature setpoint"
+            "mode_operation": "System operation mode",
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_supply_max": "Maximum supply air temperature setpoint based on requests",
+			"temperature_air_outdoor_supply_max": "Maximum outdoor air temperature for linear SAT reset",
+            "temperature_air_outdoor_supply_min": "Minimum outdoor air temperature for linear SAT reset",
+            "temperature_air_supply_setpoint_cool_min": "Minimum cooling supply air temperature setpoint",
+            "temperature_air_supply_setpoint_cool_max": "Maximum cooling supply air temperature setpoint",
+			"temperature_air_supply_setpoint": "Supply air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if t_max > max_clg_sa_t_sp",
+            "if temperature_air_supply_max > temperature_air_supply_setpoint_cool_max",
             "    fail",
             "end",
             "",
-            "switch operation_mode",
+            "switch mode_operation",
             "case 'cooldown'",
-            "    sa_t_sp = min_clg_sa_t_sp",
+            "    t_sa_sp = temperature_air_supply_setpoint_cool_min",
             "case 'warmup', 'setback",
-            "    sa_t_sp = 35 # 95 F",
+            "    t_sa_sp = 35 # 95 F",
             "case 'occupied', 'setup'",
-            "    if oa_t <= oa_t_min",
-            "        sa_t_sp = t_max",
-            "    else if oa_t >= oa_t_max",
-            "        sa_t_sp = min_clg_sa_t_sp",
+            "    if temperature_air_outdoor <= temperature_air_outdoor_supply_min",
+            "        t_sa_sp = temperature_air_supply_max",
+            "    else if temperature_air_outdoor >= temperature_air_outdoor_supply_max",
+            "        t_sa_sp = temperature_air_supply_setpoint_cool_min",
             "    else",
-            "        sa_t_sp = (oa_t - oa_t_min) * (t_max - min_clg_sa_t_sp) / (oa_t_min - oa_t_max) + t_max ",
+            "        t_sa_sp = (temperature_air_outdoor - temperature_air_outdoor_supply_min) * (temperature_air_supply_max - temperature_air_supply_setpoint_cool_min) / (temperature_air_outdoor_supply_min - temperature_air_outdoor_supply_max) + temperature_air_supply_max ",
             "# linear interpolation",
             "    end",
             "end",
             "",
-            "if abs(sa_t_sp - sa_t_s_ac) < sa_sp_tol",
+            "if abs(t_sa_sp - temperature_air_supply_setpoint) = 0",
             "    pass",
             "else",
             "    fail",
@@ -579,13 +577,13 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "heating_output": "AHU heating coil output",
-            "cooling_output": "AHU cooling coil output"
+            "output_coil_heating": "AHU heating coil heat transfer rate",
+            "output_coil_cooling": "AHU cooling coil heat transfer rate"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if heating_output > 0 and cooling_output > 0",
+            "if output_coil_heating > 0 and output_coil_cooling > 0",
             "    fail",
             "else",
             "    pass",
@@ -600,34 +598,36 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "max_ra_p": "Maximum return air damper position",
-            "ra_p": "Return air damper position",
-            "oa_p": "Outdoor air damper position",
-            "max_oa_p": "Maximum outdoor air damper position"
+            "output_coil_heating": "Heating output",
+            "output_coil_cooling": "Cooling output",
+            "position_damper_air_return_max": "Maximum return air damper position",
+            "position_damper_air_return": "Return air damper position",
+            "position_damper_air_outdoor": "Outdoor air damper position",
+            "position_damper_air_outdoor_max": "Maximum outdoor air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if heating_output > 0",
-            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "if output_coil_heating > 0",
+            "    if abs(position_damper_air_return - position_damper_air_return_max) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if cooling_output > 0",
-            "    if abs(ra_p - 0) < ra_p_tol",
+            "else if output_coil_cooling > 0",
+            "    if abs(position_damper_air_return) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if oa_p < max_oa_p",
-            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "else if pos_damper_oa < position_damper_air_outdoor_max",
+            "    if abs(position_damper_air_return - position_damper_air_return_max) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if abs(oa - max_oa_p) < oa_p_tol",
-            "    if ra_p < max_ra_p",
+            "else if abs(pos_damper_oa - position_damper_air_outdoor_max) < 0",
+            "    if position_damper_air_return < position_damper_air_return_max",
             "        pass",
             "    else",
             "        fail",
@@ -643,46 +643,46 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "heating_output": "AHU heating coil output",
-            "cooling_output": "AHU cooling coil output",
-            "economizer_high_limit_reached": "Economizer high limit flag",
-            "oa_p": "Outdoor air damper position",
-            "min_oa_p": "Minimum outdoor air damper position",
-            "max_oa_p": "Maximum outdoor air damper position",
-            "ra_p": "Return air damper position",
-            "max_ra_p": "Maximum return air damper position"
+            "output_coil_heating": "AHU heating coil heat transfer rate",
+            "output_coil_cooling": "AHU cooling coil heat transfer rate",
+            "flag_economizer_limit": "Economizer high limit flag",
+            "position_damper_air_outdoor": "Outdoor air damper position",
+            "position_damper_air_outdoor_min": "Minimum outdoor air damper position",
+            "position_damper_air_outdoor_max": "Maximum outdoor air damper position",
+            "position_damper_air_return": "Return air damper position",
+            "position_damper_air_return_max": "Maximum return air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if heating_output > 0",
-            "    if abs(oa_p - min_oa_p) < oa_p_tol",
+            "if output_coil_heating > 0",
+            "    if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if cooling_output > 0",
-            "    if economizer_high_limit_reached",
-            "        if abs(oa_p - min_oa_p) < oa_p_tol",
+            "else if output_coil_cooling > 0",
+            "    if flag_economizer_limit",
+            "        if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) < 0",
             "            pass",
             "        else",
             "            fail",
             "        end",
             "    else",
-            "        if abs(oa_p - max_oa_p) < oa_p_tol",
+            "        if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0",
             "            pass",
             "        else",
             "            fail",
             "        end",
             "    end",
-            "else if ra_p < max_ra_p",
-            "    if abs(oa_p - max_oa_p) < oa_p_tol",
+            "else if position_damper_air_return < position_damper_air_return_max",
+            "    if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if abs(ra_p - max_ra_p) < ra_p_tol",
-            "    if min_oa_p < oa_p < max_oa_p",
+            "else if abs(position_damper_air_return - position_damper_air_return_max) < 0",
+            "    if position_damper_air_outdoor_min < position_damper_air_outdoor < position_damper_air_outdoor_max",
             "        pass",
             "    else",
             "        fail",
@@ -698,11 +698,11 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "heating_output": "AHU heating coil output",
-            "cooling_output": "AHU cooling coil output",
-            "max_ra_p": "Maximum return air damper position",
-            "ra_p": "Return air damper position",
-            "rea_p": "Relief air damper position"
+            "output_coil_heating": "AHU heating coil heat transfer rate",
+            "output_coil_cooling": "AHU cooling coil heat transfer rate",
+            "position_damper_air_return_max": "Maximum return air damper position",
+            "position_damper_air_return": "Return air damper position",
+            "position_damper_relief": "Relief air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -715,13 +715,13 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "oa_p": "Outdoor air damper position",
-            "max_oa_p": "Maximum outdoor air damper position"
+            "position_damper_air_outdoor": "Outdoor air damper position",
+            "position_damper_air_outdoor_max": "Maximum outdoor air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if abs(oa_p - max_oa_p) < oa_p_tol",
+            "if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0",
             "    pass",
             "else",
             "    fail",
@@ -736,28 +736,28 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "heating_output": "AHU heating coil output",
-            "cooling_output": "AHU cooling coil output",
-            "max_rea_p": "Maximum return air damper position",
-            "rea_p": "Return air damper position",
-            "ra_p": "Relief air damper position"
+            "output_coil_heating": "AHU heating coil heat transfer rate",
+            "output_coil_cooling": "AHU cooling coil heat transfer rate",
+            "position_damper_relief_max": "Maximum relief air damper position",
+            "position_damper_relief": "Relief air damper position",
+            "position_damper_air_return": "Return air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if heating_output > 0",
-            "    if abs(rea_p - 0) < rea_p_tol",
+            "if output_coil_heating > 0",
+            "    if abs(position_damper_relief - 0) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if cooling_output > 0",
-            "    if abs(rea_p - max_rea_p) < rea_p_tol",
+            "else if output_coil_cooling > 0",
+            "    if abs(position_damper_relief - position_damper_relief) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if abs(rea_p - (1 - ra_p) * max_rea_p) < rea_p_tol",
+            "else if abs(position_damper_relief - (1 - position_damper_air_return) * position_damper_relief) < 0",
             "    pass",
             "else",
             "    fail",
@@ -772,27 +772,28 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "heating_output": "AHU heating coil output",
-            "cooling_output": "AHU cooling coil output",
-            "max_ra_p": "Maximum return air damper position",
-            "ra_p": "Return air damper position"
+            "output_coil_heating": "AHU heating coil heat transfer rate",
+            "output_coil_cooling": "AHU cooling coil heat transfer rate",
+            "position_damper_air_return_max": "Maximum return air damper position",
+            "position_damper_air_return": "Return air damper position",
+			"position_damper_air_relief": "Relief air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if heating_output > 0",
-            "    if abs(ra_p - max_ra_p) < ra_p_tol",
+            "if output_coil_heating > 0",
+            "    if abs(position_damper_air_return - position_damper_air_return_max) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if cooling_output > 0",
-            "    if abs(ra_p - 0) < ra_p_tol",
+            "else if output_coil_cooling > 0",
+            "    if abs(position_damper_air_return - 0) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if abs(ra_p - (1 - rea_p) * max_ra_p) < ra_p_tol",
+            "else if abs(position_damper_air_return - (1 - position_damper_air_relief) * position_damper_air_return_max) < 0",
             "    pass",
             "else",
             "    fail",
@@ -807,13 +808,13 @@
             "Section 5.16.2.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "oa_p": "Outdoor air damper position",
-            "max_oa_p": "Maximum outdoor air damper position"
+            "position_damper_air_outdoor": "Outdoor air damper position",
+            "position_damper_air_outdoor_max": "Maximum outdoor air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if abs(oa_p - max_oa_p) < oa_p_tol",
+            "if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0",
             "    pass",
             "else",
             "    fail",
@@ -827,19 +828,19 @@
             "Section 5.16.12.1. in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "supply_air_temp": "supply air temperature",
-            "outdoor_damper_command": "outdoor air damper",
-            "outdoor_damper_minimum": "outdoor air damper minimum position"
+            "temperature_air_supply_setpoint": "Supply air temperature",
+            "position_damper_air_outdoor": "Outdoor air damper position",
+            "position_damper_air_outdoor_min": "Minimum outdoor air damper position"
         },
         "description_assertions": [
-            "if supply_air_temp < 4.4 (continuously 5 minutes) and outdoor_damper_command > outdoor_damper_minimum:",
+            "if temperature_air_supply_setpoint < 4.4 (continuously 5 minutes) and position_damper_air_outdoor > position_damper_air_outdoor_min:",
             "  fail",
-            "elif outdoor_damper_command > outdoor_damper_minimum and not (supply_air_temp > 7 (continuously 5 minutes)):",
+            "elif position_damper_air_outdoor > position_damper_air_outdoor_min and not (temperature_air_supply_setpoint > 7 (continuously 5 minutes)):",
             "  fail",
-            "else:",
+            "else: ",
             "  pass",
             "",
-            "if never (supply_air_temp < 4.4 (continuously 5 minutes)):",
+            "if never (temperature_air_supply_setpoint < 4.4 (continuously 5 minutes)):",
             "  untested"
         ],
         "description_verification_type": "rule-based",
@@ -852,15 +853,15 @@
             "Section 5.16.12.2. in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "supply_air_temp": "supply air temperature",
-            "outdoor_damper_command": "outdoor air damper"
+            "temperature_air_supply_setpoint": "Supply air temperature",
+            "position_damper_air_outdoor": "Outdoor air damper position"
         },
         "description_assertions": [
-            "if supply_air_temp < 3.3 (continuously 5 minutes) and outdoor_damper_command > 0 (ever in the following hour):",
+            "if temperature_air_supply_setpoint < 3.3 (continuously 5 minutes) and position_damper_air_outdoor > 0 (ever in the following hour):",
             "  fail",
-            "else:",
+            "else: ",
             "  pass",
-            "if never (supply_air_temp < 3.3 (continuously 5 minutes)):",
+            "if never (temperature_air_supply_setpoint < 3.3 (continuously 5 minutes)):",
             "  untested"
         ],
         "description_verification_type": "rule-based",
@@ -873,34 +874,34 @@
             "Section 5.16.12.3. in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "freeze_stat": "(optional, set to False if system does not have it) binary freeze-stat",
-            "supply_air_temp": "supply air temperature",
-            "outdoor_damper_command": "outdoor air damper",
-            "supply_fan_status": "supply fan status (speed): [1, 0] (can be replaced by binary or numeric variables)",
-            "return_fan_status": "(optional, set to False if system does not have it) return fan status (speed)",
-            "relief_fan_status": "(optional, set to False if system does not have it) relief fan status (speed)",
-            "cooling_coil_command": "cooling coil command",
-            "heating_coil_command": "heating coil command"
+            "status_freeze": "(optional, set to False if system does not have it) Binary freeze-stat",
+            "temperature_air_supply": "Supply air temperature",
+            "position_damper_air_outdoor": "Outdoor air damper position",
+            "status_fan_supply": "Supply fan status",
+            "status_fan_return": "(optional, set to False if system does not have it) Return fan status",
+            "status_fan_relief": "(optional, set to False if system does not have it) Relief fan status",
+            "command_coil_cool": "Cooling coil command",
+            "command_coil_heat": "Heating coil command"
         },
         "description_assertions": [
-            "if supply_air_temp < 3.3 (continuously 15 minutes) or",
-            "  supply_air_temp < 1 (continuously 5 minutes) or",
-            "  freeze_stat == True",
+            "if temperature_air_supply < 3.3 (continuously 15 minutes) or",
+            "  temperature_air_supply < 1 (continuously 5 minutes) or",
+            "  status_freeze == True",
             "  if not (",
-            "    outdoor_damper_command == 0 and",
-            "    supply_fan_status == 'off' and",
-            "    return_fan_status == 'off' and",
-            "    relief_fan_status == 'off' and",
-            "    cooling_coil_command == 100 and",
-            "    heating_coil_command > 0",
+            "    position_damper_air_outdoor == 0 and",
+            "    status_fan_supply == 'off' and",
+            "    status_fan_return == 'off' and",
+            "    status_fan_relief == 'off' and",
+            "    command_coil_cool == 100 and",
+            "    command_coil_heat > 0",
             "  ):",
             "    fail",
             "  else:",
             "    pass",
             "if never (",
-            "  supply_air_temp < 3.3 (continuously 15 minutes) or",
-            "  supply_air_temp < 1 (continuously 5 minutes) or",
-            "  freeze_stat == True",
+            "  temperature_air_supply < 3.3 (continuously 15 minutes) or",
+            "  temperature_air_supply < 1 (continuously 5 minutes) or",
+            "  status_freeze == True",
             "):",
             "  untested"
         ],
@@ -914,21 +915,21 @@
             "Section 5.16 in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "outdoor_air_temp": "outdoor air temperature",
-            "economizer_high_limit_sp": "economizer lockout high limit set point",
-            "outdoor_damper_command": "outdoor air damper command",
-            "min_oa_p": "minimum outdoor air damper position set point",
-            "min_oa_sp": "minimum outdoor air flow rate setpoint",
-            "outdoor_air_flow": "outdoor air flow rate",
-            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']"
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_economizer_limit": "Economizer lockout temperature limit",
+            "position_damper_air_outdoor": "Outdoor air damper position",
+            "position_damper_air_outdoor_min": "Minimum outdoor air damper position",
+            "flow_volumetric_air_outdoor_setpoint_min": "Minimum outdoor air volume flow setpoint",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "mode_system": "System operation mode"
         },
         "description_assertions": [
-            "if not economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':",
-            "  if oudoor_damper_command >= MinOA-P and outdoor_air_flow >= MinOAsp:",
+            "if not economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_system == 'occupied':",
+            "  if position_damper_air_outdoor >= position_damper_air_outdoor_min and flow_volumetric_air_outdoor >= flow_volumetric_air_outdoor_setpoint_min:",
             "    pass",
             "  else:",
             "    fail",
-            "else:",
+            "else: ",
             "  untested"
         ],
         "description_verification_type": "rule-based",
@@ -941,29 +942,29 @@
             "Section 5.16 in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "outdoor_air_temp": "outdoor air temperature",
-            "economizer_high_limit_sp": "economizer lockout high limit set point",
-            "outdoor_damper_command": "outdoor air damper command",
-            "return_damper_command": "return air damper command",
-            "outdoor_air_flow": "outdoor air flow rate",
-            "min_oa_sp": "minimum outdoor air flow rate setpoint",
-            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']"
+            "temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_economizer_limit": "Economizer lockout temperature limit",
+            "position_damper_air_outdoor": "Outdoor air damper position",
+            "position_damper_air_return": "Return air damper position",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow",
+            "flow_volumetric_air_outdoor_setpoint_min": "Minimum outdoor air volume flow setpoint",
+            "mode_system": "System operation mode"
         },
         "description_assertions": [
-            "if economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':",
-            "  if outdoor_air_flow < MinOAsp (continuously (e.g. fall below the sp for a consecutive 1 hr)):",
-            "    if outdoor_damper_command == 100 and return_damper_command == 0:",
+            "if economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_system == 'occupied':",
+            "  if flow_volumetric_air_outdoor < flow_volumetric_air_outdoor_setpoint_min (continuously (e.g. fall below the sp for a consecutive 1 hr)):",
+            "    if position_damper_air_outdoor == 100 and position_damper_air_return == 0:",
             "      pass",
             "    else:",
             "      fail",
-            "  elif outdoor_air_flow > MinOAsp (continuously):",
-            "    if outdoor_damper_command == 0 and return_damper_command == 100:",
+            "  elif flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min (continuously):",
+            "    if position_damper_air_outdoor == 0 and position_damper_air_return == 100:",
             "      pass",
             "    else:",
             "      fail",
             "  else:",
             "    pass (essentially untested yet)",
-            "else:",
+            "else: ",
             "  untested"
         ],
         "description_verification_type": "rule-based",
@@ -976,13 +977,13 @@
             "Section 5.1.9 in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "command": "control command to be verified with command range being (0-100)",
-            "max_rate_of_change_per_min": "control loop output maximum rate of change, default to 25."
+            "command_control": "Control command (0-100)",
+            "rate_change_max": "Maximum rate of change per minute"
         },
         "description_assertions": [
             "if abs(command(current_t) - command(prev_t)) > max_rage_of_change_per_min and (current_t - prev_t <= 1 minute):",
             "  fail",
-            "else:",
+            "else: ",
             "  pass"
         ],
         "description_verification_type": "rule-based",
@@ -995,15 +996,15 @@
             "Section 5.16.8.1 in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "relief_damper_command": "relief damper opening (0-100)",
-            "supply_fan_status": "supply fan status (speed) [1, 0] (can be replaced by binary or numeric variables)"
+            "position_damper_relief": "Relief damper position (0-100)",
+            "status_fan_supply": "Supply fan status"
         },
         "description_assertions": [
-            "if relief_damper_command > 0 and supply_fan_status == 'on':",
+            "if position_damper_relief > 0 and status_fan_supply == 'on':",
             "  pass",
-            "elif supply_fan_status == 'off' and relief_damper_command == 0:",
+            "elif status_fan_supply == 'off' and position_damper_relief == 0:",
             "  pass",
-            "else:",
+            "else: ",
             "  fail",
             "if not ['on', 'off'] in supply_fan_status:",
             "  untested"
@@ -1018,22 +1019,22 @@
             "Section 5.16.1.1. in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "sys_mode": "AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']",
-            "has_reheat_box_on_perimeter_zones": "binary flag of If there are any VAV-reheat boxes on perimeter zones.",
-            "supply_fan_status": "supply fan status (speed) [1, 0] (can be replaced by binary or numeric variables)"
+            "mode_system": "System operation mode",
+            "flag_reheat_perimeter": "Flag indicating VAV-reheat boxes on perimeter zones",
+            "status_fan_supply": "Supply fan status"
         },
         "description_assertions": [
-            "if has_reheat_box_on_perimeter_zones == True:",
-            "    if sys_mode != 'unoccupied' and supply_fan_status == 'off':",
+            "if flag_reheat_perimeter == True:",
+            "    if mode_system != 'unoccupied' and status_fan_supply == 'off':",
             "        fail",
             "",
-            "else:",
-            "    if sys_mode in ['occupied', 'setup', 'cooldown'] and supply_fan_staus == 'off':",
+            "else: ",
+            "    if mode_system in ['occupied', 'setup', 'cooldown'] and status_fan_supply == 'off':",
             "        fail",
             "",
-            "if ['occupied', 'unoccupied'] in sys_mode:",
+            "if ['occupied', 'unoccupied'] in mode_system:",
             "  pass",
-            "else:",
+            "else: ",
             "  untested"
         ],
         "description_verification_type": "rule-based",
@@ -1043,8 +1044,8 @@
         "library_item_id": 47,
         "description_brief": "Local Loop Performance Verification - Set Point Tracking",
         "description_datapoints": {
-            "feedback_sensor": "feedback sensor reading of the subject to be controlled towards a set point",
-            "set_point": "set point value"
+            "value_sensor": "Feedback sensor reading",
+            "value_setpoint": "Setpoint value"
         },
         "description_assertions": [
             "With a threshold of 5% of abs(set_point) (if the set point is 0, then the threshold is default to be 0.01), if the number of samples of which the error is larger than this threshold is beyond 5% of number of all samples, then this verification fails; Otherwise, it passes."
@@ -1056,8 +1057,8 @@
         "library_item_id": 48,
         "description_brief": "Local Loop Performance Verification - Set Point Unmet Hours",
         "description_datapoints": {
-            "feedback_sensor": "feedback sensor reading of the subject to be controlled towards a set point",
-            "set_point": "set point value"
+            "value_sensor": "Feedback sensor reading",
+            "value_setpoint": "Setpoint value"
         },
         "description_assertions": [
             "Instead of checking the number of samples among the whole data set for which the set points are not met, this verification checks the total accumulated time that the set points are not met within a threshold of 5% of abs(set_point) (if the set point is 0, then the threshold is default to be 0.01)."
@@ -1069,10 +1070,10 @@
         "library_item_id": 49,
         "description_brief": "Local Loop Performance Verification - Direct Acting Loop Actuator Maximum Saturation",
         "description_datapoints": {
-            "feedback_sensor": "feedback sensor reading of the subject to be controlled towards a set point",
-            "set_point": "set point value",
-            "cmd": "control command",
-            "cmd_max": "control command range maximum value"
+            "value_sensor": "Feedback sensor reading",
+            "value_setpoint": "Setpoint value",
+            "command_control": "Control command",
+            "command_max": "Maximum control command value"
         },
         "description_assertions": [
             "If the sensed data values are consistently above its set point, and after a default of 1 hour, the control command is still not saturated to maximum, then the verification fails; Otherwise, it passes."
@@ -1084,10 +1085,10 @@
         "library_item_id": 50,
         "description_brief": "Local Loop Performance Verification - Direct Acting Loop Actuator Minimum Saturation",
         "description_datapoints": {
-            "feedback_sensor": "feedback sensor reading of the subject to be controlled towards a set point",
-            "set_point": "set point value",
-            "cmd": "control command",
-            "cmd_min": "control command range minimum value"
+            "value_sensor": "Feedback sensor reading",
+            "value_setpoint": "Setpoint value",
+            "command_control": "Control command",
+            "command_min": "Minimum control command value"
         },
         "description_assertions": [
             "If the sensed data values are consistently below its set point, and after a default of 1 hour, the control command is still not saturated to minimum, then the verification fails; Otherwise, it passes."
@@ -1099,10 +1100,10 @@
         "library_item_id": 51,
         "description_brief": "Local Loop Performance Verification - Reverse Acting Loop Actuator Maximum Saturation",
         "description_datapoints": {
-            "feedback_sensor": "feedback sensor reading of the subject to be controlled towards a set point",
-            "set_point": "set point value",
-            "cmd": "control command",
-            "cmd_max": "control command range maximum value"
+            "value_sensor": "Feedback sensor reading",
+            "value_setpoint": "Setpoint value",
+            "command_control": "Control command",
+            "command_max": "Maximum control command value"
         },
         "description_assertions": [
             "If the sensed data values are consistently below its set point, and after a default of 1 hour, the control command is still not saturated to maximum, then the verification fails; Otherwise, it passes."
@@ -1114,10 +1115,10 @@
         "library_item_id": 52,
         "description_brief": "Local Loop Performance Verification - Reverse Acting Loop Actuator Minimum Saturation",
         "description_datapoints": {
-            "feedback_sensor": "feedback sensor reading of the subject to be controlled towards a set point",
-            "set_point": "set point value",
-            "cmd": "control command",
-            "cmd_min": "control command range minimum value"
+            "value_sensor": "Feedback sensor reading",
+            "value_setpoint": "Setpoint value",
+            "command_control": "Control command",
+            "command_min": "Minimum control command value"
         },
         "description_assertions": [
             "If the sensed data values are consistently above its set point, and after a default of 1 hour, the control command is still not saturated to minimum, then the verification fails; Otherwise, it passes."
@@ -1129,9 +1130,9 @@
         "library_item_id": 53,
         "description_brief": "Multizone system zone standby model ventilation control",
         "description_datapoints": {
-            "zone_is_standby_mode": "Flag indicating that the zone targeted by the verification is in occupied standby mode",
-            "m_oa_requested_by_system": "System outdoor air setpoint",
-            "m_oa_zone_requirement": "Outdoor air required by the targeted zone"
+            "flag_zone_standby": "Zone in standby mode flag",
+            "flow_volumetric_air_outdoor_system_setpoint": "System outdoor air volume flow setpoint",
+            "flow_volumetric_air_outdoor_zone_req": "Zone required outdoor air volume flow"
         },
         "description_assertions": [
             "If the targted zone is in standby mode and if the difference between the outdoor air setpoint and the last reported outdoor air setpoint when the zone was not in standby mode is greater than the outdoor air required for the zone the verification passes, it otherwise fails."
@@ -1143,9 +1144,9 @@
         "library_item_id": 54,
         "description_brief": "Verify HVAC system fan operation as per ASHRAE 90.1 Appendix G rules",
         "description_datapoints": {
-            "o": "Number of occupants",
-            "fan_runtime_fraction": "Fan runtime fraction (fraction of time the fan ran for the reported period)",
-            "m_oa": "System outdoor air flow rate"
+            "number_occupants": "Number of occupants",
+            "fraction_runtime_fan": "Fan runtime fraction",
+            "flow_volumetric_air_outdoor": "Outdoor air volume flow"
         },
         "description_assertions": [
             "If the system never provides outdoor air the verification is untested. The verification fails if the system fan is not continuously running during an occupied period, it passes if it does. The verification fails if the system is always operating continuously during occupied periods, it passes otherwise."
@@ -1157,9 +1158,9 @@
         "library_item_id": 55,
         "description_brief": "Interior lighting control automatic full off",
         "description_datapoints": {
-            "o": "Number of occupants",
-            "total_lighting_power": "Reported total lighting power (not the design total lighting power)",
-            "lighted_floor_area": "Area lit by the device/system considered"
+            "number_occupants": "Number of occupants",
+            "power_light_total": "Total lighting power",
+            "area_lit": "Lit floor area"
         },
         "description_assertions": [
             "The algorithm verifies that the device/system doesn't serves more than 5,000 ft2 and that if it doesn't, if occupants are not present for at least 20 minutes, the lighting power of the device/system should be less or equal to 0.02 W/ft2, otherwise, the verification fails."
@@ -1171,10 +1172,10 @@
         "library_item_id": 56,
         "description_brief": "Exterior lighting control occupancy sensing reduction",
         "description_datapoints": {
-            "is_sun_up": "Flag that indicates if the sun has risen",
-            "daylight_sensed": "Amount of daylight sensed by a sensor, this should be expressed in the same unit as the setpoint",
-            "daylight_setpoint": "Daylight setpoint, or thresholds, used to determine if the exterior lighting system should be turned off",
-            "total_lighting_power": "Reported total lighting power (not the design total lighting power)"
+            "flag_sun_up": "Sun risen flag",
+            "value_daylight": "Measured daylight level",
+            "value_daylight_setpoint": "Daylight setpoint",
+            "power_light_total": "Total lighting power"
         },
         "description_assertions": [
             "The algorithm verifies that the exterior lighting is off when the sun has risen, or when there is a sufficient amount of daylight. If the exterior lighting system is not off during these situation, the verification fails, otherwise it passes."
@@ -1186,8 +1187,8 @@
         "library_item_id": 57,
         "description_brief": "Exterior lighting control occupancy sensing reduction",
         "description_datapoints": {
-            "o": "Number of occupants",
-            "total_lighting_power": "Reported total lighting power (not the design total lighting power)"
+            "number_occupants": "Number of occupants",
+            "power_light_total": "Total lighting power"
         },
         "description_assertions": [
             "The algorithm verifies that the exterior lighting is controlled based on occupancy. It fails if the maximum reported total lighting power is greater than 1500 W and if the total mnaximum lighting power is not reduced by half when occupancy has not been detected for 15 mins. Otherwise, it passes."
@@ -1202,27 +1203,27 @@
             "Section 5.5.5.1 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
-            "v_cool_max": "Maximum cooling airflow setpoint",
-            "v_min": "Occupied zone minimum airflow setpoint",
-            "v_spt": "Active airflow setpoint"
+            "mode_system": "System operation mode",
+            "state_zone": "Zone state (heating, cooling, or deadband)",
+            "flow_volumetric_air_cool_max": "Maximum cooling airflow setpoint",
+            "flow_volumetric_air_setpoint_min": "Minimum airflow setpoint during occupied mode",
+            "flow_volumetric_air_setpoint": "Airflow setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "switch operation_mode",
+            "switch mode_system",
             "case 'occupied'",
-            "    cooling_maximum = v_cool_max",
+            "    cooling_maximum = flow_volumetric_air_cool_max",
             "    minimum = v_min",
             "case 'cooldown', 'setup'",
-            "    cooling_maximum = v_cool_max",
+            "    cooling_maximum = flow_volumetric_air_cool_max",
             "    minimum = 0",
             "case 'warmup', 'setback', 'unoccupied'",
             "    cooling_maximum = 0",
             "    minimum = 0",
             "",
-            "if minimum <= v_spt <= cooling_maximum",
+            "if minimum <= v_sp <= cooling_maximum",
             "    pass",
             "else",
             "    fail",
@@ -1236,21 +1237,21 @@
             "Section 5.5.5.2 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
-            "v_min": "Occupied zone minimum airflow setpoint",
-            "v_spt": "Active airflow setpoint"
+            "mode_system": "System operation mode",
+            "state_zone": "Zone state (heating, cooling, or deadband)",
+            "flow_volumetric_air_setpoint_min": "Minimum airflow setpoint during occupied mode",
+            "flow_volumetric_air_setpoint": "Airflow setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "switch operation_mode",
+            "switch mode_system",
             "case 'occupied'",
             "    minimum = v_min",
             "case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'",
             "    minimum = 0",
             "",
-            "if abs(v_spt - minimum) <= v_spt_tol",
+            "if abs(v_sp - minimum) <= 0",
             "    pass",
             "else",
             "    fail",
@@ -1264,28 +1265,28 @@
             "Section 5.5.5.3 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
-            "v_cool_max": "Zone maximum cooling airflow setpoint",
-            "v_heat_max": "Zone maximum heating airflow setpoint",
-            "v_min": "Occupied zone minimum airflow setpoint",
-            "v_spt": "Active airflow setpoint"
+            "mode_system": "System operation mode",
+            "state_zone": "Zone state (heating, cooling, or deadband)",
+            "flow_volumetric_air_cool_max": "Maximum cooling airflow setpoint",
+            "flow_volumetric_air_heat_max": "Maximum heating airflow setpoint",
+            "flow_volumetric_air_setpoint_min": "Minimum airflow setpoint during occupied mode",
+            "flow_volumetric_air_setpoint": "Airflow setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "switch operation_mode",
+            "switch mode_system",
             "case 'occupied'",
-            "    heating_maximum = v_heat_max",
+            "    heating_maximum = flow_volumetric_air_heat_max",
             "    minimum = v_min",
             "case 'cooldown', 'setup', 'unoccupied'",
             "    heating_maximum = 0",
             "    minimum = 0",
             "case 'warmup', 'setback'",
-            "    heating_maximum = v_cool_max",
+            "    heating_maximum = flow_volumetric_air_cool_max",
             "    minimum = 0",
             "",
-            "if minimum <= v_spt <= heating_maximum",
+            "if minimum <= flow_volumetric_air_setpoint <= heating_maximum",
             "    pass",
             "else",
             "    fail",
@@ -1299,22 +1300,22 @@
             "Section 5.5.5.4 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "vav_damper_command": "Terminal box VAV damper command",
-            "v": "Terminal box discharge airflow rate",
-            "v_spt": "Active airflow setpoint"
+            "command_damper_vav": "VAV damper command",
+            "flow_volumetric_air_discharge": "Discharge airflow rate",
+            "flow_volumetric_air_setpoint": "Airflow setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if abs(v_spt - v) >= v_tracking_tol (less than 1hr):",
+            "if abs(flow_volumetric_air_setpoint - flow_volumetric_air_discharge) >= 0 (less than 1hr):",
             "    pass",
-            "elif abs(v_spt - v) < v_tracking_tol:",
+            "elif abs(flow_volumetric_air_setpoint - flow_volumetric_air_discharge) < 0:",
             "    pass",
-            "if v - v_spt >= v_tracking_tol (continously) and vav_damper_command <= 1:",
+            "if flow_volumetric_air_discharge - flow_volumetric_air_setpoint >= 0 (continously) and command_damper_vav <= 1:",
             "    pass",
-            "elif v_spt - v >= v_tracking_tol (continuously) and vav_damper_command >= 99:",
+            "elif flow_volumetric_air_setpoint - flow_volumetric_air_discharge >= 0 (continuously) and command_damper_vav >= 99:",
             "    pass",
-            "else:",
+            "else: ",
             "    fail",
             "end"
         ]
@@ -1327,25 +1328,25 @@
             "Section 5.6.5.1.a in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
-            "v_min": "Occupied zone minimum airflow setpoint",
-            "ahu_sat_spt": "AHU supply air temperature setpoint",
-            "v_spt": "Active airflow setpoint",
-            "room_temp": "Room temperature"
+            "mode_system": "System operation mode",
+            "state_zone": "Zone state (heating, cooling, or deadband)",
+            "flow_volumetric_air_setpoint_min": "Minimum airflow setpoint during occupied mode",
+            "temperature_air_supply_setpoint": "Supply air temperature setpoint",
+            "flow_volumetric_air_setpoint": "Airflow setpoint",
+            "temperature_air_room": "Room temperature"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if ahu_sat_spt <= room_temp:",
+            "if temperature_air_supply_setpoint <= temperature_air_room:",
             "    untested",
-            "else:",
-            "    switch operation_mode",
+            "else: ",
+            "    switch mode_system",
             "        case 'occupied'",
             "            minimum = v_min",
             "        case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'",
             "            minimum = 0",
-            "    if v_spt - v_spt_tol > minimum:",
+            "    if flow_volumetric_air_setpoint > minimum:",
             "        fail",
             "    else:",
             "        pass"
@@ -1358,33 +1359,33 @@
             "Section 5.6.5.1 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
-            "v_cool_max": "Maximum cooling airflow setpoint",
-            "v_min": "Occupied zone minimum airflow setpoint",
-            "v_spt": "Active airflow setpoint",
-            "heating_coil_command": "Heating coil command",
-            "dat": "Discharge air temperature",
-            "dat_min_spt": "Minimum discharge air temperature setpoint"
+            "mode_system": "System operation mode",
+            "state_zone": "Zone state (heating, cooling, or deadband)",
+            "flow_volumetric_air_cool_max": "Maximum cooling airflow setpoint",
+            "flow_volumetric_air_setpoint_min": "Minimum airflow setpoint during occupied mode",
+            "flow_volumetric_air_setpoint": "Airflow setpoint",
+            "command_coil_heat": "Heating coil command",
+            "temperature_air_discharge": "Discharge air temperature",
+            "temperature_air_discharge_setpoint_min": "Minimum discharge air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol",
+            "if temperature_air_discharge > temperature_air_discharge_setpoint_min and command_coil_heat > 0",
             "    fail",
             "else",
-            "   switch operation_mode",
+            "   switch mode_system",
             "   case 'occupied'",
-            "       cooling_maximum = v_cool_max",
+            "       cooling_maximum = flow_volumetric_air_cool_max",
             "       minimum = v_min",
             "   case 'cooldown', 'setup'",
-            "       cooling_maximum = v_cool_max",
+            "       cooling_maximum = flow_volumetric_air_cool_max",
             "       minimum = 0",
             "   case 'warmup', 'setback', 'unoccupied'",
             "       cooling_maximum = 0",
             "       minimum = 0",
             "   ",
-            "   if cooling_minimum <= v_spt <= cooling_maximum",
+            "   if minimum <= flow_volumetric_air_setpoint <= cooling_maximum",
             "       pass",
             "   else",
             "       fail",
@@ -1398,26 +1399,26 @@
             "Section 5.6.5.2 in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
-            "v_min": "Occupied zone minimum airflow setpoint",
-            "v_spt": "Active airflow setpoint",
-            "heating_coil_command": "Heating coil command",
-            "dat": "Discharge air temperature",
-            "dat_min_spt": "Minimum discharge air temperature setpoint"
+            "mode_system": "System operation mode",
+            "state_zone": "Zone state (heating, cooling, or deadband)",
+            "flow_volumetric_air_setpoint_min": "Minimum airflow setpoint during occupied mode",
+            "flow_volumetric_air_setpoint": "Airflow setpoint",
+            "command_coil_heat": "Heating coil command",
+            "temperature_air_discharge": "Discharge air temperature",
+            "temperature_air_discharge_setpoint_min": "Minimum discharge air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if dat > dat_min_spt and heating_coil_command > heating_coil_command_tol",
+            "if temperature_air_discharge > temperature_air_discharge_setpoint_min and command_coil_heat > 0",
             "    fail",
             "else",
-            "   switch operation_mode",
+            "   switch mode_system",
             "   case 'occupied'",
             "       minimum = v_min",
             "   case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'",
             "       minimum = 0",
-            "   if abs(v_spt - minimum) <= v_spt_tol",
+            "   if abs(flow_volumetric_air_setpoint - minimum) <= 0",
             "       pass",
             "   else",
             "       fail",
@@ -1431,44 +1432,44 @@
             "Section 5.6.5.3 (a, b) in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "zone_state": "Zone state (heating, cooling, or deadband (not in either heating or cooling))",
-            "v_cool_max": "Zone maximum cooling airflow setpoint",
-            "v_heat_max": "Zone maximum heating airflow setpoint",
-            "v_heat_min": "Zone minimum heating airflow setpoint",
-            "v_min": "Occupied zone minimum airflow setpoint",
-            "v_spt": "Active airflow setpoint",
-            "heating_loop_output": "Zone heating loop signal (from 0 to 100)",
-            "room_temp": "Room temperature",
-            "space_temp_spt": "Space temperature setpoint",
-            "ahu_sat_spt": "AHU supply air temperature setpoint",
-            "dat": "Discharge air temperature",
-            "dat_spt": "Discharge air temperature setpoint"
+            "mode_system": "System operation mode",
+            "state_zone": "Zone state (heating, cooling, or deadband)",
+            "flow_volumetric_air_cool_max": "Maximum cooling airflow setpoint",
+            "flow_volumetric_air_heat_max": "Maximum heating airflow setpoint",
+            "flow_volumetric_air_heat_min": "Minimum heating airflow setpoint",
+            "flow_volumetric_air_setpoint_min": "Minimum airflow setpoint during occupied mode",
+            "flow_volumetric_air_setpoint": "Airflow setpoint",
+            "signal_heat": "Zone heating loop signal (0-100)",
+            "temperature_air_room": "Room temperature",
+            "temperature_air_space_setpoint": "Space temperature setpoint",
+            "temperature_air_supply": "Supply air temperature setpoint",
+            "temperature_air_discharge": "Discharge air temperature",
+            "temperature_air_discharge_setpoint": "Discharge air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "switch operation_mode",
+            "switch mode_system",
             "    case 'occupied'",
-            "        heating_maximum = max(v_heat_min, v_min)",
-            "        heating_minimum = max(v_heat_min, v_min)",
+            "        heating_maximum = max(flow_volumetric_air_heat_min, flow_volumetric_air_setpoint_min)",
+            "        heating_minimum = max(flow_volumetric_air_heat_min, flow_volumetric_air_setpoint_min)",
             "    case 'cooldown'",
-            "        heating_maximum = v_heat_max",
-            "        heating_minimum = v_heat_min",
+            "        heating_maximum = flow_volumetric_air_heat_max",
+            "        heating_minimum = flow_volumetric_air_heat_min",
             "    case 'setup', 'unoccupied'",
             "        heating_maximum = 0",
             "        heating_minimum = 0",
             "    case 'warmup', 'setback'",
-            "        heating_maximum = v_heat_max",
-            "        heating_minimum = v_cool_max",
+            "        heating_maximum = flow_volumetric_air_heat_max",
+            "        heating_minimum = flow_volumetric_air_cool_max",
             "",
-            "    if 0 < heating_loop_output <= 50:",
-            "        if abs(v_spt - heating_minimum) <= tolerance and ahu_sat_spt <= dat_spt <= 11 + space_temp_spt:",
+            "    if 0 < signal_heat <= 50:",
+            "        if abs(flow_volumetric_air_setpoint - heating_minimum) <= 0 and temperature_air_space_setpoint <= t_discharge_sp <= 11 + t_space_sp:",
             "            pass",
             "        else:",
             "            fail",
-            "    if 50 < heating_loop_output <= 100:",
-            "        if dat > room_temp + 3 and heating_minimum <= v_spt <= heating_maximum:",
+            "    if 50 < signal_heat <= 100:",
+            "        if temperature_air_discharge > temperature_air_room + 3 and heating_minimum <= flow_volumetric_air_setpoint <= heating_maximum:",
             "            pass",
             "        else:",
             "            untested",
@@ -1482,24 +1483,24 @@
             "Section 5.6.5.3 c in ASHRAE Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "heating_coil_command": "Heating coil command",
-            "dat": "Discharge air temperature",
-            "dat_spt": "Discharge air temperature setpoint"
+            "mode_system": "System operation mode",
+            "command_coil_heat": "Heating coil command",
+            "temperature_air_discharge": "Discharge air temperature",
+            "temperature_air_discharge_setpoint": "Discharge air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "only check the following if operation_mode is heating",
-            "if abs(dat_spt - dat) >= dat_tracking_tol (less than 1hr):",
+            "only check the following if mode_system is heating",
+            "if abs(temperature_air_discharge_setpoint - temperature_air_discharge) >= 0 (less than 1hr):",
             "    pass",
-            "elif abs(dat_spt - dat) < dat_tracking_tol:",
+            "elif abs(temperature_air_discharge_setpoint - temperature_air_discharge) < 0:",
             "    pass",
-            "if dat - dat_spt >= dat_tracking_tol (continously) and heating_coil_command <= 1:",
+            "if temperature_air_discharge - temperature_air_discharge_setpoint >= 0 (continously) and command_coil_heat <= 1:",
             "    pass",
-            "elif dat_spt - dat >= dat_tracking_tol (continuously) and vav_damper_command >= 99:",
+            "elif temperature_air_discharge_setpoint - temperature_air_discharge >= 0 (continuously) and cmd_damper_vav >= 99:",
             "    pass",
-            "else:",
+            "else: ",
             "    fail",
             "end"
         ]
@@ -1511,17 +1512,17 @@
             "Section 5.6.5.4 in Guideline 36-2021"
         ],
         "description_datapoints": {
-            "operation_mode": "System operation mode",
-            "heating_coil_command": "Heating coil command",
-            "dat": "Discharge air temperature"
+            "mode_system": "System operation mode",
+            "command_coil_heat": "Heating coil command",
+            "temperature_air_discharge": "Discharge air temperature"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if operation_mode != 'occupied':",
+            "if mode_system != 'occupied':",
             "    untested",
-            "if operation_mode == 'occupied':",
-            "    if dat < 10 and heating_coil_command < 99:",
+            "if mode_system == 'occupied':",
+            "    if temperature_air_discharge < 10 and command_coil_heat < 99:",
             "        fail",
             "    else:",
             "        pass",
@@ -1535,18 +1536,18 @@
             "Section 6.5.2.1 ASHRAE 90.1-2016"
         ],
         "description_datapoints": {
-            "reheat_coil_flag": "VAV box reheat coil operation status",
-            "V_dot_VAV": "VAV airflow rate",
-            "V_dot_VAV_max": "VAV max airflow rate",
-            "VAV_min_turndown_design": "design VAV box min turndown ratio"
+            "flag_coil_reheat": "VAV box reheat coil operation status",
+            "flow_volumetric_air_vav": "VAV airflow rate",
+            "flow_volumetric_air_max": "VAV maximum airflow rate",
+            "ratio_turndown_min": "Minimum VAV turndown ratio"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if reheat_coil_flag:",
-            "  if V_dot_VAV_max == 0:",
+            "if flag_coil_reheat:",
+            "  if flow_volumetric_air_max == 0:",
             "     Untested",
-            "  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol:",
+            "  if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:",
             "     fail",
             "  else:",
             "     pass",
@@ -1562,22 +1563,22 @@
             "Section 6.5.2.1 ASHRAE 90.1-2016"
         ],
         "description_datapoints": {
-            "reheat_coil_flag": "VAV box reheat coil operation status",
-            "V_dot_VAV": "VAV airflow rate",
-            "V_dot_VAV_max": "VAV max airflow rate",
-            "VAV_min_turndown_design": "design VAV box min turndown ratio",
-            "P_set": "duct pressure setpoint"
+            "flag_coil_reheat": "VAV box reheat coil operation status",
+            "flow_volumetric_air_vav": "VAV airflow rate",
+            "flow_volumetric_air_max": "VAV maximum airflow rate",
+            "ratio_turndown_min": "Minimum VAV turndown ratio",
+            "pressure_duct_setpoint": "Duct static pressure setpoint"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if reheat_coil_flag:",
-            "  if V_dot_VAV_max == 0:",
+            "if flag_coil_reheat:",
+            "  if flow_volumetric_air_max == 0:",
             "     Untested",
-            "  if V_dot_VAV_max > 0.0 and V_dot_VAV / V_dot_VAV_max > VAV_min_turndown_design + turndown_tol:",
-            "    if P_set_prev is None:",
+            "  if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:",
+            "    if pressure_duct_setpoint_prev is None:",
 			"        Untested",
-			"    elif abs(P_set - P_set_prev) > P_set_tol:",
+			"    elif abs(pressure_duct_setpoint - pressure_duct_setpoint_prev) > 0:",
 			"        Untested",
 			"    else:",
 			"        fail",
@@ -1595,19 +1596,19 @@
             "Section 6.5.2.1 ASHRAE 90.1-2016"
         ],
         "description_datapoints": {
-            "reheat_coil_flag": "VAV box reheat coil operation status",
-            "V_dot_VAV": "VAV airflow rate",
-            "V_dot_VAV_max": "VAV max airflow rate"
+            "flag_coil_reheat": "VAV box reheat coil operation status",
+            "flow_volumetric_air_vav": "VAV airflow rate",
+            "flow_volumetric_air_max": "VAV maximum airflow rate"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if (reheat_coil_flag == False).all():",
+            "if (flag_coil_reheat == False).all():",
             "    Untested",
             "else: ",
-            "  V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max",
-            "  mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
-            "  mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()",
+            "  ratio_vav = flow_volumetric_air_vav/flow_volumetric_air_max",
+            "  mean_reheat_ratio = df.loc[self.df[`flag_coil_reheat`], `ratio_vav`].mean()",
+            "  mean_no_reheat_ratio = df.loc[~self.df[`flag_coil_reheat`], `ratio_vav`].mean()",
             "  if mean_reheat_ratio < mean_no_reheat_ratio:",
             "    pass",
             "  else: ",

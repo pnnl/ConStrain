@@ -341,16 +341,25 @@ class RuleCheckBase(CheckLibBase):
         return output
 
 
-from constrain import CheckLibBase, RuleCheckBase
+from constrain import RuleCheckBase
 
 
 class UserProvidedVerificationItem1(RuleCheckBase):
-    points = ["o", "eco_onoff", "m_oa", "m_ea", "tol_o", "tol_m_oa", "tol_m_ea"]
+    points = [
+        "number_occupants",
+        "status_economizer",
+        "flow_volumetric_air_outdoor",
+        "flow_volumetric_air_exhaust",
+        "tol_occupants",
+        "tol_v_oa",
+        "tol_v_ea",
+    ]
 
     def automatic_oa_damper_check(self, data):
-        if data["o"] < data["tol_o"]:
-            if data["eco_onoff"] == 0 and (
-                data["m_oa"] >= data["tol_m_oa"] or data["m_ea"] >= data["tol_m_ea"]
+        if data["number_occupants"] < data["tol_occupants"]:
+            if data["status_economizer"] == 0 and (
+                data["flow_volumetric_air_outdoor"] >= data["tol_v_oa"]
+                or data["flow_volumetric_air_exhaust"] >= data["tol_v_ea"]
             ):
                 return False
             else:
@@ -363,12 +372,21 @@ class UserProvidedVerificationItem1(RuleCheckBase):
 
 
 class UserProvidedVerificationItem_Beta(RuleCheckBase):
-    points = ["o", "eco_onoff", "m_oa", "m_ea", "tol_o", "tol_m_oa", "tol_m_ea"]
+    points = [
+        "number_occupants",
+        "status_economizer",
+        "flow_volumetric_air_outdoor",
+        "flow_volumetric_air_exhaust",
+        "tol_occupants",
+        "tol_v_oa",
+        "tol_v_ea",
+    ]
 
     def automatic_oa_damper_check(self, data):
-        if data["o"] < data["tol_o"]:
-            if data["eco_onoff"] == 0 and (
-                data["m_oa"] >= data["tol_m_oa"] or data["m_ea"] >= data["tol_m_ea"]
+        if data["number_occupants"] < data["tol_occupants"]:
+            if data["status_economizer"] == 0 and (
+                data["flow_volumetric_air_outdoor"] >= data["tol_v_oa"]
+                or data["flow_volumetric_air_exhaust"] >= data["tol_v_ea"]
             ):
                 return False
             else:

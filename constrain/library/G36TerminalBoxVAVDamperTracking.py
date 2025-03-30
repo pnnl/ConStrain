@@ -1,47 +1,81 @@
 """
-G36 2021
 ### Description
 
 Section 5.5.5.4
-
 - The VAV damper shall be modulated by a control loop to maintain the measured airflow at the active setpoint.
 
-### Verification logic
+### Code requirement
 
-'''
-if abs(v_spt - v) >= v_tracking_tol (less than 1hr):
-    pass
-elif abs(v_spt - v) < v_tracking_tol:
-    pass
-if v - v_spt >= v_tracking_tol (continously) and vav_damper_command <= 1:
-    pass
-elif v_spt - v >= v_tracking_tol (continuously) and vav_damper_command >= 99:
-    pass
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.5.5 Terminal Box Control
+- Code Subsection: 5.5.5.4 VAV Damper Control
+
+### Verification Approach
+
+The verification monitors airflow tracking performance:
+1. Brief deviations from setpoint (less than 1 hour) are acceptable
+2. For sustained deviations:
+   - If flow is too high, damper should be at minimum position
+   - If flow is too low, damper should be at maximum position
+3. When within tolerance, control is considered successful
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): VAV terminal boxes
+- Climate Zone(s): any
+- Component(s): VAV dampers, airflow sensors, damper actuators
+
+### Verification Algorithm Pseudo Code
+
+```python
+if abs(flow_volumetric_air_setpoint - flow_volumetric_air_discharge) >= 0:
+    if tracking_error_duration < 1_hour:
+        pass  # Brief deviation acceptable
+    else:
+        if (flow_volumetric_air_discharge - flow_volumetric_air_setpoint >= 0) and command_damper_vav = 0:
+            pass  # Flow too high, damper at minimum
+        elif (flow_volumetric_air_setpoint - flow_volumetric_air_discharge >= 0) and command_damper_vav = 100:
+            pass  # Flow too low, damper at maximum
+        else:
+            fail  # Sustained deviation without appropriate response
 else:
-    fail
-end
-'''
+    pass
+```
 
 ### Data requirements
 
-- vav_damper_command: Terminal box VAV damper command
-- v: Terminal box discharge airflow rate
-- v_spt: Active airflow setpoint
-- v_tracking_tol: Airflow tracking tolerance
-- v_spt_tol: Active airflow setpoint tolerance
+- command_damper_vav: Damper command
+  - Data Value Unit: percent
+  - Data Point Affiliation: Terminal box control
+
+- flow_volumetric_air_discharge: Airflow rate
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Terminal box monitoring
+
+- flow_volumetric_air_setpoint: Airflow setpoint
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Terminal box control
 
 """
 
-from constrain.checklib import RuleCheckBase
-import numpy as np
 import pandas as pd
+from constrain.checklib import RuleCheckBase
 
 
 class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
-    points = ["vav_damper_command", "v", "v_spt"]
+    points = [
+        "command_damper_vav",
+        "flow_volumetric_air_discharge",
+        "flow_volumetric_air_setpoint",
+    ]
 
     def err_flag(self, t):
-        if abs(t["v_spt"] - t["v"]) >= self.get_tolerance("airflow", "general"):
+        if abs(
+            t["flow_volumetric_air_setpoint"] - t["flow_volumetric_air_discharge"]
+        ) >= self.get_tolerance("airflow", "general"):
             return True
         else:
             return False
@@ -70,14 +104,18 @@ class G36TerminalBoxVAVDamperTracking(RuleCheckBase):
                 result_flag = "Untested"
             elif err_time > 1:
                 if (
-                    cur["v"] - cur["v_spt"] >= self.get_tolerance("airflow", "general")
-                    and cur["vav_damper_command"]
+                    cur["flow_volumetric_air_discharge"]
+                    - cur["flow_volumetric_air_setpoint"]
+                    >= self.get_tolerance("airflow", "general")
+                    and cur["command_damper_vav"]
                     <= self.get_tolerance("damper", "command") * 100
                 ):
                     result_flag = True
                 elif (
-                    cur["v_spt"] - cur["v"] >= self.get_tolerance("airflow", "general")
-                    and cur["vav_damper_command"]
+                    cur["flow_volumetric_air_setpoint"]
+                    - cur["flow_volumetric_air_discharge"]
+                    >= self.get_tolerance("airflow", "general")
+                    and cur["command_damper_vav"]
                     >= (1 - self.get_tolerance("damper", "command")) * 100
                 ):
                     result_flag = True

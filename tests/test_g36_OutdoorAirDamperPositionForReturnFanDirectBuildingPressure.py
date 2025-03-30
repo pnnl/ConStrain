@@ -9,21 +9,31 @@ import pandas as pd
 class TestG36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure(
     unittest.TestCase
 ):
+    tolerances = {
+        "damper": {
+            "unit": "%",
+            "types": {
+                "command": 0.05,
+            },
+        }
+    }
+
     def test_return_air_damper_position(self):
         points = [
-            "oa_p",
-            "max_oa_p",
-            "oa_p_tol",
+            "position_damper_air_outdoor",
+            "position_damper_air_outdoor_max",
         ]
         data = [
-            [0.1, 1, 0.05],  # False
-            [0.98, 1, 0.05],  # True
+            [0.1, 1],  # False
+            [0.98, 1],  # True
         ]
 
         df = pd.DataFrame(data, columns=points)
 
         verification_obj = run_test_verification_with_data(
-            "G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure", df
+            "G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure",
+            df,
+            tolerances=self.tolerances,
         )
 
         results = pd.Series(list(verification_obj.result))

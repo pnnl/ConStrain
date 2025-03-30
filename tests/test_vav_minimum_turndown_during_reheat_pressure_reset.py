@@ -9,15 +9,28 @@ from lib_unit_test_runner import *
 
 
 class TestVAVTurndown(unittest.TestCase):
+    tolerances = {
+        "ratio": {
+            "unit": "%",
+            "types": {
+                "flow": 0.01,
+            },
+            "pressure": {
+                "unit": "Pa",
+                "types": {
+                    "static": 0.01,
+                },
+            },
+        }
+    }
+
     def test_vav_turndown_reheat_coil_flag_untested(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "P_set",
-            "turndown_tol",
-            "P_set_tol",
+            "flag_coil_reheat",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
+            "ratio_turndown_min",
+            "pressure_duct_setpoint",
         ]
 
         timestamp = [
@@ -26,14 +39,16 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [False, 0.005, 0.01, 0.3, 1.0, 0.01, 0.01],
-            [False, 0.005, 0.01, 0.3, 1.1, 0.01, 0.01],
+            [False, 0.005, 0.01, 0.3, 1.0],
+            [False, 0.005, 0.01, 0.3, 1.1],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "VAVMinimumTurndownDuringReheatPressureReset", df
+            "VAVMinimumTurndownDuringReheatPressureReset",
+            df,
+            tolerances=self.tolerances,
         )
         results = list(verification_obj.result)
         expected_results = [
@@ -46,13 +61,11 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_V_dot_max_zero_untested(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "P_set",
-            "turndown_tol",
-            "P_set_tol",
+            "flag_coil_reheat",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
+            "ratio_turndown_min",
+            "pressure_duct_setpoint",
         ]
 
         timestamp = [
@@ -61,14 +74,16 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [True, 0.005, 0.0, 0.3, 1.0, 0.01, 0.01],
-            [True, 0.005, 0.0, 0.3, 1.1, 0.01, 0.01],
+            [True, 0.005, 0.0, 0.3, 1.0],
+            [True, 0.005, 0.0, 0.3, 1.1],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "VAVMinimumTurndownDuringReheatPressureReset", df
+            "VAVMinimumTurndownDuringReheatPressureReset",
+            df,
+            tolerances=self.tolerances,
         )
         results = list(verification_obj.result)
         expected_results = [
@@ -81,13 +96,11 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_P_set_same_untested(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "P_set",
-            "turndown_tol",
-            "P_set_tol",
+            "flag_coil_reheat",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
+            "ratio_turndown_min",
+            "pressure_duct_setpoint",
         ]
 
         timestamp = [
@@ -96,14 +109,16 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [True, 0.005, 0.0, 0.3, 1.0, 0.01, 0.01],
-            [True, 0.005, 0.0, 0.3, 1.0, 0.01, 0.01],
+            [True, 0.005, 0.0, 0.3, 1.0],
+            [True, 0.005, 0.0, 0.3, 1.0],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "VAVMinimumTurndownDuringReheatPressureReset", df
+            "VAVMinimumTurndownDuringReheatPressureReset",
+            df,
+            tolerances=self.tolerances,
         )
         results = list(verification_obj.result)
         expected_results = [
@@ -116,13 +131,11 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_pass(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "P_set",
-            "turndown_tol",
-            "P_set_tol",
+            "flag_coil_reheat",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
+            "ratio_turndown_min",
+            "pressure_duct_setpoint",
         ]
 
         timestamp = [
@@ -131,14 +144,16 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [True, 0.005, 0.06, 0.3, 1.0, 0.01, 0.01],
-            [True, 0.005, 0.06, 0.3, 1.1, 0.01, 0.01],
+            [True, 0.005, 0.06, 0.3, 1.0],
+            [True, 0.005, 0.06, 0.3, 1.1],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "VAVMinimumTurndownDuringReheatPressureReset", df
+            "VAVMinimumTurndownDuringReheatPressureReset",
+            df,
+            tolerances=self.tolerances,
         )
 
         results = pd.Series(list(verification_obj.result))
@@ -155,13 +170,11 @@ class TestVAVTurndown(unittest.TestCase):
 
     def test_vav_turndown_fail(self):
         points = [
-            "reheat_coil_flag",
-            "V_dot_VAV",
-            "V_dot_VAV_max",
-            "VAV_min_turndown_design",
-            "P_set",
-            "turndown_tol",
-            "P_set_tol",
+            "flag_coil_reheat",
+            "flow_volumetric_air_vav",
+            "flow_volumetric_air_max",
+            "ratio_turndown_min",
+            "pressure_duct_setpoint",
         ]
 
         timestamp = [
@@ -170,14 +183,16 @@ class TestVAVTurndown(unittest.TestCase):
         ]
 
         data = [
-            [True, 0.005, 0.01, 0.3, 1.0, 0.01, 0.01],
-            [True, 0.005, 0.01, 0.3, 1.0, 0.01, 0.01],
+            [True, 0.005, 0.01, 0.3, 1.0],
+            [True, 0.005, 0.01, 0.3, 1.0],
         ]
 
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "VAVMinimumTurndownDuringReheatPressureReset", df
+            "VAVMinimumTurndownDuringReheatPressureReset",
+            df,
+            tolerances=self.tolerances,
         )
 
         results = pd.Series(list(verification_obj.result))
