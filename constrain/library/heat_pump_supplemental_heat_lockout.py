@@ -35,7 +35,7 @@ if power_heating_supplemental == 0:
     pass
 elif load_defrost > 0:
     pass
-elif operating_capacity > load_operation + tolerance:
+elif operating_capacity > load_operation:
     fail 
 else:
     pass  
