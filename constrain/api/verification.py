@@ -231,5 +231,9 @@ class Verification:
             return None
 
         # Run verifications
-        with multiprocessing.Pool(self.num_threads) as c:
-            c.map(self.run_single_verification, self.cases.values())
+        if self.num_threads > 1:
+            with multiprocessing.Pool(self.num_threads) as c:
+                c.map(self.run_single_verification, self.cases.values())
+        else:
+            for case in self.cases.values():
+                self.run_single_verification(case)

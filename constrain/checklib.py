@@ -153,7 +153,6 @@ class CheckLibBase(ABC):
         """
         if self.tolerances is not None:
             if variable_type in self.tolerances.keys():
-                print(self.tolerances[variable_type])
                 return self.tolerances[variable_type]["types"][variable_subtype]
             else:
                 return 0.0
