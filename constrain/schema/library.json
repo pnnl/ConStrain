@@ -7,11 +7,11 @@
             "Section 6.5.3.5 in 90.1-2016"
         ],
         "description_datapoints": {
-            "temperature_air_supply": "Supply air temperature setpoint",
+            "temperature_air_supply_setpoint": "Supply air temperature setpoint",
             "temperature_air_zone_design_cool_setpoint": "Design zone cooling temperature setpoint"
         },
         "description_assertions": [
-            "Max(temperature_air_supply) - Min(temperature_air_supply) >= (temperature_air_zone_design_cool_setpoint - Min(temperature_air_supply)) * 0.25"
+            "Max(temperature_air_supply_setpoint) - Min(temperature_air_supply_setpoint) >= (temperature_air_zone_design_cool_setpoint - Min(temperature_air_supply)) * 0.25"
         ],
         "description_verification_type": "rule-based",
         "assertions_type": "pass"

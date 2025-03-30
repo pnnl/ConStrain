@@ -13,7 +13,7 @@
 			"expected_result": "pass",
 			"datapoints_source": {
 				"idf_output_variables": {
-					"temperature_air_supply": {
+					"temperature_air_supply_setpoint": {
 						"subject": "VAV_1 Supply Equipment Outlet Node",
 						"variable": "System Node Setpoint Temperature",
 						"frequency": "detailed"
@@ -38,7 +38,7 @@
 			"expected_result": "pass",
 			"datapoints_source": {
 				"idf_output_variables": {
-					"temperature_air_supply": {
+					"temperature_air_supply_setpoint": {
 						"subject": "VAV_2 Supply Equipment Outlet Node",
 						"variable": "System Node Setpoint Temperature",
 						"frequency": "detailed"
@@ -63,7 +63,7 @@
 			"expected_result": "pass",
 			"datapoints_source": {
 				"idf_output_variables": {
-					"temperature_air_supply": {
+					"temperature_air_supply_setpoint": {
 						"subject": "CAV_KITCHEN SUPPLY EQUIPMENT OUTLET NODE",
 						"variable": "System Node Setpoint Temperature",
 						"frequency": "detailed"

@@ -168,7 +168,7 @@ SupplyAirTempReset:
       variable: ahu_discharge_air_temperature_setpoint
   EnergyPlus:
     ahu_discharge_air_temperature_setpoint:
-      point: temperature_air_supply
+      point: temperature_air_supply_setpoint
       subject: Null
       variable: System Node Setpoint Temperature
 

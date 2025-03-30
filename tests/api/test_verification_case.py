@@ -21,13 +21,13 @@ class TestVerificationCase(unittest.TestCase):
         "expected_result": "pass",
         "datapoints_source": {
             "idf_output_variables": {
-                "temperature_air_supply": {
+                "temperature_air_supply_setpoint": {
                     "subject": "VAV_1 Supply Equipment Outlet Node",
                     "variable": "System Node Setpoint Temperature",
                     "frequency": "detailed",
                 }
             },
-            "parameters": {"T_z_coo": 24.0},
+            "parameters": {"temperature_air_zone_design_cool_setpoint": 24.0},
         },
         "verification_class": "SupplyAirTempReset",
     }

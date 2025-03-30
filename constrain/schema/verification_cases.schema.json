@@ -179,12 +179,12 @@
                         "idf_output_variables": {
                             "type": "object",
                             "properties": {
-                                "temperature_air_supply": {
+                                "temperature_air_supply_setpoint": {
                                     "$ref": "#/$defs/output_variable"
                                 }
                             },
                             "required": [
-                                "temperature_air_supply"
+                                "temperature_air_supply_setpoint"
                             ]
                         },
                         "parameters": {

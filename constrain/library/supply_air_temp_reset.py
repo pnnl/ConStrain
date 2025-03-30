@@ -33,8 +33,8 @@ The verification analyzes supply air temperature setpoint variation:
 ### Verification Algorithm Pseudo Code
 
 ```python
-sat_range = max(temperature_air_supply) - min(temperature_air_supply)
-min_sat = min(temperature_air_supply)
+sat_range = max(temperature_air_supply_setpoint) - min(temperature_air_supply_setpoint)
+min_sat = min(temperature_air_supply_setpoint)
 required_range = (temperature_air_zone_design_cool_setpoint - min_sat) * 0.25 * 0.99
 
 if sat_range >= required_range:
@@ -45,7 +45,7 @@ else:
 
 ### Data requirements
 
-- temperature_air_supply: Supply air temperature setpoint
+- temperature_air_supply_setpoint: Supply air temperature setpoint
   - Data Value Unit: temperature
   - Data Point Affiliation: System control
 
@@ -63,11 +63,14 @@ from constrain.checklib import RuleCheckBase
 
 
 class SupplyAirTempReset(RuleCheckBase):
-    points = ["temperature_air_supply", "temperature_air_zone_design_cool_setpoint"]
+    points = [
+        "temperature_air_supply_setpoint",
+        "temperature_air_zone_design_cool_setpoint",
+    ]
 
     def verify(self):
-        t_sa_set_max = max(self.df["temperature_air_supply"])
-        t_sa_set_min = min(self.df["temperature_air_supply"])
+        t_sa_set_max = max(self.df["temperature_air_supply_setpoint"])
+        t_sa_set_min = min(self.df["temperature_air_supply_setpoint"])
 
         self.result = (t_sa_set_max - t_sa_set_min) >= (
             self.df["temperature_air_zone_design_cool_setpoint"] - t_sa_set_min
@@ -77,7 +80,7 @@ class SupplyAirTempReset(RuleCheckBase):
         print(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
-        sns.histplot(self.df["temperature_air_supply"])
+        sns.histplot(self.df["temperature_air_supply_setpoint"])
         plt.title("All samples distribution of temperature_air_supply")
         plt.savefig(
             f"{self.results_folder}/All_samples_distribution_of_temperature_air_supply.png"
@@ -92,8 +95,8 @@ class SupplyAirTempReset(RuleCheckBase):
             daydf = self.df.loc[daystr]
             day = self.result[daystr]
             if (
-                daydf["temperature_air_supply"].max()
-                - daydf["temperature_air_supply"].min()
+                daydf["temperature_air_supply_setpoint"].max()
+                - daydf["temperature_air_supply_setpoint"].min()
                 > 0
             ):
                 return day, daydf

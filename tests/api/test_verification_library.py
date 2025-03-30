@@ -138,7 +138,7 @@ class TestVerificationLibrary(unittest.TestCase):
         vl_obj = VerificationLibrary(lib_path)
         applicable_lib_items = vl_obj.get_applicable_library_items_by_datapoints(
             [
-                "temperature_air_supply",
+                "temperature_air_supply_setpoint",
                 "temperature_air_zone_design_cool_setpoint",
                 "flow_volumetric_air_outdoor",
                 "status_ahu",
@@ -166,7 +166,10 @@ class TestVerificationLibrary(unittest.TestCase):
 
         with self.assertLogs() as logobs:
             vl_obj.get_applicable_library_items_by_datapoints(
-                {"temperature_air_supply", "temperature_air_zone_design_cool_setpoint"}
+                {
+                    "temperature_air_supply_setpoint",
+                    "temperature_air_zone_design_cool_setpoint",
+                }
             )
             self.assertEqual(
                 "ERROR:root:datapoints' type must be List. It can't be <class 'set'>.",
@@ -183,7 +186,7 @@ class TestVerificationLibrary(unittest.TestCase):
         with self.assertLogs() as logobs:
             vl_obj.get_applicable_library_items_by_datapoints(
                 [
-                    "temperature_air_supply",
+                    "temperature_air_supply_setpoint",
                     {"temperature_air_zone_design_cool_setpoint"},
                 ]
             )

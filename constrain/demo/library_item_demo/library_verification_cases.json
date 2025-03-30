@@ -76,10 +76,10 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "temperature_air_supply": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)",
+                    "temperature_air_supply_setpoint": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)",
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -258,10 +258,10 @@
             },
             "datapoints_source": {
                 "idf_output_variables": {
-                    "temperature_air_supply": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
+                    "temperature_air_supply_setpoint": "VAV_BOT WITH REHEAT SUPPLY EQUIPMENT OUTLET NODE:System Node Setpoint Temperature [C](Each Call)"
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
