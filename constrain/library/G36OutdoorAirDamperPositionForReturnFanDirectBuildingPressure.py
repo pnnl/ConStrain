@@ -34,11 +34,11 @@ else:
 
 ### Data requirements
 
-- position_damper_air_outdoor: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
-- position_damper_air_outdoor_max: Maximum outdoor air damper command
+- position_damper_air_outdoor_max: Maximum outdoor air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 

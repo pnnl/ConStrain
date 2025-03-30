@@ -62,19 +62,19 @@ elif abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0:
   - Data Value Unit: percent
   - Data Point Affiliation: System control
 
-- position_damper_air_return: Return air damper command
+- position_damper_air_return: Return air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
-- position_damper_air_return_max: Maximum return air damper command
+- position_damper_air_return_max: Maximum return air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
-- position_damper_air_outdoor: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
-- position_damper_air_outdoor_max: Maximum outdoor air damper command
+- position_damper_air_outdoor_max: Maximum outdoor air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 

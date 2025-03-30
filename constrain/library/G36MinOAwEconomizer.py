@@ -52,11 +52,11 @@ else:
   - Data Value Unit: °C
   - Data Point Affiliation: Economizer control
 
-- position_damper_air_outdoor: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
-- position_damper_air_outdoor_min: Minimum outdoor air damper command
+- position_damper_air_outdoor_min: Minimum outdoor air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 

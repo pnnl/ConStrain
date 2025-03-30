@@ -42,7 +42,7 @@ if not ['on', 'off'] in status_fan_supply:
 
 ### Data requirements
 
-- position_damper_relief: Relief damper command
+- position_damper_relief: Relief damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 

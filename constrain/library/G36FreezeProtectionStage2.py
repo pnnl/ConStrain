@@ -41,7 +41,7 @@ if never (temperature_air_supply_setpoint < 3.3 (continuously 5 minutes)):
   - Data Value Unit: °C
   - Data Point Affiliation: Air handling unit
 
-- position_damper_air_outdoor: Outdoor air damper command
+- position_damper_air_outdoor: Outdoor air damper position
   - Data Value Unit: percent
   - Data Point Affiliation: Air handling unit
 
