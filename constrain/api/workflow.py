@@ -58,8 +58,6 @@ class WorkflowEngine:
 
         os.chdir(word_dir_before_run)
 
-
-
     def change_work_dir(self) -> None:
         # First, check if the workflow_dict has "working_dir"
         if "working_dir" not in self.workflow_dict:
