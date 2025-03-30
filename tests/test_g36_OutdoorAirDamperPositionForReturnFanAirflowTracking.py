@@ -3,7 +3,7 @@ import unittest, sys
 sys.path.append("./constrain")
 from lib_unit_test_runner import *
 
-import pandas as pdd
+import pandas as pd
 
 
 class TestG36OutdoorAirDamperPositionForReturnFanAirflowTracking(unittest.TestCase):
