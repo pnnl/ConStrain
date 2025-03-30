@@ -9,7 +9,7 @@ import pandas as pd
 
 class TestLocalLoopSaturationReverseActingMax(unittest.TestCase):
     def test_saturation_ramax_pass(self):
-        points = ["feedback_sensor", "set_point", "cmd", "cmd_max"]
+        points = ["value_sensor", "value_setpoint", "command_control", "command_max"]
         timestamp = [
             datetime(2023, 5, 1, 0, 5, 0),
             datetime(2023, 5, 1, 1, 5, 10),
@@ -67,7 +67,7 @@ class TestLocalLoopSaturationReverseActingMax(unittest.TestCase):
         self.assertTrue(binaryflag)
 
     def test_saturation_damax_pass(self):
-        points = ["feedback_sensor", "set_point", "cmd", "cmd_max"]
+        points = ["value_sensor", "value_setpoint", "command_control", "command_max"]
         timestamp = [
             datetime(2023, 5, 1, 0, 5, 0),
             datetime(2023, 5, 1, 1, 5, 10),

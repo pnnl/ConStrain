@@ -9,28 +9,38 @@ import pandas as pd
 class TestG36ReturnAirDamperPositionForReturnFanDirectBuildingPressure(
     unittest.TestCase
 ):
+    tolerances = {
+        "damper": {
+            "unit": "%",
+            "types": {
+                "position": 0.05,
+            },
+        }
+    }
+
     def test_return_air_damper_position(self):
         points = [
-            "heating_output",
-            "cooling_output",
-            "ra_p",
-            "max_ra_p",
-            "ra_p_tol",
+            "output_coil_heating",
+            "output_coil_cooling",
+            "position_damper_air_return",
+            "position_damper_air_return_max",
         ]
         data = [
-            [1000, 0, 0.5, 1.0, 0.05],  # False
-            [1000, 0, 0.99, 1.0, 0.05],  # True
-            [0, 1000, 0.5, 1.0, 0.05],  # False
-            [0, 1000, 0.02, 1.0, 0.05],  # True
-            [0, 0, 1.0, 1.0, 0.05],  # False
-            [0, 0, 0, 1.0, 0.05],  # False
-            [0, 0, 0.5, 1.0, 0.05],  # True
+            [1000, 0, 0.5, 1.0],  # False
+            [1000, 0, 0.99, 1.0],  # True
+            [0, 1000, 0.5, 1.0],  # False
+            [0, 1000, 0.02, 1.0],  # True
+            [0, 0, 1.0, 1.0],  # False
+            [0, 0, 0, 1.0],  # False
+            [0, 0, 0.5, 1.0],  # True
         ]
 
         df = pd.DataFrame(data, columns=points)
 
         verification_obj = run_test_verification_with_data(
-            "G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure", df
+            "G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure",
+            df,
+            tolerances=self.tolerances,
         )
 
         results = pd.Series(list(verification_obj.result))

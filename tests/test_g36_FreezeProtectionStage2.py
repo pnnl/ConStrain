@@ -23,7 +23,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
     }
 
     def test_freeze_protection_2_pass(self):
-        points = ["supply_air_temp", "outdoor_damper_command"]
+        points = ["temperature_air_supply_setpoint", "position_damper_air_outdoor"]
 
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -49,7 +49,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         self.assertTrue(binaryflag)
 
     def test_freeze_protection_2_fail(self):
-        points = ["supply_air_temp", "outdoor_damper_command"]
+        points = ["temperature_air_supply_setpoint", "position_damper_air_outdoor"]
 
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -76,7 +76,7 @@ class TestG36FreezeProtectionStage2(unittest.TestCase):
         self.assertFalse(binaryflag)
 
     def test_freeze_protection_2_untested(self):
-        points = ["supply_air_temp", "outdoor_damper_command"]
+        points = ["temperature_air_supply_setpoint", "position_damper_air_outdoor"]
 
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),

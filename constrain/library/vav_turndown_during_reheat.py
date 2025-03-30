@@ -1,6 +1,12 @@
 """
 ### Description
-When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should be higher than when it isn't in reheat mode
+
+section 6.5.2.1 Zone Controls
+Zone thermostatic controls shall prevent
+a. reheating;
+b. recooling;
+c. mixing or simultaneously supplying air that has been previously mechanically heated and air that has been previously cooled, either by mechanical cooling or by economizer systems;
+d. other simultaneous operation of heating and cooling systems to the same zone.
 
 ### Code requirement
 
@@ -10,26 +16,54 @@ When a VAV box is in reheat mode, the ratio of V_dot_VAV to V_dot_VAV_max should
 - Code Subsection: 6.5.2.1 Zone Controls
 
 ### Verification Approach
-- We aim to identify how VAV airflow rate varies when the VAV box is and isn't in reheat mode.
 
-### Verification logic
-```
-if (reheat_coil_flag == False).all():
-    Untested
+The verification compares average airflow ratios:
+1. Calculate flow ratios (actual/maximum) for all periods
+2. Separate data into reheat and non-reheat periods
+3. Compare average ratios:
+   - Calculate mean ratio during reheat
+   - Calculate mean ratio during normal operation
+   - Pass if reheat ratio is lower
+4. Mark as untested if no reheat operation observed
+
+### Verification Applicability
+
+- Building Type(s): any with VAV systems
+- Space Type(s): any with reheat capability
+- System(s): VAV terminal units
+- Climate Zone(s): any
+- Component(s): VAV boxes, reheat coils, airflow sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if no_reheat_periods_exist:
+    untested  # Cannot verify without reheat operation
 else:
-    V_dot_VAV_ratio = V_dot_VAV/V_dot_VAV_max
-    mean_reheat_ratio = df.loc[self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
-    mean_no_reheat_ratio = df.loc[~self.df[`reheat_coil_flag`], `V_dot_VAV_ratio`].mean()
-
-    if mean_reheat_ratio < mean_no_reheat_ratio:
-        pass
+    flow_ratio = flow_volumetric_air_vav / flow_volumetric_air_max
+    
+    reheat_avg = mean(flow_ratio[flag_coil_reheat])
+    normal_avg = mean(flow_ratio[not flag_coil_reheat])
+    
+    if reheat_avg < normal_avg:
+        pass  # Proper turndown during reheat
     else:
-        fail
+        fail  # Insufficient turndown
 ```
+
 ### Data requirements
-- reheat_coil_flag: VAV box reheat coil operation status
-- V_dot_VAV: actual VAV volume flow
-- V_dot_VAV_max: max VAV volume flow
+
+- flag_coil_reheat: VAV box reheat coil operation flag
+  - Data Value Unit: binary
+  - Data Point Affiliation: Terminal unit control
+
+- flow_volumetric_air_vav: VAV airflow rate
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Terminal unit monitoring
+
+- flow_volumetric_air_max: VAV maximum airflow rate
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Terminal unit configuration
 
 """
 
@@ -38,29 +72,31 @@ from constrain.checklib import RuleCheckBase
 
 class VAVTurndownDuringReheat(RuleCheckBase):
     points = [
-        "reheat_coil_flag",
-        "V_dot_VAV",
-        "V_dot_VAV_max",
+        "flag_coil_reheat",
+        "flow_volumetric_air_vav",
+        "flow_volumetric_air_max",
     ]
 
     def verify(self):
-        # Make sure every value in `V_dot_VAV_max` is greater than 0
+        # Make sure every value in `v_vav_max` is greater than 0
         assert (
-            self.df["V_dot_VAV_max"] > 0
-        ).all(), "Not all `V_dot_VAV_max` values are greater than 0"
+            self.df["flow_volumetric_air_max"] > 0
+        ).all(), "Not all `v_vav_max` values are greater than 0"
 
-        # Check if the `reheat_coil_flag` column has only False values
-        if (self.df["reheat_coil_flag"] == False).all():
+        # Check if the `flag_coil_reheat` column has only False values
+        if (self.df["flag_coil_reheat"] == False).all():
             self.df["result"] = "Untested"
         else:
-            self.df["V_dot_VAV_ratio"] = self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
+            self.df["v_vav_ratio"] = (
+                self.df["flow_volumetric_air_vav"] / self.df["flow_volumetric_air_max"]
+            )
 
             # Calculate the mean ratios for reheat and no reheat conditions
             mean_reheat_ratio = self.df.loc[
-                self.df["reheat_coil_flag"], "V_dot_VAV_ratio"
+                self.df["flag_coil_reheat"], "v_vav_ratio"
             ].mean()
             mean_no_reheat_ratio = self.df.loc[
-                ~self.df["reheat_coil_flag"], "V_dot_VAV_ratio"
+                ~self.df["flag_coil_reheat"], "v_vav_ratio"
             ].mean()
             self.df["result"] = mean_reheat_ratio < (
                 mean_no_reheat_ratio - self.get_tolerance("ratio", "flow")

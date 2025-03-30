@@ -21,12 +21,12 @@ class TestFanStaticPressureResetControl(unittest.TestCase):
 
     def test_fan_static_pressure_reset_control_pass(self):
         points = [
-            "p_set",
-            "d_VAV_1",
-            "d_VAV_2",
-            "d_VAV_3",
-            "d_VAV_4",
-            "d_VAV_5",
+            "pressure_static_setpoint",
+            "pos_damper_vav_1",
+            "pos_damper_vav_2",
+            "pos_damper_vav_3",
+            "pos_damper_vav_4",
+            "pos_damper_vav_5",
         ]
 
         timestamp = [
@@ -65,12 +65,12 @@ class TestFanStaticPressureResetControl(unittest.TestCase):
 
     def test_fan_static_pressure_reset_control_fail(self):
         points = [
-            "p_set",
-            "d_VAV_1",
-            "d_VAV_2",
-            "d_VAV_3",
-            "d_VAV_4",
-            "d_VAV_5",
+            "pressure_static_setpoint",
+            "pos_damper_vav_1",
+            "pos_damper_vav_2",
+            "pos_damper_vav_3",
+            "pos_damper_vav_4",
+            "pos_damper_vav_5",
         ]
 
         timestamp = [

@@ -5,7 +5,6 @@ from lib_unit_test_runner import *
 from library import *
 
 import pandas as pd
-import numpy as np
 
 
 class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
@@ -26,12 +25,12 @@ class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
             },
         }
         points = [
-            "operation_mode",
-            "zone_state",
-            "v_min",
-            "ahu_sat_spt",
-            "v_spt",
-            "room_temp",
+            "mode_system",
+            "state_zone",
+            "flow_volumetric_air_setpoint_min",
+            "temperature_air_supply_setpoint",
+            "flow_volumetric_air_setpoint",
+            "temperature_air_room",
         ]
 
         data = [

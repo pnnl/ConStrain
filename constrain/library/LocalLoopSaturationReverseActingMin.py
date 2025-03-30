@@ -1,20 +1,64 @@
 """
-## Local Loop Performance Verification - Reverse Acting Loop Actuator Minimum Saturation
-
 ### Description
 
-This verification checks that a reverse acting control loop would saturate its actuator to minimum when the error is consistently above the set point.
+- This verification checks that a reverse acting control loop would saturate its actuator to minimum when the error is consistently above the set point.
 
-### Verification logic
+### Code requirement
 
-If the sensed data values are consistently above its set point, and after a default of 1 hour, the control command is still not saturated to minimum, then the verification fails; Otherwise, it passes.
+- Code Name: N/A
+- Code Year: N/A
+- Code Section: N/A
+
+### Verification Approach
+
+The verification monitors control loop behavior when error persists:
+1. Track duration of positive control error (feedback > setpoint)
+2. After 1 hour of continuous error:
+   - Verify actuator command reaches minimum position
+   - Allow small tolerance from minimum
+3. Pass if actuator saturates, fail if it doesn't respond properly
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): any control loop with reverse-acting response
+- Climate Zone(s): any
+- Component(s): actuators, sensors, controllers
+
+### Verification Algorithm Pseudo Code
+
+```python
+error_duration = 0
+for each timestep:
+    if value_sensor > value_setpoint:  # Positive error
+        error_duration += timestep_size
+        if error_duration >= 1_hour:
+            if command_control - command_min <= 0:
+                pass  # Proper saturation
+            else:
+                fail  # Should be at minimum
+    else:
+        error_duration = 0  # Reset duration when error clears
+```
 
 ### Data requirements
 
-- feedback_sensor: feedback sensor reading of the subject to be controlled towards a set point
-- set_point: set point value
-- cmd: control command
-- cmd_min: control command range minimum value
+- value_sensor: Process variable
+  - Data Value Unit: varies by application
+  - Data Point Affiliation: Control loop input
+
+- value_setpoint: Control setpoint
+  - Data Value Unit: same as value_sensor
+  - Data Point Affiliation: Control loop configuration
+
+- command_control: Actuator command
+  - Data Value Unit: percent
+  - Data Point Affiliation: Control loop output
+
+- command_min: Minimum command
+  - Data Value Unit: percent
+  - Data Point Affiliation: Control loop configuration
 
 """
 
@@ -23,16 +67,20 @@ from constrain.checklib import RuleCheckBase
 
 
 class LocalLoopSaturationReverseActingMin(RuleCheckBase):
-    points = ["feedback_sensor", "set_point", "cmd", "cmd_min"]
+    points = ["value_sensor", "value_setpoint", "command_control", "command_min"]
 
     def saturation_flag(self, t):
-        if 0 <= t["cmd"] - t["cmd_min"] <= 0.01:
+        if (
+            0
+            <= t["command_control"] - t["command_min"]
+            <= self.get_tolerance("command", "general")
+        ):
             return True
         else:
             return False
 
     def err_flag(self, t):
-        if t["feedback_sensor"] > t["set_point"]:
+        if t["value_sensor"] > t["value_setpoint"]:
             return True
         else:
             return False

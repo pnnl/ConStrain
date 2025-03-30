@@ -50,10 +50,6 @@ Running Verifications using **ConStrain**
                       "max_ra_p": "max_ra_p",
                       "oa_p": "oa_p",
                       "max_oa_p": "max_oa_p"
-                  },
-                  "parameters": {
-                      "ra_p_tol": 0.01,
-                      "oa_p_tol": 0.01
                   }
               },
               "verification_class": "G36ReturnAirDamperPositionForReliefDamperOrFan"
@@ -71,7 +67,7 @@ Running Verifications using **ConStrain**
 .. sourcecode:: JSON
 
   "idf_output_variables": {
-    "T_sa_set": {
+    "temperature_air_supply": {
       "subject": "VAV_1 Supply Equipment Outlet Node",
       "variable": "System Node Setpoint Temperature",
       "frequency": "detailed"

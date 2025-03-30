@@ -4,9 +4,7 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 
-import json
 import pandas as pd
-import numpy as np
 
 
 class TestAutomaticOADamperControl(unittest.TestCase):
@@ -18,7 +16,12 @@ class TestAutomaticOADamperControl(unittest.TestCase):
             },
             "ratio": {"unit": "%", "types": {"occupancy": 0.001, "general": 0.001}},
         }
-        points = ["o", "eco_onoff", "m_oa", "m_ea"]
+        points = [
+            "number_occupants",
+            "status_economizer",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_exhaust",
+        ]
         data = [
             [1, 0, 0, 0],
             [0, 1, 0, 0],

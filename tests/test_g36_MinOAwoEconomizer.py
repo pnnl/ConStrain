@@ -5,9 +5,7 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 
-import json
 import pandas as pd
-import numpy as np
 
 
 class TestG36MinOAwEconomizer(unittest.TestCase):
@@ -28,13 +26,13 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_pass_untested_low(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "return_damper_command",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "temperature_air_outdoor",
+            "temperature_air_economizer_limit",
+            "position_damper_air_outdoor",
+            "position_damper_air_return",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_outdoor_setpoint_min",
+            "mode_system",
         ]
 
         timestamp = [
@@ -68,13 +66,13 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_fail_untested_low(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "return_damper_command",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "temperature_air_outdoor",
+            "temperature_air_economizer_limit",
+            "position_damper_air_outdoor",
+            "position_damper_air_return",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_outdoor_setpoint_min",
+            "mode_system",
         ]
 
         timestamp = [
@@ -108,13 +106,13 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_pass_untested_high(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "return_damper_command",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "temperature_air_outdoor",
+            "temperature_air_economizer_limit",
+            "position_damper_air_outdoor",
+            "position_damper_air_return",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_outdoor_setpoint_min",
+            "mode_system",
         ]
 
         timestamp = [
@@ -148,13 +146,13 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
 
     def test_minoa_wo_economizer_fail_untested_high(self):
         points = [
-            "outdoor_air_temp",
-            "economizer_high_limit_sp",
-            "outdoor_damper_command",
-            "return_damper_command",
-            "outdoor_air_flow",
-            "min_oa_sp",
-            "sys_mode",
+            "temperature_air_outdoor",
+            "temperature_air_economizer_limit",
+            "position_damper_air_outdoor",
+            "position_damper_air_return",
+            "flow_volumetric_air_outdoor",
+            "flow_volumetric_air_outdoor_setpoint_min",
+            "mode_system",
         ]
 
         timestamp = [

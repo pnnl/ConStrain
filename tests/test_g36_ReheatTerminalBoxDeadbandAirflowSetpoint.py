@@ -5,10 +5,9 @@ from lib_unit_test_runner import *
 from library import *
 
 import pandas as pd
-import numpy as np
 
 
-class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
+class TestG36ReheatTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
     tolerances = {
         "airflow": {"unit": "m3/s", "types": {"general": 0.01}},
         "damper": {"unit": "%", "general": 0.01, "types": {"command": 0.01}},
@@ -16,13 +15,13 @@ class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
 
     def test_g36_cooling_only_terminal_box_deadband_airflow_setpoint(self):
         points = [
-            "operation_mode",
-            "zone_state",
-            "v_min",
-            "v_spt",
-            "heating_coil_command",
-            "dat",
-            "dat_min_spt",
+            "mode_system",
+            "state_zone",
+            "flow_volumetric_air_setpoint_min",
+            "flow_volumetric_air_setpoint",
+            "command_coil_heat",
+            "temperature_air_discharge",
+            "temperature_air_discharge_setpoint_min",
         ]
 
         data = [
