@@ -2,12 +2,7 @@
 This file containing the high level interface for implementing verificaiton item classes in library.py
 """
 
-# %% Supress future warning if needed
 import warnings
-
-warnings.simplefilter(action="ignore", category=FutureWarning)
-
-# %% import packages
 import datetime
 from datetime import timedelta, date
 from typing import List, Dict, Union
@@ -15,12 +10,11 @@ from abc import ABC, abstractmethod
 import matplotlib.pyplot as plt
 import seaborn as sns
 import glob, json, os
-
-# plt.style.use("ggplot")
 import pandas as pd
+from typing import Dict, List, Tuple, Union
 from pandas.plotting import register_matplotlib_converters
 
-# register_matplotlib_converters()
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 class CheckLibBase(ABC):
@@ -29,7 +23,9 @@ class CheckLibBase(ABC):
     points = None
     result = pd.DataFrame()
 
-    def __init__(self, df: pd.DataFrame, params=None, results_folder=None):
+    def __init__(
+        self, df: pd.DataFrame, params=None, results_folder=None, tolerances=None
+    ):
         full_df = df.copy(deep=True)
         if params is not None:
             for k, v in params.items():
@@ -43,6 +39,7 @@ class CheckLibBase(ABC):
         self.df.index = pd.to_datetime(self.df.index)
         self.df = self.df.sort_index()
         self.results_folder = results_folder
+        self.tolerances = tolerances
         self.verify()
         self.result.name = ""
         self.df["Verification Result"] = self.result
@@ -141,6 +138,26 @@ class CheckLibBase(ABC):
     def save_data(self, csv_path):
         self.df.to_csv(csv_path)
         return
+
+    def get_tolerance(
+        self, variable_type: str = None, variable_subtype: str = "general"
+    ) -> float:
+        """Get tolerance for a specific variable type.
+
+        Args:
+            variable_type (str): Type of variable. For example: "temperature".
+            variable_subtype (str): Variable subtype. For example: "outdoor_air".
+
+        Returns:
+            float tolerance
+        """
+        if self.tolerances is not None:
+            if variable_type in self.tolerances.keys():
+                return self.tolerances[variable_type]["types"][variable_subtype]
+            else:
+                return 0.0
+        else:
+            return 0.0
 
     def plot(self, plot_option, plt_pts=None, fig_size=(6.4, 4.8)):
         """default plot function for showing result"""

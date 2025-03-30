@@ -16,25 +16,57 @@ class HWReset(RuleCheckBase):
 
     def verify(self):
         self.result = (
-            (
-                self.df["m_hw"] <= 0
-            )  # add boundary relaxation in the rules for this one and chwreset
+            (self.df["m_hw"] <= self.get_tolerance("waterflow", "hot"))
             | (
-                (self.df["T_oa_db"] <= self.df["T_oa_min"])
-                & (self.df["T_hw"] >= self.df["T_hw_max_set"] * 0.99)
-            )
-            | (
-                (self.df["T_oa_db"] >= (self.df["T_oa_max"]))
-                & (self.df["T_hw"] <= self.df["T_hw_min_set"] * 1.01)
+                (
+                    self.df["T_oa_db"]
+                    <= self.df["T_oa_min"]
+                    + self.get_tolerance("temperature", "outdoor_air")
+                )
+                & (
+                    self.df["T_hw"]
+                    >= self.df["T_hw_max_set"]
+                    - self.get_tolerance("temperature", "general")
+                )
             )
             | (
                 (
-                    (self.df["T_oa_db"] >= self.df["T_oa_min"])
-                    & (self.df["T_oa_db"] <= self.df["T_oa_max"])
+                    self.df["T_oa_db"]
+                    >= (
+                        self.df["T_oa_max"]
+                        - self.get_tolerance("temperature", "outdoor_air")
+                    )
                 )
                 & (
-                    (self.df["T_hw"] >= self.df["T_hw_min_set"] * 0.99)
-                    & (self.df["T_hw"] <= self.df["T_hw_max_set"] * 1.01)
+                    self.df["T_hw"]
+                    <= self.df["T_hw_min_set"]
+                    + self.get_tolerance("temperature", "general")
+                )
+            )
+            | (
+                (
+                    (
+                        self.df["T_oa_db"]
+                        >= self.df["T_oa_min"]
+                        - self.get_tolerance("temperature", "outdoor_air")
+                    )
+                    & (
+                        self.df["T_oa_db"]
+                        <= self.df["T_oa_max"]
+                        + self.get_tolerance("temperature", "outdoor_air")
+                    )
+                )
+                & (
+                    (
+                        self.df["T_hw"]
+                        >= self.df["T_hw_min_set"]
+                        + self.get_tolerance("temperature", "general")
+                    )
+                    & (
+                        self.df["T_hw"]
+                        <= self.df["T_hw_max_set"]
+                        - self.get_tolerance("temperature", "general")
+                    )
                 )
             )
         )

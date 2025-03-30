@@ -13,17 +13,9 @@ def get_verification_cases(cases_json):
     return items
 
 
-def run_test_verification_with_data(verification_class, df):
-    # item = build_an_item(case)
-    # verification_class = item.item["verification_class"]
-    cls = globals()[verification_class]  # consultant says use map instead of globals
-    # parameters = (
-    #     item.item["datapoints_source"]["parameters"]
-    #     if ("parameters" in item.item["datapoints_source"])
-    #     else None
-    # )
-    verification_obj = cls(df, None)
-    # verification_obj = cls(df, parameters)
+def run_test_verification_with_data(verification_class, df, tolerances=None):
+    cls = globals()[verification_class]
+    verification_obj = cls(df, None, tolerances=tolerances)
     return verification_obj
 
 

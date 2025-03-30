@@ -13,7 +13,7 @@ class HeatRejectionFanVariableFlowControlsCells(RuleCheckBase):
 
     def verify(self):
         self.df["ct_cells_op_theo_intermediate"] = (
-            self.df["ct_m"]
+            (self.df["ct_m"])
             / self.df["ct_m_des"]
             * self.df["min_flow_frac_per_cell"]
             / self.df["ct_cells"]
@@ -29,5 +29,5 @@ class HeatRejectionFanVariableFlowControlsCells(RuleCheckBase):
         self.result = ~(
             (self.df["ct_op_cells"] > 0)
             & (self.df["ct_op_cells"] < self.df["ct_cells_op_theo"])
-            & (self.df["ct_P_fan"] > 0)
+            & (self.df["ct_P_fan"] > self.get_tolerance("power", "fan"))
         )

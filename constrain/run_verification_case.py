@@ -1,7 +1,9 @@
 from constrain.workflowsteps import *
 from constrain.library import *
-import sys, json
+import sys, json, pathlib
 from tqdm import tqdm
+
+path = pathlib.Path(__file__).parent.resolve()
 
 
 def run_verification_case(item_dict, run_path_postfix=""):
@@ -49,7 +51,7 @@ def main():
         print("No command line argument provided, ABORT!")
         return
     cases_path = sys.argv[1]
-    lib_items_path = "../schema/library.json"
+    lib_items_path = f"{path}/schema/library.json"
     items = assemble_verification_items(
         cases_path=cases_path, lib_items_path=lib_items_path
     )
