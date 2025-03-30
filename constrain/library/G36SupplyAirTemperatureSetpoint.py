@@ -52,7 +52,7 @@ match mode_operation:
             t_sa_sp_calc = (temperature_air_outdoor - temperature_air_outdoor_supply_min) * (temperature_air_supply_max - temperature_air_supply_cool_min) / (temperature_air_outdoor_supply_min - temperature_air_outdoor_supply_max) + temperature_air_supply_max
 
 # Verify setpoint matches calculated value
-if abs(t_sa_sp_calc - temperature_air_supply_setpoint) < 0:
+if abs(t_sa_sp_calc - temperature_air_supply_setpoint) = 0:
     pass
 else:
     fail

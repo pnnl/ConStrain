@@ -30,16 +30,16 @@ The verification checks return air damper position under three conditions:
 
 ```python
 if output_coil_heating > 0:
-    if abs(position_damper_air_return - position_damper_air_return_max) < 0:
+    if abs(position_damper_air_return - position_damper_air_return_max) = 0:
         pass
     else:
         fail
 elif output_coil_cooling > 0:
-    if abs(position_damper_air_return - 0) < 0:
+    if abs(position_damper_air_return - 0) = 0:
         pass
     else:
         fail
-elif abs(position_damper_air_return - (1 - position_damper_relief) * position_damper_air_return_max) < 0:
+elif abs(position_damper_air_return - (1 - position_damper_relief) * position_damper_air_return_max) = 0:
     pass
 else:
     fail

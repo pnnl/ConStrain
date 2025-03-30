@@ -49,7 +49,7 @@ switch mode_system:
         heating_minimum = flow_volumetric_air_cool_max
 
 if 0 < signal_heat <= 50:
-    if abs(flow_volumetric_air_setpoint - heating_minimum) <= tolerance and temperature_air_supply <= temperature_air_discharge_setpoint <= 11 + temperature_air_space_setpoint:
+    if abs(flow_volumetric_air_setpoint - heating_minimum) = 0 and temperature_air_supply <= temperature_air_discharge_setpoint <= 11 + temperature_air_space_setpoint:
         pass
     else:
         fail

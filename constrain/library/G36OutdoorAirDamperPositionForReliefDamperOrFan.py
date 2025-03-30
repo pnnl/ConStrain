@@ -31,27 +31,27 @@ The verification checks outdoor air damper position under various operating cond
 
 ```python
 if output_coil_heating > 0:
-    if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) < 0:
+    if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) = 0:
         pass
     else:
         fail
 elif output_coil_cooling > 0:
     if flag_economizer_limit:
-        if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) < 0:
+        if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) = 0:
             pass
         else:
             fail
     else:
-        if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0:
+        if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) = 0:
             pass
         else:
             fail
 elif position_damper_air_return < position_damper_air_return_max:
-    if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0:
+    if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) = 0:
         pass
     else:
         fail
-elif abs(position_damper_air_return - position_damper_air_return_max) < 0:
+elif abs(position_damper_air_return - position_damper_air_return_max) = 0:
     if position_damper_air_outdoor_min < position_damper_air_outdoor < position_damper_air_outdoor_max:
         pass
     else:

@@ -43,7 +43,7 @@ if flag_coil_reheat:
   if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:
     if p_press_duct_sp_prev is None:
         Untested
-    elif abs(pressure_duct_setpoint - p_press_duct_sp_prev) > 0:
+    elif abs(pressure_duct_setpoint - p_press_duct_sp_prev) = 0:
         Untested
     else:
         fail

@@ -26,7 +26,7 @@ The verification checks that the outdoor air damper maintains its maximum positi
 ### Verification Algorithm Pseudo Code
 
 ```python
-if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0:
+if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) = 0:
     pass
 else:
     fail

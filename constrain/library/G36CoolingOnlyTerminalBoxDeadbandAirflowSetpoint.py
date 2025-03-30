@@ -32,7 +32,7 @@ case 'occupied'
 case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
     minimum = 0
 
-if abs(flow_volumetric_air_setpoint - minimum) <= 0
+if abs(flow_volumetric_air_setpoint - minimum) = 0
     pass
 else
     fail

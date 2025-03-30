@@ -268,7 +268,7 @@
             "power_fan": "Fan power"
         },
         "description_assertions": [
-            "if t_z_heat_sp <= t_z <= t_z_cool_sp and p_power_fan == 0 then x1=0 else x1=1, if (t_z > t_z_cool_sp and p_power_fan >= 0) and (t_z < t_z_heat_sp and p_power_fan > 0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
+            "if temperature_air_zone_heat_setpoint <= temperature_air_zone <= temperature_air_zone_cool_setpoint and power_fan == 0 then x1=0 else x1=1, if (temperature_air_zone > temperature_air_zone_cool_setpoint and power_fan >= 0) and (temperature_air_zone < temperature_air_zone_heat_setpoint and p_power_fan > 0) then x2=0 else x=1, if x1 and x2=0, then pass, elseif x1=0 and x2=1 then fail, elseif x1=1 and x2=0 then fail, elseif x1=1 and x2=1 then fail"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -311,7 +311,7 @@
             "status_economizer": "Economizer status"
         },
         "description_assertions": [
-            "if number_occupants <= 0 and flow_volumetric_air_exhaust + flow_volumetric_air_outdoor > 0 and status_economizer = 0, then false else pass"
+            "if number_occupants = 0 and flow_volumetric_air_exhaust + flow_volumetric_air_outdoor > 0 and status_economizer = 0, then false else pass"
         ],
         "description_verification_type": "procedure-based",
         "assertions_type": "pass"
@@ -563,7 +563,7 @@
             "    end",
             "end",
             "",
-            "if abs(t_sa_sp - t_sa_sp) < 0",
+            "if abs(t_sa_sp - temperature_air_supply_setpoint) = 0",
             "    pass",
             "else",
             "    fail",
@@ -655,13 +655,13 @@
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
-            "if q_heat > 0",
+            "if output_coil_heating > 0",
             "    if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) < 0",
             "        pass",
             "    else",
             "        fail",
             "    end",
-            "else if q_cool > 0",
+            "else if output_coil_cooling > 0",
             "    if flag_economizer_limit",
             "        if abs(position_damper_air_outdoor - position_damper_air_outdoor_min) < 0",
             "            pass",
