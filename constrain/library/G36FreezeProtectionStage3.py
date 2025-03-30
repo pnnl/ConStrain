@@ -51,7 +51,7 @@ if never (
 
 ### Data requirements
 
-- freeze_stat: Freeze protection flag
+- freeze_stat: (optional, set to False if system does not have it) Binary freeze-stat
   - Data Value Unit: binary
   - Data Point Affiliation: Air handling unit
 

@@ -39,7 +39,7 @@ if never (temperature_air_supply_setpoint < 4.4 (continuously 5 minutes)):
 
 ### Data requirements
 
-- temperature_air_supply_setpoint: Supply air temperature
+- temperature_air_supply_setpoint: Supply air temperature setpoint
   - Data Value Unit: °C
   - Data Point Affiliation: Air handling unit
 

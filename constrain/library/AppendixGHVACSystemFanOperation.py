@@ -36,7 +36,7 @@ Endif
 # This assumes that the system does provide OA to the space as per the first check
 potential_failures_count = 0
 potential_pass_count = 0
-If number_occupants
+If number_occupants == 0
   If fraction_runtime_fan == 1
     return True
   Else

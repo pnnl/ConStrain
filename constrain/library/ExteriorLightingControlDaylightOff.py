@@ -41,19 +41,19 @@ Endif
 
 ### Data requirements
 
-- flag_sun_up: Sun position flag
+- flag_sun_up: Flag indicating whether the sun is up; data can be either a boolean (True or False), or numeric boolean (0 or 1)
   - Data Value Unit: binary
   - Data Point Affiliation: Environmental conditions
 
-- value_daylight: Measured daylight level
+- value_daylight: Amount of daylight sensed by a photocell type sensor; unit should be consistent with `daylight_setpoint`
   - Data Value Unit: illuminance
   - Data Point Affiliation: Lighting control
 
-- value_daylight_setpoint: Daylight threshold
+- value_daylight_setpoint: Setpoint or threshold below which daylight is not sufficient and exterior lighting is required
   - Data Value Unit: illuminance
   - Data Point Affiliation: Lighting control
 
-- power_light_total: Lighting power
+- power_light_total: Reported total lighting power (not the design total lighting power)
   - Data Value Unit: power
   - Data Point Affiliation: Lighting system
 

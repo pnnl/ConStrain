@@ -49,7 +49,7 @@ if not ('occupied' in mode_system and 'unoccupied' in mode_system):
 
 ### Data requirements
 
-- mode_system: System mode
+- mode_system: System mode ("occupied", "unoccupied", "setup", "cooldown")
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 

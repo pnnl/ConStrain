@@ -46,11 +46,11 @@ end
 
 ### Data requirements
 
-- mode_system: System operation mode
+- mode_system: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
-- state_zone: Zone state
+- state_zone: Zone state (if state_zone is not "cooling", this verification item falls into the "untested" result)
   - Data Value Unit: enumeration
   - Data Point Affiliation: Zone control
 
@@ -58,7 +58,7 @@ end
   - Data Value Unit: volumetric flow rate
   - Data Point Affiliation: Zone airflow control
 
-- flow_volumetric_air_setpoint_min: Minimum airflow
+- flow_volumetric_air_setpoint_min: minimum airflow setpoint
   - Data Value Unit: volumetric flow rate
   - Data Point Affiliation: Zone airflow control
 

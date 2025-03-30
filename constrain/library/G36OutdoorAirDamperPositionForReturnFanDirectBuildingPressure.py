@@ -1,7 +1,8 @@
 """
 ### Description
 
-This verification aims to check if the outdoor air damper operates correctly in systems with return fan direct building pressure control. The damper should maintain a position that supports proper building pressurization control.
+Section 5.16.2.3
+- Supply air temperature shall be controlled to setpoint using a control loop whose output is mapped to sequence the heating coil (if applicable), outdoor air damper, return air damper, and cooling coil.
 
 ### Code requirement
 
@@ -12,8 +13,7 @@ This verification aims to check if the outdoor air damper operates correctly in 
 
 ### Verification Approach
 
-Section 5.16.2.3
-- Supply air temperature shall be controlled to setpoint using a control loop whose output is mapped to sequence the heating coil (if applicable), outdoor air damper, return air damper, and cooling coil.
+This verification aims to check if the outdoor air damper operates correctly in systems with return fan direct building pressure control. The damper should maintain a position that supports proper building pressurization control.
 
 ### Verification Applicability
 

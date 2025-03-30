@@ -37,7 +37,7 @@ else:
 
 ### Data requirements
 
-- mode_system: System operation mode
+- mode_system: System operation mode (if mode_system is not "occupied", this verification item falls into the "untested" result)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 

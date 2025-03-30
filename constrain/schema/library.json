@@ -1286,7 +1286,7 @@
             "    heating_maximum = flow_volumetric_air_cool_max",
             "    minimum = 0",
             "",
-            "if minimum <= v_sp <= heating_maximum",
+            "if minimum <= flow_volumetric_air_setpoint <= heating_maximum",
             "    pass",
             "else",
             "    fail",
