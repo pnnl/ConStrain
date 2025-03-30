@@ -15,7 +15,7 @@ if abs(dat_spt - dat) >= dat_tracking_tol (less than 1hr):
     pass
 elif abs(dat_spt - dat) < dat_tracking_tol:
     pass
-if dat - dat_spt >= dat_tracking_tol (continously) and heating_coil_command <= 1:
+if dat - dat_spt >= dat_tracking_tol (continuously) and heating_coil_command <= 1:
     pass
 elif dat_spt - dat >= dat_tracking_tol (continuously) and vav_damper_command >= 99:
     pass

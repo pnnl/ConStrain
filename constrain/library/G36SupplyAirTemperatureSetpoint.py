@@ -15,7 +15,7 @@ end
 switch operation_mode
 case "cooldown"
     sa_t_sp = min_clg_sa_t_sp
-case "warmup", "setback
+case "warmup", "setback"
     sa_t_sp = 95 # F
 case "occupied", "setup"
     if oa_t <= oa_t_min

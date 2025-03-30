@@ -13,7 +13,7 @@ if abs(v_spt - v) >= v_tracking_tol (less than 1hr):
     pass
 elif abs(v_spt - v) < v_tracking_tol:
     pass
-if v - v_spt >= v_tracking_tol (continously) and vav_damper_command <= 1:
+if v - v_spt >= v_tracking_tol (continuously) and vav_damper_command <= 1:
     pass
 elif v_spt - v >= v_tracking_tol (continuously) and vav_damper_command >= 99:
     pass
