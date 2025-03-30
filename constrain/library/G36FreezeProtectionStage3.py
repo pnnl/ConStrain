@@ -26,25 +26,25 @@ The verification monitors multiple conditions that can trigger stage 3 protectio
 ### Verification Algorithm Pseudo Code
 
 ```python
-if supply_air_temp < 3.3 (continuously 15 minutes) or
-  supply_air_temp < 1 (continuously 5 minutes) or
-  freeze_stat == True:
+if temperature_air_supply < 3.3 (continuously 15 minutes) or
+  temperature_air_supply < 1 (continuously 5 minutes) or
+  status_freeze == True:
     if not (
-        outdoor_damper_command == 0 and
-        supply_fan_status == 'off' and
-        return_fan_status == 'off' and
-        relief_fan_status == 'off' and
-        cooling_coil_command == 100 and
-        heating_coil_command > 0
+        position_damper_air_outdoor == 0 and
+        status_fan_supply == 'off' and
+        status_fan_return == 'off' and
+        status_fan_relief == 'off' and
+        command_coil_cool == 100 and
+        command_coil_heat > 0
     ):
         fail
     else:
         pass
 
 if never (
-    supply_air_temp < 3.3 (continuously 15 minutes) or
-    supply_air_temp < 1 (continuously 5 minutes) or
-    freeze_stat == True
+    temperature_air_supply < 3.3 (continuously 15 minutes) or
+    temperature_air_supply < 1 (continuously 5 minutes) or
+    status_freeze == True
 ):
     untested
 ```
