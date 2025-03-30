@@ -33,6 +33,8 @@ else:
 
 """
 
+import logging
+
 from constrain.checklib import RuleCheckBase
 
 
@@ -44,13 +46,11 @@ class VAVTurndownDuringReheat(RuleCheckBase):
     ]
 
     def verify(self):
-        # Make sure every value in `V_dot_VAV_max` is greater than 0
-        assert (
-            self.df["V_dot_VAV_max"] > 0
-        ).all(), "Not all `V_dot_VAV_max` values are greater than 0"
-
-        # Check if the `reheat_coil_flag` column has only False values
-        if (self.df["reheat_coil_flag"] == False).all():
+        # Check if the `reheat_coil_flag` column has only True/False value
+        if self.df["reheat_coil_flag"].nunique() == 1:
+            self.df["result"] = "Untested"
+        elif (self.df["V_dot_VAV_max"] == 0).any():
+            logging.error("Any `V_dot_VAV_max` value shouldn't be zero.")
             self.df["result"] = "Untested"
         else:
             self.df["V_dot_VAV_ratio"] = self.df["V_dot_VAV"] / self.df["V_dot_VAV_max"]
