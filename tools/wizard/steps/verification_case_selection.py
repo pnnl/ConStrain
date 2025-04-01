@@ -4,6 +4,8 @@ from PyQt6 import QtWidgets
 
 from tools.wizard.utils.load_schemas import load_verification_cases_library
 from tools.wizard.steps import WizardPageIds
+
+
 class VerificationCaseSelectionPage(QtWidgets.QWizardPage):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -15,9 +17,9 @@ class VerificationCaseSelectionPage(QtWidgets.QWizardPage):
 
     def initUI(self):
         self.setTitle("Select an Item")
-        
+
         layout = QtWidgets.QVBoxLayout()
-        
+
         self.searchBox = QtWidgets.QLineEdit()
         self.searchBox.setPlaceholderText("Search")
         self.searchBox.textChanged.connect(self.filterTree)
@@ -27,15 +29,15 @@ class VerificationCaseSelectionPage(QtWidgets.QWizardPage):
         for key in self._verification_cases_library.keys():
             item = QtWidgets.QTreeWidgetItem([key])
             self.tree.addTopLevelItem(item)
-        
+
         self.tree.currentItemChanged.connect(self.onItemSelected)
-        
+
         self.selectionLabel = QtWidgets.QLabel("Please select an item from the list.")
 
         layout.addWidget(self.searchBox)
         layout.addWidget(self.tree)
         layout.addWidget(self.selectionLabel)
-        
+
         self.setLayout(layout)
 
     def filterTree(self):
@@ -51,7 +53,9 @@ class VerificationCaseSelectionPage(QtWidgets.QWizardPage):
 
             if current != previous:
                 self.wizard().selected_verification_class = selected_item
-                variable_mapping_page = self.wizard().page(WizardPageIds.VARIABLE_MAPPING.value)
+                variable_mapping_page = self.wizard().page(
+                    WizardPageIds.VARIABLE_MAPPING.value
+                )
                 variable_mapping_page.reset_mappings()
 
     def nextId(self):

@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class WizardPageIds(Enum):
     PATH_SELECTION = 0
     SINGLE_ITEM = 1

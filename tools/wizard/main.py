@@ -7,12 +7,16 @@ from tools.wizard.steps.run_verification import RunVerificationPage
 from tools.wizard.steps.path_selection import PathSelectionPage
 from tools.wizard.steps import WizardPageIds
 
+
 class Wizard(QtWidgets.QWizard):
     def __init__(self, parent=None):
         super().__init__()
 
         self.setPage(WizardPageIds.PATH_SELECTION.value, PathSelectionPage())
-        self.setPage(WizardPageIds.VERIFICATION_CASE_SELECTION.value, VerificationCaseSelectionPage())
+        self.setPage(
+            WizardPageIds.VERIFICATION_CASE_SELECTION.value,
+            VerificationCaseSelectionPage(),
+        )
         self.setPage(WizardPageIds.CSV_UPLOAD.value, CSVUploadPage())
         self.setPage(WizardPageIds.VARIABLE_MAPPING.value, VariableMappingPage())
         self.setPage(WizardPageIds.RUN_VERIFICATION.value, RunVerificationPage())
@@ -25,7 +29,7 @@ class Wizard(QtWidgets.QWizard):
     def accept(self):
         print("Wizard completed!")
         super().accept()
-        
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
@@ -33,6 +37,7 @@ def main():
 
     wizard.show()
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()

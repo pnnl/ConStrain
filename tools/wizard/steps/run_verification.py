@@ -8,6 +8,7 @@ from tools.wizard.utils.load_schemas import LIBRARY_PATH
 from tools.wizard.components.verification_case_runner import VerificationCaseRunner
 from tools.wizard.steps import WizardPageIds
 
+
 class RunVerificationPage(QtWidgets.QWizardPage):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -15,7 +16,7 @@ class RunVerificationPage(QtWidgets.QWizardPage):
 
         self.previous_uploaded_file_path, self.current_uploaded_file_path = None, None
         self.previous_verification_class, self.current_verification_class = None, None
-        
+
         self.tmpdir = None
 
         self.initUI()
@@ -63,7 +64,7 @@ class RunVerificationPage(QtWidgets.QWizardPage):
         self.create_verification_case(verification_class, mapping)
 
         self.tmpdir = tempfile.TemporaryDirectory()
-        verification_case = VerificationCase(self.verification_cases['cases'])
+        verification_case = VerificationCase(self.verification_cases["cases"])
         verification = Verification(verification_case)
         verification.configure(
             output_path=self.tmpdir.name,
@@ -77,12 +78,14 @@ class RunVerificationPage(QtWidgets.QWizardPage):
         self.verification_runner = VerificationCaseRunner(verification)
         self.verification_runner.update_text.connect(self.append_output)
         self.verification_runner.finished.connect(self.cleanup_tmpdir)
-        self.verification_runner.finished.connect(lambda: self.uploadButton.setEnabled(True))
+        self.verification_runner.finished.connect(
+            lambda: self.uploadButton.setEnabled(True)
+        )
         self.verification_runner.start()
 
     def cleanup_tmpdir(self):
         if self.tmpdir:
-            shutil.rmtree(self.tmpdir.name) 
+            shutil.rmtree(self.tmpdir.name)
 
     def create_verification_case(self, verification_class, mapping):
         cases = self.verification_cases["cases"]
@@ -94,16 +97,18 @@ class RunVerificationPage(QtWidgets.QWizardPage):
 
         csv_upload_page = self.wizard().page(WizardPageIds.CSV_UPLOAD.value)
         uploaded_file_path = csv_upload_page.uploaded_file_path
-        cases.append({
-            "no": len(cases) + 1,
-            "run_simulation": False,
-            "expected_result": "pass",
-			"simulation_IO": {
-				"output": uploaded_file_path,
-			},
-            "datapoints_source": mapping,
-            "verification_class": verification_class
-        })
+        cases.append(
+            {
+                "no": len(cases) + 1,
+                "run_simulation": False,
+                "expected_result": "pass",
+                "simulation_IO": {
+                    "output": uploaded_file_path,
+                },
+                "datapoints_source": mapping,
+                "verification_class": verification_class,
+            }
+        )
 
     def set_current_verification_class_and_upload_path(self):
         self.previous_uploaded_file_path = self.current_uploaded_file_path

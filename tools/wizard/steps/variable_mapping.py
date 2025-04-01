@@ -6,6 +6,7 @@ from PyQt6 import QtWidgets
 from tools.wizard.utils.load_schemas import load_verification_cases_library
 from tools.wizard.steps import WizardPageIds
 
+
 class VariableMappingPage(QtWidgets.QWizardPage):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -129,6 +130,6 @@ class VariableMappingPage(QtWidgets.QWizardPage):
     def isComplete(self):
         self.set_datapoint_mapping()
         return True
-    
+
     def nextId(self):
         return WizardPageIds.RUN_VERIFICATION.value
