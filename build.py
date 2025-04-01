@@ -10,7 +10,6 @@ def build_wizard_executable():
         "pyinstaller",
         "--onefile",
         "--windowed",
-        f"--add-data={os.path.join(schema_dir, 'verification_cases.schema.json')}:{schema_dir}",
         f"--add-data={os.path.join(schema_dir, 'library.json')}:{schema_dir}",
         gui_path,
     ]
