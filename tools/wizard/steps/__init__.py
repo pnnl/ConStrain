@@ -1,0 +1,12 @@
+from enum import Enum
+
+class WizardPageIds(Enum):
+    PATH_SELECTION = 0
+    SINGLE_ITEM = 1
+    MULTIPLE_ITEMS = 2
+    CONSTRAIN_ANALYSIS = 3
+    NEW_ITEM = 4
+    CSV_UPLOAD = 5
+    RUN_VERIFICATION = 6
+    VERIFICATION_CASE_SELECTION = 7
+    VARIABLE_MAPPING = 8

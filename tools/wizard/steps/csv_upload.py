@@ -1,6 +1,7 @@
 from PyQt6 import QtWidgets
 import pandas as pd
 
+from tools.wizard.steps import WizardPageIds
 class CSVUploadPage(QtWidgets.QWizardPage):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -31,12 +32,13 @@ class CSVUploadPage(QtWidgets.QWizardPage):
 
             try:
                 self.wizard().data = pd.read_csv(self.uploaded_file_path)
-            except Exception:
+            except Exception as e:
+                QtWidgets.QMessageBox.critical(self, "Error", f"Failed to read CSV: {str(e)}")
                 return
-
             self.completeChanged.emit()
-
-        
         
     def isComplete(self):
         return self.uploaded_file_path is not None
+    
+    def nextId(self):
+        return WizardPageIds.VARIABLE_MAPPING.value
