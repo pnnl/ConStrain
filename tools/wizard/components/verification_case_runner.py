@@ -16,4 +16,5 @@ class VerificationCaseRunner(QtCore.QThread):
         try:
             self.verification.run()
         finally:
+            print("Verification Complete")
             sys.stdout = sys.__stdout__  # Reset stdout to original
