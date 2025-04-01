@@ -43,6 +43,7 @@ def run_libcase(
     run_idf_path = None
     idd_path = None
     run_path = None
+    instrumented_idf_path = None
 
     if need_injection or run_sim:
         original_idf_path = item.item["simulation_IO"]["idf"].strip()
@@ -93,11 +94,12 @@ def run_libcase(
             year=2000,
         ).transform()
     else:
-        df = DateTimeEP(
-            item.read_points_values(
-                csv_path=f"{instrumented_idf_path.replace('.idf', '')}/{item.item['simulation_IO']['output']}"
-            )
-        ).transform()
+        input_path = (
+            f"{instrumented_idf_path.replace('.idf', '')}/{item.item['simulation_IO']['output']}"
+            if instrumented_idf_path is not None
+            else item.item["simulation_IO"]["output"]
+        )
+        df = DateTimeEP(item.read_points_values(csv_path=input_path)).transform()
     verification_class = item.item["verification_class"]
 
     parameters = (
@@ -127,7 +129,8 @@ def run_libcase(
         )  # verification is executed by CheckLibBase constructor
 
     if time_series_file_name is not None:
-        csv_path = f"{output_path}/{time_series_file_name}.csv"
+        file_name = os.path.basename(time_series_file_name)  # Extract only the file name
+        csv_path = f"{output_path}/{file_name}.csv"
         verification_obj.save_data(csv_path)
 
     if produce_outputs:
