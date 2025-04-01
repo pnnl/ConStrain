@@ -2,7 +2,7 @@ import json
 
 from PyQt6 import QtWidgets
 
-from tools.wizard.utils.load_schemas import load_verification_cases_library, load_verification_cases_schema
+from tools.wizard.utils.load_schemas import load_verification_cases_library
 from tools.wizard.steps import WizardPageIds
 class VerificationCaseSelectionPage(QtWidgets.QWizardPage):
     def __init__(self, parent=None):
@@ -10,7 +10,6 @@ class VerificationCaseSelectionPage(QtWidgets.QWizardPage):
 
         self.selected_verification_class = None
         self._verification_cases_library = load_verification_cases_library()
-        self._verification_cases_schema = load_verification_cases_schema()
 
         self.initUI()
 
