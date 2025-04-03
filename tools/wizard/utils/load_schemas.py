@@ -12,7 +12,7 @@ def get_resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-LIBRARY_PATH = get_resource_path("schema/library.json")
+LIBRARY_PATH = get_resource_path("constrain/schema/library.json")
 
 
 def load_verification_cases_library():
