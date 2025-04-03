@@ -1,10 +1,7 @@
 """
-G36 2021
-
 ### Description
 
 Section 5.16 interpretation:
-
 - With Relief damper or relief fan
   - when economizer control is not in lockout, and actual damper positions are controlled by the SAT control loop. Above only set the lower limit for OA damper. Track MinOAsp with a reverse-acting loop and map output to
     - OA (economizer) damper minimum position MinOA-P
@@ -14,53 +11,85 @@ Section 5.16 interpretation:
     - set MaxOA-P = MinOA-P, control OA damper to meet MinOAsp
     - modulate RA damper to maintain MinOAsp (return air damper position equals to MaxRA-P)
 
-Verification Item 1:
+### Code requirement
 
-- when economizer condition okay and occupied, check OA beyond minOA, leave actual control of dampers to SAT control
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16 Air Handling Unit and Relief Fan Control Sequences
+- Code Subsection: Minimum Outdoor Air Control with Economizer
 
-### Verification logic
+### Verification Approach
+
+The verification checks that during occupied periods when economizer is not in lockout, the outdoor air damper position and flow rate remain at or above their minimum setpoints. The actual damper modulation for temperature control is handled by the supply air temperature control loop.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units with economizers
+- Climate Zone(s): any
+- Component(s): outdoor air dampers, airflow sensors
+
+### Verification Algorithm Pseudo Code
 
 ```python
-if not economizer_lockout(outdoor_air_temp, economizer_high_limit_sp) and sys_mode == 'occupied':
-  if oudoor_damper_command >= MinOA-P and outdoor_air_flow >= MinOAsp:
-    pass
-  else:
-    fail
+if not economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_system == 'occupied':
+    if position_damper_air_outdoor >= position_damper_air_outdoor_min and flow_volumetric_air_outdoor >= flow_volumetric_air_outdoor_setpoint_min:
+        pass
+    else:
+        fail
 else:
-  untested
+    untested
 ```
 
 ### Data requirements
 
-- outdoor_air_temp: outdoor air temperature
-- economizer_high_limit_sp: economizer lockout high limit set point
-- outdoor_damper_command: outdoor air damper command
-- min_oa_p: minimum outdoor air damper position set point
-- min_oa_sp: minimum outdoor air flow rate setpoint
-- outdoor_air_flow: outdoor air flow rate
-- sys_mode: AHU system mode mode, enumeration of ['occupied', 'unoccupied', 'cooldown', 'warmup', 'setback', 'setup']
+- temperature_air_outdoor: Outdoor air temperature
+  - Data Value Unit: °C
+  - Data Point Affiliation: Environmental conditions
+
+- temperature_air_economizer_limit: Economizer high limit temperature
+  - Data Value Unit: °C
+  - Data Point Affiliation: Economizer control
+
+- position_damper_air_outdoor: Outdoor air damper position
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
+
+- position_damper_air_outdoor_min: Minimum outdoor air damper position
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
+
+- flow_volumetric_air_outdoor_setpoint_min: Minimum outdoor airflow setpoint
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Air handling unit
+
+- flow_volumetric_air_outdoor: Outdoor airflow
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Air handling unit
+
+- mode_system: System mode (If mode_system is not "occupied", this verification item results fall into ""Untested)
+  - Data Value Unit: enumeration
+  - Data Point Affiliation: System control
 
 """
 
-import pandas as pd
 from constrain.checklib import RuleCheckBase
-from datetime import datetime
-import numpy as np
 
 
 class G36MinOAwEconomizer(RuleCheckBase):
     points = [
-        "outdoor_air_temp",
-        "economizer_high_limit_sp",
-        "outdoor_damper_command",
-        "min_oa_p",
-        "outdoor_air_flow",
-        "min_oa_sp",
-        "sys_mode",
+        "temperature_air_outdoor",
+        "temperature_air_economizer_limit",
+        "position_damper_air_outdoor",
+        "position_damper_air_outdoor_min",
+        "flow_volumetric_air_outdoor",
+        "flow_volumetric_air_outdoor_setpoint_min",
+        "mode_system",
     ]
 
-    def economizer_lockout(self, outdoor_air_temp, economizer_high_limit_sp):
-        if outdoor_air_temp > economizer_high_limit_sp:
+    def economizer_lockout(self, t_oa, t_economizer_limit):
+        if t_oa > t_economizer_limit:
             return True
         else:
             return False
@@ -68,11 +97,17 @@ class G36MinOAwEconomizer(RuleCheckBase):
     def ts_verify_logic(self, t):
         if (
             not self.economizer_lockout(
-                t["outdoor_air_temp"], t["economizer_high_limit_sp"]
+                t["temperature_air_outdoor"], t["temperature_air_economizer_limit"]
             )
-        ) and (t["sys_mode"].strip().lower() == "occupied"):
-            if (t["outdoor_damper_command"] >= t["min_oa_p"]) and (
-                t["outdoor_air_flow"] >= t["min_oa_sp"]
+        ) and (t["mode_system"].strip().lower() == "occupied"):
+            if (
+                t["position_damper_air_outdoor"]
+                >= t["position_damper_air_outdoor_min"]
+                - self.get_tolerance("damper", "position")
+            ) and (
+                t["flow_volumetric_air_outdoor"]
+                >= t["flow_volumetric_air_outdoor_setpoint_min"]
+                - self.get_tolerance("airflow", "outdoor_air")
             ):
                 return True
             else:

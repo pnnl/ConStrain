@@ -8,36 +8,37 @@ import pandas as pd
 import numpy as np
 
 
-class TestG36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
-    def test_cooling_only_terminal_box_heating_airflow_setpoint(self):
+class TestG36ReheatTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
+    tolerances = {"airflow": {"unit": "%", "types": {"general": 1}}}
+
+    def test_reheat_terminal_box_heating_airflow_setpoint(self):
         points = [
-            "operation_mode",
-            "zone_state",
-            "v_cool_max",
-            "v_heat_max",
-            "v_heat_min",
-            "v_min",
-            "v_spt",
-            "v_spt_tol",
-            "heating_loop_output",
-            "room_temp",
-            "space_temp_spt",
-            "ahu_sat_spt",
-            "dat",
-            "dat_spt",
+            "mode_system",
+            "state_zone",
+            "flow_volumetric_air_cool_max",
+            "flow_volumetric_air_heat_max",
+            "flow_volumetric_air_heat_min",
+            "flow_volumetric_air_setpoint_min",
+            "flow_volumetric_air_setpoint",
+            "signal_heat",
+            "temperature_air_room",
+            "temperature_air_space_setpoint",
+            "temperature_air_supply",
+            "temperature_air_discharge",
+            "temperature_air_discharge_setpoint",
         ]
 
         data = [
-            ["occupied", "cooling", 100, 90, 20, 10, 90, 1, 40, 25, 27, 13, 15, 16],
-            ["occupied", "deadband", 100, 90, 20, 10, 90, 1, 40, 25, 27, 13, 15, 16],
-            ["occupied", "heating", 100, 90, 20, 10, 90, 1, 40, 25, 27, 13, 15, 16],
-            ["occupied", "heating", 100, 90, 20, 10, 8, 1, 40, 25, 27, 13, 15, 16],
-            ["occupied", "heating", 100, 90, 20, 10, 98, 1, 40, 25, 27, 13, 15, 16],
-            ["cooldown", "cooling", 100, 90, 20, 10, 90, 1, 40, 25, 27, 13, 15, 16],
-            ["setup", "heating", 100, 90, 20, 10, 80, 1, 40, 25, 27, 13, 15, 16],
-            ["setup", "heating", 100, 90, 20, 10, 0, 1, 40, 25, 27, 13, 15, 16],
-            ["setback", "heating", 100, 90, 20, 10, 98, 1, 40, 25, 27, 13, 15, 16],
-            ["setback", "heating", 100, 90, 20, 10, 8, 1, 40, 25, 27, 13, 15, 16],
+            ["occupied", "cooling", 100, 90, 20, 10, 90, 40, 25, 27, 13, 15, 16],
+            ["occupied", "deadband", 100, 90, 20, 10, 90, 40, 25, 27, 13, 15, 16],
+            ["occupied", "heating", 100, 90, 20, 10, 90, 40, 25, 27, 13, 15, 16],
+            ["occupied", "heating", 100, 90, 20, 10, 8, 40, 25, 27, 13, 15, 16],
+            ["occupied", "heating", 100, 90, 20, 10, 98, 40, 25, 27, 13, 15, 16],
+            ["cooldown", "cooling", 100, 90, 20, 10, 90, 40, 25, 27, 13, 15, 16],
+            ["setup", "heating", 100, 90, 20, 10, 80, 40, 25, 27, 13, 15, 16],
+            ["setup", "heating", 100, 90, 20, 10, 0, 40, 25, 27, 13, 15, 16],
+            ["setback", "heating", 100, 90, 20, 10, 98, 40, 25, 27, 13, 15, 16],
+            ["setback", "heating", 100, 90, 20, 10, 8, 40, 25, 27, 13, 15, 16],
         ]
 
         expected_results = pd.Series(
@@ -60,7 +61,9 @@ class TestG36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
         results = pd.Series(
             list(
                 run_test_verification_with_data(
-                    "G36ReheatTerminalBoxHeatingAirflowSetpoint", df
+                    "G36ReheatTerminalBoxHeatingAirflowSetpoint",
+                    df,
+                    tolerances=self.tolerances,
                 ).result
             )
         )

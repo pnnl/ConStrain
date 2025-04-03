@@ -9,7 +9,7 @@ import pandas as pd
 
 class TestLocalLoopSaturationDirectActingMin(unittest.TestCase):
     def test_saturation_damin_pass(self):
-        points = ["feedback_sensor", "set_point", "cmd", "cmd_min"]
+        points = ["value_sensor", "value_setpoint", "command_control", "command_min"]
         timestamp = [
             datetime(2023, 5, 1, 0, 5, 0),
             datetime(2023, 5, 1, 1, 5, 10),
@@ -67,7 +67,7 @@ class TestLocalLoopSaturationDirectActingMin(unittest.TestCase):
         self.assertTrue(binaryflag)
 
     def test_saturation_damax_pass(self):
-        points = ["feedback_sensor", "set_point", "cmd", "cmd_min"]
+        points = ["value_sensor", "value_setpoint", "command_control", "command_min"]
         timestamp = [
             datetime(2023, 5, 1, 0, 5, 0),
             datetime(2023, 5, 1, 1, 5, 10),

@@ -4,7 +4,7 @@ This scripts auto-generate the documentationfor verifications included in the li
 
 import json
 
-LIBRARY_PATH = "../../schema/library.json"
+LIBRARY_PATH = "../../constrain/schema/library.json"
 
 
 def upper_case_all_words(words):

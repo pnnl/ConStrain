@@ -1,46 +1,70 @@
 """
-G36 2021
-
 ### Description
 
-5.1.9 To avoid abrupt changes in equipment operation, the output of every control loop shall be capable of being limited by a user adjustable maximum rate of change, with a default of 25% per minute.
+Section 5.1.9 
+- To avoid abrupt changes in equipment operation, the output of every control loop shall be capable of being limited by a user adjustable maximum rate of change, with a default of 25% per minute.
 
-### Verification logic
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.1 General
+- Code Subsection: 5.1.9 Control Loop Output Rate Limiting
+
+### Verification Approach
+
+The verification monitors the rate of change in control loop outputs by comparing consecutive values and their timestamps. It verifies that changes do not exceed the maximum allowed rate (default 25% per minute) when normalized to a per-minute basis.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): any control loops
+- Climate Zone(s): any
+- Component(s): controllers, actuators, control loops
+
+### Verification Algorithm Pseudo Code
 
 ```python
-if abs(command(current_t) - command(prev_t)) > max_rage_of_change_per_min and (current_t - prev_t <= 1 minute):
-  fail
-else:
-  pass
+time_delta = current_time - previous_time
+allowed_change = rate_change_max * (time_delta_in_minutes)
+actual_change = abs(command_control(current_t) - command_control(prev_t))
 
+if actual_change > allowed_change:
+    fail
+else:
+    pass
 ```
 
 ### Data requirements
 
-- command: control command to be verified with command range being (0-100)
-- max_rate_of_change_per_min: control loop output maximum rate of change, default to 25.
+- command_control: Control loop output
+  - Data Value Unit: percent
+  - Data Point Affiliation: Control loop
+
+- rate_change_max: Maximum rate of change per minute
+  - Data Value Unit: percent per minute
+  - Data Point Affiliation: Control loop configuration
 
 """
 
 import pandas as pd
 from constrain.checklib import RuleCheckBase
-from datetime import datetime
-import numpy as np
 
 
 class G36OutputChangeRateLimit(RuleCheckBase):
     points = [
-        "command",
-        "max_rate_of_change_per_min",
-    ]  # command is expected to have a data range of 100
+        "command_control",
+        "rate_change_max",
+    ]  # command_control is expected to have a data range of 100
 
     def change_rate_check(self, cur, prev, cur_time, prev_time):
         if prev is None:
             return "Untested"
         time_delta = cur_time - prev_time
         min_change = time_delta.total_seconds() / 60
-        allowable_change = min_change * cur["max_rate_of_change_per_min"]
-        actual_change = abs(cur["command"] - prev["command"])
+        allowable_change = min_change * cur["rate_change_max"]
+        actual_change = abs(cur["command_control"] - prev["command_control"])
         if actual_change > allowable_change:
             return False
         else:

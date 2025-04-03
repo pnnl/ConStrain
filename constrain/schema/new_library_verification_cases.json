@@ -13,14 +13,14 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply_setpoint": {
                         "subject": "VAV_1 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -38,14 +38,14 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply_setpoint": {
                         "subject": "VAV_1 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -63,14 +63,14 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply_setpoint": {
                         "subject": "VAV_2 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -88,14 +88,14 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply_setpoint": {
                         "subject": "VAV_2 Supply Equipment Outlet Node",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "T_z_coo": 24.0
+                    "temperature_air_zone_design_cool_setpoint": 24.0
                 }
             },
             "verification_class": "SupplyAirTempReset"
@@ -113,31 +113,28 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "oa_flow": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "VAV_1_OAInlet Node",
                         "variable": "System Node Standard Density Volume Flow Rate",
                         "frequency": "TimeStep"
                     },
-                    "oa_db": {
+                    "temperature_air_outdoor": {
                         "subject": "Environment",
                         "variable": "Site Outdoor Air Drybulb Temperature",
                         "frequency": "TimeStep"
                     },
-                    "ret_a_enth": {
+                    "enthalpy_air_return": {
                         "subject": "VAV_1 Supply Equipment Inlet Node",
                         "variable": "System Node Enthalpy",
                         "frequency": "TimeStep"
                     },
-                    "oa_enth": {
+                    "enthalpy_air_outdoor": {
                         "subject": "Environment",
                         "variable": "Site Outdoor Air Enthalpy",
                         "frequency": "TimeStep"
                     }
                 },
-                "parameters": {
-                    "oa_threshold": 999,
-                    "oa_min_flow": 4.3265
-                }
+                "parameters": {}
             },
             "verification_class": "EconomizerHighLimitD"
         },
@@ -154,31 +151,28 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "oa_flow": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "VAV_1_OAInlet Node",
                         "variable": "System Node Standard Density Volume Flow Rate",
                         "frequency": "TimeStep"
                     },
-                    "oa_db": {
+                    "temperature_air_outdoor": {
                         "subject": "Environment",
                         "variable": "Site Outdoor Air Drybulb Temperature",
                         "frequency": "TimeStep"
                     },
-                    "ret_a_enth": {
+                    "enthalpy_air_return": {
                         "subject": "VAV_1 Supply Equipment Inlet Node",
                         "variable": "System Node Enthalpy",
                         "frequency": "TimeStep"
                     },
-                    "oa_enth": {
+                    "enthalpy_air_outdoor": {
                         "subject": "Environment",
                         "variable": "Site Outdoor Air Enthalpy",
                         "frequency": "TimeStep"
                     }
                 },
-                "parameters": {
-                    "oa_threshold": 999,
-                    "oa_min_flow": 2.9741
-                }
+                "parameters": {}
             },
             "verification_class": "EconomizerHighLimitD"
         },
@@ -195,19 +189,19 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "oa_flow": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "PSZ-AC:1_OAInlet Node",
                         "variable": "System Node Standard Density Volume Flow Rate",
                         "frequency": "detailed"
                     },
-                    "ccoil_out": {
+                    "output_coil_cooling": {
                         "subject": "PSZ-AC:1",
                         "variable": "Air System Cooling Coil Total Cooling Energy",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "oa_min_flow": 0.28946
+                    "flow_volumetric_air_outdoor_setpoint_min": 0.28946
                 }
             },
             "verification_class": "IntegratedEconomizerControl"
@@ -225,19 +219,19 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "oa_flow": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "PSZ-AC:2_OAInlet Node",
                         "variable": "System Node Standard Density Volume Flow Rate",
                         "frequency": "detailed"
                     },
-                    "ccoil_out": {
+                    "output_coil_cooling": {
                         "subject": "PSZ-AC:2",
                         "variable": "Air System Cooling Coil Total Cooling Energy",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "oa_min_flow": 2.439
+                    "flow_volumetric_air_outdoor_setpoint_min": 2.439
                 }
             },
             "verification_class": "IntegratedEconomizerControl"
@@ -255,27 +249,27 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_oa_db": {
+                    "temperature_air_outdoor": {
                         "subject": "Environment",
                         "variable": "Site Outdoor Air Drybulb Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_hw": {
+                    "temperature_water_hot": {
                         "subject": "HeatSys1 Supply Outlet Node",
                         "variable": "System Node Temperature",
                         "frequency": "TimeStep"
                     },
-                    "m_hw": {
+                    "flow_mass_water_hot": {
                         "subject": "HeatSys1 Supply Outlet Node",
                         "variable": "System Node Mass Flow Rate",
                         "frequency": "TimeStep"
                     }
                 },
                 "parameters": {
-                    "T_oa_max": 10,
-                    "T_oa_min": -6.7,
-                    "T_hw_max_set": 60.0,
-                    "T_hw_min_set": 48.89
+                    "temperature_air_outdoor_max": 10,
+                    "temperature_air_outdoor_min": -6.7,
+                    "temperature_water_hot_setpoint_max": 60.0,
+                    "temperature_water_hot_setpoint_min": 48.89
                 }
             },
             "verification_class": "HWReset"
@@ -293,27 +287,27 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_oa_db": {
+                    "temperature_air_outdoor": {
                         "subject": "Environment",
                         "variable": "Site Outdoor Air Drybulb Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_hw": {
+                    "temperature_water_hot": {
                         "subject": "HeatSys1 Supply Outlet Node",
                         "variable": "System Node Temperature",
                         "frequency": "TimeStep"
                     },
-                    "m_hw": {
+                    "flow_mass_water_hot": {
                         "subject": "HeatSys1 Supply Outlet Node",
                         "variable": "System Node Mass Flow Rate",
                         "frequency": "TimeStep"
                     }
                 },
                 "parameters": {
-                    "T_oa_max": 10,
-                    "T_oa_min": -6.7,
-                    "T_hw_max_set": 60.0,
-                    "T_hw_min_set": 48.89
+                    "temperature_air_outdoor_max": 10,
+                    "temperature_air_outdoor_min": -6.7,
+                    "temperature_water_hot_setpoint_max": 60.0,
+                    "temperature_water_hot_setpoint_min": 48.89
                 }
             },
             "verification_class": "HWReset"
@@ -331,27 +325,27 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_oa_db": {
+                    "temperature_air_outdoor": {
                         "subject": "Environment",
                         "variable": "Site Outdoor Air Drybulb Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_chw": {
+                    "temperature_water_chilled": {
                         "subject": "CoolSys1 Supply Outlet Node",
                         "variable": "System Node Temperature",
                         "frequency": "TimeStep"
                     },
-                    "m_chw": {
+                    "flow_mass_water_chilled": {
                         "subject": "CoolSys1 Supply Outlet Node",
                         "variable": "System Node Mass Flow Rate",
                         "frequency": "TimeStep"
                     }
                 },
                 "parameters": {
-                    "T_oa_max": 21.11,
-                    "T_oa_min": 12.78,
-                    "T_chw_max_st": 8.89,
-                    "T_chw_min_st": 6.7
+                    "temperature_air_outdoor_max": 21.11,
+                    "temperature_air_outdoor_min": 12.78,
+                    "temperature_water_chilled_setpoint_max": 8.89,
+                    "temperature_water_chilled_setpoint_min": 6.7
                 }
             },
             "verification_class": "CHWReset"
@@ -369,27 +363,27 @@
             "expected_result": "fail",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_oa_db": {
+                    "temperature_air_outdoor": {
                         "subject": "Environment",
                         "variable": "Site Outdoor Air Drybulb Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_chw": {
+                    "temperature_water_chilled": {
                         "subject": "CoolSys1 Supply Outlet Node",
                         "variable": "System Node Temperature",
                         "frequency": "TimeStep"
                     },
-                    "m_chw": {
+                    "flow_mass_water_chilled": {
                         "subject": "CoolSys1 Supply Outlet Node",
                         "variable": "System Node Mass Flow Rate",
                         "frequency": "TimeStep"
                     }
                 },
                 "parameters": {
-                    "T_oa_max": 21.11,
-                    "T_oa_min": 12.78,
-                    "T_chw_max_st": 8.89,
-                    "T_chw_min_st": 6.7
+                    "temperature_air_outdoor_max": 21.11,
+                    "temperature_air_outdoor_min": 12.78,
+                    "temperature_water_chilled_setpoint_max": 8.89,
+                    "temperature_water_chilled_setpoint_min": 6.7
                 }
             },
             "verification_class": "CHWReset"
@@ -407,27 +401,27 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_zone": {
+                    "temperature_air_zone": {
                         "subject": "PERIMETER_ZN_1",
                         "variable": "Zone Air Temperature",
                         "frequency": "TimeStep"
                     },
-                    "HVAC_operation_sch": {
+                    "status_hvac": {
                         "subject": "HVACOperationSchd",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "T_heat_set": {
+                    "temperature_air_zone_heat_setpoint": {
                         "subject": "HTGSETP_SCH_NO_OPTIMUM",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "T_cool_set": {
+                    "temperature_air_zone_cool_setpoint": {
                         "subject": "CLGSETP_SCH_NO_OPTIMUM",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "Fan_elec_rate": {
+                    "power_fan": {
                         "subject": "PSZ-AC:2 FAN",
                         "variable": "Fan Electric Power",
                         "frequency": "TimeStep"
@@ -450,25 +444,23 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "o": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "m_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_BOTTOM VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep"
                     },
-                    "eco_onoff": {
+                    "status_economizer": {
                         "subject": "PACU_VAV_BOT",
                         "variable": "Air System Outdoor Air Economizer Status",
                         "frequency": "TimeStep"
                     }
                 },
-                "parameters": {
-                    "tol": 0.03
-                }
+                "parameters": {}
             },
             "verification_class": "AutomaticOADamperControl"
         },
@@ -485,7 +477,7 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "p_set": {
+                    "pressure_static_setpoint": {
                         "subject": "sensor",
                         "variable": "static_pressure_setpoint",
                         "frequency": "detailed"
@@ -533,26 +525,26 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "ct_op_cells": {
+                    "number_cells_coolingtower": {
                         "subject": "TOWERWATERSYS COOLTOWER 2",
                         "variable": "Cooling Tower Operating Cells Count",
                         "frequency": "detailed"
                     },
-                    "ct_m": {
+                    "flow_mass_coolingtower": {
                         "subject": "TOWERWATERSYS COOLTOWER 2",
                         "variable": "Cooling Tower Mass Flow Rate",
                         "frequency": "detailed"
                     },
-                    "ct_P_fan": {
+                    "power_fan_coolingtower": {
                         "subject": "TOWERWATERSYS COOLTOWER 2",
                         "variable": "Cooling Tower Fan Electric Power",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "ct_cells": 4,
-                    "ct_m_des": 0.0375568,
-                    "min_flow_frac_per_cell": 0.05
+                    "number_cells_coolingtower_operation": 4,
+                    "flow_mass_coolingtower_design": 0.0375568,
+                    "fraction_flow_min_cell": 0.05
                 }
             },
             "verification_class": "HeatRejectionFanVariableFlowControlsCells"
@@ -570,7 +562,7 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_wh_inlet": {
+                    "temperature_water_inlet": {
                         "subject": "BATHROOMS_ZN_1_FLR_1 SHW_DEFAULT",
                         "variable": "Water Use Equipment Mixed Water Temperature",
                         "frequency": "detailed"
@@ -593,14 +585,11 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "p_fan_set": {
+                    "pressure_static_setpoint": {
                         "subject": "sensor",
                         "variable": "static_pressure_setpoint",
                         "frequency": "detailed"
                     }
-                },
-                "parameters": {
-                    "tol_P_fan": 2.98
                 }
             },
             "verification_class": "VAVStaticPressureSensorLocation"
@@ -618,17 +607,17 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "no_of_occ": {
+                    "number_occupants": {
                         "subject": "Core_ZN",
                         "variable": "People Occupant Count",
                         "frequency": "Timestep"
                     },
-                    "Q_load": {
+                    "heat_sensible": {
                         "subject": "Core_ZN",
                         "variable": "Zone Predicted Sensible Load to Setpoint Heat Transfer Rate",
                         "frequency": "Timestep"
                     },
-                    "P_fan": {
+                    "power_fan": {
                         "subject": "PSZ-AC:1 Fan",
                         "variable": "Fan Electric Power",
                         "frequency": "Timestep"
@@ -651,25 +640,23 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_max_heating_loop": {
+                    "temperature_water_heating_max": {
                         "subject": "CENTRAL BOILER OUTLET NODE",
                         "variable": "System Node Temperature",
                         "frequency": "Timestep"
                     },
-                    "T_min_cooling_loop": {
+                    "temperature_water_cooling_min": {
                         "subject": "CENTRAL TOWER OUTLET NODE",
                         "variable": "System Node Temperature",
                         "frequency": "Timestep"
                     },
-                    "m_pump": {
+                    "flow_mass_water_pump": {
                         "subject": "PLANT CIRC PUMP",
                         "variable": "Pump Mass Flow Rate",
                         "frequency": "Timestep"
                     }
                 },
-                "parameters": {
-                    "tol": 0.556
-                }
+                "parameters": {}
             },
             "verification_class": "WLHPLoopHeatRejectionControl"
         },
@@ -686,7 +673,7 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "hvac_set": {
+                    "status_hvac": {
                         "subject": "HVACOPERATIONSCHD",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
@@ -709,35 +696,34 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "L_op": {
+                    "load_operation": {
                         "subject": "PSZ-AC:1 HEAT PUMP DX HEATING COIL",
                         "variable": "Heating Coil Heating Rate",
                         "frequency": "detailed"
                     },
-                    "P_supp_ht": {
+                    "power_heating_supplemental": {
                         "subject": "PSZ-AC:1 HEAT PUMP DX SUPP HEATING COIL",
                         "variable": "Heating Coil Gas Rate",
                         "frequency": "detailed"
                     },
-                    "C_t_mod": {
+                    "capacity_modifier_temperature": {
                         "subject": "HPACHEATCAPFT",
                         "variable": "Performance Curve Output Value",
                         "frequency": "detailed"
                     },
-                    "C_ff_mod": {
+                    "capacity_modifier_fraction_flow": {
                         "subject": "HPACHeatCapFFF",
                         "variable": "Performance Curve Output Value",
                         "frequency": "detailed"
                     },
-                    "L_defrost": {
+                    "load_defrost": {
                         "subject": "PSZ-AC:1 HEAT PUMP DX HEATING COIL",
                         "variable": "Heating Coil Defrost Electric Power",
                         "frequency": "detailed"
                     }
                 },
                 "parameters": {
-                    "C_ref": 5091.29,
-                    "tol": 0.01
+                    "capacity_full_load": 5091.29
                 }
             },
             "verification_class": "HeatPumpSupplementalHeatLockout"
@@ -755,20 +741,20 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "ct_P_fan": {
+                    "power_fan_coolingtower": {
                         "subject": "TOWERWATERSYS COOLTOWER 2",
                         "variable": "Cooling Tower Fan Electric Power",
                         "frequency": "Detailed"
                     },
-                    "ct_m_fan_ratio": {
+                    "ratio_flow_coolingtower": {
                         "subject": "TOWERWATERSYS COOLTOWER 2",
                         "variable": "Cooling Tower Air Flow Rate Ratio",
                         "frequency": "Detailed"
                     }
                 },
                 "parameters": {
-                    "ct_m_fan_dsgn": 36.47,
-                    "ct_P_fan_dsgn": 13359.2
+                    "flow_volumetric_air_coolingtower_design": 36.47,
+                    "power_fan_coolingtower_design": 13359.2
                 }
             },
             "verification_class": "HeatRejectionFanVariableFlowControl"
@@ -786,23 +772,21 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "m_z_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Mechanical Ventilation Standard Density Volume Flow Rate",
                         "frequency": "TimeStep"
                     },
-                    "O_sch": {
+                    "schedule_occupancy": {
                         "subject": "BLDG_OCC_SCH_wo_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     }
                 },
                 "parameters": {
-                    "area_z": 39.02,
-                    "height_z": 3.05,
-                    "v_outdoor_per_zone": 0.000395372,
-                    "tol_occ": 0.05,
-                    "tol_oa_flow": 0.0003
+                    "area_zone": 39.02,
+                    "height_zone": 3.05,
+                    "flow_volumetric_air_outdoor_per_area": 0.000395372
                 }
             },
             "verification_class": "GuestRoomControlVent"
@@ -820,25 +804,21 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_z_hea_set": {
+                    "temperature_air_zone_heat_setpoint": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Heating Setpoint Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_z_coo_set": {
+                    "temperature_air_zone_cool_setpoint": {
                         "subject": "ROOM_2_FLR_3",
                         "variable": "Zone Thermostat Cooling Setpoint Temperature",
                         "frequency": "TimeStep"
                     },
-                    "O_sch": {
+                    "schedule_occupancy": {
                         "subject": "GuestRoom_Occ_Sch",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     }
-                },
-                "parameters": {
-                    "tol_occ": 0.05,
-                    "tol_temp": 1.0
                 }
             },
             "verification_class": "GuestRoomControlTemp"
@@ -856,42 +836,22 @@
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "v_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "PACU_VAV_bot_OAInlet Node",
                         "variable": "System Node Standard Density Volume Flow Rate",
                         "frequency": "TimeStep"
                     },
-                    "s_ahu": {
+                    "status_ahu": {
                         "subject": "HVACOperationSchd",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep"
                     },
-                    "s_eco": {
+                    "status_economizer": {
                         "subject": "PACU_VAV_BOT",
                         "variable": "Air System Outdoor Air Economizer Status",
                         "frequency": "TimeStep"
                     },
-                    "no_of_occ_core": {
-                        "subject": "CORE_BOTTOM",
-                        "variable": "People Occupant Count",
-                        "frequency": "TimeStep"
-                    },
-                    "no_of_occ_per1": {
-                        "subject": "Perimeter_bot_ZN_1",
-                        "variable": "People Occupant Count",
-                        "frequency": "TimeStep"
-                    },
-                    "no_of_occ_per2": {
-                        "subject": "Perimeter_bot_ZN_2",
-                        "variable": "People Occupant Count",
-                        "frequency": "TimeStep"
-                    },
-                    "no_of_occ_per3": {
-                        "subject": "Perimeter_bot_ZN_3",
-                        "variable": "People Occupant Count",
-                        "frequency": "TimeStep"
-                    },
-                    "no_of_occ_per4": {
+                    "number_occupants": {
                         "subject": "Perimeter_bot_ZN_4",
                         "variable": "People Occupant Count",
                         "frequency": "TimeStep"

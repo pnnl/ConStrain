@@ -1,47 +1,88 @@
 """
-G36 2021
-
 ### Description
 
-5.16.12.3.	Upon signal from the freeze-stat (if installed), or if supply air temperature drops below 3.3°C (38°F) for 15 minutes or below 1°C (34°F) for 5 minutes, shut down supply and return/relief fan(s), close outdoor air damper, open the cooling-coil valve to 100%, and energize the CHW pump system. Also send two (or more, as required to ensure that heating plant is active) heating hot-water plant requests, modulate the heating coil to maintain the higher of the supply air temperature or the mixed air temperature at 27°C (80°F), and set a Level 2 alarm indicating the unit is shut down by freeze protection.
+Section 5.16.12.3.	
+- Upon signal from the freeze-stat (if installed), or if supply air temperature drops below 3.3°C (38°F) for 15 minutes or below 1°C (34°F) for 5 minutes, shut down supply and return/relief fan(s), close outdoor air damper, open the cooling-coil valve to 100%, and energize the CHW pump system. Also send two (or more, as required to ensure that heating plant is active) heating hot-water plant requests, modulate the heating coil to maintain the higher of the supply air temperature or the mixed air temperature at 27°C (80°F), and set a Level 2 alarm indicating the unit is shut down by freeze protection.
 
-### Verification logic
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.12 Freeze Protection
+- Code Subsection: 5.16.12.3 Stage 3 (Highest)
+
+### Verification Approach
+
+The verification monitors multiple conditions that can trigger stage 3 protection: freeze-stat signal, sustained low temperatures, or critically low temperatures. When triggered, it verifies that fans are stopped, dampers are closed, and coils are properly positioned to prevent freezing damage.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units
+- Climate Zone(s): any
+- Component(s): supply air temperature sensors, freeze-stats, fans, dampers, coils
+
+### Verification Algorithm Pseudo Code
 
 ```python
-if supply_air_temp < 3.3 (continuously 15 minutes) or
-  supply_air_temp < 1 (continuously 5 minutes) or
-  freeze_stat == True
-  if not (
-    outdoor_damper_command == 0 and
-    supply_fan_status == 'off' and
-    return_fan_status == 'off' and
-    relief_fan_status == 'off' and
-    cooling_coil_command == 100 and
-    heating_coil_command > 0
-  ):
-    fail
-  else:
-    pass
+if temperature_air_supply < 3.3 (continuously 15 minutes) or
+  temperature_air_supply < 1 (continuously 5 minutes) or
+  status_freeze == True:
+    if not (
+        position_damper_air_outdoor == 0 and
+        status_fan_supply == 'off' and
+        status_fan_return == 'off' and
+        status_fan_relief == 'off' and
+        command_coil_cool == 100 and
+        command_coil_heat > 0
+    ):
+        fail
+    else:
+        pass
 
 if never (
-  supply_air_temp < 3.3 (continuously 15 minutes) or
-  supply_air_temp < 1 (continuously 5 minutes) or
-  freeze_stat == True
+    temperature_air_supply < 3.3 (continuously 15 minutes) or
+    temperature_air_supply < 1 (continuously 5 minutes) or
+    status_freeze == True
 ):
-  untested
-
+    untested
 ```
 
 ### Data requirements
 
-- freeze_stat: (optional, set to False if system does not have it) binary freeze-stat
-- supply_air_temp: supply air temperature
-- outdoor_damper_command: outdoor air damper
-- supply_fan_status: supply fan status (speed): [1, 0] (can be replaced by binary or numeric variables)
-- return_fan_status: (optional, set to False if system does not have it) return fan status (speed)
-- relief_fan_status: (optional, set to False if system does not have it) relief fan status (speed)
-- cooling_coil_command: cooling coil command
-- heating_coil_command: heating coil command
+- status_freeze: (optional, set to False if system does not have it) Binary freeze-stat
+  - Data Value Unit: binary
+  - Data Point Affiliation: Air handling unit
+
+- temperature_air_supply: Supply air temperature
+  - Data Value Unit: °C
+  - Data Point Affiliation: Air handling unit
+
+- position_damper_air_outdoor: Outdoor air damper position
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
+
+- status_fan_supply: Supply fan status
+  - Data Value Unit: binary
+  - Data Point Affiliation: Air handling unit
+
+- status_fan_return: Return fan status
+  - Data Value Unit: binary
+  - Data Point Affiliation: Air handling unit
+
+- status_fan_relief: Relief fan status
+  - Data Value Unit: binary
+  - Data Point Affiliation: Air handling unit
+
+- command_coil_cool: Cooling valve command
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
+
+- command_coil_heat: Heating valve command
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
+
 """
 
 from constrain.checklib import RuleCheckBase
@@ -49,31 +90,33 @@ from constrain.checklib import RuleCheckBase
 
 class G36FreezeProtectionStage3(RuleCheckBase):
     points = [
-        "freeze_stat",
-        "supply_air_temp",
-        "outdoor_damper_command",
-        "supply_fan_status",
-        "return_fan_status",
-        "relief_fan_status",
-        "cooling_coil_command",
-        "heating_coil_command",
+        "status_freeze",
+        "temperature_air_supply",
+        "position_damper_air_outdoor",
+        "status_fan_supply",
+        "status_fan_return",
+        "status_fan_relief",
+        "command_coil_cool",
+        "command_coil_heat",
     ]
 
     def ts_verify_logic(self, t):
-        if not (t["freeze_status"] or bool(t["freeze_stat"])):
+        if not (t["freeze_status"] or bool(t["status_freeze"])):
             return True
         if (
             (t["sat_lowerthan_3.3_timer"] > 15)
             or (t["sat_lowerthan_1_timer"] > 5)
-            or t["freeze_stat"]
+            or t["status_freeze"]
         ):
             if not (
-                t["outdoor_damper_command"] < 1
-                and (not bool(t["supply_fan_status"]))
-                and (not bool(t["return_fan_status"]))
-                and (not bool(t["relief_fan_status"]))
-                and t["cooling_coil_command"] > 99
-                and t["heating_coil_command"] > 0
+                t["position_damper_air_outdoor"]
+                < self.get_tolerance("damper", "command")
+                and (not bool(t["status_fan_supply"]))
+                and (not bool(t["status_fan_return"]))
+                and (not bool(t["status_fan_relief"]))
+                and t["command_coil_cool"]
+                >= 100 - self.get_tolerance("damper", "command") * 100
+                and t["command_coil_heat"] > 0
             ):
                 return False
         return True
@@ -86,7 +129,9 @@ class G36FreezeProtectionStage3(RuleCheckBase):
         lt1_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["supply_air_temp"] < 3.3:
+            if t["temperature_air_supply"] < (
+                3.3 - self.get_tolerance("temperature", "supply_air")
+            ):
                 if lt3p3_timer_start is None:
                     lt3p3_timer_start = i
                     lt3p3_timer_list.append(0)
@@ -100,7 +145,9 @@ class G36FreezeProtectionStage3(RuleCheckBase):
                 lt3p3_timer_start = None
                 lt3p3_timer_list.append(0)
 
-            if t["supply_air_temp"] < 1:
+            if t["temperature_air_supply"] < (
+                1 - self.get_tolerance("temperature", "supply_air")
+            ):
                 if lt1_timer_start is None:
                     lt1_timer_start = i
                     lt1_timer_list.append(0)
@@ -124,7 +171,7 @@ class G36FreezeProtectionStage3(RuleCheckBase):
         self.result = self.df.apply(lambda t: self.ts_verify_logic(t), axis=1)
 
     def check_bool(self):
-        free_stat_bool_list = [bool(x) for x in self.df["freeze_stat"]]
+        free_stat_bool_list = [bool(x) for x in self.df["status_freeze"]]
         if len(self.result[self.result == False] > 0):
             return False
         else:

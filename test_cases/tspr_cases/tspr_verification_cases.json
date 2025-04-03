@@ -14,7 +14,7 @@
             "verification_class": "SupplyAirTempReset",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply": {
                         "subject": "Node 85",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
@@ -39,7 +39,7 @@
             "verification_class": "SupplyAirTempReset",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply": {
                         "subject": "Node 85",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed"
@@ -69,20 +69,20 @@
                         "variable": "Site Outdoor Air Drybulb Temperature",
                         "frequency": "TimeStep"
                     },
-                    "T_chw": {
+                    "temperature_water_chilled": {
                         "subject": "Node 71",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "TimeStep"
                     },
-                    "m_chw": {
+                    "flow_mass_water_chilled": {
                         "subject": "Chiller for plant plant_loops-1903",
                         "variable": "Chiller Evaporator Mass Flow Rate",
                         "frequency": "TimeStep"
                     }
                 },
                 "parameters": {
-                    "T_oa_max": 26.67,
-                    "T_oa_min": 15.67,
+                    "temperature_air_outdoor_max": 26.67,
+                    "temperature_air_outdoor_min": 15.67,
                     "T_chw_max_st": 12.22,
                     "T_chw_min_st": 6.67
                 }

@@ -1,23 +1,97 @@
-from constrain.checklib import CheckLibBase
+"""
+### Description
+
+Section 6.4.3.3.5.2 Guest Room Ventilation Control
+Within 30 minutes of all occupants leaving the guest room, ventilation and exhaust fans shall automatically be turned off, or isolation devices serving each guest room shall automatically 
+shut off the supply of outdoor air to the guest room and shut off exhaust air from the guest room.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2016
+- Code Section: 6.4.3.3.5.2 Guest Room Ventilation Control
+
+### Verification Approach
+
+The verification checks two scenarios:
+1. For unrented rooms (daily occupancy ≈ 0):
+   - Ventilation should be completely shut off (zero flow)
+2. For rented rooms:
+   - Ventilation must be provided continuously
+   - Flow rate should match either:
+     - Area-based minimum outdoor air requirement, or
+     - Air changes based on zone volume
+
+### Verification Applicability
+
+- Building Type(s): hotels, motels
+- Space Type(s): guest rooms
+- System(s): room HVAC units with ventilation capability
+- Climate Zone(s): any
+- Component(s): ventilation systems, outdoor air dampers, occupancy sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+for each day:
+    if room_not_rented (schedule_occupancy ≈ 0 all day):
+        if flow_volumetric_air_outdoor == 0:
+            pass  # Proper ventilation shutoff
+        else:
+            fail  # Ventilation not shut off
+    else:  # room is rented
+        if flow_volumetric_air_outdoor > 0:
+            if flow_volumetric_air_outdoor == flow_volumetric_air_outdoor_per_area * area_zone or
+               daily_total_flow == area_zone * height_zone:
+                pass  # Proper ventilation provided
+            else:
+                fail  # Incorrect ventilation rate
+        else:
+            fail  # No ventilation provided
+```
+
+### Data requirements
+
+- flow_volumetric_air_outdoor: Outdoor air flow rate
+  - Data Value Unit: volumetric flow rate
+  - Data Point Affiliation: Zone ventilation
+
+- schedule_occupancy: Occupancy schedule
+  - Data Value Unit: fraction (0-1)
+  - Data Point Affiliation: Zone occupancy
+
+- area_zone: Zone area
+  - Data Value Unit: area
+  - Data Point Affiliation: Zone configuration
+
+- height_zone: Zone height
+  - Data Value Unit: length
+  - Data Point Affiliation: Zone configuration
+
+- flow_volumetric_air_outdoor_per_area: Outdoor air requirement
+  - Data Value Unit: volumetric flow rate per area
+  - Data Point Affiliation: Zone ventilation
+
+"""
+
 import pandas as pd
+from constrain.checklib import CheckLibBase
 
 
 class GuestRoomControlVent(CheckLibBase):
     points = [
-        "m_z_oa",
-        "O_sch",
-        "area_z",
-        "height_z",
-        "v_outdoor_per_zone",
-        "tol_occ",
-        "tol_oa_flow",
+        "flow_volumetric_air_outdoor",
+        "schedule_occupancy",
+        "area_zone",
+        "height_zone",
+        "flow_volumetric_air_outdoor_per_area",
     ]
 
     def verify(self):
-        tol_occ = self.df["tol_occ"][0]
-        tol_m = self.df["tol_oa_flow"][0]
-        zone_volume = self.df["area_z"][0] * self.df["height_z"][0]
-        m_z_oa_set = self.df["v_outdoor_per_zone"][0] * self.df["area_z"][0]
+        zone_volume = self.df["area_zone"][0] * self.df["height_zone"][0]
+        m_z_oa_set = (
+            self.df["flow_volumetric_air_outdoor_per_area"][0] * self.df["area_zone"][0]
+        )
 
         year_info = 2000
         result_repo = []
@@ -28,17 +102,27 @@ class GuestRoomControlVent(CheckLibBase):
                 pass
             else:
                 if (
-                    day["O_sch"] <= tol_occ
+                    day["schedule_occupancy"]
+                    <= self.get_tolerance("ratio", "occupancy")
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["m_z_oa"] == 0).all():
+                    if (
+                        abs(day["flow_volumetric_air_outdoor"])
+                        < self.get_tolerance("airflow", "outdoor_air")
+                    ).all():
                         result_repo.append(1)  # pass,
                     else:
                         result_repo.append(0)  # fail
                 else:  # room is rented out
-                    if (day["m_z_oa"] > 0).all():
-                        if (
-                            day["m_z_oa"] == m_z_oa_set
-                            or day["m_z_oa"].sum(axis=1) == zone_volume
+                    if (
+                        day["flow_volumetric_air_outdoor"]
+                        > self.get_tolerance("airflow", "outdoor_air")
+                    ).all():
+                        if abs(
+                            day["flow_volumetric_air_outdoor"] - m_z_oa_set
+                        ) < self.get_tolerance("airflow", "outdoor_air") or abs(
+                            day["flow_volumetric_air_outdoor"].sum(axis=1) - zone_volume
+                        ) < self.get_tolerance(
+                            "airflow", "outdoor_air"
                         ):
                             result_repo.append(1)  # pass
                         else:

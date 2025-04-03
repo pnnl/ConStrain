@@ -9,14 +9,24 @@ from lib_unit_test_runner import *
 
 
 class TestFanStaticPressureResetControl(unittest.TestCase):
+    tolerances = {
+        "pressure": {
+            "unit": "Pa",
+            "types": {
+                "static": 0.0,
+                "general": 0.0,
+            },
+        }
+    }
+
     def test_fan_static_pressure_reset_control_pass(self):
         points = [
-            "p_set",
-            "d_VAV_1",
-            "d_VAV_2",
-            "d_VAV_3",
-            "d_VAV_4",
-            "d_VAV_5",
+            "pressure_static_setpoint",
+            "pos_damper_vav_1",
+            "pos_damper_vav_2",
+            "pos_damper_vav_3",
+            "pos_damper_vav_4",
+            "pos_damper_vav_5",
         ]
 
         timestamp = [
@@ -36,7 +46,7 @@ class TestFanStaticPressureResetControl(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "FanStaticPressureResetControl", df
+            "FanStaticPressureResetControl", df, tolerances=self.tolerances
         )
 
         results = pd.Series(list(verification_obj.result))
@@ -55,12 +65,12 @@ class TestFanStaticPressureResetControl(unittest.TestCase):
 
     def test_fan_static_pressure_reset_control_fail(self):
         points = [
-            "p_set",
-            "d_VAV_1",
-            "d_VAV_2",
-            "d_VAV_3",
-            "d_VAV_4",
-            "d_VAV_5",
+            "pressure_static_setpoint",
+            "pos_damper_vav_1",
+            "pos_damper_vav_2",
+            "pos_damper_vav_3",
+            "pos_damper_vav_4",
+            "pos_damper_vav_5",
         ]
 
         timestamp = [
@@ -80,7 +90,7 @@ class TestFanStaticPressureResetControl(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
 
         verification_obj = run_test_verification_with_data(
-            "FanStaticPressureResetControl", df
+            "FanStaticPressureResetControl", df, tolerances=self.tolerances
         )
 
         results = pd.Series(list(verification_obj.result))

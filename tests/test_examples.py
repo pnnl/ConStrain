@@ -1,4 +1,4 @@
-import unittest, os, re
+import unittest, os, re, time
 import pandas as pd
 
 from constrain.examples import Examples
@@ -19,10 +19,13 @@ class TestExamples(unittest.TestCase):
         assert isinstance(data, pd.DataFrame)
         assert len(data) > 1
 
-        # Run example
+        # Prepare verifications
         cases = VerificationCase(json_case_path=ex.verifications("example_1"))
         cases.validate()
         verif = Verification(verifications=cases)
+
+        # Run example (single thread)
+        start_time_single_thread = time.time()
         verif.configure(
             output_path="./",
             lib_items_path=ex.library(),
@@ -32,6 +35,25 @@ class TestExamples(unittest.TestCase):
             preprocessed_data=data,
         )
         verif.run()
+        end_time_single_thread = time.time()
+
+        # Run example (multi thread)
+        start_time_multi_thread = time.time()
+        verif.configure(
+            output_path="./",
+            lib_items_path=ex.library(),
+            plot_option="all-expand",
+            fig_size=(10, 5),
+            num_threads=3,
+            preprocessed_data=data,
+        )
+        verif.run()
+        end_time_multi_thread = time.time()
+        assert (end_time_single_thread - start_time_single_thread) > (
+            end_time_multi_thread - start_time_multi_thread
+        )
+
+        # Report results
         reporting = Reporting(
             verification_json="./*_md.json",
             result_md_name="report_summary.md",

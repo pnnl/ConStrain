@@ -5,35 +5,37 @@ from lib_unit_test_runner import *
 from library import *
 
 import pandas as pd
-import numpy as np
 
 
-class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
+class TestG36ReheatTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
+    tolerances = {
+        "airflow": {"unit": "m3/s", "types": {"general": 0.01}},
+        "damper": {"unit": "%", "general": 0.01, "types": {"command": 0.01}},
+    }
+
     def test_g36_cooling_only_terminal_box_deadband_airflow_setpoint(self):
         points = [
-            "operation_mode",
-            "zone_state",
-            "v_min",
-            "v_spt",
-            "v_spt_tol",
-            "heating_coil_command",
-            "heating_coil_command_tol",
-            "dat",
-            "dat_min_spt",
+            "mode_system",
+            "state_zone",
+            "flow_volumetric_air_setpoint_min",
+            "flow_volumetric_air_setpoint",
+            "command_coil_heat",
+            "temperature_air_discharge",
+            "temperature_air_discharge_setpoint_min",
         ]
 
         data = [
-            ["occupied", "heating", 10, 90, 0.01, 0, 1, 14, 15],
-            ["occupied", "cooling", 10, 90, 0.01, 0, 1, 14, 15],
-            ["occupied", "deadband", 10, 10.1, 0.01, 0, 1, 14, 15],
-            ["occupied", "deadband", 10, 10.01, 0.01, 0, 1, 14, 15],
-            ["occupied", "deadband", 10, 10.001, 0.01, 0, 1, 14, 15],
-            ["cooldown", "deadband", 10, 10.001, 0.01, 0, 1, 14, 15],
-            ["cooldown", "deadband", 10, 0, 0.01, 0, 1, 14, 15],
-            ["occupied", "deadband", 10, 9.9, 0.01, 0, 1, 14, 15],
-            ["occupied", "deadband", 10, 9.99, 0.01, 0, 1, 14, 15],
-            ["occupied", "deadband", 10, 10.01, 0.01, 0, 1, 16, 15],
-            ["occupied", "deadband", 10, 10.01, 0.01, 2, 1, 16, 15],
+            ["occupied", "heating", 10, 90, 0, 14, 15],
+            ["occupied", "cooling", 10, 90, 0, 14, 15],
+            ["occupied", "deadband", 10, 10.1, 0, 14, 15],
+            ["occupied", "deadband", 10, 10.01, 0, 14, 15],
+            ["occupied", "deadband", 10, 10.001, 0, 14, 15],
+            ["cooldown", "deadband", 10, 10.001, 0, 14, 15],
+            ["cooldown", "deadband", 10, 0, 0, 14, 15],
+            ["occupied", "deadband", 10, 9.9, 0, 14, 15],
+            ["occupied", "deadband", 10, 9.99, 0, 14, 15],
+            ["occupied", "deadband", 10, 10.01, 0, 16, 15],
+            ["occupied", "deadband", 10, 10.01, 2, 16, 15],
         ]
 
         expected_results = pd.Series(
@@ -57,7 +59,9 @@ class TestG36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
         results = pd.Series(
             list(
                 run_test_verification_with_data(
-                    "G36ReheatTerminalBoxDeadbandAirflowSetpoint", df
+                    "G36ReheatTerminalBoxDeadbandAirflowSetpoint",
+                    df,
+                    tolerances=self.tolerances,
                 ).result
             )
         )

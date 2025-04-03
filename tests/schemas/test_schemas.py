@@ -6,11 +6,12 @@ import json
 
 
 class JSONSchemaTest(unittest.TestCase):
-
     def setUp(self):
-        workflow_schema_path = "./schema/workflow.schema.json"
-        library_item_schema_path = "./schema/library.schema.json"
-        verification_cases_schema_path = "./schema/verification_cases.schema.json"
+        workflow_schema_path = "./constrain/schema/workflow.schema.json"
+        library_item_schema_path = "./constrain/schema/library.schema.json"
+        verification_cases_schema_path = (
+            "./constrain/schema/verification_cases.schema.json"
+        )
 
         with open(workflow_schema_path, "r") as f:
             self.workflow_schema = json.load(f)
@@ -22,7 +23,7 @@ class JSONSchemaTest(unittest.TestCase):
             self.verification_cases_schema = json.load(f)
 
     def test_workflow_schema_pass(self):
-        workflow_path = "./demo/api_demo/demo_workflow.json"
+        workflow_path = "./constrain/demo/api_demo/demo_workflow.json"
 
         with open(workflow_path, "r") as f:
             workflow_dict = json.load(f)
@@ -33,7 +34,7 @@ class JSONSchemaTest(unittest.TestCase):
             self.fail(f"Validation failed: {e}")
 
     def test_workflow_schema_fail(self):
-        workflow_path = "./demo/api_demo/demo_workflow.json"
+        workflow_path = "./constrain/demo/api_demo/demo_workflow.json"
 
         with open(workflow_path, "r") as f:
             workflow_dict = json.load(f)
@@ -44,7 +45,9 @@ class JSONSchemaTest(unittest.TestCase):
             jsonschema.validate(instance=workflow_dict, schema=self.workflow_schema)
 
     def test_verification_cases_schema(self):
-        verification_case_path = "./demo/api_demo/demo_verification_cases.json"
+        verification_case_path = (
+            "./constrain/demo/api_demo/demo_verification_cases.json"
+        )
 
         with open(verification_case_path, "r") as f:
             verification_cases_dict = json.load(f)
@@ -57,7 +60,7 @@ class JSONSchemaTest(unittest.TestCase):
             self.fail(f"Validation failed: {e}")
 
     def test_library_item_schema(self):
-        library_item_schema_path = "./schema/library.json"
+        library_item_schema_path = "./constrain/schema/library.json"
 
         with open(library_item_schema_path, "r") as f:
             library_dict = json.load(f)

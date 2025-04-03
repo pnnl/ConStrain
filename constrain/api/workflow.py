@@ -5,7 +5,8 @@ Workflow API
 """
 
 import glob
-import sys, logging, json, os, datetime
+import sys, logging, json, os, datetime, platform
+from pathlib import Path
 from typing import Union
 
 sys.path.append("./constrain")
@@ -37,7 +38,6 @@ class WorkflowEngine:
         self.states = {}
         self.workflow_dict = {}
         self.running_sequence = []
-
         # checking workflow validity is handed over to the API method.
         if isinstance(workflow, str):
             self.load_workflow_json(workflow)
@@ -46,9 +46,72 @@ class WorkflowEngine:
             self.workflow_dict = workflow
 
         self.load_states()
+        # change working dir
 
+        word_dir_before_run = os.getcwd()
+
+        self.change_work_dir()
+
+        # run workflow now
         if run_workflow_now:
             self.run_workflow()
+
+        os.chdir(word_dir_before_run)
+
+    def change_work_dir(self) -> None:
+        # First, check if the workflow_dict has "working_dir"
+        if "working_dir" not in self.workflow_dict:
+            logging.info("No working_dir is specified")
+        else:
+            # Change the working path to the working_dir value in workflow_dict.
+            if not isinstance(self.workflow_dict["working_dir"], str):
+                # First, detect if the working dir is a valid string
+                logging.error("working directory specified is not a valid string.")
+            else:
+                # Then detect if the working dir provided is in Linux format or Windows Format.
+                if ("/" in self.workflow_dict["working_dir"]) and (
+                    "\\" not in self.workflow_dict["working_dir"]
+                ):
+                    # in Linux Format
+                    if (
+                        platform.system() == "Windows"
+                    ):  # convert it to the working platform if it is windows
+                        self.workflow_dict["working_dir"] = self.workflow_dict[
+                            "working_dir"
+                        ].replace("/", "\\")
+                    logging.info("the working dir provided is in Linux format.")
+                elif ("/" not in self.workflow_dict["working_dir"]) and (
+                    "\\" in self.workflow_dict["working_dir"]
+                ):
+                    # in windows format
+                    if (
+                        platform.system() == "Linux"
+                    ):  # convert it to the working platform if it is Linux
+                        self.workflow_dict["working_dir"] = self.workflow_dict[
+                            "working_dir"
+                        ].replace("\\", "/")
+                    logging.info("the working dir provided is in Win format.")
+
+                # change the working directory if it exists
+                if os.path.exists(self.workflow_dict["working_dir"]):
+                    os.chdir(self.workflow_dict["working_dir"])
+                    logging.info("Change current working path to the specified path.")
+                else:
+                    try:
+                        Path(self.workflow_dict["working_dir"]).mkdir(
+                            parents=True, exist_ok=True
+                        )
+                        logging.info(
+                            "working directory specified does not exist and create a new director."
+                        )
+                        os.chdir(self.workflow_dict["working_dir"])
+                    except Exception as e:
+                        # If an invalid escape sequence string is specified. E.g. ".\tests\api\test"
+                        if e.winerror == 123:
+                            # The error is : OSError: [WinError 123] The filename, directory name, or volume label syntax is incorrect.
+                            logging.error(
+                                "The working directory specified is an invalid escape sequence string."
+                            )
 
     def validate(self, verbose: bool = False) -> bool:
         """function to be implemented to check for high level validity of the workflow definition"""
@@ -287,7 +350,7 @@ class Workflow:
 
     @staticmethod
     def create_workflow_engine(
-        workflow: Union[str, dict]
+        workflow: Union[str, dict],
     ) -> Union[None, WorkflowEngine]:
         """Instantiate a WorkflowEngine object with specified workflow definition.
 
@@ -297,6 +360,7 @@ class Workflow:
         Returns:
             Union[None, WorkflowEngine]: Instantiated WorkflowEngine object if provided workflow is valid; None otherwise.
         """
+
         if (isinstance(workflow, str) and os.path.isfile(workflow)) or isinstance(
             workflow, dict
         ):
@@ -445,7 +509,7 @@ class MethodCall:
             elif v[:3] == "+x ":  # unique prefix for evaluate the rest of the string
                 return eval(v[3:])
             else:
-                # in all other string param value, we consider it is a string. This is for clarity and security. More complicated parameter should use embedded methodcall
+                # in all other string param value, we consider it is a string. This is for clarity and security. More complicated parameter should use embedded method call
                 return v
 
     def run(self):

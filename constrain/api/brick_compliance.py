@@ -9,8 +9,10 @@ from collections import defaultdict
 
 import brickschema
 import yaml
+import pathlib
 from pydash import filter_, flatten_deep
 
+path = pathlib.Path(__file__).parent.resolve()
 sys.path.append("..")
 
 HVAC_ZONE_NAME_PARSE_RE = r"\?(\w+) a brick:HVAC_Zone \."
@@ -156,7 +158,7 @@ class BrickCompliance:
             return None
 
         try:
-            with open("./schema/library.json", "r") as file:
+            with open(f"{path}/../schema/library.json", "r") as file:
                 self.library_json = json.load(file)
         except FileNotFoundError:
             logging.error(
@@ -217,7 +219,7 @@ class BrickCompliance:
         else:
             verification_lib_items = list(self.query_statement)
 
-        # find if queried datapoints are the same as the datapoints in the library.json. If not, warning meesage shows up
+        # find if queried datapoints are the same as the datapoints in the library.json. If not, warning message shows up
         available_verification_item_list = []
         for verification_lib_item in verification_lib_items:
             for query_result in self.query_verification_case_datapoints(
