@@ -7,6 +7,7 @@ from constrain.api.verification import Verification
 from tools.wizard.utils.load_schemas import LIBRARY_PATH
 from tools.wizard.components.verification_case_runner import VerificationCaseRunner
 from tools.wizard.steps import WizardPageIds
+import os
 
 
 class RunVerificationPage(QtWidgets.QWizardPage):
@@ -67,7 +68,8 @@ class RunVerificationPage(QtWidgets.QWizardPage):
         verification_case = VerificationCase(self.verification_cases["cases"])
         verification = Verification(verification_case)
         verification.configure(
-            output_path=self.tmpdir.name,
+            # output_path=self.tmpdir.name,
+            output_path=os.getcwd(),
             time_series_csv_export_name=uploaded_file_path,
             lib_items_path=LIBRARY_PATH,
             plot_option=None,
