@@ -4,6 +4,7 @@ import shutil
 import atexit
 from constrain.api.verification_case import VerificationCase
 from constrain.api.verification import Verification
+from constrain.api.reporting import Reporting
 from tools.wizard.utils.load_schemas import LIBRARY_PATH
 from tools.wizard.components.verification_case_runner import VerificationCaseRunner
 from tools.wizard.steps import WizardPageIds
@@ -76,7 +77,12 @@ class RunVerificationPage(QtWidgets.QWizardPage):
             fig_size=(6, 5),
             num_threads=2,
         )
-
+        reporting = Reporting(
+            verification_json="./*_md.json",
+            result_md_name="report_summary.md",
+            report_format="markdown",
+        )
+        reporting.report_multiple_cases()
         self.verification_runner = VerificationCaseRunner(verification)
         self.verification_runner.update_text.connect(self.append_output)
         self.verification_runner.finished.connect(self.cleanup_tmpdir)
