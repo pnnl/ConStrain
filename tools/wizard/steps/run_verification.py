@@ -1,7 +1,6 @@
 from PyQt6 import QtWidgets
 import tempfile
 import shutil
-import atexit
 from constrain.api.verification_case import VerificationCase
 from constrain.api.verification import Verification
 from tools.wizard.utils.load_schemas import LIBRARY_PATH
@@ -18,6 +17,7 @@ class RunVerificationPage(QtWidgets.QWizardPage):
         self.previous_verification_class, self.current_verification_class = None, None
 
         self.tmpdir = None
+        self.verification_runner = None
 
         self.initUI()
 
@@ -26,9 +26,9 @@ class RunVerificationPage(QtWidgets.QWizardPage):
 
         layout = QtWidgets.QVBoxLayout()
 
-        self.uploadButton = QtWidgets.QPushButton("Run Verification")
-        self.uploadButton.clicked.connect(self.runVerification)
-        layout.addWidget(self.uploadButton)
+        self.runVerficationButton = QtWidgets.QPushButton("Run Verification")
+        self.runVerficationButton.clicked.connect(self.runVerification)
+        layout.addWidget(self.runVerficationButton)
 
         self.outputTextEdit = QtWidgets.QTextEdit()
         self.outputTextEdit.setReadOnly(True)  # Make the text edit read-only
@@ -39,7 +39,23 @@ class RunVerificationPage(QtWidgets.QWizardPage):
     def append_output(self, message):
         self.outputTextEdit.append(message)
 
+    def add_restart_button(self):
+        self.wizard().setOption(QtWidgets.QWizard.WizardOption.HaveCustomButton1, True)
+        self.wizard().button(QtWidgets.QWizard.WizardButton.CustomButton1).setEnabled(
+            False
+        )
+        self.setButtonText(QtWidgets.QWizard.WizardButton.CustomButton1, "Restart")
+        self.wizard().button(
+            QtWidgets.QWizard.WizardButton.CustomButton1
+        ).clicked.connect(self.wizard().restart)
+
+    def cleanupPage(self):
+        self.wizard().setOption(QtWidgets.QWizard.WizardOption.HaveCustomButton1, False)
+        super().cleanupPage()
+
     def initializePage(self):
+        self.add_restart_button()
+
         self.set_current_verification_class_and_upload_path()
 
         if (
@@ -50,7 +66,7 @@ class RunVerificationPage(QtWidgets.QWizardPage):
 
     def runVerification(self):
         self.outputTextEdit.clear()
-        self.uploadButton.setEnabled(False)
+        self.runVerficationButton.setEnabled(False)
         verification_class = self.wizard().selected_verification_class
 
         mapping_page = self.wizard().page(WizardPageIds.VARIABLE_MAPPING.value)
@@ -79,13 +95,19 @@ class RunVerificationPage(QtWidgets.QWizardPage):
         self.verification_runner.update_text.connect(self.append_output)
         self.verification_runner.finished.connect(self.cleanup_tmpdir)
         self.verification_runner.finished.connect(
-            lambda: self.uploadButton.setEnabled(True)
+            lambda: self.runVerficationButton.setEnabled(True)
+        )
+        self.verification_runner.finished.connect(
+            lambda: self.wizard()
+            .button(QtWidgets.QWizard.WizardButton.CustomButton1)
+            .setEnabled(True)
         )
         self.verification_runner.start()
 
     def cleanup_tmpdir(self):
         if self.tmpdir:
             shutil.rmtree(self.tmpdir.name)
+            self.tmpdir = None
 
     def create_verification_case(self, verification_class, mapping):
         cases = self.verification_cases["cases"]
@@ -120,3 +142,14 @@ class RunVerificationPage(QtWidgets.QWizardPage):
 
     def nextId(self):
         return -1
+
+    def restart(self):
+        self.verification_cases = {"cases": []}
+        self.previous_uploaded_file_path, self.current_uploaded_file_path = None, None
+        self.previous_verification_class, self.current_verification_class = None, None
+
+        if self.tmpdir:
+            shutil.rmtree(self.tmpdir.name)
+            self.tmpdir = None
+
+        self.outputTextEdit.clear()

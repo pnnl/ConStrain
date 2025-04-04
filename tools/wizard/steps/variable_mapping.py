@@ -14,9 +14,8 @@ class VariableMappingPage(QtWidgets.QWizardPage):
         self.datapoint_mapping = {"dev_settings": {}, "parameters": {}}
         self.verification_case_library = load_verification_cases_library()
         self.datapoints_keys = None
-        self.data = None
 
-        self.previous_uploaded_file_path, self.current_uploaded_file_path = None, None
+        self.previous_uploaded_data, self.current_uploaded_data = None, None
         self.previous_verification_class, self.current_verification_class = None, None
 
         self.initUI()
@@ -37,15 +36,21 @@ class VariableMappingPage(QtWidgets.QWizardPage):
         self.set_current_verification_class_and_upload_path()
 
         if (
-            self.current_uploaded_file_path != self.previous_uploaded_file_path
+            self.current_uploaded_data is None
+            or (
+                all(
+                    isinstance(i, pd.DataFrame)
+                    for i in [self.current_uploaded_data, self.previous_uploaded_data]
+                )
+                and not self.current_uploaded_data.equals(self.previous_uploaded_data)
+            )
             or self.current_verification_class != self.previous_verification_class
         ):
             self.reset_mappings()
         else:
             return
 
-        self.data = pd.read_csv(self.current_uploaded_file_path)
-        csv_columns = list(self.data.columns)
+        csv_columns = list(self.current_uploaded_data)
 
         csv_columns.insert(0, "Use Parameter")
 
@@ -91,9 +96,9 @@ class VariableMappingPage(QtWidgets.QWizardPage):
         self.set_datapoint_mapping()
 
     def set_current_verification_class_and_upload_path(self):
-        self.previous_uploaded_file_path = self.current_uploaded_file_path
+        self.previous_uploaded_data = self.current_uploaded_data
         csv_upload_page = self.wizard().page(WizardPageIds.CSV_UPLOAD.value)
-        self.current_uploaded_file_path = csv_upload_page.uploaded_file_path
+        self.current_uploaded_data = csv_upload_page.data
 
         self.previous_verification_class = self.current_verification_class
         self.current_verification_class = self.wizard().selected_verification_class
@@ -114,8 +119,8 @@ class VariableMappingPage(QtWidgets.QWizardPage):
 
     def reset_mappings(self):
         self.datapoint_mapping = {"dev_settings": {}, "parameters": {}}
+        self.wizard().datapoint_mapping = self.datapoint_mapping
         self.clear_layout(self.mappingLayout)
-        self.mappingWidgets = {}
 
     def clear_layout(self, layout):
         while layout.count():
@@ -133,3 +138,8 @@ class VariableMappingPage(QtWidgets.QWizardPage):
 
     def nextId(self):
         return WizardPageIds.RUN_VERIFICATION.value
+
+    def restart(self):
+        self.reset_mappings()
+        self.previous_uploaded_data, self.current_uploaded_data = None, None
+        self.previous_verification_class, self.current_verification_class = None, None

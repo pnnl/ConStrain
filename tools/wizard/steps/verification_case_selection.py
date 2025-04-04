@@ -51,12 +51,25 @@ class VerificationCaseSelectionPage(QtWidgets.QWizardPage):
             selected_item = current.text(0)
             self.selectionLabel.setText(f"Selected Item: {selected_item}")
 
+            self.selected_verification_class = selected_item
+            self.wizard().selected_verification_class = self.selected_verification_class
+
+            self.completeChanged.emit()
+
             if current != previous:
-                self.wizard().selected_verification_class = selected_item
                 variable_mapping_page = self.wizard().page(
                     WizardPageIds.VARIABLE_MAPPING.value
                 )
                 variable_mapping_page.reset_mappings()
+
+    def restart(self):
+        self.searchBox.clear()
+        self.selected_verification_class = None
+        self.wizard().selected_verification_class = None
+        self.selectionLabel.clear()
+
+    def isComplete(self):
+        return self.selected_verification_class is not None
 
     def nextId(self):
         return WizardPageIds.CSV_UPLOAD.value

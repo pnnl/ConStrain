@@ -8,6 +8,7 @@ class CSVUploadPage(QtWidgets.QWizardPage):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.uploaded_file_path = None
+        self.data = None
         self.initUI()
 
     def initUI(self):
@@ -35,7 +36,7 @@ class CSVUploadPage(QtWidgets.QWizardPage):
             self.filePathLabel.setText(f"Uploaded: {fileName}")
 
             try:
-                self.wizard().data = pd.read_csv(self.uploaded_file_path)
+                self.data = pd.read_csv(self.uploaded_file_path)
             except Exception as e:
                 QtWidgets.QMessageBox.critical(
                     self, "Error", f"Failed to read CSV: {str(e)}"
@@ -48,3 +49,8 @@ class CSVUploadPage(QtWidgets.QWizardPage):
 
     def nextId(self):
         return WizardPageIds.VARIABLE_MAPPING.value
+
+    def restart(self):
+        self.uploaded_file_path = None
+        self.data = None
+        self.filePathLabel.setText("No file uploaded.")

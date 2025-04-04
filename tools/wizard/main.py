@@ -13,6 +13,8 @@ class Wizard(QtWidgets.QWizard):
         super().__init__()
 
         self.setPage(WizardPageIds.PATH_SELECTION.value, PathSelectionPage())
+        self.setStartId(WizardPageIds.PATH_SELECTION.value)
+
         self.setPage(
             WizardPageIds.VERIFICATION_CASE_SELECTION.value,
             VerificationCaseSelectionPage(),
@@ -21,14 +23,20 @@ class Wizard(QtWidgets.QWizard):
         self.setPage(WizardPageIds.VARIABLE_MAPPING.value, VariableMappingPage())
         self.setPage(WizardPageIds.RUN_VERIFICATION.value, RunVerificationPage())
 
-        self.setStartId(WizardPageIds.PATH_SELECTION.value)
-
         self.setWindowTitle("Verification Case Wizard")
         self.resize(500, 400)
 
-    def accept(self):
-        print("Wizard completed!")
-        super().accept()
+    def restart(self):
+        self.selected_verification_class = None
+        self.datapoint_mapping = None
+        self.data = None
+
+        for pageId in self.pageIds():
+            page = self.page(pageId)
+            if hasattr(page, "restart"):
+                page.restart()
+
+        super().restart()
 
 
 def main():
