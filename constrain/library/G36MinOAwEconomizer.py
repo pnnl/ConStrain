@@ -68,7 +68,7 @@ else:
   - Data Value Unit: volumetric flow rate
   - Data Point Affiliation: Air handling unit
 
-- mode_system: System mode (If mode_system is not "occupied", this verification item results fall into ""Untested)
+- mode_system: System mode (If mode_system is not "occupied", this verification item results fall into "Untested")
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
