@@ -22,6 +22,7 @@ class DataProcessing:
         data_path: str = None,
         data_source: str = None,
         timestamp_column_name: str = None,
+        timestamp_datetime_format: str = None,
     ):
         """Instantiate a data processing object to load datasets and manipulate data before feeding it to the verification process.
 
@@ -29,6 +30,7 @@ class DataProcessing:
             data_path (str, optional): Path to the data (CSV format) to be loaded for processing.
             data_source (str, optional): Data source name. Use `EnergyPlus` or `Other`.
             timestamp_column_name (str, optional): Name of the column header that contains the time series timestamps.
+            timestamp_datetime_format (str, optional): Python datetime format code https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes. Example: "%Y-%m-%dT%H:%M:%S%z".
         """
         self.data = None
 
@@ -64,7 +66,21 @@ class DataProcessing:
                         return None
                     data.set_index(timestamp_column_name, inplace=True)
                     try:
-                        data.index = pd.to_datetime(data.index)
+                        if timestamp_datetime_format is None:
+                            data.index = pd.to_datetime(data.index)
+                        else:
+                            try:
+                                data_index = data.index.to_series()
+                                data.index = data_index.apply(
+                                    lambda x: datetime.datetime.strptime(
+                                        x, timestamp_datetime_format
+                                    )
+                                )
+                            except:
+                                logging.error(
+                                    f"The data in {timestamp_column_name} does not match the timestamp datetime formate provided."
+                                )
+                                return None
                     except:
                         logging.error(
                             f"The data in {timestamp_column_name} could not be converted to Python datetime object. Make sure that the data is consistent defined as a set of date strings."
