@@ -28,7 +28,7 @@ class DataProcessing:
 
         Args:
             data_path (str, optional): Path to the data (CSV format) to be loaded for processing.
-            data_source (str, optional): Data source name. Use `EnergyPlus` or `Other`.
+            data_source (str, optional): Data source name. Use `EnergyPlus` or `bms`.
             timestamp_column_name (str, optional): Name of the column header that contains the time series timestamps.
             timestamp_datetime_format (str, optional): Python datetime format code https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes. Example: "%Y-%m-%dT%H:%M:%S%z".
         """
@@ -54,7 +54,7 @@ class DataProcessing:
                 elif data_source.lower() == "bms":
                     if timestamp_column_name is None:
                         logging.error(
-                            "timestamp_column_name is required when data_source = 'Other'"
+                            "timestamp_column_name is required when data_source = 'bms'"
                         )
                         return None
 
