@@ -229,7 +229,7 @@ class TestVerification(unittest.TestCase):
             )
             v_obj.configure(output_path="./test")
             self.assertEqual(
-                "ERROR:root:The specificed output directory does not exist.",
+                "ERROR:root:The specified output directory does not exist.",
                 logobs.output[1],
             )
 
@@ -430,6 +430,7 @@ class TestVerification(unittest.TestCase):
             plot_option=None,
             fig_size=(6, 5),
             num_threads=2,
+
         )
         v_obj.run()
 
