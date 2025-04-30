@@ -1,3 +1,5 @@
+import glob
+import shutil
 import unittest, sys, os, pathlib
 
 sys.path.append("./constrain")
@@ -417,6 +419,24 @@ class TestVerification(unittest.TestCase):
         assert os.path.isfile("./tests/api/test_df_dump_2.csv")
         os.remove("./tests/api/test_df_dump_1.csv")
         os.remove("./tests/api/test_df_dump_2.csv")
+
+    def test_data_export_no_file(self):
+        vc = VerificationCase(cases=self.cases)
+        v_obj = Verification(verifications=vc)
+        os.mkdir("./tests/api/export_test")
+        v_obj.configure(
+            output_path="./tests/api/export_test",
+            lib_items_path="./constrain/schema/library.json",
+            plot_option=None,
+            fig_size=(6, 5),
+            num_threads=2,
+        )
+        v_obj.run()
+
+        csv_files = glob.glob("./tests/api/export_test/*.csv")
+
+        self.assertEqual(len(csv_files), 0)
+        shutil.rmtree("./tests/api/export_test")
 
 
 if __name__ == "__main__":
