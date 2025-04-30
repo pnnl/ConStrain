@@ -1567,7 +1567,7 @@
             "flow_volumetric_air_vav": "VAV airflow rate",
             "flow_volumetric_air_max": "VAV maximum airflow rate",
             "ratio_turndown_min": "Minimum VAV turndown ratio",
-            "pressure_duct_setpoint": "Duct static pressure setpoint"
+            "pressure_static_setpoint": "Duct static pressure setpoint"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
@@ -1576,9 +1576,9 @@
             "  if flow_volumetric_air_max == 0:",
             "     Untested",
             "  if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:",
-            "    if pressure_duct_setpoint_prev is None:",
+            "    if pressure_static_setpoint_prev is None:",
 			"        Untested",
-			"    elif abs(pressure_duct_setpoint - pressure_duct_setpoint_prev) > 0:",
+			"    elif abs(pressure_static_setpoint - pressure_static_setpoint_prev) > 0:",
 			"        Untested",
 			"    else:",
 			"        fail",
