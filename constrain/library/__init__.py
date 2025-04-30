@@ -47,6 +47,7 @@ from .LocalLoopSetPointTracking import *
 from .LocalLoopUnmetHours import *
 from .MZSystemOccupiedStandbyVentilationZoneControl import *
 from .supply_air_temp_reset import *
+from .trim_respond_logic import *
 from .vav_minimum_turndown_during_reheat import *
 from .vav_minimum_turndown_during_reheat_pressure_reset import *
 from .vav_static_pressure_sensor_location import *
@@ -116,4 +117,5 @@ __all__ = [
     "G36ReheatTerminalBoxHeatingAirflowSetpoint",
     "G36ReheatTerminalBoxDeadbandAirflowSetpoint",
     "G36TerminalBoxCoolingMinimumAirflow",
+    "TrimRespondLogic",
 ]

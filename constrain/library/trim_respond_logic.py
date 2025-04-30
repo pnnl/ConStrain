@@ -1,8 +1,25 @@
+import json
 import logging
+from pathlib import Path
 from typing import Union
 
 import pandas as pd
 from pandas.api.types import is_datetime64_any_dtype
+
+VARIABLE_SET = ("temperature", "airflow", "waterflow", "pressure")
+VARIABLE_SUBTYPE_SET = {
+    "temperature": (
+        "supply_air",
+        "zone",
+        "outdoor_air",
+        "discharge_air",
+        "return_air",
+        "general",
+    ),
+    "airflow": ("supply", "outdoor_air", "exhaust_air", "general"),
+    "waterflow": ("hot", "general"),
+    "pressure": ("static", "building", "general"),
+}
 
 
 def TrimRespondLogic(
@@ -15,8 +32,9 @@ def TrimRespondLogic(
     SPmin: Union[float, int],
     SPmax: Union[float, int],
     SPres_max: Union[float, int],
-    tol: Union[float, int],
     controller_type: str,
+    variable_type: str,
+    variable_subtype: str,
 ) -> Union[None, pd.DataFrame]:
     """Trim and respond logic verification & setpoint calculation.
 
@@ -30,9 +48,14 @@ def TrimRespondLogic(
         SPmin (float or int): Minimum setpoint.
         SPmax (float or int): Maximum setpoint.
         SPres_max (float or int): Maximum response per time interval.
-        tol (float or int): tolerance.
-        controller_type (str): either `direct_acting` or `reverse_acting`. When an increase in the controller output results in an increase in the process barialbe, the `direct_acting` option should be selected. Otherwise, the `reverse_acting` option should be selected.
-
+        controller_type (str): either `direct_acting` or `reverse_acting`. When an increase in the controller output results in an increase in the process varialbe, the `direct_acting` option should be selected. Otherwise, the `reverse_acting` option should be selected.
+        variable_type (str): Type of variable to determine tolerance. Available options: temperature, airflow, waterflow, pressure. All the tolerance units are in SI (e.g., temperature: deg C, airflow: m3/s, waterflow: m3/s, pressure Pa)
+        variable_subtype (str): Variable subtype to determine tolerance.
+                                Available options:
+                                    temperature: supply_air, zone, outdoor_air, discharge_air, return_air, general
+                                    airflow: supply, outdoor_air, exhaust_air, general
+                                    waterflow: hot, general
+                                    pressure: static, building, general
     Return: dataframe including verification in boolean and setpoint calculation results in each timestep.
     """
 
@@ -69,7 +92,7 @@ def TrimRespondLogic(
 
     if not isinstance(SP0, (float, int)):
         logging.error(
-            f"The type of the `SP0` arg must be a float or int. It cannot be {type(tol)}."
+            f"The type of the `SP0` arg must be a float or int. It cannot be {type(SP0)}."
         )
         return None
 
@@ -102,18 +125,31 @@ def TrimRespondLogic(
         )
         return None
 
-    if not isinstance(tol, (float, int)):
-        logging.error(
-            f"The type of the `tol` arg must be a float or int. It cannot be {type(tol)}."
-        )
-        return None
-
     # check if the `controller_type` is either `direct_acting` or `reverse_acting`
     if controller_type not in ("direct_acting", "reverse_acting"):
         logging.error(
-            f"`controller_type` arg must be either `direct_acting` or `reverse_acting`. It can't be `{controller_type}`."
+            f"The `controller_type` arg must be either `direct_acting` or `reverse_acting`. It can't be `{controller_type}`."
         )
         return None
+
+    # set tolerance
+    if variable_type not in VARIABLE_SET:
+        logging.error(
+            f"The `variable_type` arg must be one of temperature, airflow, waterflow, pressure. It can't be `{variable_type}`."
+        )
+        return None
+
+    if variable_subtype not in VARIABLE_SUBTYPE_SET.get(variable_type):
+        logging.error(
+            f"The `variable_subtype` arg doesn't have a right subtype. Please check the ./constrain/tolerances.json file."
+        )
+        return None
+
+    path_to_custom_tolerance_file = Path(__file__).parent.parent / "tolerances.json"
+    with open(path_to_custom_tolerance_file) as f:
+        tolerances = json.load(f)
+
+    tol = tolerances[variable_type]["types"][variable_subtype]
 
     # calculate actual start time
     initial_timestamp = df.index[0]
@@ -142,6 +178,7 @@ def TrimRespondLogic(
             return None
 
     # start the T&R logic verification
+    SPtrim = abs(SPtrim)
     for current_timestamp, row in copied_df.iterrows():
         prev_row_df = copied_df.iloc[copied_df.index.get_loc(current_timestamp) - 1]
         prev_row_result = result.iloc[result.index.get_loc(current_timestamp) - 1]
@@ -151,7 +188,7 @@ def TrimRespondLogic(
             if controller_type == "direct_acting":
                 # determine T&R logic was implemented correctly (verification)
                 if (
-                    row["setpoint"] <= prev_row_df["setpoint"] + SPtrim + tol
+                    row["setpoint"] <= prev_row_df["setpoint"] - SPtrim + tol
                     and row["setpoint"] >= SPmin
                 ):
                     result.loc[current_timestamp, "verification"] = True
@@ -159,7 +196,7 @@ def TrimRespondLogic(
                     result.loc[current_timestamp, "verification"] = False
 
                 # calculate setpoint by T&R logic
-                new_setpoint = prev_row_result["setpoint"] + SPtrim
+                new_setpoint = prev_row_result["setpoint"] - SPtrim
                 result.loc[current_timestamp, "setpoint"] = (
                     SPmin if new_setpoint < SPmin else new_setpoint
                 )
@@ -167,7 +204,7 @@ def TrimRespondLogic(
             elif controller_type == "reverse_acting":
                 # determine T&R logic was implemented correctly (verification)
                 if (
-                    row["setpoint"] <= prev_row_df["setpoint"] - SPtrim - tol
+                    row["setpoint"] <= prev_row_df["setpoint"] + SPtrim - tol
                     and row["setpoint"] <= SPmax
                 ):
                     result.loc[current_timestamp, "verification"] = True
@@ -175,7 +212,7 @@ def TrimRespondLogic(
                     result.loc[current_timestamp, "verification"] = False
 
                 # calculate setpoint by T&R logic
-                new_setpoint = prev_row_result["setpoint"] - SPtrim
+                new_setpoint = prev_row_result["setpoint"] + SPtrim
                 result.loc[current_timestamp, "setpoint"] = (
                     SPmax if new_setpoint >= SPmax else new_setpoint
                 )
