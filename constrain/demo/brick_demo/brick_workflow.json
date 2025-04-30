@@ -1,0 +1,124 @@
+{
+    "workflow_name": "Brick workflow",
+    "meta": {
+        "author": "Constrain Team",
+        "date": "08/21/2023",
+        "version": "1.0",
+        "description": "Demo workflow to showcase core brick API functionalities"
+    },
+    "imports": ["numpy as np", "pandas as pd", "datetime", "glob"],
+    "states": {
+        "instantiate BrickCompliance object": {
+            "Type": "MethodCall",
+            "MethodCall": "BrickCompliance",
+            "Parameters": {
+                "brick_schema_path": "./resources/brick/Brick.ttl",
+                "brick_instance_path": "./resources/brick/brick_instance.ttl"
+            },
+            "Payloads": {"BrickCompliance_obj": "$"},
+            "Start": "True",
+            "Next": "query datapoints"
+        },
+        "query datapoints": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['BrickCompliance_obj'].query_verification_case_datapoints",
+            "Parameters": {
+                "verification_item_lib_name": "ZoneTempControl",
+                "energyplus_naming_assembly": false,
+						    "default_verification_case_values": "{'run_simulation': False, 'simulation_IO': {'idf': 'EnergyPlus_data', 'idd': './resources/Energy+V9_0_1.idd', 'weather': './weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw', 'output': './demo/brick_demo/brick_dataset/data_file.csv', 'ep_path': 'C:\\\\\\\\EnergyPlusV9-0-1\\\\\\\\energyplus.exe'}, 'expected_result': 'pass', 'parameters': {}}"},
+            "Payloads": {"query_result": "$"},
+            "Next": "instantiate verification case"
+			  },
+        "instantiate verification case": {
+            "Type": "MethodCall",
+            "MethodCall": "VerificationCase",
+            "Parameters": {},
+            "Payloads": {"verification_case_obj": "$"},
+            "Next": "save query result"
+        },
+        "save query result": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['verification_case_obj'].save_verification_cases_to_json",
+            "Parameters": {
+                "json_path": "./demo/brick_demo/brick_dataset/query_result.json",
+                "cases": "Payloads['query_result']"
+            },
+            "Payloads": {},
+            "Next": "load verification cases"
+        },
+        "load verification cases": {
+            "Type": "MethodCall",
+            "MethodCall": "VerificationCase",
+            "Parameters": {
+                "json_case_path": "./demo/brick_demo/brick_dataset/query_result.json"
+            },
+            "Payloads": {"verification_case_obj": "$"},
+            "Next": "load timeseries data"
+        },
+        "load timeseries data": {
+            "Type": "MethodCall",
+            "MethodCall": "DataProcessing",
+            "Parameters": {
+                "data_path": "./demo/brick_demo/brick_dataset/data_file.csv",
+                "data_source": "EnergyPlus"
+            },
+            "Payloads": {"data_processing_obj": "$", "data": "$.data"},
+            "Next": "setup verification"
+        },
+        "setup verification": {
+            "Type": "MethodCall",
+            "MethodCall": "Verification",
+            "Parameters": {"verifications": "Payloads['verification_case_obj']"},
+            "Payloads": {"verification_obj": "$"},
+            "Next": "configure verification runner"
+        },
+        "configure verification runner": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['verification_obj'].configure",
+            "Parameters": {
+                "output_path": "./demo/brick_demo/brick_dataset",
+                "lib_items_path": "./schema/library.json",
+                "plot_option": "+x None",
+                "fig_size": "+x (6, 5)",
+                "num_threads": 1,
+                "preprocessed_data": "Payloads['data']"
+            },
+            "Payloads": {},
+            "Next": "run verification"
+        },
+        "run verification": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['verification_obj'].run",
+            "Parameters": {},
+            "Payloads": {"verification_return": "$"},
+            "Next": "reporting_object_instantiation"
+        },
+        "reporting_object_instantiation": {
+            "Type": "MethodCall",
+            "MethodCall": "Reporting",
+            "Parameters": {
+                "verification_json": "./demo/brick_demo/brick_dataset/*_md.json",
+                "result_md_name": "report_summary.md",
+                "report_format": "markdown"
+            },
+            "Payloads": {"reporting_obj": "$"},
+            "Next": "report cases"
+        },
+        "report cases": {
+            "Type": "MethodCall",
+            "MethodCall": "Payloads['reporting_obj'].report_multiple_cases",
+            "Parameters": {},
+            "Payloads": {},
+            "Next": "Success"
+        },
+        "Success": {
+            "Type": "MethodCall",
+            "MethodCall": "print",
+            "Parameters": [
+                "Congratulations! the demo workflow is executed with expected results and no error!"
+            ],
+            "Payloads": {},
+            "End": "True"
+        }
+    }
+}

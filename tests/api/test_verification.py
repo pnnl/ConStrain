@@ -1,9 +1,11 @@
-import unittest, sys, os
+import unittest, sys, os, pathlib
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 from api import VerificationCase
 from api import Verification
 from api import DataProcessing
+
+path = pathlib.Path(__file__).parent.resolve()
 
 
 class TestVerification(unittest.TestCase):
@@ -21,31 +23,31 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "o": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "m_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_BOTTOM VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "m_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "eco_onoff": {
+                    "status_economizer": {
                         "subject": "PACU_VAV_BOT",
                         "variable": "Air System Outdoor Air Economizer Status",
                         "frequency": "TimeStep",
                     },
                 },
                 "parameters": {
-                    "tol_o": 0.03,
-                    "tol_m_ea": 50,
-                    "tol_m_oa": 50,
+                    "tol_occupants": 0.03,
+                    "tol_v_ea": 50,
+                    "tol_v_oa": 50,
                 },
             },
             "verification_class": "AutomaticOADamperControl",
@@ -63,34 +65,121 @@ class TestVerification(unittest.TestCase):
             "expected_result": "pass",
             "datapoints_source": {
                 "idf_output_variables": {
-                    "o": {
+                    "number_occupants": {
                         "subject": "BLDG_OCC_SCH_WO_SB",
                         "variable": "Schedule Value",
                         "frequency": "TimeStep",
                     },
-                    "m_oa": {
+                    "flow_volumetric_air_outdoor": {
                         "subject": "CORE_MID VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "m_ea": {
+                    "flow_volumetric_air_exhaust": {
                         "subject": "CORE_TOP VAV BOX COMPONENT",
                         "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
                         "frequency": "TimeStep",
                     },
-                    "eco_onoff": {
+                    "status_economizer": {
                         "subject": "PACU_VAV_MID",
                         "variable": "Air System Outdoor Air Economizer Status",
                         "frequency": "TimeStep",
                     },
                 },
                 "parameters": {
-                    "tol_o": 0.03,
-                    "tol_m_ea": 50,
-                    "tol_m_oa": 50,
+                    "tol_occupants": 0.03,
+                    "tol_v_ea": 50,
+                    "tol_v_oa": 50,
                 },
             },
             "verification_class": "AutomaticOADamperControl",
+        },
+    ]
+
+    custom_cases = [
+        {
+            "no": 1,
+            "run_simulation": False,
+            "simulation_IO": {
+                "idf": "./tests/api/data/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
+                "idd": "./resources/Energy+V9_0_1.idd",
+                "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe",
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "number_occupants": {
+                        "subject": "BLDG_OCC_SCH_WO_SB",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep",
+                    },
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "CORE_BOTTOM VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep",
+                    },
+                    "flow_volumetric_air_exhaust": {
+                        "subject": "CORE_MID VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep",
+                    },
+                    "status_economizer": {
+                        "subject": "PACU_VAV_BOT",
+                        "variable": "Air System Outdoor Air Economizer Status",
+                        "frequency": "TimeStep",
+                    },
+                },
+                "parameters": {
+                    "tol_occupants": 0.03,
+                    "tol_v_ea": 50,
+                    "tol_v_oa": 50,
+                },
+            },
+            "verification_class": "UserProvidedVerificationItem1",
+        },
+        {
+            "no": 2,
+            "run_simulation": False,
+            "simulation_IO": {
+                "idf": "./tests/api/data/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
+                "idd": "./resources/Energy+V9_0_1.idd",
+                "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe",
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "number_occupants": {
+                        "subject": "BLDG_OCC_SCH_WO_SB",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep",
+                    },
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "CORE_MID VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep",
+                    },
+                    "flow_volumetric_air_exhaust": {
+                        "subject": "CORE_TOP VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep",
+                    },
+                    "status_economizer": {
+                        "subject": "PACU_VAV_MID",
+                        "variable": "Air System Outdoor Air Economizer Status",
+                        "frequency": "TimeStep",
+                    },
+                },
+                "parameters": {
+                    "tol_occupants": 0.03,
+                    "tol_v_ea": 50,
+                    "tol_v_oa": 50,
+                },
+            },
+            "verification_class": "UserProvidedVerificationItem_Beta",
         },
     ]
 
@@ -169,7 +258,7 @@ class TestVerification(unittest.TestCase):
             # Valid plot_option
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option="test",
             )
             self.assertEqual(
@@ -180,7 +269,7 @@ class TestVerification(unittest.TestCase):
             # Valid fig_size
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size=("a", 5),
             )
@@ -190,7 +279,7 @@ class TestVerification(unittest.TestCase):
             )
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size="test",
             )
@@ -202,7 +291,7 @@ class TestVerification(unittest.TestCase):
             # Valid num_threads
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size=(6, 5),
                 num_threads=0,
@@ -216,7 +305,7 @@ class TestVerification(unittest.TestCase):
             df = {}
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size=(6, 5),
                 num_threads=1,
@@ -232,11 +321,12 @@ class TestVerification(unittest.TestCase):
             df = DataProcessing(data_path=filep, data_source="EnergyPlus")
             v_obj.configure(
                 output_path="./",
-                lib_items_path="./schema/library.json",
+                lib_items_path="./constrain/schema/library.json",
                 plot_option=None,
                 fig_size=(6, 5),
                 num_threads=1,
                 preprocessed_data=df.data,
+                path_to_custom_tolerance_file="./constrain/tolerances.json",
             )
             assert len(logobs.output) == 11
 
@@ -246,7 +336,7 @@ class TestVerification(unittest.TestCase):
         v_obj = Verification(verifications=vc)
         v_obj.configure(
             output_path="./tests/api",
-            lib_items_path="./schema/library.json",
+            lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=1,
@@ -268,7 +358,7 @@ class TestVerification(unittest.TestCase):
 
         v_obj.configure(
             output_path="./tests/api",
-            lib_items_path="./schema/library.json",
+            lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=1,
@@ -283,7 +373,7 @@ class TestVerification(unittest.TestCase):
         v_obj = Verification(verifications=vc)
         v_obj.configure(
             output_path="./tests/api",
-            lib_items_path="./schema/library.json",
+            lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=2,
@@ -291,6 +381,39 @@ class TestVerification(unittest.TestCase):
         v_obj.run()
         assert os.path.isfile("./tests/api/1_md.json")
         assert os.path.isfile("./tests/api/2_md.json")
+        os.remove("./tests/api/1_md.json")
+        os.remove("./tests/api/2_md.json")
+
+    def test_user_lib(self):
+        vc = VerificationCase(cases=self.custom_cases)
+        v_obj = Verification(verifications=vc)
+        v_obj.configure(
+            output_path="./tests/api",
+            lib_items_path="./tests/api/data/custom_lib.json",
+            lib_classes_py_file="./tests/api/data/custom_lib_aio/custom_lib_all.py",
+            plot_option=None,
+            fig_size=(6, 5),
+            num_threads=2,
+        )
+        v_obj.run()
+        assert os.path.isfile("./tests/api/1_md.json")
+        assert os.path.isfile("./tests/api/2_md.json")
+        os.remove("./tests/api/1_md.json")
+        os.remove("./tests/api/2_md.json")
+
+    def test_data_export(self):
+        vc = VerificationCase(cases=self.cases)
+        v_obj = Verification(verifications=vc)
+        v_obj.configure(
+            output_path="./tests/api",
+            time_series_csv_export_name="test_df_dump.csv",
+            lib_items_path="./constrain/schema/library.json",
+            plot_option=None,
+            fig_size=(6, 5),
+            num_threads=2,
+        )
+        v_obj.run()
+        assert os.path.isfile("./tests/api/test_df_dump.csv")
 
 
 if __name__ == "__main__":

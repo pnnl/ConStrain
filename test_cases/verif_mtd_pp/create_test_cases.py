@@ -1,17 +1,14 @@
 # Import auxiliary packages
 import matplotlib.pyplot as plt
-import json, six, glob, os, sys
+import json, glob
 
-sys.path.insert(0, "../../src")
-
-# Import ANIMATE
-from workflowsteps import *
-from library import *
-from libcases import *
-from datetimeep import DateTimeEP
+# Import ConStrain
+import constrain
+from constrain.workflowsteps import *
+from constrain.library import *
+from constrain.libcases import *
 from eppy.modeleditor import IDF
 
-# IDF.setiddname("C:/EnergyPlusV9-0-1/Energy+.idd")
 IDF.setiddname("../../resources/Energy+V9_0_1.idd")
 
 
@@ -65,20 +62,20 @@ def chwreset(idf, idf_f, id, cases):
                     "variable": "Site Outdoor Air Drybulb Temperature",
                     "frequency": "Detailed",
                 },
-                "T_chw": {
+                "temperature_water_chilled": {
                     "subject": f"{chw_node}",
                     "variable": "System Node Setpoint Temperature",
                     "frequency": "Detailed",
                 },
-                "m_chw": {
+                "flow_mass_water_chilled": {
                     "subject": f"{chiller_name}",
                     "variable": "Chiller Evaporator Mass Flow Rate",
                     "frequency": "Detailed",
                 },
             },
             "parameters": {
-                "T_oa_max": t_oa_max,
-                "T_oa_min": t_oa_min,
+                "temperature_air_outdoor_max": t_oa_max,
+                "temperature_air_outdoor_min": t_oa_min,
                 "T_chw_max_st": t_chw_max_st,
                 "T_chw_min_st": t_chw_min_st,
             },
@@ -131,20 +128,20 @@ def hwreset(idf, idf_f, id, cases):
                     "variable": "Site Outdoor Air Drybulb Temperature",
                     "frequency": "Detailed",
                 },
-                "T_hw": {
+                "temperature_water_hot": {
                     "subject": f"{hw_node}",
                     "variable": "System Node Setpoint Temperature",
                     "frequency": "Detailed",
                 },
-                "m_hw": {
+                "flow_mass_water_hot": {
                     "subject": f"{boiler_name}",
                     "variable": "Boiler Mass Flow Rate",
                     "frequency": "Detailed",
                 },
             },
             "parameters": {
-                "T_oa_max": t_oa_max,
-                "T_oa_min": t_oa_min,
+                "temperature_air_outdoor_max": t_oa_max,
+                "temperature_air_outdoor_min": t_oa_min,
                 "T_hw_max_st": t_hw_max_st,
                 "T_hw_min_st": t_hw_min_st,
             },
@@ -220,7 +217,7 @@ def sat_reset(idf, idf_f, id, cases):
             sat_case["verification_class"] = "SupplyAirTempReset"
             sat_case["datapoints_source"] = {
                 "idf_output_variables": {
-                    "T_sa_set": {
+                    "temperature_air_supply": {
                         "subject": f"{sat_node}",
                         "variable": "System Node Setpoint Temperature",
                         "frequency": "detailed",
@@ -296,7 +293,7 @@ def zone_temp_ctrl_depth_htg(idf, idf_f, id, cases):
         zone_temp_ctrl_depth_htg["verification_class"] = "ZoneHeatingResetDepth"
         zone_temp_ctrl_depth_htg["datapoints_source"] = {
             "idf_output_variables": {
-                "T_heat_set": {
+                "temperature_air_zone_heat_setpoint": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Heating Setpoint Temperature",
                     "frequency": "detailed",
@@ -331,7 +328,7 @@ def zone_temp_ctrl_depth_clg(idf, idf_f, id, cases):
         zone_temp_ctrl_depth_clg["verification_class"] = "ZoneCoolingResetDepth"
         zone_temp_ctrl_depth_clg["datapoints_source"] = {
             "idf_output_variables": {
-                "T_cool_set": {
+                "temperature_air_zone_cool_setpoint": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Cooling Setpoint Temperature",
                     "frequency": "detailed",
@@ -366,7 +363,7 @@ def zone_temp_ctrl_min(idf, idf_f, id, cases):
         zone_temp_ctrl_min["verification_class"] = "ZoneHeatSetpointMinimum"
         zone_temp_ctrl_min["datapoints_source"] = {
             "idf_output_variables": {
-                "T_heat_set": {
+                "temperature_air_zone_heat_setpoint": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Heating Setpoint Temperature",
                     "frequency": "detailed",
@@ -401,7 +398,7 @@ def zone_temp_ctrl_max(idf, idf_f, id, cases):
         zone_temp_ctrl_max["verification_class"] = "ZoneCoolingSetpointMaximum"
         zone_temp_ctrl_max["datapoints_source"] = {
             "idf_output_variables": {
-                "T_cool_set": {
+                "temperature_air_zone_cool_setpoint": {
                     "subject": f"{zone.Name}",
                     "variable": "Zone Thermostat Cooling Setpoint Temperature",
                     "frequency": "detailed",
@@ -524,9 +521,9 @@ def integrated_econ(idf, idf_f, id, cases):
                                         "ep_path": "C:\EnergyPlusV9-0-1\energyplus.exe",
                                     }
                                     integrated_econ["expected_result"] = "fail"
-                                    integrated_econ[
-                                        "verification_class"
-                                    ] = "IntegratedEconomizerControl"
+                                    integrated_econ["verification_class"] = (
+                                        "IntegratedEconomizerControl"
+                                    )
                                     integrated_econ["datapoints_source"] = {
                                         "idf_output_variables": {
                                             "oa_flow": {

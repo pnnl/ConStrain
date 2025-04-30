@@ -1,0 +1,42 @@
+{
+    "VerificationCase": [
+        "case_already_in_suite",
+        "check_file",
+        "check_json_path_type",
+        "check_type",
+        "create_verification_case_suite_from_base_case",
+        "load_verification_cases_from_json",
+        "read_case",
+        "same_case",
+        "save_case_suite_to_json",
+        "save_verification_cases_to_json",
+        "validate",
+        "validate_verification_case_structure"
+    ],
+    "DataProcessing": [
+        "add_parameter",
+        "apply_function",
+        "check",
+        "concatenate",
+        "downsample",
+        "fill_missing_values",
+        "plot",
+        "slice",
+        "summary"
+    ],
+    "Reporting": [
+        "report_multiple_cases"
+    ],
+    "VerificationLibrary": [
+        "get_applicable_library_items_by_datapoints",
+        "get_library_item",
+        "get_library_items",
+        "get_required_datapoints_by_library_items",
+        "validate_library"
+    ],
+    "Verification": [
+        "configure",
+        "run",
+        "run_single_verification"
+    ]
+}

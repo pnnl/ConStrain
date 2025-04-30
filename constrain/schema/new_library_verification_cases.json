@@ -1,0 +1,865 @@
+{
+    "cases": [
+        {
+            "no": 1,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case1.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_supply_setpoint": {
+                        "subject": "VAV_1 Supply Equipment Outlet Node",
+                        "variable": "System Node Setpoint Temperature",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "temperature_air_zone_design_cool_setpoint": 24.0
+                }
+            },
+            "verification_class": "SupplyAirTempReset"
+        },
+        {
+            "no": 2,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case2.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "fail",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_supply_setpoint": {
+                        "subject": "VAV_1 Supply Equipment Outlet Node",
+                        "variable": "System Node Setpoint Temperature",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "temperature_air_zone_design_cool_setpoint": 24.0
+                }
+            },
+            "verification_class": "SupplyAirTempReset"
+        },
+        {
+            "no": 3,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case3.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_supply_setpoint": {
+                        "subject": "VAV_2 Supply Equipment Outlet Node",
+                        "variable": "System Node Setpoint Temperature",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "temperature_air_zone_design_cool_setpoint": 24.0
+                }
+            },
+            "verification_class": "SupplyAirTempReset"
+        },
+        {
+            "no": 4,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case4.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "fail",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_supply_setpoint": {
+                        "subject": "VAV_2 Supply Equipment Outlet Node",
+                        "variable": "System Node Setpoint Temperature",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "temperature_air_zone_design_cool_setpoint": 24.0
+                }
+            },
+            "verification_class": "SupplyAirTempReset"
+        },
+        {
+            "no": 5,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case5.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "VAV_1_OAInlet Node",
+                        "variable": "System Node Standard Density Volume Flow Rate",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_air_outdoor": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Drybulb Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "enthalpy_air_return": {
+                        "subject": "VAV_1 Supply Equipment Inlet Node",
+                        "variable": "System Node Enthalpy",
+                        "frequency": "TimeStep"
+                    },
+                    "enthalpy_air_outdoor": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Enthalpy",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "EconomizerHighLimitD"
+        },
+        {
+            "no": 6,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case6.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "fail",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "VAV_1_OAInlet Node",
+                        "variable": "System Node Standard Density Volume Flow Rate",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_air_outdoor": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Drybulb Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "enthalpy_air_return": {
+                        "subject": "VAV_1 Supply Equipment Inlet Node",
+                        "variable": "System Node Enthalpy",
+                        "frequency": "TimeStep"
+                    },
+                    "enthalpy_air_outdoor": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Enthalpy",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "EconomizerHighLimitD"
+        },
+        {
+            "no": 7,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_RetailStandalone_STD2004_Seattle_Case7.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "PSZ-AC:1_OAInlet Node",
+                        "variable": "System Node Standard Density Volume Flow Rate",
+                        "frequency": "detailed"
+                    },
+                    "output_coil_cooling": {
+                        "subject": "PSZ-AC:1",
+                        "variable": "Air System Cooling Coil Total Cooling Energy",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "flow_volumetric_air_outdoor_setpoint_min": 0.28946
+                }
+            },
+            "verification_class": "IntegratedEconomizerControl"
+        },
+        {
+            "no": 8,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_RetailStandalone_STD2004_Buffalo_Case8.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_NY_Buffalo.Niagara.Intl.AP.725280_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "fail",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "PSZ-AC:2_OAInlet Node",
+                        "variable": "System Node Standard Density Volume Flow Rate",
+                        "frequency": "detailed"
+                    },
+                    "output_coil_cooling": {
+                        "subject": "PSZ-AC:2",
+                        "variable": "Air System Cooling Coil Total Cooling Energy",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "flow_volumetric_air_outdoor_setpoint_min": 2.439
+                }
+            },
+            "verification_class": "IntegratedEconomizerControl"
+        },
+        {
+            "no": 9,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case9.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_outdoor": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Drybulb Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_water_hot": {
+                        "subject": "HeatSys1 Supply Outlet Node",
+                        "variable": "System Node Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "flow_mass_water_hot": {
+                        "subject": "HeatSys1 Supply Outlet Node",
+                        "variable": "System Node Mass Flow Rate",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {
+                    "temperature_air_outdoor_max": 10,
+                    "temperature_air_outdoor_min": -6.7,
+                    "temperature_water_hot_setpoint_max": 60.0,
+                    "temperature_water_hot_setpoint_min": 48.89
+                }
+            },
+            "verification_class": "HWReset"
+        },
+        {
+            "no": 10,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case10.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "fail",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_outdoor": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Drybulb Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_water_hot": {
+                        "subject": "HeatSys1 Supply Outlet Node",
+                        "variable": "System Node Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "flow_mass_water_hot": {
+                        "subject": "HeatSys1 Supply Outlet Node",
+                        "variable": "System Node Mass Flow Rate",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {
+                    "temperature_air_outdoor_max": 10,
+                    "temperature_air_outdoor_min": -6.7,
+                    "temperature_water_hot_setpoint_max": 60.0,
+                    "temperature_water_hot_setpoint_min": 48.89
+                }
+            },
+            "verification_class": "HWReset"
+        },
+        {
+            "no": 11,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case11.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_outdoor": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Drybulb Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_water_chilled": {
+                        "subject": "CoolSys1 Supply Outlet Node",
+                        "variable": "System Node Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "flow_mass_water_chilled": {
+                        "subject": "CoolSys1 Supply Outlet Node",
+                        "variable": "System Node Mass Flow Rate",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {
+                    "temperature_air_outdoor_max": 21.11,
+                    "temperature_air_outdoor_min": 12.78,
+                    "temperature_water_chilled_setpoint_max": 8.89,
+                    "temperature_water_chilled_setpoint_min": 6.7
+                }
+            },
+            "verification_class": "CHWReset"
+        },
+        {
+            "no": 12,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case12.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "fail",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_outdoor": {
+                        "subject": "Environment",
+                        "variable": "Site Outdoor Air Drybulb Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_water_chilled": {
+                        "subject": "CoolSys1 Supply Outlet Node",
+                        "variable": "System Node Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "flow_mass_water_chilled": {
+                        "subject": "CoolSys1 Supply Outlet Node",
+                        "variable": "System Node Mass Flow Rate",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {
+                    "temperature_air_outdoor_max": 21.11,
+                    "temperature_air_outdoor_min": 12.78,
+                    "temperature_water_chilled_setpoint_max": 8.89,
+                    "temperature_water_chilled_setpoint_min": 6.7
+                }
+            },
+            "verification_class": "CHWReset"
+        },
+        {
+            "no": 13,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2019_Seattle.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_AK_Anchorage-JB.Elmendorf-Richardson.702720_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_zone": {
+                        "subject": "PERIMETER_ZN_1",
+                        "variable": "Zone Air Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "status_hvac": {
+                        "subject": "HVACOperationSchd",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_air_zone_heat_setpoint": {
+                        "subject": "HTGSETP_SCH_NO_OPTIMUM",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_air_zone_cool_setpoint": {
+                        "subject": "CLGSETP_SCH_NO_OPTIMUM",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep"
+                    },
+                    "power_fan": {
+                        "subject": "PSZ-AC:2 FAN",
+                        "variable": "Fan Electric Power",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "NightCycleOperation"
+        },
+        {
+            "no": 14,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeMedium_STD2019_Atlanta_case14.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "number_occupants": {
+                        "subject": "BLDG_OCC_SCH_WO_SB",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep"
+                    },
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "CORE_BOTTOM VAV BOX COMPONENT",
+                        "variable": "Zone Air Terminal Outdoor Air Volume Flow Rate",
+                        "frequency": "TimeStep"
+                    },
+                    "status_economizer": {
+                        "subject": "PACU_VAV_BOT",
+                        "variable": "Air System Outdoor Air Economizer Status",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "AutomaticOADamperControl"
+        },
+        {
+            "no": 15,
+            "run_simulation": false,
+            "simulation_IO": {
+                "idf": "",
+                "idd": "",
+                "weather": "",
+                "output": "../resources/FanStaticPressureResetControl.csv",
+                "ep_path": ""
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "pressure_static_setpoint": {
+                        "subject": "sensor",
+                        "variable": "static_pressure_setpoint",
+                        "frequency": "detailed"
+                    },
+                    "d_VAV_1": {
+                        "subject": "measured_damper_position",
+                        "variable": "South",
+                        "frequency": "detailed"
+                    },
+                    "d_VAV_2": {
+                        "subject": "measured_damper_position",
+                        "variable": "East",
+                        "frequency": "detailed"
+                    },
+                    "d_VAV_3": {
+                        "subject": "measured_damper_position",
+                        "variable": "North",
+                        "frequency": "detailed"
+                    },
+                    "d_VAV_4": {
+                        "subject": "measured_damper_position",
+                        "variable": "West",
+                        "frequency": "detailed"
+                    },
+                    "d_VAV_5": {
+                        "subject": "measured_damper_position",
+                        "variable": "Core",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "FanStaticPressureResetControl"
+        },
+        {
+            "no": 16,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case16.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "number_cells_coolingtower": {
+                        "subject": "TOWERWATERSYS COOLTOWER 2",
+                        "variable": "Cooling Tower Operating Cells Count",
+                        "frequency": "detailed"
+                    },
+                    "flow_mass_coolingtower": {
+                        "subject": "TOWERWATERSYS COOLTOWER 2",
+                        "variable": "Cooling Tower Mass Flow Rate",
+                        "frequency": "detailed"
+                    },
+                    "power_fan_coolingtower": {
+                        "subject": "TOWERWATERSYS COOLTOWER 2",
+                        "variable": "Cooling Tower Fan Electric Power",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "number_cells_coolingtower_operation": 4,
+                    "flow_mass_coolingtower_design": 0.0375568,
+                    "fraction_flow_min_cell": 0.05
+                }
+            },
+            "verification_class": "HeatRejectionFanVariableFlowControlsCells"
+        },
+        {
+            "no": 17,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_SchoolSecondary_STD2016_Atlanta_case17.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_water_inlet": {
+                        "subject": "BATHROOMS_ZN_1_FLR_1 SHW_DEFAULT",
+                        "variable": "Water Use Equipment Mixed Water Temperature",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "ServiceWaterHeatingSystemControl"
+        },
+        {
+            "no": 18,
+            "run_simulation": false,
+            "simulation_IO": {
+                "idf": "",
+                "idd": "",
+                "weather": "",
+                "output": "VAVStaticPressureSensorLocation.csv",
+                "ep_path": ""
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "pressure_static_setpoint": {
+                        "subject": "sensor",
+                        "variable": "static_pressure_setpoint",
+                        "frequency": "detailed"
+                    }
+                }
+            },
+            "verification_class": "VAVStaticPressureSensorLocation"
+        },
+        {
+            "no": 19,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2019_Seattle_case19.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "number_occupants": {
+                        "subject": "Core_ZN",
+                        "variable": "People Occupant Count",
+                        "frequency": "Timestep"
+                    },
+                    "heat_sensible": {
+                        "subject": "Core_ZN",
+                        "variable": "Zone Predicted Sensible Load to Setpoint Heat Transfer Rate",
+                        "frequency": "Timestep"
+                    },
+                    "power_fan": {
+                        "subject": "PSZ-AC:1 Fan",
+                        "variable": "Fan Electric Power",
+                        "frequency": "Timestep"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "VentilationFanControl"
+        },
+        {
+            "no": 20,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_ApartmentHighRise_STD2019_Atlanta_case20.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_water_heating_max": {
+                        "subject": "CENTRAL BOILER OUTLET NODE",
+                        "variable": "System Node Temperature",
+                        "frequency": "Timestep"
+                    },
+                    "temperature_water_cooling_min": {
+                        "subject": "CENTRAL TOWER OUTLET NODE",
+                        "variable": "System Node Temperature",
+                        "frequency": "Timestep"
+                    },
+                    "flow_mass_water_pump": {
+                        "subject": "PLANT CIRC PUMP",
+                        "variable": "Pump Mass Flow Rate",
+                        "frequency": "Timestep"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "WLHPLoopHeatRejectionControl"
+        },
+        {
+            "no": 21,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2019_Seattle.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "status_hvac": {
+                        "subject": "HVACOPERATIONSCHD",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "AutomaticShutdown"
+        },
+        {
+            "no": 22,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2016_Seattle.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "load_operation": {
+                        "subject": "PSZ-AC:1 HEAT PUMP DX HEATING COIL",
+                        "variable": "Heating Coil Heating Rate",
+                        "frequency": "detailed"
+                    },
+                    "power_heating_supplemental": {
+                        "subject": "PSZ-AC:1 HEAT PUMP DX SUPP HEATING COIL",
+                        "variable": "Heating Coil Gas Rate",
+                        "frequency": "detailed"
+                    },
+                    "capacity_modifier_temperature": {
+                        "subject": "HPACHEATCAPFT",
+                        "variable": "Performance Curve Output Value",
+                        "frequency": "detailed"
+                    },
+                    "capacity_modifier_fraction_flow": {
+                        "subject": "HPACHeatCapFFF",
+                        "variable": "Performance Curve Output Value",
+                        "frequency": "detailed"
+                    },
+                    "load_defrost": {
+                        "subject": "PSZ-AC:1 HEAT PUMP DX HEATING COIL",
+                        "variable": "Heating Coil Defrost Electric Power",
+                        "frequency": "detailed"
+                    }
+                },
+                "parameters": {
+                    "capacity_full_load": 5091.29
+                }
+            },
+            "verification_class": "HeatPumpSupplementalHeatLockout"
+        },
+        {
+            "no": 23,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "power_fan_coolingtower": {
+                        "subject": "TOWERWATERSYS COOLTOWER 2",
+                        "variable": "Cooling Tower Fan Electric Power",
+                        "frequency": "Detailed"
+                    },
+                    "ratio_flow_coolingtower": {
+                        "subject": "TOWERWATERSYS COOLTOWER 2",
+                        "variable": "Cooling Tower Air Flow Rate Ratio",
+                        "frequency": "Detailed"
+                    }
+                },
+                "parameters": {
+                    "flow_volumetric_air_coolingtower_design": 36.47,
+                    "power_fan_coolingtower_design": 13359.2
+                }
+            },
+            "verification_class": "HeatRejectionFanVariableFlowControl"
+        },
+        {
+            "no": 24,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_HotelLarge_STD2016_Seattle.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "ROOM_2_FLR_3",
+                        "variable": "Zone Mechanical Ventilation Standard Density Volume Flow Rate",
+                        "frequency": "TimeStep"
+                    },
+                    "schedule_occupancy": {
+                        "subject": "BLDG_OCC_SCH_wo_SB",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {
+                    "area_zone": 39.02,
+                    "height_zone": 3.05,
+                    "flow_volumetric_air_outdoor_per_area": 0.000395372
+                }
+            },
+            "verification_class": "GuestRoomControlVent"
+        },
+        {
+            "no": 25,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_HotelLarge_STD2019_Atlanta.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "temperature_air_zone_heat_setpoint": {
+                        "subject": "ROOM_2_FLR_3",
+                        "variable": "Zone Thermostat Heating Setpoint Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "temperature_air_zone_cool_setpoint": {
+                        "subject": "ROOM_2_FLR_3",
+                        "variable": "Zone Thermostat Cooling Setpoint Temperature",
+                        "frequency": "TimeStep"
+                    },
+                    "schedule_occupancy": {
+                        "subject": "GuestRoom_Occ_Sch",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep"
+                    }
+                }
+            },
+            "verification_class": "GuestRoomControlTemp"
+        },
+        {
+            "no": 27,
+            "run_simulation": true,
+            "simulation_IO": {
+                "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeMedium_STD2019_Atlanta_ventilation_revised_dcv_no_vent_opt_no_econ_V900.idf",
+                "idd": "../resources/Energy+V9_0_1.idd",
+                "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
+                "output": "eplusout.csv",
+                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+            },
+            "expected_result": "pass",
+            "datapoints_source": {
+                "idf_output_variables": {
+                    "flow_volumetric_air_outdoor": {
+                        "subject": "PACU_VAV_bot_OAInlet Node",
+                        "variable": "System Node Standard Density Volume Flow Rate",
+                        "frequency": "TimeStep"
+                    },
+                    "status_ahu": {
+                        "subject": "HVACOperationSchd",
+                        "variable": "Schedule Value",
+                        "frequency": "TimeStep"
+                    },
+                    "status_economizer": {
+                        "subject": "PACU_VAV_BOT",
+                        "variable": "Air System Outdoor Air Economizer Status",
+                        "frequency": "TimeStep"
+                    },
+                    "number_occupants": {
+                        "subject": "Perimeter_bot_ZN_4",
+                        "variable": "People Occupant Count",
+                        "frequency": "TimeStep"
+                    }
+                },
+                "parameters": {}
+            },
+            "verification_class": "DemandControlVentilation"
+        }
+    ]
+}

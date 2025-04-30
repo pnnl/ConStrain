@@ -1,8 +1,8 @@
-import unittest, sys, datetime, copy
+import unittest, sys, datetime, copy, pandas
 
 import matplotlib
 
-sys.path.append("./src")
+sys.path.append("./constrain")
 
 from api import DataProcessing
 
@@ -76,18 +76,20 @@ class TestDataProcessing(unittest.TestCase):
         t = DataProcessing(data_path=filep, data_source="EnergyPlus")
         assert len(t.data) == 2
 
-    def test_other_data_file(self):
+    def test_BMS_data_file(self):
         filep = "./tests/api/data/data_non_ep_head.csv"
         dp = DataProcessing(
-            data_path=filep, data_source="Other", timestamp_column_name="Date Time"
+            data_path=filep, data_source="BMS", timestamp_column_name="Date Time"
         )
         assert len(dp.data) == 2
+        assert len(dp.data.columns) == 106
+        assert isinstance(dp.data.index, pandas.DatetimeIndex)
 
     def test_datafile_error_parsing(self):
         with self.assertLogs() as logobs:
             filep = "./tests/api/data/data_err_parse.csv"
             dp = DataProcessing(
-                data_path=filep, data_source="Other", timestamp_column_name="Date/Time"
+                data_path=filep, data_source="BMS", timestamp_column_name="Date/Time"
             )
             self.assertEqual(
                 f"ERROR:root:The data in Date/Time could not be converted to Python datetime object. Make sure that the data is consistent defined as a set of date strings.",
@@ -97,9 +99,9 @@ class TestDataProcessing(unittest.TestCase):
     def test_datafile_missing_datetimecol(self):
         with self.assertLogs() as logobs:
             filep = "./tests/api/data/data_non_ep_head.csv"
-            dp = DataProcessing(data_path=filep, data_source="Other")
+            dp = DataProcessing(data_path=filep, data_source="BMS")
             self.assertEqual(
-                "ERROR:root:timestamp_column_name is required when data_source = 'Other'",
+                "ERROR:root:timestamp_column_name is required when data_source = 'BMS'",
                 logobs.output[0],
             )
 

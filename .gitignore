@@ -10,3 +10,14 @@ readvars.audit
 temp
 test_cases/verif_mtd_pp/idfs/
 *.sbatch
+dist/
+*.html
+*.js
+.buildinfo
+.nojekyll
+*.inv
+docs/_modules
+docs/_sources
+docs/_static
+docs/.doctrees
+**.DS_Store

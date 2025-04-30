@@ -1,20 +1,19 @@
-import unittest, sys
-
-sys.path.append("./src")
-from lib_unit_test_runner import *
-from library import *
+import unittest
 import numpy as np
 import pandas as pd
+
+from constrain.lib_unit_test_runner import *
+from constrain.library import *
 from scipy.stats import pearsonr
 
 
 class TestDemandControlVentilation(unittest.TestCase):
     def test_dcv_positive_correlation(self):
         points = [
-            "v_oa",
-            "s_ahu",
-            "s_eco",
-            "no_of_occ",
+            "flow_volumetric_air_outdoor",
+            "status_ahu",
+            "status_economizer",
+            "number_occupants",
         ]
         while True:
             data, corr, p = self.generate_correlated_data(50, 5)
@@ -22,8 +21,8 @@ class TestDemandControlVentilation(unittest.TestCase):
                 continue
             break
 
-        data["s_eco"] = 0
-        data["s_ahu"] = 1
+        data["status_economizer"] = 0
+        data["status_ahu"] = 1
 
         df = pd.DataFrame(data, columns=points)
 
@@ -36,10 +35,10 @@ class TestDemandControlVentilation(unittest.TestCase):
 
     def test_dcv_no_eco_good_time(self):
         points = [
-            "v_oa",
-            "s_ahu",
-            "s_eco",
-            "no_of_occ",
+            "flow_volumetric_air_outdoor",
+            "status_ahu",
+            "status_economizer",
+            "number_occupants",
         ]
         while True:
             data, corr, p = self.generate_correlated_data(50, 5)
@@ -47,8 +46,8 @@ class TestDemandControlVentilation(unittest.TestCase):
                 continue
             break
 
-        data["s_eco"] = 1
-        data["s_ahu"] = 1
+        data["status_economizer"] = 1
+        data["status_ahu"] = 1
 
         df = pd.DataFrame(data, columns=points)
 
@@ -56,16 +55,16 @@ class TestDemandControlVentilation(unittest.TestCase):
             "DemandControlVentilation", df
         )
         self.assertTrue(
-            verification_obj.check_bool() is np.nan,
+            verification_obj.check_bool() == "Untested",
             verification_obj.check_detail()["Message"],
         )
 
     def test_dcv_no_ahu_good_time(self):
         points = [
-            "v_oa",
-            "s_ahu",
-            "s_eco",
-            "no_of_occ",
+            "flow_volumetric_air_outdoor",
+            "status_ahu",
+            "status_economizer",
+            "number_occupants",
         ]
         while True:
             data, corr, p = self.generate_correlated_data(50, 5)
@@ -73,8 +72,8 @@ class TestDemandControlVentilation(unittest.TestCase):
                 continue
             break
 
-        data["s_eco"] = 1
-        data["s_ahu"] = 0
+        data["status_economizer"] = 1
+        data["status_ahu"] = 0
 
         df = pd.DataFrame(data, columns=points)
 
@@ -82,16 +81,16 @@ class TestDemandControlVentilation(unittest.TestCase):
             "DemandControlVentilation", df
         )
         self.assertTrue(
-            verification_obj.check_bool() is np.nan,
+            verification_obj.check_bool() == "Untested",
             verification_obj.check_detail()["Message"],
         )
 
     def test_dcv_no_good_time(self):
         points = [
-            "v_oa",
-            "s_ahu",
-            "s_eco",
-            "no_of_occ",
+            "flow_volumetric_air_outdoor",
+            "status_ahu",
+            "status_economizer",
+            "number_occupants",
         ]
         while True:
             data, corr, p = self.generate_correlated_data(50, 5)
@@ -99,8 +98,8 @@ class TestDemandControlVentilation(unittest.TestCase):
                 continue
             break
 
-        data["s_eco"] = 0
-        data["s_ahu"] = 0
+        data["status_economizer"] = 0
+        data["status_ahu"] = 0
 
         df = pd.DataFrame(data, columns=points)
 
@@ -108,16 +107,16 @@ class TestDemandControlVentilation(unittest.TestCase):
             "DemandControlVentilation", df
         )
         self.assertTrue(
-            verification_obj.check_bool() is np.nan,
+            verification_obj.check_bool() == "Untested",
             verification_obj.check_detail()["Message"],
         )
 
     def test_dcv_high_p(self):
         points = [
-            "v_oa",
-            "s_ahu",
-            "s_eco",
-            "no_of_occ",
+            "flow_volumetric_air_outdoor",
+            "status_ahu",
+            "status_economizer",
+            "number_occupants",
         ]
         while True:
             data, corr, p = self.generate_correlated_data(3, 4)
@@ -125,8 +124,8 @@ class TestDemandControlVentilation(unittest.TestCase):
                 continue
             break
 
-        data["s_eco"] = 0
-        data["s_ahu"] = 1
+        data["status_economizer"] = 0
+        data["status_ahu"] = 1
 
         df = pd.DataFrame(data, columns=points)
 
@@ -134,16 +133,16 @@ class TestDemandControlVentilation(unittest.TestCase):
             "DemandControlVentilation", df
         )
         self.assertTrue(
-            verification_obj.check_bool() is np.nan,
+            verification_obj.check_bool() == "Untested",
             verification_obj.check_detail()["Message"],
         )
 
     def test_dcv_low_corr(self):
         points = [
-            "v_oa",
-            "s_ahu",
-            "s_eco",
-            "no_of_occ",
+            "flow_volumetric_air_outdoor",
+            "status_ahu",
+            "status_economizer",
+            "number_occupants",
         ]
         while True:
             data, corr, p = self.generate_correlated_data(50, 1)
@@ -151,8 +150,8 @@ class TestDemandControlVentilation(unittest.TestCase):
                 continue
             break
 
-        data["s_eco"] = 0
-        data["s_ahu"] = 1
+        data["status_economizer"] = 0
+        data["status_ahu"] = 1
 
         df = pd.DataFrame(data, columns=points)
 
@@ -165,10 +164,10 @@ class TestDemandControlVentilation(unittest.TestCase):
 
     def test_dcv_negative_corr(self):
         points = [
-            "v_oa",
-            "s_ahu",
-            "s_eco",
-            "no_of_occ",
+            "flow_volumetric_air_outdoor",
+            "status_ahu",
+            "status_economizer",
+            "number_occupants",
         ]
         while True:
             data, corr, p = self.generate_correlated_data(50, -5)
@@ -176,8 +175,8 @@ class TestDemandControlVentilation(unittest.TestCase):
                 continue
             break
 
-        data["s_eco"] = 0
-        data["s_ahu"] = 1
+        data["status_economizer"] = 0
+        data["status_ahu"] = 1
 
         df = pd.DataFrame(data, columns=points)
 
@@ -191,8 +190,12 @@ class TestDemandControlVentilation(unittest.TestCase):
     def generate_correlated_data(self, num_sample, cov):
         cov = np.array([[6, cov], [cov, 6]])
         pts = np.random.multivariate_normal([20, 500], cov, size=num_sample)
-        df = pd.DataFrame(pts, columns=["no_of_occ", "v_oa"])
-        corr, p_value = pearsonr(df["no_of_occ"], df["v_oa"])
+        df = pd.DataFrame(
+            pts, columns=["number_occupants", "flow_volumetric_air_outdoor"]
+        )
+        corr, p_value = pearsonr(
+            df["number_occupants"], df["flow_volumetric_air_outdoor"]
+        )
         return df, corr, p_value
 
 
