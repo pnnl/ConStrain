@@ -99,6 +99,8 @@ class Verification:
                 self.time_series_csv_export_name = time_series_csv_export_name_prefix[
                     :-4
                 ]
+            else:
+                self.time_series_csv_export_name = time_series_csv_export_name_prefix
 
         # TODO: lib_items_path now only needed when user provides their own lib items, and the default lib items from
         #  ConStrain will be loaded without user inputs. This is no longer an error to be logged.
