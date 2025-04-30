@@ -430,7 +430,6 @@ class TestVerification(unittest.TestCase):
             plot_option=None,
             fig_size=(6, 5),
             num_threads=2,
-
         )
         v_obj.run()
 
