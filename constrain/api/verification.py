@@ -33,6 +33,8 @@ class Verification:
         self.plot_option = None
         self.fig_size = None
         self.num_threads = None
+        self.tolerances = None
+        self.time_series_csv_export_name = None
 
         if verifications is None:
             logging.error(
@@ -42,19 +44,19 @@ class Verification:
             if isinstance(verifications, VerificationCase):
                 if len(verifications.case_suite) == 0:
                     logging.error("The verification case suite is empty.")
-                    return None
+                    return
                 else:
                     self.cases = verifications.case_suite
             else:
                 logging.error(
                     f"A VerificationCase should be provided not a {type(verifications)}."
                 )
-                return None
+                return
 
     def configure(
         self,
         output_path: str = None,
-        time_series_csv_export_name: str = None,
+        time_series_csv_export_name_prefix: str = None,
         lib_items_path: str = None,
         lib_classes_py_file: str = None,
         plot_option: str = None,
@@ -67,7 +69,7 @@ class Verification:
 
         Args:
             output_path (str): Verification results output path.
-            time_series_csv_export_name (str, optional): CSV file name for saving a complete data csv file with verification result flags. Defaults to None, which will not save any time series data archives.
+            time_series_csv_export_name_prefix (str, optional): CSV file name prefix for saving a complete data csv file with verification result flags. Defaults to None, which will not save any time series data archives.
             lib_items_path (str, optional): User provided verification item json path (include name of the file with extension).
             lib_classes_py_file (str, optional): User provided verification item python classes file.
             plot_option (str, optional): Type of plots to include. It should either be all-compact, all-expand, day-compact, or day-expand. It can also be None, which will plot all types. Default to None.
@@ -84,17 +86,19 @@ class Verification:
             logging.error("An output_path argument should be specified.")
             return None
         elif not os.path.isdir(output_path):
-            logging.error("The specificed output directory does not exist.")
+            logging.error("The specified output directory does not exist.")
             return None
 
-        if time_series_csv_export_name is None:
-            self.time_series_csv_export_name = time_series_csv_export_name
-        else:
-            if not isinstance(time_series_csv_export_name, str):
+        if time_series_csv_export_name_prefix is not None:
+            if not isinstance(time_series_csv_export_name_prefix, str):
                 logging.error("time_series_csv_export_name should be a string.")
                 return None
-            if time_series_csv_export_name[-4:] == ".csv":
-                self.time_series_csv_export_name = time_series_csv_export_name[:-4]
+            if time_series_csv_export_name_prefix[-4:] == ".csv":
+                # the name is just a part of the csv name, so user should not add '.csv' at the end,
+                # but if they do, we ignore
+                self.time_series_csv_export_name = time_series_csv_export_name_prefix[
+                    :-4
+                ]
 
         # TODO: lib_items_path now only needed when user provides their own lib items, and the default lib items from
         #  ConStrain will be loaded without user inputs. This is no longer an error to be logged.

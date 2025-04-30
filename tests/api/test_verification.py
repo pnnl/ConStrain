@@ -406,14 +406,17 @@ class TestVerification(unittest.TestCase):
         v_obj = Verification(verifications=vc)
         v_obj.configure(
             output_path="./tests/api",
-            time_series_csv_export_name="test_df_dump.csv",
+            time_series_csv_export_name_prefix="test_df_dump",
             lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=2,
         )
         v_obj.run()
-        assert os.path.isfile("./tests/api/test_df_dump.csv")
+        assert os.path.isfile("./tests/api/test_df_dump_1.csv")
+        assert os.path.isfile("./tests/api/test_df_dump_2.csv")
+        os.remove("./tests/api/test_df_dump_1.csv")
+        os.remove("./tests/api/test_df_dump_2.csv")
 
 
 if __name__ == "__main__":

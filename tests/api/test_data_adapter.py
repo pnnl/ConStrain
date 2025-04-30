@@ -11,7 +11,7 @@ class TestDataAdapter(unittest.TestCase):
         new_df = DataAdapter.digest_long_csv(
             data_path=test_file_path,
             time_col="Timestamp",
-            point_name_assembly=["System", "Building", "Equipment", "Sensor"],
+            point_name_assembly=["System", "Building", "Equipment", "Variable"],
             value_col="Value",
         )
         new_df.to_csv("./tests/api/data/wide_sample_output.csv")
