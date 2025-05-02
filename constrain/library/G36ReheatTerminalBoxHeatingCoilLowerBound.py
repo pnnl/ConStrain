@@ -75,7 +75,9 @@ class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.heating_coil_working(
-                t["mode_operation"], t["command_coil_heat"], t["temperature_air_discharge"]
+                t["mode_operation"],
+                t["command_coil_heat"],
+                t["temperature_air_discharge"],
             ),
             axis=1,
         )
