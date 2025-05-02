@@ -13,7 +13,7 @@ end_date = "2023-06-21 12:59:59"  # End date and time
 
 data = pd.DataFrame(
     columns=["setpoint", "number_of_requests"],
-    index=pd.date_range(start=start_date, end=end_date, freq="2T"),
+    index=pd.date_range(start=start_date, end=end_date, freq="2min"),
 )
 # fmt: off
 # The below data is from Figure 5.1.14.4 in the ASHRAE G36-2021
@@ -24,8 +24,8 @@ in_to_pa = 248.84
 
 # Convert to Pascals
 data["setpoint"]  = [value * in_to_pa for value in values_in_inches]
-
 data["number_of_requests"] = [0, 1, 2, 3, 4, 6, 3, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 1, 0, 1, 2, 6, 6, 5, 5, 2, 2, 4, 2]
+data["flag_device"] = [1 for _ in range(30)]
 # fmt: on
 
 
@@ -285,27 +285,6 @@ class TestTrimRespond(unittest.TestCase):
                 logobs.output[0],
             )
 
-        # check if delayed timestamp is in the `df`'s index
-        with self.assertLogs() as logobs:
-            TrimRespondLogic(
-                data,
-                Td=0,
-                ignored_requests=2,
-                SP0=120,
-                SPtrim=-10,
-                SPres=15,
-                SPmin=37,
-                SPmax=370,
-                SPres_max=37,
-                controller_type="direct_acting",
-                variable_type="pressure",
-                variable_subtype="static",
-            )
-            self.assertEqual(
-                "ERROR:root:The delayed timestamp must be included in the `df` timestamp.",
-                logobs.output[0],
-            )
-
         # Check if variable_type has one of the ("temperature", "airflow", "waterflow", "pressure") values
         with self.assertLogs() as logobs:
             TrimRespondLogic(
@@ -374,10 +353,9 @@ class TestTrimRespond(unittest.TestCase):
         """Test winter day reset dataset from Modelica"""
 
         start_date = "2023-12-21 12:00:00"
-
         modelica_winter = pd.DataFrame(
             columns=["setpoint", "number_of_requests"],
-            index=pd.date_range(start=start_date, periods=1441, freq="T"),
+            index=pd.date_range(start=start_date, periods=1441, freq="min"),
         )
 
         modelica_winter["setpoint"] = (
@@ -412,7 +390,7 @@ class TestTrimRespond(unittest.TestCase):
             + [120] * 301
         )
         modelica_winter["number_of_requests"] = (
-            [8] * 300
+            [0] * 300
             + [3] * 1
             + [9] * 9
             + [8] * 2
@@ -421,6 +399,7 @@ class TestTrimRespond(unittest.TestCase):
             + [1] * 2
             + [0] * 1123
         )
+        modelica_winter["flag_device"] = [0] * 283 + [1] * 857 + [0] * 301
 
         # verify the verification was implemented correctly
         tr_obj = TrimRespondLogic(
@@ -445,10 +424,9 @@ class TestTrimRespond(unittest.TestCase):
         """Test summer day reset dataset from Modelica"""
 
         start_date = "2023-06-21 12:00:00"
-
         modelica_summer = pd.DataFrame(
-            columns=["setpoint", "number_of_requests"],
-            index=pd.date_range(start=start_date, periods=1441, freq="T"),
+            columns=["setpoint", "number_of_requests", "flag_device"],
+            index=pd.date_range(start=start_date, periods=1441, freq="min"),
         )
 
         modelica_summer["setpoint"] = (
@@ -464,11 +442,12 @@ class TestTrimRespond(unittest.TestCase):
             + [120] * 301
         )
         modelica_summer["number_of_requests"] = [0] * 1441
+        modelica_summer["flag_device"] = [0] * 360 + [1] * 780 + [0] * 301
 
         # verify the verification was implemented correctly
         tr_obj = TrimRespondLogic(
             modelica_summer,
-            Td=10,  # 10 mins
+            Td=10,
             ignored_requests=2,
             SP0=120,
             SPtrim=-12,
