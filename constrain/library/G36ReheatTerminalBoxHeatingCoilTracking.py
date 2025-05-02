@@ -49,7 +49,7 @@ else:
 
 ### Data requirements
 
-- mode_system: System operation mode (if mode_system is not "heating", this verification item falls into the "untested" result)
+- mode_operation: System operation mode (if mode_operation is not "heating", this verification item falls into the "untested" result)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -73,7 +73,7 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
     points = [
-        "mode_system",
+        "mode_operation",
         "command_coil_heat",
         "temperature_air_discharge",
         "temperature_air_discharge_setpoint",
@@ -94,7 +94,7 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
 
         self.result = pd.Series(index=self.df.index)
         for cur_time, cur in self.df.iterrows():
-            if cur["mode_system"].strip().lower() != "heating":
+            if cur["mode_operation"].strip().lower() != "heating":
                 result_flag = "Untested"
                 err_start_time = None
                 err_time = 0

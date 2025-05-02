@@ -12,7 +12,7 @@ import numpy as np
 
 class TestG36SupplyFanStatus(unittest.TestCase):
     def test_supply_fan_pass(self):
-        points = ["mode_system", "status_fan_supply", "flag_reheat_perimeter"]
+        points = ["mode_operation", "status_fan_supply", "flag_reheat_perimeter"]
         data = [
             ["occupied", True, True],
             ["unoccupied", False, True],
@@ -31,7 +31,7 @@ class TestG36SupplyFanStatus(unittest.TestCase):
         self.assertTrue(binary_result)
 
     def test_supply_fan_fail(self):
-        points = ["mode_system", "status_fan_supply", "flag_reheat_perimeter"]
+        points = ["mode_operation", "status_fan_supply", "flag_reheat_perimeter"]
         data = [
             ["occupied", False, False],
             ["unoccupied", True, False],
@@ -50,7 +50,7 @@ class TestG36SupplyFanStatus(unittest.TestCase):
         self.assertFalse(binary_result)
 
     def test_supply_fan_untest(self):
-        points = ["mode_system", "status_fan_supply", "flag_reheat_perimeter"]
+        points = ["mode_operation", "status_fan_supply", "flag_reheat_perimeter"]
         data = [
             ["occupied", True, False],
             ["occupied", True, False],

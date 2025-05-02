@@ -22,7 +22,7 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
 
     def test_g36_reheat_terminal_box_heating_coil_tracking0(self):
         points = [
-            "mode_system",
+            "mode_operation",
             "command_coil_heat",
             "temperature_air_discharge",
             "temperature_air_discharge_setpoint",
@@ -82,7 +82,7 @@ class TestG36ReheatTerminalBoxHeatingCoilTracking(unittest.TestCase):
 
     def test_g36_reheat_terminal_box_heating_coil_tracking1(self):
         points = [
-            "mode_system",
+            "mode_operation",
             "command_coil_heat",
             "temperature_air_discharge",
             "temperature_air_discharge_setpoint",

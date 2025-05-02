@@ -26,7 +26,7 @@ The verification checks that when the zone is in heating mode, the active airflo
 ### Verification Algorithm Pseudo Code
 
 ```
-switch mode_system
+switch mode_operation
 case 'occupied'
     heating_maximum = flow_volumetric_air_heat_max
     minimum = flow_volumetric_air_setpoint_min
@@ -46,7 +46,7 @@ end
 
 ### Data requirements
 
-- mode_system: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
+- mode_operation: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -77,7 +77,7 @@ from constrain.checklib import RuleCheckBase
 
 class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
     points = [
-        "mode_system",
+        "mode_operation",
         "state_zone",
         "flow_volumetric_air_cool_max",
         "flow_volumetric_air_heat_max",
@@ -86,11 +86,11 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
     ]
 
     def setpoint_in_range(
-        self, mode_system, state_zone, v_cool_max, v_heat_max, v_min, v_sp
+        self, mode_operation, state_zone, v_cool_max, v_heat_max, v_min, v_sp
     ):
         if state_zone.lower().strip() != "heating":
             return "Untested"
-        match mode_system.strip().lower():
+        match mode_operation.strip().lower():
             case "occupied":
                 heating_max = v_heat_max
                 heating_min = v_min
@@ -112,7 +112,7 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_in_range(
-                t["mode_system"],
+                t["mode_operation"],
                 t["state_zone"],
                 t["flow_volumetric_air_cool_max"],
                 t["flow_volumetric_air_heat_max"],

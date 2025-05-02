@@ -19,7 +19,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "position_damper_air_outdoor_min",
             "flow_volumetric_air_outdoor",
             "flow_volumetric_air_outdoor_setpoint_min",
-            "mode_system",
+            "mode_operation",
         ]
 
         data = [

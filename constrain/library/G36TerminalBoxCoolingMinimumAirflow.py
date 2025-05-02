@@ -32,7 +32,7 @@ The test is considered untested if supply air temperature is not above room temp
 if temperature_air_supply_setpoint <= temperature_air_room:
     untested
 else:
-    match mode_system:
+    match mode_operation:
         case 'occupied':
             minimum = flow_volumetric_air_setpoint_min
         case 'cooldown' | 'setup' | 'warmup' | 'setback' | 'unoccupied':
@@ -46,7 +46,7 @@ else:
 
 ### Data requirements
 
-- mode_system: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
+- mode_operation: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -77,7 +77,7 @@ from constrain.checklib import RuleCheckBase
 
 class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
     points = [
-        "mode_system",
+        "mode_operation",
         "state_zone",
         "flow_volumetric_air_setpoint_min",
         "temperature_air_supply_setpoint",
@@ -87,7 +87,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
 
     def setpoint_at_minimum_when_dat_high(
         self,
-        mode_system,
+        mode_operation,
         state_zone,
         v_min,
         t_sa_sp,
@@ -98,7 +98,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
             return "Untested"
         if t_sa_sp <= t_room + self.get_tolerance("temperature", "general"):
             return "Untested"
-        match mode_system.strip().lower():
+        match mode_operation.strip().lower():
             case "occupied":
                 airflowmin = v_min
             case "cooldown" | "setup" | "warmup" | "setback" | "unoccupied":
@@ -115,7 +115,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_at_minimum_when_dat_high(
-                t["mode_system"],
+                t["mode_operation"],
                 t["state_zone"],
                 t["flow_volumetric_air_setpoint_min"],
                 t["temperature_air_supply_setpoint"],
