@@ -22,6 +22,30 @@ VARIABLE_SUBTYPE_SET = {
 }
 
 
+def _assgin_value(
+    result_df: pd.DataFrame,
+    current_timestamp: pd.Timestamp,
+    col_value_pair: dict[str, str],
+) -> pd.DataFrame:
+    """
+    Assigns values to specified columns in a DataFrame at a given timestamp.
+
+    Args:
+        result_df (pd.DataFrame): The DataFrame where the values will be assigned.
+        current_timestamp (pd.Timestamp): The timestamp at which the values should be set.
+        col_value_pair (dict[str, str]): A dictionary where keys are column names and values are the corresponding values to be assigned.
+
+    Returns:
+        pd.DataFrame: The updated DataFrame with assigned values at the specified timestamp.
+
+    """
+
+    for col_name, value in col_value_pair.items():
+        result_df.loc[current_timestamp, col_name] = value
+
+    return result_df
+
+
 def TrimRespondLogic(
     df: pd.DataFrame,
     Td: Union[float, int],
@@ -62,25 +86,25 @@ def TrimRespondLogic(
     Return: dataframe including verification in boolean and calculated setpoint calculation results in each timestep.
     """
 
-    # check df type
+    # Check df type
     if not isinstance(df, pd.DataFrame):
         logging.error(
             f"The type of the `df` arg must be a dataframe. It cannot be {type(df)}."
         )
         return None
 
-    # check df index type
+    # Check df index type
     if not is_datetime64_any_dtype(df.index):
         logging.error(f"Index's format is not in datetime format.")
         return None
 
-    # check df columns
+    # Check df columns
     for col in ("setpoint", "number_of_requests", "flag_device"):
         if col not in df.columns:
             logging.error(f"{col} column doesn't exist in the `df`.")
             return None
 
-    # check the given arguments type
+    # Check the given arguments type
     if not isinstance(Td, (float, int)):
         logging.error(
             f"The type of the `Td` arg must be a float or int. It cannot be {type(Td)}."
@@ -129,7 +153,7 @@ def TrimRespondLogic(
         )
         return None
 
-    # check if the `controller_type` is either `direct_acting` or `reverse_acting`
+    # Check if the `controller_type` is either `direct_acting` or `reverse_acting`
     if controller_type not in ("direct_acting", "reverse_acting"):
         logging.error(
             f"The `controller_type` arg must be either `direct_acting` or `reverse_acting`. It can't be `{controller_type}`."
@@ -157,130 +181,143 @@ def TrimRespondLogic(
     # Define tolerance
     tol = tolerances[variable_type]["types"][variable_subtype]
 
-    # create "result" dataframe
+    # Create "result" dataframe
     result = pd.DataFrame(
         columns=["verification", "calculated_setpoint"],
         index=df.index,
     )
 
-    # start the T&R logic verification
+    # Start the T&R logic verification
     SPtrim = abs(SPtrim)
     loop_count = 0
+    TR_logic_start = False
     for current_timestamp, row in df.iterrows():
         if row["flag_device"] in (1, True) and loop_count != 0:
-            # when device is on
+            # When device is on
             # Check if the device is within the last Td minute(s). If so, proceed with the trim and response logic; otherwise, skip it.
             if (
                 df[
                     (df.index >= current_timestamp - pd.Timedelta(minutes=Td))
                     & (df.index <= current_timestamp)
                 ]["flag_device"]
-                .apply(lambda x: x in [1, True])
+                .apply(lambda x: x in (1, True))
                 .all()
             ):
-                prev_timestamp_no = df.index.get_loc(current_timestamp) - 1
-                prev_row_df = df.iloc[prev_timestamp_no]
-                prev_row_result = result.iloc[prev_timestamp_no]
+                if TR_logic_start:
+                    prev_timestamp_no = df.index.get_loc(current_timestamp) - 1
+                    prev_row_df = df.iloc[prev_timestamp_no]
+                    prev_row_result = result.iloc[prev_timestamp_no]
 
-                # Extracted common variables
-                num_requests = row["number_of_requests"]
-                setpoint = row["setpoint"]
-                prev_setpoint = prev_row_df["setpoint"]
-                prev_calculated_setpoint = prev_row_result["calculated_setpoint"]
+                    # Extracted common variables
+                    num_requests = row["number_of_requests"]
+                    setpoint = row["setpoint"]
+                    prev_setpoint = prev_row_df["setpoint"]
+                    prev_calculated_setpoint = prev_row_result["calculated_setpoint"]
 
-                # When the number of ignored requests is greater than or equal to the number of requests
-                if num_requests <= ignored_requests:
-                    if controller_type == "direct_acting":
+                    # When the number of ignored requests is greater than or equal to the number of requests
+                    if num_requests <= ignored_requests:
+                        if controller_type == "direct_acting":
+                            # Check if the setpoint was lowered by SPtrim
+                            result.loc[current_timestamp, "verification"] = False
+                            expected_setpoint = prev_setpoint - SPtrim + tol
+                            if expected_setpoint > SPmin:
+                                if setpoint <= expected_setpoint and setpoint >= SPmin:
+                                    result.loc[current_timestamp, "verification"] = True
+                            elif setpoint == SPmin:
+                                result.loc[current_timestamp, "verification"] = True
 
-                        # Check if the setpoint was lowered by SPtrim
-                        result.loc[current_timestamp, "verification"] = (
-                            True
-                            if (
-                                setpoint <= prev_setpoint - SPtrim + tol
-                                and setpoint >= SPmin
+                            # If new_setpoint is lower than SPmin, set SPmin
+                            new_setpoint = prev_calculated_setpoint - SPtrim
+                            result.loc[current_timestamp, "calculated_setpoint"] = (
+                                SPmin if new_setpoint < SPmin else new_setpoint
                             )
-                            else False
-                        )
 
-                        # If new_setpoint is lower than SPmin, set SPmin
-                        new_setpoint = prev_calculated_setpoint - SPtrim
-                        result.loc[current_timestamp, "calculated_setpoint"] = (
-                            SPmin if new_setpoint < SPmin else new_setpoint
-                        )
+                        elif controller_type == "reverse_acting":
+                            # Check if the setpoint was increased by SPtrim
+                            result.loc[current_timestamp, "verification"] = False
+                            expected_setpoint = prev_setpoint + SPtrim + tol
+                            if expected_setpoint > setpoint:
+                                if setpoint <= expected_setpoint and setpoint <= SPmax:
+                                    result.loc[current_timestamp, "verification"] = True
+                            else:
+                                if setpoint == SPmax:
+                                    result.loc[current_timestamp, "verification"] = True
 
-                    elif controller_type == "reverse_acting":
-
-                        # Check if the setpoint was increased by SPtrim
-                        result.loc[current_timestamp, "verification"] = (
-                            True
-                            if (
-                                setpoint <= prev_setpoint + SPtrim - tol
-                                and setpoint <= SPmax
+                            # If new_setpoint is greater than SPmax, set SPmax
+                            new_setpoint = prev_calculated_setpoint + SPtrim
+                            result.loc[current_timestamp, "calculated_setpoint"] = (
+                                SPmax if new_setpoint >= SPmax else new_setpoint
                             )
-                            else False
+
+                    else:
+                        # When requests > ignored requests
+                        trim_amount = (num_requests - ignored_requests) * SPres
+                        delta = (
+                            SPres_max
+                            if abs(trim_amount) > abs(SPres_max)
+                            else trim_amount
                         )
 
-                        # If new_setpoint is greater than SPmax, set SPmax
-                        new_setpoint = prev_calculated_setpoint + SPtrim
-                        result.loc[current_timestamp, "calculated_setpoint"] = (
-                            SPmax if new_setpoint >= SPmax else new_setpoint
-                        )
+                        if controller_type == "direct_acting":
+                            result.loc[current_timestamp, "verification"] = False
+                            expected_setpoint = prev_row_df["setpoint"] + delta - tol
+                            if expected_setpoint <= SPmax:
+                                if setpoint >= expected_setpoint and setpoint <= SPmax:
+                                    result.loc[current_timestamp, "verification"] = True
+                            else:
+                                if setpoint == SPmin:
+                                    result.loc[current_timestamp, "verification"] = True
 
+                            # Calculate setpoint
+                            new_setpoint = (
+                                prev_row_result["calculated_setpoint"] + delta
+                            )
+                            result.loc[current_timestamp, "calculated_setpoint"] = (
+                                SPmax if new_setpoint >= SPmax else new_setpoint
+                            )
+
+                        elif controller_type == "reverse_acting":
+                            # Check if setpoint was increased by correct amount
+
+                            result.loc[current_timestamp, "verification"] = False
+                            expected_setpoint = prev_setpoint - delta - tol
+                            if expected_setpoint > setpoint:
+                                if setpoint >= expected_setpoint and setpoint >= SPmin:
+                                    result.loc[current_timestamp, "verification"] = True
+                            else:
+                                if setpoint == SPmin:
+                                    result.loc[current_timestamp, "verification"] = True
+
+                            # Calculate setpoint
+                            new_setpoint = prev_calculated_setpoint - delta
+                            result.loc[current_timestamp, "calculated_setpoint"] = (
+                                SPmin if new_setpoint <= SPmin else new_setpoint
+                            )
                 else:
-                    # When requests > ignored requests
-                    trim_amount = (num_requests - ignored_requests) * SPres
-                    delta = (
-                        SPres_max if abs(trim_amount) > abs(SPres_max) else trim_amount
+                    TR_logic_start = True
+                    _assgin_value(
+                        result,
+                        current_timestamp,
+                        {"verification": "Untested", "calculated_setpoint": SP0},
                     )
-
-                    if controller_type == "direct_acting":
-                        # Check if setpoint was increased by correct amount
-                        result.loc[current_timestamp, "verification"] = (
-                            True
-                            if (
-                                setpoint >= prev_row_df["setpoint"] + delta - tol
-                                and setpoint <= SPmax
-                            )
-                            else False
-                        )
-
-                        # Calculate setpoint
-                        new_setpoint = prev_row_result["calculated_setpoint"] + delta
-                        result.loc[current_timestamp, "calculated_setpoint"] = (
-                            SPmax if new_setpoint > SPmax else new_setpoint
-                        )
-
-                    elif controller_type == "reverse_acting":
-                        # Check if setpoint was increased by correct amount
-                        result.loc[current_timestamp, "verification"] = (
-                            True
-                            if (
-                                row["setpoint"] >= prev_setpoint - delta + tol
-                                and row["setpoint"] >= SPmin
-                            )
-                            else False
-                        )
-
-                        # Calculate setpoint
-                        new_setpoint = prev_calculated_setpoint - delta
-                        result.loc[current_timestamp, "calculated_setpoint"] = (
-                            SPmin if new_setpoint <= SPmin else new_setpoint
-                        )
             else:
-                # when device is on, but it hasn't been on for the Td period
-                result.loc[
-                    current_timestamp, ["verification", "calculated_setpoint"]
-                ] = [
-                    "Untested",
-                    SP0,
-                ]
+                # When device is on, but it hasn't been on for the Td period
+                _assgin_value(
+                    result,
+                    current_timestamp,
+                    {"verification": "Untested", "calculated_setpoint": SP0},
+                )
+
+                TR_logic_start = False
+
         else:
-            # when device is off
+            # When device is off
             # When the associated device is OFF, the setpoint shall be SP0
-            result.loc[current_timestamp, ["verification", "calculated_setpoint"]] = [
-                "Untested",
-                SP0,
-            ]
+            _assgin_value(
+                result,
+                current_timestamp,
+                {"verification": "Untested", "calculated_setpoint": SP0},
+            )
 
         loop_count += 1
 
