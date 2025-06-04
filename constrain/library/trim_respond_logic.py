@@ -1,3 +1,109 @@
+"""
+### Description
+
+Trim & Respond (T&R) logic resets a setpoint for pressure, temperature, or other variables at an air handler or plant.
+It reduces the setpoint at a fixed rate until a downstream zone is no longer satisfied and generates a request.
+
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.1.14 Trim & Respond Set-Point Reset Logic
+
+### Verification Approach
+
+The verification checks that the setpoint adjustments follow the trim and respond logic rules. When the number of requests is less than or equal to the ignored requests, the setpoint should be trimmed.
+When the number of requests exceeds the ignored requests, the setpoint should be adjusted in response to the requests, with the adjustment proportional to the number of requests.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): HVAC systems with trim and respond control logic
+- Climate Zone(s): any
+- Component(s): air handling units, VAV boxes, static pressure control, supply air temperature control
+
+### Verification Algorithm Pseudo Code
+
+```
+if device_on and has_been_on_for_time_delay:
+    if number_of_requests <= ignored_requests:
+        if controller_type == "direct_acting":
+            verify setpoint <= previous_setpoint - trim_amount + tolerance
+        else:  # reverse_acting
+            verify setpoint >= previous_setpoint + trim_amount - tolerance
+    else:  # number_of_requests > ignored_requests
+        response_amount = (number_of_requests - ignored_requests) * respond_amount
+        if response_amount > max_response:
+            response_amount = max_response
+        
+        if controller_type == "direct_acting":
+            verify setpoint >= previous_setpoint + response_amount - tolerance
+        else:  # reverse_acting
+            verify setpoint <= previous_setpoint - response_amount + tolerance
+else:
+    return "Untested"
+```
+
+### Data requirements
+
+- setpoint: control setpoint
+  - Data Value Unit: varies (temperature, pressure, flow rate)
+  - Data Point Affiliation: System operation
+
+- number_of_requests: Number of requests
+  - Data Value Unit: count
+  - Data Point Affiliation: System operation
+
+- ignored_requests: Number of ignored requests
+  - Data Value Unit: count
+  - Data Point Affiliation: System operation
+
+- flag_device: Device operational status
+  - Data Value Unit: binary
+  - Data Point Affiliation: System operation
+
+- Td: Time delay in minutes
+    - Data Value Unit: minute
+    - Data Point Affiliation: System operation
+
+- SP0: Initial setpoint
+    - Data Value Unit: varies (temperature, pressure, flow rate)
+    - Data Point Affiliation: System operation
+
+- SPtrim: Trim amount
+    - Data Value Unit: varies (temperature, pressure, flow rate)
+    - Data Point Affiliation: System operation
+
+- SPres: Respond amount
+    - Data Value Unit: varies (temperature, pressure, flow rate)
+    - Data Point Affiliation: System operation
+
+- SPmin: Minimum setpoint
+    - Data Value Unit: varies (temperature, pressure, flow rate)
+    - Data Point Affiliation: System operation
+
+- SPmax: Maximum setpoint
+    - Data Value Unit: varies (temperature, pressure, flow rate)
+    - Data Point Affiliation: System operation
+
+- SPres_max: Maximum response per time interval
+    - Data Value Unit: varies (temperature, pressure, flow rate)
+    - Data Point Affiliation: System operation
+
+- controller_type: Type of controller (either `direct_acting` or `reverse_acting`)
+    - Data Value Unit: None
+    - Data Point Affiliation: System operation
+
+- variable_type: Type of variable to determine tolerance
+    - Data Value Unit: None
+    - Data Point Affiliation: System operation
+
+- variable_subtype: Variable subtype to determine tolerance
+    - Data Value Unit: None
+    - Data Point Affiliation: System operation
+"""
+
 import json
 import logging
 from pathlib import Path
