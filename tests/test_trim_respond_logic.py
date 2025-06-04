@@ -1,6 +1,7 @@
 import sys
 import unittest
 
+import numpy as np
 import pandas as pd
 
 sys.path.append("./constrain")
@@ -8,25 +9,85 @@ from lib_unit_test_runner import *
 from library import *
 
 # data preparation
-start_date = "2023-06-21 12:00:00"  # Start date and time
-end_date = "2023-06-21 12:59:59"  # End date and time
+start_date = "2023-06-21 12:00:00"
+end_date = "2023-06-21 12:59:59"
 
 data = pd.DataFrame(
     columns=["setpoint", "number_of_requests"],
     index=pd.date_range(start=start_date, end=end_date, freq="2min"),
 )
-# fmt: off
 # The below data is from Figure 5.1.14.4 in the ASHRAE G36-2021
-values_in_inches = [0.50, 0.46, 0.42, 0.48,0.60, 0.75, 0.81, 0.77, 0.73, 0.69, 0.65, 0.61, 0.57, 0.53, 0.49, 0.45, 0.41, 0.37, 0.33, 0.29, 0.25, 0.21, 0.36, 0.51, 0.66, 0.81, 0.77, 0.73, 0.85, 0.81]
+values_in_inches = [
+    0.50,
+    0.46,
+    0.42,
+    0.48,
+    0.60,
+    0.75,
+    0.81,
+    0.77,
+    0.73,
+    0.69,
+    0.65,
+    0.61,
+    0.57,
+    0.53,
+    0.49,
+    0.45,
+    0.41,
+    0.37,
+    0.33,
+    0.29,
+    0.25,
+    0.21,
+    0.36,
+    0.51,
+    0.66,
+    0.81,
+    0.77,
+    0.73,
+    0.85,
+    0.81,
+]
 
 # Define the conversion factor
 in_to_pa = 248.84
 
 # Convert to Pascals
-data["setpoint"]  = [value * in_to_pa for value in values_in_inches]
-data["number_of_requests"] = [0, 1, 2, 3, 4, 6, 3, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 1, 0, 1, 2, 6, 6, 5, 5, 2, 2, 4, 2]
+data["setpoint"] = [value * in_to_pa for value in values_in_inches]
+data["number_of_requests"] = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    3,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    0,
+    1,
+    2,
+    6,
+    6,
+    5,
+    5,
+    2,
+    2,
+    4,
+    2,
+]
 data["flag_device"] = [1 for _ in range(30)]
-# fmt: on
 
 
 class TestTrimRespond(unittest.TestCase):
@@ -352,29 +413,83 @@ class TestTrimRespond(unittest.TestCase):
     def test_TR_winter_day_reset_singlesample(self):
         """Test the winter day reset dataset from Modelica"""
 
-        start_date = "2023-12-21 12:00:00"
         modelica_winter = pd.DataFrame(
             columns=["setpoint", "number_of_requests", "flag_device"],
-            index=pd.date_range(start=start_date, periods=1441, freq="min"),
+            index=pd.date_range(start="2023-12-21 12:00:00", periods=1441, freq="min"),
         )
-        # fmt: off
+
         modelica_winter["setpoint"] = (
             [120] * 294
             + [
-                108, 96, 84, 72, 60, 48, 51, 71, 91, 111, 131, 151, 171, 191, 211, 231,
-                251, 271, 291, 311,  314, 317, 305, 293, 281, 269, 257, 245, 233, 221,
-                209, 197, 185, 173, 161, 149, 137, 125, 113, 101, 89, 29, 77, 65, 53, 41,
+                108,
+                96,
+                84,
+                72,
+                60,
+                48,
+                63,
+                95,
+                127,
+                159,
+                191,
+                223,
+                255,
+                287,
+                319,
+                351,
+                383,
+                415,
+                430,
+                445,
+                433,
+                421,
+                409,
+                397,
+                385,
+                373,
+                361,
+                349,
+                337,
+                325,
+                313,
+                301,
+                289,
+                277,
+                265,
+                253,
+                241,
+                229,
+                217,
+                205,
+                193,
+                181,
+                169,
+                157,
+                145,
+                133,
+                121,
+                109,
+                97,
+                85,
+                73,
+                61,
+                49,
+                37,
             ]
-            + [25] * 800
+            + [25] * 792
             + [120] * 301
         )
-        # fmt: on
+
         modelica_winter["number_of_requests"] = (
             [0] * 300
             + [3] * 1
             + [9] * 3
-            + [10, 12, 11, 11, 11, 11, 10, 10, 7, 7, 3, 3, 2, 2]
-            + [0] * 1123
+            + [10, 12]
+            + [11] * 2
+            + [9] * 2
+            + [6] * 2
+            + [3] * 2
+            + [0] * 1127
         )
         modelica_winter["flag_device"] = [0] * 283 + [1] * 857 + [0] * 301
 
@@ -394,8 +509,116 @@ class TestTrimRespond(unittest.TestCase):
             variable_subtype="static",
         )
 
-        # check if all verification result
-        # self.assertTrue(all(tr_obj["verification"]))
+        # check if there are only "Untested" or True in the `verification` column
+        self.assertTrue(
+            set(tr_obj["verification"].unique()).issubset({"Untested", True})
+        )
+
+        # check if the given and calculated setpoints are within 1% diff
+        percent_diff = (
+            np.abs(modelica_winter["setpoint"] - tr_obj["calculated_setpoint"])
+            <= 0.01 * modelica_winter["setpoint"]
+        ).all()
+        self.assertTrue(percent_diff)
+
+    def test_TR_summer_day_reset_singlesample(self):
+        """Test the summer day reset dataset from Modelica"""
+
+        modelica_summer = pd.DataFrame(
+            columns=["setpoint", "number_of_requests", "flag_device"],
+            index=pd.date_range(start="2023-06-21 12:00:00", periods=2161, freq="min"),
+        )
+        modelica_summer["setpoint"] = (
+            [291.15] * 1845
+            + [
+                290.95,
+                290.75,
+                290.55,
+                290.35,
+                290.15,
+                289.95,
+                289.75,
+                289.55,
+                289.35,
+                289.15,
+                288.95,
+                288.55,
+                288.15,
+                287.75,
+                287.35,
+                286.95,
+                286.55,
+                286.15,
+                285.75,
+                285.35,
+            ]
+            + [285.15] * 132
+            + [
+                285.25,
+                285.35,
+                285.45,
+                285.55,
+                285.65,
+                285.75,
+                285.85,
+                285.95,
+                286.05,
+                286.15,
+                286.25,
+                286.35,
+                286.45,
+            ]
+            + [291.15] * 151
+        )
+        modelica_summer["number_of_requests"] = (
+            [0] * 1177
+            + [1] * 3
+            + [0] * 35
+            + [1] * 72
+            + [0] * 422
+            + [1] * 91
+            + [2] * 45
+            + [3] * 11
+            + [4] * 36
+            + [5] * 79
+            + [4] * 26
+            + [2] * 3
+            + [1] * 7
+            + [0] * 154
+        )
+        modelica_summer["flag_device"] = (
+            [0] * 172
+            + [1] * 398
+            + [0] * 330
+            + [1] * 390
+            + [0] * 304
+            + [1] * 416
+            + [0] * 151
+        )
+        tr_obj = TrimRespondLogic(
+            modelica_summer,
+            Td=10,  # 10 mins
+            ignored_requests=2,
+            SP0=291.15,
+            SPtrim=0.1,
+            SPres=-0.2,
+            SPmin=285.15,
+            SPmax=291.15,
+            SPres_max=-0.6,
+            controller_type="reverse_acting",
+            variable_type="temperature",
+            variable_subtype="general",
+        )
+
+        # check if there are only "Untested" or True in the `verification` column
+        self.assertTrue(set(tr_obj["verification"]).issubset({"Untested", True}))
+
+        # check if the given and calculated setpoints are within 1% diff
+        percent_diff = (
+            np.abs(modelica_summer["setpoint"] - tr_obj["calculated_setpoint"])
+            <= 0.01 * modelica_summer["setpoint"]
+        ).all()
+        self.assertTrue(percent_diff)
 
 
 if __name__ == "__main__":

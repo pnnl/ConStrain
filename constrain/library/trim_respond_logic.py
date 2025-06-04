@@ -187,8 +187,12 @@ def TrimRespondLogic(
         index=df.index,
     )
 
-    # Start the T&R logic verification
+    # make sure the sign is consistent
     SPtrim = abs(SPtrim)
+    SPres = abs(SPres)
+    SPres_max = abs(SPres_max)
+
+    # Start the T&R logic verification
     loop_count = 0
     TR_logic_start = False
     for current_timestamp, row in df.iterrows():
@@ -217,6 +221,7 @@ def TrimRespondLogic(
                     # When the number of ignored requests is greater than or equal to the number of requests
                     if num_requests <= ignored_requests:
                         if controller_type == "direct_acting":
+
                             # Check if the setpoint was lowered by SPtrim
                             result.loc[current_timestamp, "verification"] = False
                             expected_setpoint = prev_setpoint - SPtrim + tol
@@ -233,29 +238,27 @@ def TrimRespondLogic(
                             )
 
                         elif controller_type == "reverse_acting":
-                            # Check if the setpoint was increased by SPtrim
+
+                            # Check if the setpoint increased by SPtrim
                             result.loc[current_timestamp, "verification"] = False
-                            expected_setpoint = prev_setpoint + SPtrim + tol
-                            if expected_setpoint > setpoint:
-                                if setpoint <= expected_setpoint and setpoint <= SPmax:
+                            expected_setpoint = prev_setpoint + SPtrim - tol
+                            if expected_setpoint < SPmax:
+                                if setpoint > expected_setpoint and setpoint <= SPmax:
                                     result.loc[current_timestamp, "verification"] = True
-                            else:
-                                if setpoint == SPmax:
-                                    result.loc[current_timestamp, "verification"] = True
+                            elif setpoint == SPmax:
+                                result.loc[current_timestamp, "verification"] = True
 
                             # If new_setpoint is greater than SPmax, set SPmax
                             new_setpoint = prev_calculated_setpoint + SPtrim
                             result.loc[current_timestamp, "calculated_setpoint"] = (
-                                SPmax if new_setpoint >= SPmax else new_setpoint
+                                SPmax if new_setpoint > SPmax else new_setpoint
                             )
 
                     else:
                         # When requests > ignored requests
                         trim_amount = (num_requests - ignored_requests) * SPres
                         delta = (
-                            SPres_max
-                            if abs(trim_amount) > abs(SPres_max)
-                            else trim_amount
+                            SPres_max if abs(trim_amount) > SPres_max else trim_amount
                         )
 
                         if controller_type == "direct_acting":
@@ -264,34 +267,32 @@ def TrimRespondLogic(
                             if expected_setpoint <= SPmax:
                                 if setpoint >= expected_setpoint and setpoint <= SPmax:
                                     result.loc[current_timestamp, "verification"] = True
-                            else:
-                                if setpoint == SPmin:
-                                    result.loc[current_timestamp, "verification"] = True
+                            elif setpoint == SPmin:
+                                result.loc[current_timestamp, "verification"] = True
 
                             # Calculate setpoint
                             new_setpoint = (
                                 prev_row_result["calculated_setpoint"] + delta
                             )
                             result.loc[current_timestamp, "calculated_setpoint"] = (
-                                SPmax if new_setpoint >= SPmax else new_setpoint
+                                SPmax if new_setpoint > SPmax else new_setpoint
                             )
 
                         elif controller_type == "reverse_acting":
-                            # Check if setpoint was increased by correct amount
 
+                            # Check if setpoint increased by correct amount
                             result.loc[current_timestamp, "verification"] = False
-                            expected_setpoint = prev_setpoint - delta - tol
-                            if expected_setpoint > setpoint:
-                                if setpoint >= expected_setpoint and setpoint >= SPmin:
+                            expected_setpoint = prev_setpoint - delta + tol
+                            if expected_setpoint > SPmin:
+                                if setpoint <= expected_setpoint and setpoint >= SPmin:
                                     result.loc[current_timestamp, "verification"] = True
-                            else:
-                                if setpoint == SPmin:
-                                    result.loc[current_timestamp, "verification"] = True
+                            elif setpoint == SPmin:
+                                result.loc[current_timestamp, "verification"] = True
 
                             # Calculate setpoint
                             new_setpoint = prev_calculated_setpoint - delta
                             result.loc[current_timestamp, "calculated_setpoint"] = (
-                                SPmin if new_setpoint <= SPmin else new_setpoint
+                                SPmin if new_setpoint < SPmin else new_setpoint
                             )
                 else:
                     TR_logic_start = True
