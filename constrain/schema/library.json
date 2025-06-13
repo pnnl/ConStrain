@@ -1640,7 +1640,7 @@
             "Compare the predicted peak load with the nominal plant capacity",
             "Verification passes if:",
             "  The maximum outdoor air temperature doesn't exceed the upper limit (120°F/48.89°C)",
-            "  The predicted peak load is less than or equal to 95% of the nominal plant capacity""
+            "  The predicted peak load is less than or equal to 95% of the nominal plant capacity"
         ]
     },
 	"ChilledWaterPlantSizingMultipleChillers": {
