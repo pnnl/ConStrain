@@ -1613,7 +1613,115 @@
             "    pass",
             "  else: ",
             "    fail",
+			"  end",
             "end"
+        ]
+    },
+	"ChilledWaterPlantSizingWholePlant": {
+        "library_item_id": 71,
+        "description_brief": "",
+        "description_index": [
+            "N/A"
+        ],
+        "description_datapoints": {
+            "temperature_water_supply": "Supply water temperature",
+            "temperature_water_return": "Return water temperature",
+			"flow_mass_water": "Water mass flow rate",
+            "load_plant_water_chilled": "Chilled water plant load",
+			"temperature_air_outdoor": "Outdoor air temperature",
+            "capacity_nominal_plant_water_chilled": "Chilled water plant nominal capacity"		
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "Perform linear, quadratic, and cubic regressions of plant load vs. outdoor air temperature",
+            "Select the regression model with the best fit (highest R² value)",
+            "Use the selected model to predict the peak load at the maximum outdoor air temperature",
+            "Compare the predicted peak load with the nominal plant capacity",
+            "Verification passes if:",
+            "  The maximum outdoor air temperature doesn't exceed the upper limit (120°F/48.89°C)",
+            "  The predicted peak load is less than or equal to 95% of the nominal plant capacity""
+        ]
+    },
+	"ChilledWaterPlantSizingMultipleChillers": {
+        "library_item_id": 72,
+        "description_brief": "",
+        "description_index": [
+            "N/A"
+        ],
+        "description_datapoints": {
+            "status_chiller": "Chiller Status",
+            "load_plant_water_chilled": "Chilled water plant load"		
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "For each timestep i:",
+            "  If status_chiller[i] > 0: ",
+            "    duration_chiller[i] = timestep[i] - timestep[i-1]",
+            "  else: ",
+            "    duration_chiller[i] = 0",
+            "  end",
+            "chiller_load_hours = Sum(duration_chiller)",
+            "",
+            "For each timestep i:",
+            "  If load_plant_water_chilled[i] > 0: ",
+            "    duration_plant[i] = timestep[i] - timestep[i-1] ",
+            "  else:",
+            "    duration_plant[i] = 0",
+            "  end",
+            "plant_load_hours = Sum(duration_plant)",
+            " ",
+            "operation_ratio = chiller_load_hours / plant_load_hours",
+            "If operation_ratio >= 0.8",
+            "  pass",
+            "else: ",
+            "  fail",
+            "end"
+        ]
+    },
+	"ChilledWaterPlantSizingChillerMaxLoading": {
+        "library_item_id": 73,
+        "description_brief": "",
+        "description_index": [
+            "N/A"
+        ],
+        "description_datapoints": {
+            "ratio_loading_chiller": "Chiller loading ratio",
+            "ratio_loading_chiller_max_min": "Minimum acceptable maximum loading ratio"		
+        },
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "For each timestep i:",
+            "  if ratio_loading_chiller_max > ratio_loading_chiller_max_min",
+            "    pass",
+            "  else",
+            "    fail",
+            "  end"
+        ]
+    },
+	"ChilledWaterPlantSizingChillerShortCycling": {
+        "library_item_id": 74,
+        "description_brief": "",
+        "description_index": [
+            "N/A"
+        ],
+        "description_datapoints": {
+            "status_chiller": "Chiller status",
+            "cycles_number_maximum": "Maximum allowed number of on/off cycles per hour"		
+        },
+        "description_verification_type": "rule-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "For each hour, count the number of transitions between on and off states",
+            "Compare the count with the maximum allowed cycles",
+            "For each timestep i:",
+            "  if ratio_loading_chiller_max > ratio_loading_chiller_max_min",
+            "    pass",
+            "  else",
+            "    fail",
+            "  end"
         ]
     }
 }
