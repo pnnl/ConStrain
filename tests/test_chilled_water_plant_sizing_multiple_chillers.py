@@ -30,14 +30,11 @@ class TestChilledWaterPlantSizingMultipleChillers(unittest.TestCase):
             [1, 95],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([True, True, True, True, True])
         verification_obj = run_test_verification_with_data(
             "ChilledWaterPlantSizingMultipleChillers", df
         )
 
-        results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
-        self.assertTrue(results.equals(expected_results))
         self.assertTrue(binaryflag)
 
     def test_chilled_water_plant_sizing_multiple_chiller_fail(self):
@@ -61,12 +58,9 @@ class TestChilledWaterPlantSizingMultipleChillers(unittest.TestCase):
             [1, 95],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
-        expected_results = pd.Series([False, False, False, False, False])
         verification_obj = run_test_verification_with_data(
             "ChilledWaterPlantSizingMultipleChillers", df
         )
 
-        results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
-        self.assertTrue(results.equals(expected_results))
         self.assertFalse(binaryflag)

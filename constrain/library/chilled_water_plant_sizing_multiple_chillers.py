@@ -82,42 +82,31 @@ class ChilledWaterPlantSizingMultipleChillers(RuleCheckBase):
         "load_plant_water_chilled",
     ]
 
-    def time_calculation(self, df):
-        # Initializing duration columns to zero timedelta
-        df["duration_chiller"] = timedelta(0)
-        df["duration_plant_water_chilled"] = timedelta(0)
-
-        last_operation = df.index[0]
-
-        # Utilize iterrows if operation needs DataFrame-level modification
-        for i in df.index:
-            index_diff = i - last_operation
-
-            if df.at[i, "status_chiller"] > 0.0:
-                df.at[i, "duration_chiller"] = index_diff
-
-            if df.at[i, "load_plant_water_chilled"] > 0.0:
-                df.at[i, "duration_plant_water_chilled"] = index_diff
-
-            last_operation = i
-
-        # Sum durations
-        load_hours_chiller = df["duration_chiller"].sum()
-        load_hours_plant_water_chilled = df["duration_plant_water_chilled"].sum()
-
-        return load_hours_chiller, load_hours_plant_water_chilled
+    def get_runtimes(self, point, name):
+        previous_time = 0
+        self.df[name] = 0
+        index = 0
+        for (
+            index,
+            row,
+        ) in self.df.iterrows():
+            if row[point] > 0:
+                if previous_time != 0:  # skip first record
+                    self.df.loc[index, name] = (index - previous_time).total_seconds()
+            previous_time = index
 
     def verify(self):
-
-        # Calculate total load hours
-        chiller_load_hours, plant_water_chilled_load_hours = self.time_calculation(
-            self.df
-        )
-
-        # Store the boolean result in the result column
+        self.get_runtimes("status_chiller", "chiller_runtime_seconds")
+        self.get_runtimes("load_plant_water_chilled", "plant_runtime_seconds")
         self.df["result"] = (
-            chiller_load_hours / plant_water_chilled_load_hours >= TOL_RATIO_GENERAL
+            self.df["chiller_runtime_seconds"] / self.df["plant_runtime_seconds"]
         )
-
-        # Save result in instance variable
         self.result = self.df["result"]
+
+    def check_bool(self):
+        if self.df["chiller_runtime_seconds"].sum() / self.df[
+            "plant_runtime_seconds"
+        ].sum() >= (1 - self.get_tolerance("ratio", "general")):
+            return True
+        else:
+            return False
