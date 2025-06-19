@@ -82,6 +82,7 @@ class ChilledWaterPlantSizingWholePlant(RuleCheckBase):
         "temperature_air_outdoor",
         "capacity_nominal_plant_water_chilled",
         "ratio_sizing_plant_water_chilled_acceptable",
+        "determination_of_coefficient_acceptable",
     ]
 
     def calc_temp_from_load(self, load, model):
@@ -111,14 +112,21 @@ class ChilledWaterPlantSizingWholePlant(RuleCheckBase):
             )
 
         # Perform regressions of `load_plant_water_chilled` = f(`temperature_air_outdoor`)
+        # Only use load > 0
+        df_reg = self.df.loc[self.df["load_plant_water_chilled"] > 0, :]
         feat = PolynomialFeatures(degree=2)
-        X = feat.fit_transform(self.df[["temperature_air_outdoor"]].values)
-        model = LinearRegression().fit(X, self.df["load_plant_water_chilled"])
+        X = feat.fit_transform(df_reg[["temperature_air_outdoor"]].values)
+        model = LinearRegression().fit(X, df_reg["load_plant_water_chilled"])
         y = model.predict(X)
-        coefficient_of_determination = r2_score(
-            self.df[["load_plant_water_chilled"]], y
-        )
-        acceptable_coefficient_of_determination = 0.5
+        coefficient_of_determination = r2_score(df_reg[["load_plant_water_chilled"]], y)
+
+        # Determine minimum R2 for validation of the model
+        if self.df["determination_of_coefficient_acceptable"].iloc[0] is None:
+            acceptable_coefficient_of_determination = 0.5
+        else:
+            acceptable_coefficient_of_determination = self.df[
+                "determination_of_coefficient_acceptable"
+            ].iloc[0]
         if coefficient_of_determination >= acceptable_coefficient_of_determination:
             outdoor_air_temperature_at_nominal_chilled_water_plant_capacity = (
                 self.calc_temp_from_load(

@@ -19,6 +19,7 @@ def test_chilled_water_plant_sizing_plant_pass():
     periods = 525600  # One year of minute data
     minute_index = pd.date_range(start=start_datetime, periods=periods, freq="T")
     df.index = minute_index
+    df["determination_of_coefficient_acceptable"] = 0.5
 
     # Drop the Date/Time column if it exists
     if "Date/Time" in df.columns:
@@ -45,6 +46,7 @@ def test_chilled_water_plant_sizing_plant_fail():
     periods = 525600  # One year of minute data
     minute_index = pd.date_range(start=start_datetime, periods=periods, freq="T")
     df.index = minute_index
+    df["determination_of_coefficient_acceptable"] = 0.5
 
     # Drop the Date/Time column if it exists
     if "Date/Time" in df.columns:
@@ -65,13 +67,14 @@ def test_chilled_water_plant_sizing_plant_untested():
     csv_path = f"{os.path.dirname(os.path.abspath(__file__))}/api/data/chilled_water_plant_sizing.csv"
     df = pd.read_csv(csv_path)
     df["capacity_nominal_plant_water_chilled"] = 1812231.335 * 2 / 1.15
-    df["load_plant_water_chilled"][:300000] = 0
+    df["load_plant_water_chilled"][:300000] = 150
 
     # Create datetime index
     start_datetime = "2023-10-01 00:00"
     periods = 525600  # One year of minute data
     minute_index = pd.date_range(start=start_datetime, periods=periods, freq="T")
     df.index = minute_index
+    df["determination_of_coefficient_acceptable"] = 0.5
 
     # Drop the Date/Time column if it exists
     if "Date/Time" in df.columns:
