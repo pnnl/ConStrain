@@ -49,6 +49,7 @@ end
 """
 
 from math import ceil
+import pandas as pd
 
 from constrain.checklib import RuleCheckBase
 
@@ -59,32 +60,42 @@ class ChilledWaterPlantSizingChillerShortCycling(RuleCheckBase):
         "cycles_number_maximum",
     ]
 
-    def count_transitions(self, status_chiller):
-        # Calculate the number of transitions between 1 and 0 for each hour
-
-        return status_chiller.diff().abs().sum()
-
     def verify(self):
-
-        # Normalize status_chiller to 0s and 1s if needed
-        if not self.df["status_chiller"].isin([0, 1]).all():
-            max_value = self.df["status_chiller"].max()
-            if max_value > 0:  # Avoid division by zero
-                self.df["status_chiller"] = (
-                    self.df["status_chiller"] / max_value
-                ).apply(ceil)
-
-        # Extract hour from timestamp
-        self.df["hour"] = self.df.index.hour
-
-        transitions = (
-            self.df.groupby("hour")["status_chiller"]
-            .apply(self.count_transitions)
-            .reset_index()
+        # Normalize the status of the chiller
+        self.df["status_chiller"] = self.df.apply(
+            lambda x: 1 if x["status_chiller"] > 0 else 0, axis=1
         )
-        transitions = transitions.rename(
-            columns={"status_chiller": "transitions_count"}
+
+        # Identify transitions of operation
+        transitions = self.df["status_chiller"].diff()
+
+        # Initialization
+        cycle_ends = []
+        on_time = None
+        # Iterate over the transitions to find cycles
+        for i in range(1, len(transitions)):
+            if transitions[i] == 1:  # Transition from 0 to 1 (chiller coming on)
+                on_time = self.df.index[i]
+            elif transitions[i] == -1:  # Transition from 1 to 0 (chiller coming off)
+                if on_time is not None:
+                    cycle_ends.append(self.df.index[i])
+                    on_time = None
+
+        # Create a Series for storing cycle end times
+        cycles = pd.Series(1, index=pd.Index(cycle_ends))
+
+        # Count number of cycles per rolling hour
+        rolling_hour_cycles = cycles.rolling("1h").sum().fillna(0)
+        rolling_hour_cycles = rolling_hour_cycles.to_frame(
+            name="cycles_per_rolling_hour"
         )
-        self.result = (
-            transitions["transitions_count"] <= self.df["cycles_number_maximum"][0]
-        )
+
+        if (
+            rolling_hour_cycles["cycles_per_rolling_hour"].max()
+            > self.df["cycles_number_maximum"].iloc[0]
+        ):
+            self.df["result"] = False
+        else:
+            self.df["result"] = True
+
+        self.result = self.df["result"]
