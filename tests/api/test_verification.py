@@ -1,3 +1,5 @@
+import glob
+import shutil
 import unittest, sys, os, pathlib
 
 sys.path.append("./constrain")
@@ -227,7 +229,7 @@ class TestVerification(unittest.TestCase):
             )
             v_obj.configure(output_path="./test")
             self.assertEqual(
-                "ERROR:root:The specificed output directory does not exist.",
+                "ERROR:root:The specified output directory does not exist.",
                 logobs.output[1],
             )
 
@@ -406,14 +408,35 @@ class TestVerification(unittest.TestCase):
         v_obj = Verification(verifications=vc)
         v_obj.configure(
             output_path="./tests/api",
-            time_series_csv_export_name="test_df_dump.csv",
+            time_series_csv_export_name_prefix="test_df_dump",
             lib_items_path="./constrain/schema/library.json",
             plot_option=None,
             fig_size=(6, 5),
             num_threads=2,
         )
         v_obj.run()
-        assert os.path.isfile("./tests/api/test_df_dump.csv")
+        assert os.path.isfile("./tests/api/test_df_dump_1.csv")
+        assert os.path.isfile("./tests/api/test_df_dump_2.csv")
+        os.remove("./tests/api/test_df_dump_1.csv")
+        os.remove("./tests/api/test_df_dump_2.csv")
+
+    def test_data_export_no_file(self):
+        vc = VerificationCase(cases=self.cases)
+        v_obj = Verification(verifications=vc)
+        os.mkdir("./tests/api/export_test")
+        v_obj.configure(
+            output_path="./tests/api/export_test",
+            lib_items_path="./constrain/schema/library.json",
+            plot_option=None,
+            fig_size=(6, 5),
+            num_threads=2,
+        )
+        v_obj.run()
+
+        csv_files = glob.glob("./tests/api/export_test/*.csv")
+
+        self.assertEqual(len(csv_files), 0)
+        shutil.rmtree("./tests/api/export_test")
 
 
 if __name__ == "__main__":

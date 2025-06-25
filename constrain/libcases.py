@@ -130,7 +130,7 @@ def run_libcase(
         )  # verification is executed by CheckLibBase constructor
 
     if time_series_file_name is not None:
-        csv_path = f"{output_path}/{time_series_file_name}.csv"
+        csv_path = f"{output_path}/{time_series_file_name}_{item_dict['no']}.csv"
         verification_obj.save_data(csv_path)
 
     if produce_outputs:
