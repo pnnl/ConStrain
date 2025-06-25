@@ -27,7 +27,7 @@ We aim to verify that chillers are properly sized by checking if the maximum loa
 The verification algorithm evaluates chiller sizing by analyzing the loading ratio throughout the simulation period:
 
 ```python
-# Compare against the minimum acceptable maximum loading ratio
+# Compare against the minimum acceptable maximum loading ratio (repeat for average loading ratio)
 if ratio_loading_chiller_max > ratio_loading_chiller_max_min
   # Chiller is properly sized
   return true
@@ -35,11 +35,6 @@ else
   # Chiller is potentially oversized
   return false
 end
-
-# Additional metrics that could be evaluated:
-# Average loading ratio = mean(ratio_loading_chiller(t))
-# Time at high loading = count(ratio_loading_chiller(t) > 0.9) / total_timesteps
-# Cycling frequency = count(transitions from off to on) / simulation_days
 ```
 
 ### Data requirements
@@ -51,6 +46,10 @@ end
 - ratio_loading_chiller_max_min: Minimum acceptable maximum loading ratio
   - Data Value Unit: dimensionless (0-1)
   - Data Point Affiliation: design parameter
+
+- ratio_loading_chiller_average_min: Minimum acceptable average loading ratio
+  - Data Value Unit: dimensionless (0-1)
+  - Data Point Affiliation: design parameter
 """
 
 from constrain.checklib import RuleCheckBase
@@ -60,13 +59,19 @@ class ChilledWaterPlantSizingChillerMaxLoading(RuleCheckBase):
     points = [
         "ratio_loading_chiller",
         "ratio_loading_chiller_max_min",
+        "ratio_loading_chiller_average_min",
     ]
 
     def verify(self):
-
         self.df["result"] = (
             max(self.df["ratio_loading_chiller"])
-            > self.df["ratio_loading_chiller_max_min"][0]
+            >= self.df["ratio_loading_chiller_max_min"][0]
+        ) & (
+            (
+                self.df["ratio_loading_chiller"].sum()
+                / self.df["ratio_loading_chiller"].count()
+            )
+            >= self.df["ratio_loading_chiller_average_min"]
         )
 
         self.result = self.df["result"]

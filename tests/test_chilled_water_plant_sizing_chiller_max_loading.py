@@ -13,6 +13,7 @@ class TestChilledWaterPlantSizingChillerMaxLoading(unittest.TestCase):
         points = [
             "ratio_loading_chiller",
             "ratio_loading_chiller_max_min",
+            "ratio_loading_chiller_average_min",
         ]
         timestamp = [
             datetime(2023, 8, 1, 11, 0, 0),
@@ -20,9 +21,9 @@ class TestChilledWaterPlantSizingChillerMaxLoading(unittest.TestCase):
             datetime(2023, 8, 1, 13, 0, 0),
         ]
         data = [
-            [0.8, 0.5],
-            [0.6, 0.5],
-            [0.6, 0.5],
+            [0.8, 0.5, 0.2],
+            [0.6, 0.5, 0.2],
+            [0.6, 0.5, 0.2],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series([True, True, True])
@@ -39,6 +40,7 @@ class TestChilledWaterPlantSizingChillerMaxLoading(unittest.TestCase):
         points = [
             "ratio_loading_chiller",
             "ratio_loading_chiller_max_min",
+            "ratio_loading_chiller_average_min",
         ]
         timestamp = [
             datetime(2023, 8, 1, 11, 0, 0),
@@ -46,9 +48,9 @@ class TestChilledWaterPlantSizingChillerMaxLoading(unittest.TestCase):
             datetime(2023, 8, 1, 13, 0, 0),
         ]
         data = [
-            [0.8, 0.8],
-            [0.6, 0.8],
-            [0.6, 0.8],
+            [0.8, 0.8, 0.7],
+            [0.6, 0.8, 0.7],
+            [0.6, 0.8, 0.7],
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series([False, False, False])

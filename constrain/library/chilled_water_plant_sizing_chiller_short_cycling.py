@@ -43,7 +43,7 @@ end
   - Data Value Unit: binary
   - Data Point Affiliation: Chiller operation status
 
-- cycles_number_maximum: Maximum allowed number of on/off cycles per hour
+- cycles_number_maximum: Maximum allowed number of cycles per hour
   - Data Value Unit: count
   - Data Point Affiliation: Design specification
 """
