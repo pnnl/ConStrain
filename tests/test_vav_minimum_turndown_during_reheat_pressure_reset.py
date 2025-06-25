@@ -30,7 +30,7 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "pressure_duct_setpoint",
+            "pressure_static_setpoint",
         ]
 
         timestamp = [
@@ -65,7 +65,7 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "pressure_duct_setpoint",
+            "pressure_static_setpoint",
         ]
 
         timestamp = [
@@ -100,7 +100,7 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "pressure_duct_setpoint",
+            "pressure_static_setpoint",
         ]
 
         timestamp = [
@@ -135,7 +135,7 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "pressure_duct_setpoint",
+            "pressure_static_setpoint",
         ]
 
         timestamp = [
@@ -174,7 +174,7 @@ class TestVAVTurndown(unittest.TestCase):
             "flow_volumetric_air_vav",
             "flow_volumetric_air_max",
             "ratio_turndown_min",
-            "pressure_duct_setpoint",
+            "pressure_static_setpoint",
         ]
 
         timestamp = [

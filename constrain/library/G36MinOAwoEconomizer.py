@@ -33,7 +33,7 @@ The verification checks that during occupied periods when economizer is in locko
 ### Verification Algorithm Pseudo Code
 
 ```python
-if economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_system == 'occupied':
+if economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_operation == 'occupied':
     if flow_volumetric_air_outdoor < flow_volumetric_air_outdoor_setpoint_min (continuously for 1 hour):
         if position_damper_air_outdoor == 100 and position_damper_air_return == 0:
             pass
@@ -76,7 +76,7 @@ else:
   - Data Value Unit: volumetric flow rate
   - Data Point Affiliation: Air handling unit
 
-- mode_system: System mode (If mode_system is not "occupied", this verification item results fall into ""Untested)
+- mode_operation: System operation mode (If mode_system is not "occupied", this verification item results fall into ""Untested)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -93,7 +93,7 @@ class G36MinOAwoEconomizer(RuleCheckBase):
         "position_damper_air_return",
         "flow_volumetric_air_outdoor",
         "flow_volumetric_air_outdoor_setpoint_min",
-        "mode_system",
+        "mode_operation",
     ]
 
     def economizer_lockout(
@@ -109,7 +109,7 @@ class G36MinOAwoEconomizer(RuleCheckBase):
             self.economizer_lockout(
                 t["temperature_air_outdoor"], t["temperature_air_economizer_limit"]
             )
-            and t["mode_system"].strip().lower() == "occupied"
+            and t["mode_operation"].strip().lower() == "occupied"
         ):
             if t["oaf_low_timer"] > 60:
                 if (
@@ -142,7 +142,7 @@ class G36MinOAwoEconomizer(RuleCheckBase):
                 self.economizer_lockout(
                     t["temperature_air_outdoor"], t["temperature_air_economizer_limit"]
                 )
-                and t["mode_system"].strip().lower() == "occupied"
+                and t["mode_operation"].strip().lower() == "occupied"
             ):
                 # only count the timers when it is in occupied mode with economizer lockout
                 if t["flow_volumetric_air_outdoor"] < t[

@@ -26,7 +26,7 @@ The verification checks that during occupied mode, if the discharge air temperat
 ### Verification Algorithm Pseudo Code
 
 ```python
-if mode_system != 'occupied':
+if mode_operation != 'occupied':
     untested
 else:
     if temperature_air_discharge >= 10 and command_coil_heat < 100:
@@ -37,7 +37,7 @@ else:
 
 ### Data requirements
 
-- mode_system: System operation mode (if mode_system is not "occupied", this verification item falls into the "untested" result)
+- mode_operation: System operation mode (if mode_operation is not "occupied", this verification item falls into the "untested" result)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -56,13 +56,13 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     points = [
-        "mode_system",
+        "mode_operation",
         "command_coil_heat",
         "temperature_air_discharge",
     ]
 
-    def heating_coil_working(self, mode_system, cmd_coil_heat, t_discharge):
-        if mode_system.lower().strip() != "occupied":
+    def heating_coil_working(self, mode_operation, cmd_coil_heat, t_discharge):
+        if mode_operation.lower().strip() != "occupied":
             return "Untested"
         if t_discharge >= (10 - self.get_tolerance("temperature", "discharge_air")):
             return True
@@ -75,7 +75,9 @@ class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.heating_coil_working(
-                t["mode_system"], t["command_coil_heat"], t["temperature_air_discharge"]
+                t["mode_operation"],
+                t["command_coil_heat"],
+                t["temperature_air_discharge"],
             ),
             axis=1,
         )

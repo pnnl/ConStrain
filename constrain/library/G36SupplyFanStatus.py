@@ -49,7 +49,7 @@ if not ('occupied' in mode_system and 'unoccupied' in mode_system):
 
 ### Data requirements
 
-- mode_system: System mode ("occupied", "unoccupied", "setup", "cooldown")
+- mode_operation: System operation mode ("occupied", "unoccupied", "setup", "cooldown")
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -67,18 +67,18 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36SupplyFanStatus(RuleCheckBase):
-    points = ["mode_system", "status_fan_supply", "flag_reheat_perimeter"]
+    points = ["mode_operation", "status_fan_supply", "flag_reheat_perimeter"]
 
     def ts_verify_logic(self, t):
         if bool(t["flag_reheat_perimeter"]):
-            if (t["mode_system"].strip().lower() != "unoccupied") and (
+            if (t["mode_operation"].strip().lower() != "unoccupied") and (
                 not bool(t["status_fan_supply"])
             ):
                 return False
             return True
         else:
             if (
-                t["mode_system"].strip().lower() in ["occupied", "setup", "cooldown"]
+                t["mode_operation"].strip().lower() in ["occupied", "setup", "cooldown"]
             ) and (not bool(t["status_fan_supply"])):
                 return False
             return True
@@ -91,7 +91,7 @@ class G36SupplyFanStatus(RuleCheckBase):
             return False
         else:
             obs_modes = [
-                s.lower().strip() for s in list(self.df["mode_system"].unique())
+                s.lower().strip() for s in list(self.df["mode_operation"].unique())
             ]
             if ("occupied" in obs_modes) and ("unoccupied" in obs_modes):
                 return True

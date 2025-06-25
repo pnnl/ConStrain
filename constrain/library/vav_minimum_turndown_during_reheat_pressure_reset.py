@@ -43,7 +43,7 @@ if flag_coil_reheat:
   if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:
     if p_press_duct_sp_prev is None:
         Untested
-    elif abs(pressure_duct_setpoint - p_press_duct_sp_prev) = 0:
+    elif abs(pressure_static_setpoint - p_press_duct_sp_prev) = 0:
         Untested
     else:
         fail
@@ -70,7 +70,7 @@ else:
   - Data Value Unit: fraction
   - Data Point Affiliation: Terminal unit configuration
 
-- pressure_duct_setpoint: Duct static pressure setpoint
+- pressure_static_setpoint: Duct static pressure setpoint
   - Data Value Unit: pressure
   - Data Point Affiliation: System control
 
@@ -86,7 +86,7 @@ class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
         "flow_volumetric_air_vav",
         "flow_volumetric_air_max",
         "ratio_turndown_min",
-        "pressure_duct_setpoint",
+        "pressure_static_setpoint",
     ]
 
     def vav_turndown_check(self, data):
@@ -99,7 +99,7 @@ class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
                 if data["p_press_duct_sp_prev"] is None:
                     return "Untested"
                 elif abs(
-                    data["pressure_duct_setpoint"] - data["p_press_duct_sp_prev"]
+                    data["pressure_static_setpoint"] - data["p_press_duct_sp_prev"]
                 ) > self.get_tolerance("pressure", "static"):
                     return "Untested"
                 else:
@@ -112,7 +112,7 @@ class VAVMinimumTurndownDuringReheatPressureReset(RuleCheckBase):
     def verify(self):
         # Copy the previous row's value in 'p_press_duct_sp' column to the current row
         self.df["p_press_duct_sp_prev"] = (
-            self.df["pressure_duct_setpoint"].shift(1).replace({np.nan: None})
+            self.df["pressure_static_setpoint"].shift(1).replace({np.nan: None})
         )
         if (self.df["flow_volumetric_air_max"] != 0).all():
             self.df["v_vav_ratio"] = (

@@ -15,7 +15,7 @@ class TestG36ReheatTerminalBoxDeadbandAirflowSetpoint(unittest.TestCase):
 
     def test_g36_cooling_only_terminal_box_deadband_airflow_setpoint(self):
         points = [
-            "mode_system",
+            "mode_operation",
             "state_zone",
             "flow_volumetric_air_setpoint_min",
             "flow_volumetric_air_setpoint",
