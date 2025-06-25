@@ -17,6 +17,7 @@ class TestDataAdapter(unittest.TestCase):
         new_df.to_csv("./tests/api/data/wide_sample_output.csv")
         assert len(new_df) == 7
         assert os.path.isfile("./tests/api/data/wide_sample_output.csv")
+        os.remove("./tests/api/data/wide_sample_output.csv")
 
 
 if __name__ == "__main__":
