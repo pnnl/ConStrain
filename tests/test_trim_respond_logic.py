@@ -1,0 +1,625 @@
+import sys
+import unittest
+
+import numpy as np
+import pandas as pd
+
+sys.path.append("./constrain")
+from lib_unit_test_runner import *
+from library import *
+
+# data preparation
+start_date = "2023-06-21 12:00:00"
+end_date = "2023-06-21 12:59:59"
+
+data = pd.DataFrame(
+    columns=["setpoint", "number_of_requests"],
+    index=pd.date_range(start=start_date, end=end_date, freq="2min"),
+)
+# The below data is from Figure 5.1.14.4 in the ASHRAE G36-2021
+values_in_inches = [
+    0.50,
+    0.46,
+    0.42,
+    0.48,
+    0.60,
+    0.75,
+    0.81,
+    0.77,
+    0.73,
+    0.69,
+    0.65,
+    0.61,
+    0.57,
+    0.53,
+    0.49,
+    0.45,
+    0.41,
+    0.37,
+    0.33,
+    0.29,
+    0.25,
+    0.21,
+    0.36,
+    0.51,
+    0.66,
+    0.81,
+    0.77,
+    0.73,
+    0.85,
+    0.81,
+]
+
+# Define the conversion factor
+in_to_pa = 248.84
+
+# Convert to Pascals
+data["setpoint"] = [value * in_to_pa for value in values_in_inches]
+data["number_of_requests"] = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    3,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    1,
+    0,
+    1,
+    2,
+    6,
+    6,
+    5,
+    5,
+    2,
+    2,
+    4,
+    2,
+]
+data["flag_device"] = [1 for _ in range(30)]
+
+
+class TestTrimRespond(unittest.TestCase):
+    def test_check_args_type(self):
+        """Test if argument types are correct."""
+
+        # check `data` (type)
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                dict(data),
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `df` arg must be a dataframe. It cannot be <class 'dict'>.",
+                logobs.output[0],
+            )
+
+        # check `data` index type
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data.reset_index(drop=True),
+                Td=0,
+                ignored_requests=2,
+                SP0=0.5,
+                SPtrim=-0.04,
+                SPres=0.06,
+                SPmin=0.15,
+                SPmax=1.5,
+                SPres_max=0.15,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:Index's format is not in datetime format.",
+                logobs.output[0],
+            )
+
+        # check `data` (missing column)
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data.drop("setpoint", axis=1),
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:setpoint column doesn't exist in the `df`.",
+                logobs.output[0],
+            )
+
+        # check `Td`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td="0",
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `Td` arg must be a float or int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
+        # check `I`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests="2",
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `ignored_requests` arg must be an int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
+        # check `SP0`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0="120",
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `SP0` arg must be a float or int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
+        # check `SPtrim`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim="-10",
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `SPtrim` arg must be a float or int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
+        # check `SPres`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres="15",
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `SPres` arg must be a float or int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
+        # check `SPmin`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin="37",
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `SPmin` arg must be a float or int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
+        # check `SPmax`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax="370",
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `SPmax` arg must be a float or int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
+        # check `SPres_max`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max="37",
+                controller_type="direct_acting",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The type of the `SPres_max` arg must be a float or int. It cannot be <class 'str'>.",
+                logobs.output[0],
+            )
+
+        # check `controller_type`
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="wrong_value",
+                variable_type="pressure",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The `controller_type` arg must be either `direct_acting` or `reverse_acting`. It can't be `wrong_value`.",
+                logobs.output[0],
+            )
+
+        # Check if variable_type has one of the ("temperature", "airflow", "waterflow", "pressure") values
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="wrong_var",
+                variable_subtype="static",
+            )
+            self.assertEqual(
+                "ERROR:root:The `variable_type` arg must be one of temperature, airflow, waterflow, pressure. It can't be `wrong_var`.",
+                logobs.output[0],
+            )
+
+        # Check if variable_subtype has a right subtype
+        with self.assertLogs() as logobs:
+            TrimRespondLogic(
+                data,
+                Td=0,
+                ignored_requests=2,
+                SP0=120,
+                SPtrim=-10,
+                SPres=15,
+                SPmin=37,
+                SPmax=370,
+                SPres_max=37,
+                controller_type="direct_acting",
+                variable_type="temperature",
+                variable_subtype="no_subtype",
+            )
+            self.assertEqual(
+                "ERROR:root:The `variable_subtype` arg doesn't have a right subtype. Please check the ./constrain/tolerances.json file.",
+                logobs.output[0],
+            )
+
+    def test_TR_logic_verification(self):
+        """Test if the T&R logic was implemented correctly."""
+
+        # verify the verification was implemented correctly
+        tr_obj = TrimRespondLogic(
+            data,
+            Td=0,
+            ignored_requests=2,
+            SP0=120,
+            SPtrim=-10,
+            SPres=15,
+            SPmin=37,
+            SPmax=370,
+            SPres_max=37,
+            controller_type="direct_acting",
+            variable_type="pressure",
+            variable_subtype="static",
+        )
+
+        # check if all verification passed
+        self.assertTrue(all(tr_obj["verification"]))
+
+    def test_TR_winter_day_reset_singlesample(self):
+        """Test the winter day reset dataset from Modelica"""
+
+        modelica_winter = pd.DataFrame(
+            columns=["setpoint", "number_of_requests", "flag_device"],
+            index=pd.date_range(start="2023-12-21 12:00:00", periods=1441, freq="min"),
+        )
+
+        modelica_winter["setpoint"] = (
+            [120] * 294
+            + [
+                108,
+                96,
+                84,
+                72,
+                60,
+                48,
+                63,
+                95,
+                127,
+                159,
+                191,
+                223,
+                255,
+                287,
+                319,
+                351,
+                383,
+                415,
+                430,
+                445,
+                433,
+                421,
+                409,
+                397,
+                385,
+                373,
+                361,
+                349,
+                337,
+                325,
+                313,
+                301,
+                289,
+                277,
+                265,
+                253,
+                241,
+                229,
+                217,
+                205,
+                193,
+                181,
+                169,
+                157,
+                145,
+                133,
+                121,
+                109,
+                97,
+                85,
+                73,
+                61,
+                49,
+                37,
+            ]
+            + [25] * 792
+            + [120] * 301
+        )
+
+        modelica_winter["number_of_requests"] = (
+            [0] * 300
+            + [3] * 1
+            + [9] * 3
+            + [10, 12]
+            + [11] * 2
+            + [9] * 2
+            + [6] * 2
+            + [3] * 2
+            + [0] * 1127
+        )
+        modelica_winter["flag_device"] = [0] * 283 + [1] * 857 + [0] * 301
+
+        # verify the verification was implemented correctly
+        tr_obj = TrimRespondLogic(
+            modelica_winter,
+            Td=10,  # 10 mins
+            ignored_requests=2,
+            SP0=120,
+            SPtrim=-12,
+            SPres=15,
+            SPmin=25,
+            SPmax=1000,
+            SPres_max=32,
+            controller_type="direct_acting",
+            variable_type="pressure",
+            variable_subtype="static",
+        )
+
+        # check if there are only "Untested" or True in the `verification` column
+        self.assertTrue(
+            set(tr_obj["verification"].unique()).issubset({"Untested", True})
+        )
+
+        # check if the given and calculated setpoints are within 1% diff
+        percent_diff = (
+            np.abs(modelica_winter["setpoint"] - tr_obj["calculated_setpoint"])
+            <= 0.01 * modelica_winter["setpoint"]
+        ).all()
+        self.assertTrue(percent_diff)
+
+    def test_TR_summer_day_reset_singlesample(self):
+        """Test the summer day reset dataset from Modelica"""
+
+        modelica_summer = pd.DataFrame(
+            columns=["setpoint", "number_of_requests", "flag_device"],
+            index=pd.date_range(start="2023-06-21 12:00:00", periods=2161, freq="min"),
+        )
+        modelica_summer["setpoint"] = (
+            [291.15] * 1845
+            + [
+                290.95,
+                290.75,
+                290.55,
+                290.35,
+                290.15,
+                289.95,
+                289.75,
+                289.55,
+                289.35,
+                289.15,
+                288.95,
+                288.55,
+                288.15,
+                287.75,
+                287.35,
+                286.95,
+                286.55,
+                286.15,
+                285.75,
+                285.35,
+            ]
+            + [285.15] * 132
+            + [
+                285.25,
+                285.35,
+                285.45,
+                285.55,
+                285.65,
+                285.75,
+                285.85,
+                285.95,
+                286.05,
+                286.15,
+                286.25,
+                286.35,
+                286.45,
+            ]
+            + [291.15] * 151
+        )
+        modelica_summer["number_of_requests"] = (
+            [0] * 1177
+            + [1] * 3
+            + [0] * 35
+            + [1] * 72
+            + [0] * 422
+            + [1] * 91
+            + [2] * 45
+            + [3] * 11
+            + [4] * 36
+            + [5] * 79
+            + [4] * 26
+            + [2] * 3
+            + [1] * 7
+            + [0] * 154
+        )
+        modelica_summer["flag_device"] = (
+            [0] * 172
+            + [1] * 398
+            + [0] * 330
+            + [1] * 390
+            + [0] * 304
+            + [1] * 416
+            + [0] * 151
+        )
+        tr_obj = TrimRespondLogic(
+            modelica_summer,
+            Td=10,  # 10 mins
+            ignored_requests=2,
+            SP0=291.15,
+            SPtrim=0.1,
+            SPres=-0.2,
+            SPmin=285.15,
+            SPmax=291.15,
+            SPres_max=-0.6,
+            controller_type="reverse_acting",
+            variable_type="temperature",
+            variable_subtype="general",
+        )
+
+        # check if there are only "Untested" or True in the `verification` column
+        self.assertTrue(set(tr_obj["verification"]).issubset({"Untested", True}))
+
+        # check if the given and calculated setpoints are within 1% diff
+        percent_diff = (
+            np.abs(modelica_summer["setpoint"] - tr_obj["calculated_setpoint"])
+            <= 0.01 * modelica_summer["setpoint"]
+        ).all()
+        self.assertTrue(percent_diff)
+
+
+if __name__ == "__main__":
+    unittest.main()
