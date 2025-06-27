@@ -31,7 +31,7 @@ The verification checks two conditions:
 if temperature_air_discharge > temperature_air_discharge_setpoint_min and command_coil_heat > 0:
     fail
 else:
-    switch mode_system:
+    switch mode_operation:
         case 'occupied':
             minimum = flow_volumetric_air_setpoint_min
         case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied':
@@ -45,7 +45,7 @@ else:
 
 ### Data requirements
 
-- mode_system: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
+- mode_operation: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -79,7 +79,7 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
     points = [
-        "mode_system",
+        "mode_operation",
         "state_zone",
         "flow_volumetric_air_setpoint_min",
         "flow_volumetric_air_setpoint",
@@ -123,7 +123,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_at_minimum(
-                t["mode_system"],
+                t["mode_operation"],
                 t["state_zone"],
                 t["flow_volumetric_air_setpoint_min"],
                 t["flow_volumetric_air_setpoint"],

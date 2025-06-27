@@ -25,7 +25,7 @@ class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
             },
         }
         points = [
-            "mode_system",
+            "mode_operation",
             "state_zone",
             "flow_volumetric_air_setpoint_min",
             "temperature_air_supply_setpoint",

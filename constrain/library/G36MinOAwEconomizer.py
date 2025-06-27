@@ -33,7 +33,7 @@ The verification checks that during occupied periods when economizer is not in l
 ### Verification Algorithm Pseudo Code
 
 ```python
-if not economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_system == 'occupied':
+if not economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_operation == 'occupied':
     if position_damper_air_outdoor >= position_damper_air_outdoor_min and flow_volumetric_air_outdoor >= flow_volumetric_air_outdoor_setpoint_min:
         pass
     else:
@@ -68,7 +68,7 @@ else:
   - Data Value Unit: volumetric flow rate
   - Data Point Affiliation: Air handling unit
 
-- mode_system: System mode (If mode_system is not "occupied", this verification item results fall into ""Untested)
+- mode_operation: System operation mode (If mode_system is not "occupied", this verification item results fall into "Untested")
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -85,7 +85,7 @@ class G36MinOAwEconomizer(RuleCheckBase):
         "position_damper_air_outdoor_min",
         "flow_volumetric_air_outdoor",
         "flow_volumetric_air_outdoor_setpoint_min",
-        "mode_system",
+        "mode_operation",
     ]
 
     def economizer_lockout(self, t_oa, t_economizer_limit):
@@ -99,7 +99,7 @@ class G36MinOAwEconomizer(RuleCheckBase):
             not self.economizer_lockout(
                 t["temperature_air_outdoor"], t["temperature_air_economizer_limit"]
             )
-        ) and (t["mode_system"].strip().lower() == "occupied"):
+        ) and (t["mode_operation"].strip().lower() == "occupied"):
             if (
                 t["position_damper_air_outdoor"]
                 >= t["position_damper_air_outdoor_min"]

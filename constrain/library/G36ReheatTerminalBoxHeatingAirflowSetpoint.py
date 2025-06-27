@@ -34,7 +34,7 @@ The verification checks the control sequence in two stages:
 ### Verification Algorithm Pseudo Code
 
 ```python
-switch mode_system:
+switch mode_operation:
     case 'occupied':
         heating_maximum = max(flow_volumetric_air_heat_min, flow_volumetric_air_setpoint_min)
         heating_minimum = max(flow_volumetric_air_heat_min, flow_volumetric_air_setpoint_min)
@@ -62,7 +62,7 @@ elif 50 < signal_heat <= 100:
 
 ### Data requirements
 
-- mode_system: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
+- mode_operation: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -121,7 +121,7 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
     points = [
-        "mode_system",
+        "mode_operation",
         "state_zone",
         "flow_volumetric_air_cool_max",
         "flow_volumetric_air_heat_max",
@@ -138,7 +138,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
 
     def setpoint_in_range(
         self,
-        mode_system,
+        mode_operation,
         state_zone,
         v_cool_max,
         v_heat_max,
@@ -156,7 +156,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
         if state_zone.lower().strip() != "heating":
             return "Untested"
 
-        match mode_system.strip().lower():
+        match mode_operation.strip().lower():
             case "occupied":
                 heating_max = max(v_heat_min, v_min)
                 heating_min = max(v_heat_min, v_min)
@@ -191,7 +191,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_in_range(
-                t["mode_system"],
+                t["mode_operation"],
                 t["state_zone"],
                 t["flow_volumetric_air_cool_max"],
                 t["flow_volumetric_air_heat_max"],

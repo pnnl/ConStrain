@@ -31,7 +31,7 @@ The verification checks two conditions:
 if temperature_air_discharge > temperature_air_discharge_setpoint_min and command_coil_heat > 0:
     fail
 else:
-    switch mode_system:
+    switch mode_operation:
         case 'occupied':
             cooling_maximum = flow_volumetric_air_cool_max
             minimum = flow_volumetric_air_setpoint_min
@@ -50,7 +50,7 @@ else:
 
 ### Data requirements
 
-- mode_system: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
+- mode_operation: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -89,7 +89,7 @@ from constrain.checklib import RuleCheckBase
 
 class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
     points = [
-        "mode_system",
+        "mode_operation",
         "state_zone",
         "flow_volumetric_air_cool_max",
         "flow_volumetric_air_setpoint_min",
@@ -101,7 +101,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
 
     def setpoint_in_range(
         self,
-        mode_system,
+        mode_operation,
         state_zone,
         v_cool_max,
         v_min,
@@ -115,7 +115,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
             return "Untested"
         if t_discharge > t_discharge_min_sp and cmd_coil_heat > tol_cmd_coil_heat:
             return False
-        match mode_system.strip().lower():
+        match mode_operation.strip().lower():
             case "occupied":
                 cooling_maximum = v_cool_max
                 cooling_minimum = v_min
@@ -137,7 +137,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_in_range(
-                t["mode_system"],
+                t["mode_operation"],
                 t["state_zone"],
                 t["flow_volumetric_air_cool_max"],
                 t["flow_volumetric_air_setpoint_min"],

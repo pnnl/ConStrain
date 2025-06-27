@@ -13,7 +13,7 @@ class TestG36ReheatTerminalBoxHeatingAirflowSetpoint(unittest.TestCase):
 
     def test_reheat_terminal_box_heating_airflow_setpoint(self):
         points = [
-            "mode_system",
+            "mode_operation",
             "state_zone",
             "flow_volumetric_air_cool_max",
             "flow_volumetric_air_heat_max",

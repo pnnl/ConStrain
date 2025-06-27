@@ -26,7 +26,7 @@ The verification checks that when the zone is in deadband mode, the active airfl
 ### Verification Algorithm Pseudo Code
 
 ```
-switch mode_system
+switch mode_operation
 case 'occupied'
     minimum = flow_volumetric_air_setpoint_min
 case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
@@ -41,7 +41,7 @@ end
 
 ### Data requirements
 
-- mode_system: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
+- mode_operation: System operation mode (occupied, cooldown, setup, warmup, setback, unoccupied)
   - Data Value Unit: enumeration
   - Data Point Affiliation: System control
 
@@ -64,16 +64,16 @@ from constrain.checklib import RuleCheckBase
 
 class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
     points = [
-        "mode_system",
+        "mode_operation",
         "state_zone",
         "flow_volumetric_air_setpoint_min",
         "flow_volumetric_air_setpoint",
     ]
 
-    def setpoint_at_minimum(self, mode_system, state_zone, v_min, v_sp, tol_v):
+    def setpoint_at_minimum(self, mode_operation, state_zone, v_min, v_sp, tol_v):
         if state_zone.lower().strip() != "deadband":
             return "Untested"
-        match mode_system.strip().lower():
+        match mode_operation.strip().lower():
             case "occupied":
                 dbmin = v_min
             case "cooldown" | "setup" | "warmup" | "setback" | "unoccupied":
@@ -90,7 +90,7 @@ class G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.setpoint_at_minimum(
-                t["mode_system"],
+                t["mode_operation"],
                 t["state_zone"],
                 t["flow_volumetric_air_setpoint_min"],
                 t["flow_volumetric_air_setpoint"],

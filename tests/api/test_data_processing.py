@@ -85,6 +85,18 @@ class TestDataProcessing(unittest.TestCase):
         assert len(dp.data.columns) == 106
         assert isinstance(dp.data.index, pandas.DatetimeIndex)
 
+    def test_BMS_data_file_datetime_format(self):
+        filep = "./tests/api/data/data_non_ep_head.csv"
+        dp = DataProcessing(
+            data_path=filep,
+            data_source="BMS",
+            timestamp_column_name="Date Time",
+            timestamp_datetime_format="%d/%m/%Y %H:%M",
+        )
+        assert len(dp.data) == 2
+        assert len(dp.data.columns) == 106
+        assert isinstance(dp.data.index, pandas.DatetimeIndex)
+
     def test_datafile_error_parsing(self):
         with self.assertLogs() as logobs:
             filep = "./tests/api/data/data_err_parse.csv"

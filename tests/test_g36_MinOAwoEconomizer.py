@@ -32,7 +32,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "position_damper_air_return",
             "flow_volumetric_air_outdoor",
             "flow_volumetric_air_outdoor_setpoint_min",
-            "mode_system",
+            "mode_operation",
         ]
 
         timestamp = [
@@ -72,7 +72,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "position_damper_air_return",
             "flow_volumetric_air_outdoor",
             "flow_volumetric_air_outdoor_setpoint_min",
-            "mode_system",
+            "mode_operation",
         ]
 
         timestamp = [
@@ -112,7 +112,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "position_damper_air_return",
             "flow_volumetric_air_outdoor",
             "flow_volumetric_air_outdoor_setpoint_min",
-            "mode_system",
+            "mode_operation",
         ]
 
         timestamp = [
@@ -152,7 +152,7 @@ class TestG36MinOAwEconomizer(unittest.TestCase):
             "position_damper_air_return",
             "flow_volumetric_air_outdoor",
             "flow_volumetric_air_outdoor_setpoint_min",
-            "mode_system",
+            "mode_operation",
         ]
 
         timestamp = [
