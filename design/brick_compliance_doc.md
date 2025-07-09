@@ -1,9 +1,9 @@
 ### Brick API documentation
 
-`Class BrickQueryCompliance`   
+`Class BrickCompliance`   
 
 - `__init__(`_brick_schema_path: str_`, `_brick_instance_path: str_`)`    
-Instantiate a `BrickQueryCompliance` class object and load specified brick schema and brick instance.   
+Instantiate a `BrickCompliance` class object and load specified brick schema and brick instance.   
     - **Parameters**  
         - **brick_schema_path**: `str` path to a brick schema to be used for query. The default location is `./resources/brick/Brick.ttl`.   
         - **brick_instance_path**: `str` path to a brick instance to be used for query. For now, only `.ttl` format is accepted.    
