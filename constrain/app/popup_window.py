@@ -16,6 +16,8 @@ from PyQt6.QtWidgets import (
     QGroupBox,
     QMessageBox,
     QLayout,
+    QScrollArea,
+    QWidget
 )
 
 from constrain.app.list_and_choice_popups import ListPopup, ChoicesPopup
@@ -90,33 +92,38 @@ class PopupWindow(QDialog):
         self.buttons_layout.addWidget(self.save_button)
         self.buttons_layout.addWidget(self.cancel_button)
 
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_widget = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scroll_widget)
+
+        self.scroll_layout.addWidget(self.type_combo_box)
+        self.scroll_layout.addWidget(self.object_type_combo_box)
+        self.scroll_layout.addWidget(self.method_combo_box)
+
+        self.scroll_layout.addLayout(self.form_layout)
+        self.scroll_layout.addLayout(self.buttons_layout)
+
+        self.scroll_area.setWidget(self.scroll_widget)
+
+        layout = QVBoxLayout(self)
+        layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        layout.addWidget(self.scroll_area)
+
     def set_ui(self):
         """Loads UI for when user is manually adding information instead of importing"""
         self.setWindowTitle("Add State")
-
-        layout = QVBoxLayout()
-        layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.setLayout(layout)
-
+        
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
 
         # object types to choose from
         object_types = list(schema.keys())
         object_types.insert(0, "")
         object_types.append("Custom")
-
         self.object_type_combo_box.addItems(object_types)
 
-        layout.addWidget(self.type_combo_box)
-        layout.addWidget(self.object_type_combo_box)
-        layout.addWidget(self.method_combo_box)
-
-        # hide until necessary
         self.object_type_combo_box.hide()
         self.method_combo_box.hide()
-
-        layout.addLayout(self.form_layout)
-        layout.addLayout(self.buttons_layout)
 
         self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
         self.object_type_combo_box.currentIndexChanged.connect(self.on_state_selected)
@@ -215,29 +222,24 @@ class PopupWindow(QDialog):
         Args:
             rect (CustomItem): rect associated with self
         """
-
-        layout = QVBoxLayout()
-        layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.setLayout(layout)
-
+    
         state = rect.state
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
         self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
 
         type = state["Type"]
         if type == "MethodCall":
-            self.load_method_ui(state, layout)
+            self.load_method_ui(state)
         elif type == "Choice":
-            self.load_choice_ui(state, layout)
+            self.load_choice_ui(state)
         else:
             return
 
-    def load_choice_ui(self, state, layout):
+    def load_choice_ui(self, state):
         """Adds Choice UI to layout from self.load_ui given state and layout
 
         Args:
             state (dict): state of the CustomItem associated with self
-            layout (PyQt6.QtWidgets.QVBoxLayout): base layout for this popup
         """
 
         object_types = list(schema.keys())
@@ -257,11 +259,8 @@ class PopupWindow(QDialog):
 
         parameters["Name of State"] = title
 
-        layout.addWidget(self.type_combo_box)
         self.type_combo_box.setCurrentText("Choice")
 
-        layout.addLayout(self.form_layout)
-        layout.addLayout(self.buttons_layout)
 
         # add parameter values to first layer of popup
         self.set_state(parameters)
@@ -279,12 +278,11 @@ class PopupWindow(QDialog):
                 )
             self.choice_list_widget.addItem(widget_line)
 
-    def load_method_ui(self, state, layout):
+    def load_method_ui(self, state):
         """Adds MethodCall UI to layout from self.load_ui given state and layout. Requires state['Type'] == 'MethodCall'
 
         Args:
             state (dict): state of the CustomItem associated with self
-            layout (PyQt6.QtWidgets.QVBoxLayout): base layout for this popup
         """
 
         object_types = list(schema.keys())
@@ -364,14 +362,6 @@ class PopupWindow(QDialog):
         # add methods if object is valid and not custom
         if object_type in schema:
             self.method_combo_box.addItems(schema[object_type])
-
-        # set layout
-        layout.addWidget(self.type_combo_box)
-        layout.addWidget(self.object_type_combo_box)
-        layout.addWidget(self.method_combo_box)
-
-        layout.addLayout(self.form_layout)
-        layout.addLayout(self.buttons_layout)
 
         self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
         self.object_type_combo_box.currentIndexChanged.connect(self.on_state_selected)
