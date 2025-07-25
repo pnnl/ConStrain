@@ -8,72 +8,118 @@ This tool builds workflows following the ConStrain API schema. The GUI provides 
 
 ## How to Use
 
-#### First Dialog:
-When starting this GUI, a popup asks whether you want Basic or Advanced settings. The basic settings will let you to see the basic form when clicking on a state to edit it, while the advanced settings will let you see an advanced form.
+#### Selecting Basic or Advanced:
+
+You can choose between Basic or Advanced settings in **Settings > Popup Settings**.
+
+![Popup Settings](constrain_gui_settings.png)
+
+* **Basic** mode provides guided state creation and editing.
+* **Advanced** mode allows manual editing of the full state definition.
 
 #### Basic Form:
-The basic form is meant to guide the user in the creation of a state. It is triggered by navigating to the 'State' tab and pressing the 'Add Basic' button, and also triggered by clicking a state in the Workflow Diagram while using Basic Settings. The following are the steps when creating a state from the basic popup:
 
-1. Choose a state type
-2. Continue reading these steps if 'MethodCall'. Else, go to the steps after the line below.
-3. Choose the object type that you wish you initialize or that you want a method from
-4. Choose a method
-5. Fill out all non-optional parameters
-6. If Payloads are to added, click 'Edit'. They can be added by filling out the 'Name:' and 'Payload:' forms and pressing 'Add', and deleted by right clicking a payload in the list widget. Finish by clicking OK.
-7. Press the 'Save' button to add this state to the workflow diagram.
----
-1. Fill out the parameters here.
-2. To add choices, click 'Edit'. They can be added by selecting an 'Object Type', a 'Method', an 'Object', an 'Equals' value, adding a 'Next' value, and clicking add. This form will be added to the previous popup after you select 'OK'.
-3. Press the 'Save' button to add this state to the workflow diagram.
+The Basic Form is designed to guide you through creating a state. It appears when you:
+
+* Navigate to the **State** tab and press **Add Basic**, or
+* Click a state in the Workflow Diagram while using **Basic** settings.
+
+Steps to create a state with the Basic Form:
+
+1. Choose a **State Type**.
+2. If the type is **MethodCall**, continue with the following:
+
+   * Choose the **Object Type** you want to initialize or call a method from.
+   * Choose a **Method**.
+   * Fill in all non-optional parameters.
+   * (Optional) To add Payloads, click **Edit**. Add items using the **Name** and **Payload** fields and press **Add**. Right-click to delete an item. Click **OK** when finished.
+3. Click **Save** to add the state to the Workflow Diagram.
+
+For other state types:
+
+1. Fill out the parameters provided.
+2. To add **Choices**, click **Edit**. Add choices by selecting an **Object Type**, **Method**, **Object**, **Equals** value, and **Next** value, then click **Add**. Confirm by clicking **OK**.
+3. Press **Save** to add the state to the Workflow Diagram.
 
 #### Advanced Form:
-The advanced form offers no guidance in the creation of a state. It is triggered by navigating to the 'State' tab and pressing the 'Add Advanced' button, and also triggered by clicking a state in the Workflow Diagram while using Advanced Settings. It is a text box where the user inputs a state. The state should be in the following format:
+
+The Advanced Form allows free-form editing with no guidance. It is used when:
+
+* You press **Add Advanced** under the **State** tab, or
+* Click a state in the Workflow Diagram while using **Advanced** settings.
+
+You must enter the state manually in JSON format:
 
 ```json
- { 
-    "name of state": {
-        ...
-    }
+{ 
+  "name of state": {
+    ...
   }
+}
 ```
 
+Make sure your state definition is valid before saving.
+
 #### Meta Form:
-You can select the Meta Form by selecting the Meta tab. Here, you can add the following information to include in your workflow:
-- Workflow Name
-- Author
-- Date
-- Version
-- Description
+
+Access the **Meta Form** by clicking on the **Meta** tab. This section allows you to define metadata for your workflow. You can enter the following information:
+
+* **Workflow Name**
+* **Author**
+* **Date**
+* **Version**
+* **Description**
 
 #### Imports Form:
-You can select the Imports Form by selecting the Imports tab. Here, you can import Python modules to use inside of your workflow. To add to the Imports Form, simply type in the import, e.g. `numpy as np`, and press the 'Add' button. Imports can be deleted by right-clicking on an import in the list and pressing 'Delete'.
+
+Access the **Imports Form** by clicking on the **Imports** tab. This section allows you to include Python module imports used in your workflow.
+To add an import:
+
+* Type the import string (e.g., `numpy as np`)
+* Click the **Add** button
+
+To delete an import:
+
+* Right-click the import in the list
+* Select **Delete**
 
 #### Workflow Diagram:
-The Workflow Diagram can be accessed by navigating to the 'States' tab. States to add in your Workflow Diagram can either be created manually or imported. To create manually, you would select either the 'Add Basic' or 'Add Advanced' button. To import, you would click on the 'File' button in the toolbar and select 'Import' to find a JSON file to import.
+
+The **Workflow Diagram** is available under the **States** tab. You can add states to the diagram either by creating them manually or by importing a JSON file.
+
+* **To create a state manually**, click **Add State**
+* **To import states**, click **File** in the toolbar and select **Import Workflow**, then choose a JSON file.
 
 ##### Moving a State:
-A state can be moved by dragging and dropping.
+
+Drag and drop a state to move it.
 
 ##### Editing a State:
-A state can be edited by clicking it.
+
+Click on a state to open its editor. The form shown depends on your current Popup Settings (Basic or Advanced).
 
 ##### Connecting States:
-A state can be connected to another state by first selecting a control point on a state, and then dragging and dropping to a control point on another state.
+
+Click and drag from a control point on one state to a control point on another to create a connection.
 
 ##### Deleting States:
-A state can be deleted by right clicking on a state and selecting delete.
+
+Right-click a state and select **Delete**.
 
 ##### Deleting Paths:
-A path can be deleted by right clicking on a path and selecting delete. Since paths quite small, it may be helpful to zoom-in in order to do this.
+
+Right-click a path (line between states) and select **Delete**. If paths are difficult to click, zoom in for better precision.
 
 ##### Reformatting Diagram:
-To format your diagram into a tree-like shape, press the 'Reformat' button in the far right.
 
-#### Workflow Validation:
-Validating your workflow is necessary to be able to submit your workflow. To validate, press the 'Validate' button on the bottom of the main window. If the validation was successful, the 'Submit' button will turn active.
+Click the **Rearrange** button in the far-right corner of the window to automatically organize the diagram into a tree-like layout.
 
-#### Workflow Submission:
-To submit your workflow, press the 'Submit' button on the bottom of the main window. Note that the 'Submit' button is activated only after the workflow has been validated using the 'Validate' button. On submission of your workflow, a popup will be displayed showing the results.
+#### Workflow Evaluation:
+
+You can evaluate your workflow by clicking the **Evaluate Workflow** button at the bottom of the main window.
+A popup will appear showing the submission results.
+
+---
 
 ## Files
 The application contains 9 Python source files:
