@@ -10,18 +10,20 @@ This tool builds workflows following the ConStrain API schema. The GUI provides 
 
 #### Selecting Basic or Advanced:
 
-You can choose between Basic or Advanced settings in **Settings > Popup Settings**.
-
 ![Popup Settings](resources/constrain_gui_settings.png)
+
+You can choose between Basic or Advanced settings in **Settings > Popup Settings**.
 
 * **Basic** mode provides guided state creation and editing.
 * **Advanced** mode allows manual editing of the full state definition.
 
 #### Basic Form:
 
+![Basic Form](resources/constrain_gui_edit_basic_state.png)
+
 The Basic Form is designed to guide you through creating a state. It appears when you:
 
-* Navigate to the **State** tab and press **Add Basic**, or
+* Navigate to the **State** tab and press **Add State**, or
 * Click a state in the Workflow Diagram while using **Basic** settings.
 
 Steps to create a state with the Basic Form:
@@ -43,9 +45,11 @@ For other state types:
 
 #### Advanced Form:
 
-The Advanced Form allows free-form editing with no guidance. It is used when:
+![Advanced Form](resources/constrain_gui_edit_advanced_state.png)
 
-* You press **Add Advanced** under the **State** tab, or
+The Advanced Form allows free-form JSON editing with no guidance. It is used when:
+
+* You press **Add State** under the **State** tab, or
 * Click a state in the Workflow Diagram while using **Advanced** settings.
 
 You must enter the state manually in JSON format:
@@ -62,6 +66,8 @@ Make sure your state definition is valid before saving.
 
 #### Meta Form:
 
+![Meta Form](resources/constrain_gui_meta.png)
+
 Access the **Meta Form** by clicking on the **Meta** tab. This section allows you to define metadata for your workflow. You can enter the following information:
 
 * **Workflow Name**
@@ -71,6 +77,8 @@ Access the **Meta Form** by clicking on the **Meta** tab. This section allows yo
 * **Description**
 
 #### Imports Form:
+
+![Imports Form](resources/constrain_gui_imports.png)
 
 Access the **Imports Form** by clicking on the **Imports** tab. This section allows you to include Python module imports used in your workflow.
 To add an import:
@@ -84,6 +92,8 @@ To delete an import:
 * Select **Delete**
 
 #### Workflow Diagram:
+
+![Workflow Diagram](resources/constrain_gui_state.png)
 
 The **Workflow Diagram** is available under the **States** tab. You can add states to the diagram either by creating them manually or by importing a JSON file.
 
