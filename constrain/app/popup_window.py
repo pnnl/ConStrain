@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QLayout,
     QScrollArea,
-    QWidget
+    QWidget,
 )
 
 from constrain.app.list_and_choice_popups import ListPopup, ChoicesPopup
@@ -113,7 +113,7 @@ class PopupWindow(QDialog):
     def set_ui(self):
         """Loads UI for when user is manually adding information instead of importing"""
         self.setWindowTitle("Add State")
-        
+
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
 
         # object types to choose from
@@ -222,7 +222,7 @@ class PopupWindow(QDialog):
         Args:
             rect (CustomItem): rect associated with self
         """
-    
+
         state = rect.state
         self.type_combo_box.addItems(["", "MethodCall", "Choice"])
         self.type_combo_box.currentIndexChanged.connect(self.on_type_selected)
@@ -260,7 +260,6 @@ class PopupWindow(QDialog):
         parameters["Name of State"] = title
 
         self.type_combo_box.setCurrentText("Choice")
-
 
         # add parameter values to first layer of popup
         self.set_state(parameters)
