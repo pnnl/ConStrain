@@ -12,7 +12,7 @@ This tool builds workflows following the ConStrain API schema. The GUI provides 
 
 You can choose between Basic or Advanced settings in **Settings > Popup Settings**.
 
-![Popup Settings](constrain/app/resources/constrain_gui_settings.png)
+![Popup Settings](resources/constrain_gui_settings.png)
 
 * **Basic** mode provides guided state creation and editing.
 * **Advanced** mode allows manual editing of the full state definition.
