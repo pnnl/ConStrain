@@ -31,7 +31,7 @@ if __name__ == "__main__":
     response = requests.get(url)
     data = json.loads(response.content)
 
-    # 2- Change data path
+    # 2 - Change data path
     data["states"]["load data"]["Parameters"]["data_path"] = str(
         Path(__file__).parent.parent.parent
         / "constrain/demo/G36_demo/data/G36_Modelica_Jan.csv"

@@ -27,13 +27,11 @@ While the development of ConStrain was motivated by use cases with building ener
 - Authority having jurisdiction (AHJ) – achieve better compliance rates for control provisions in code.
 - Mechanical engineer/energy modeler – ensure that chosen systems and their controls will comply with code.
 - Energy code/control guideline developer – identify ambiguity in code languages.
-- BEM software developer – identify control related issues in simulation engine.
+- BEM users and software developer – identify control related issues in simulation engine.
 
 # Current Version of _ConStrain_?
 
 The current version of ConStrain includes the framework implementation, a preliminary development and implementation of the verification library (based on ASHRAE 90.1-2016 control related requirement), and the test cases of verification algorithms using prototype building models. The current list of implemented verification algorithms includes supply air temperature control, economizer high limit, integrated economizer control, zone temperature control (dead band), zone temperature control (setback), hot water temperature reset, chilled water temperature reset, etc.
-
-A newly released API helps users to use ConStrain more easily. An API workflow demo is provided at `demo/api_demo` and `test/api/test_workflow.py`
 
 See the Publications section for more information and example of uses of the framework.
 

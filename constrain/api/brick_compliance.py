@@ -1,3 +1,9 @@
+"""
+brick_compliance.py
+====================================
+Brick Compliance API
+"""
+
 import ast
 import copy
 import json
