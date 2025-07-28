@@ -65,10 +65,8 @@ class CheckLibBase(ABC):
     ):
         outcome_bool, outcome_dict = self.get_checks
 
-        img_folder = f"{img_folder}/VerificationCase{item_dict['no']}"
-        relative_path_to_img_in_md = (
-            f"{relative_path_to_img_in_md}/VerificationCase{item_dict['no']}"
-        )
+        img_folder = f"{img_folder}/VerificationCase{item_dict['verification_case_id']}"
+        relative_path_to_img_in_md = f"{relative_path_to_img_in_md}/VerificationCase{item_dict['verification_case_id']}"
         if not os.path.exists(img_folder):
             os.makedirs(img_folder)
 
@@ -93,7 +91,7 @@ class CheckLibBase(ABC):
 """
 
         md_content = f"""
-## Results for Verification Case ID {item_dict['no']}
+## Results for Verification Case ID {item_dict['verification_case_id']}
 
 ### Pass/Fail check result
 {str(outcome_dict)}

@@ -221,7 +221,7 @@ class Verification:
 
         # TODO: JXL to make this compatible with reporting API, save md json instead of md files directly.
         # Output case summary
-        cases_file = f"{self.output_path}/{case['no']}_md.json"
+        cases_file = f"{self.output_path}/{case['verification_case_id']}_md.json"
         with open(cases_file, "w") as fw:
             json.dump(results, fw)
 

@@ -58,8 +58,10 @@ def run_libcase(
             run_path = f"{original_idf_path[:-7]}"
         else:
             run_path = original_idf_path
-        instrumented_idf_path = f"{original_idf_path.split('.idf')[0]}_injected_VerificationNo{item_dict['no']}.idf"
-        run_path = f"{run_path}_injected_VerificationNo{item_dict['no']}"
+        instrumented_idf_path = f"{original_idf_path.split('.idf')[0]}_injected_VerificationNo{item_dict['verification_case_id']}.idf"
+        run_path = (
+            f"{run_path}_injected_VerificationNo{item_dict['verification_case_id']}"
+        )
         inject_idf(
             iddpath=idd_path,
             idfpath_in=original_idf_path,
@@ -130,7 +132,7 @@ def run_libcase(
         )  # verification is executed by CheckLibBase constructor
 
     if time_series_file_name is not None:
-        csv_path = f"{output_path}/{time_series_file_name}_{item_dict['no']}.csv"
+        csv_path = f"{output_path}/{time_series_file_name}_{item_dict['verification_case_id']}.csv"
         verification_obj.save_data(csv_path)
 
     if produce_outputs:
