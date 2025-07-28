@@ -1,9 +1,9 @@
 {
     "cases": [
         {
-            "no": 1,
+            "verification_case_id": 1,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case1.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -26,9 +26,9 @@
             "verification_class": "SupplyAirTempReset"
         },
         {
-            "no": 2,
+            "verification_case_id": 2,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case2.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",

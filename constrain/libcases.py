@@ -48,10 +48,10 @@ def run_libcase(
     run_path = None
 
     if need_injection or run_sim:
-        original_idf_path = item.item["simulation_IO"]["idf"].strip()
+        original_idf_path = item.item["verification_properties"]["idf"].strip()
 
     if need_injection:
-        idd_path = item.item["simulation_IO"]["idd"].strip()
+        idd_path = item.item["verification_properties"]["idd"].strip()
         if ".idf" in original_idf_path.lower():
             run_path = f"{original_idf_path[:-4]}"
         elif ".epjson" in original_idf_path.lower():
@@ -71,12 +71,12 @@ def run_libcase(
         run_idf_path = original_idf_path
 
     if run_sim:
-        weather_path = item.item["simulation_IO"]["weather"].strip()
-        if "ep_path" in list(item.item["simulation_IO"].keys()):
+        weather_path = item.item["verification_properties"]["weather"].strip()
+        if "ep_path" in list(item.item["verification_properties"].keys()):
             run_simulation(
                 idfpath=run_idf_path,
                 weatherpath=weather_path,
-                ep_path=item.item["simulation_IO"]["ep_path"],
+                ep_path=item.item["verification_properties"]["ep_path"],
             )
         else:
             run_simulation(idfpath=run_idf_path, weatherpath=weather_path)
@@ -98,7 +98,7 @@ def run_libcase(
     else:
         df = DateTimeEP(
             item.read_points_values(
-                csv_path=f"{instrumented_idf_path.replace('.idf', '')}/{item.item['simulation_IO']['output']}"
+                csv_path=f"{instrumented_idf_path.replace('.idf', '')}/{item.item['verification_properties']['output']}"
             )
         ).transform()
     verification_class = item.item["verification_class"]
@@ -137,7 +137,7 @@ def run_libcase(
         md_content = verification_obj.add_md(
             None, output_path, "./", item_dict, plot_option, fig_size
         )
-        return {int(item_dict["no"]): md_content}
+        return {int(item_dict["verification_case_id"]): md_content}
     else:
         outcome = verification_obj.get_checks
         verification_obj.plot(plot_option)

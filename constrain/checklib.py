@@ -128,7 +128,7 @@ class CheckLibBase(ABC):
         return {
             "md_content": md_content,
             "outcome_notes": outcome_dict,
-            "model_file": item_dict["simulation_IO"]["idf"]
+            "model_file": item_dict["verification_properties"]["idf"]
             .split("/")[-1]
             .split("\\")[-1]
             .replace(".idf", ""),

@@ -1,9 +1,9 @@
 {
     "cases": [
         {
-            "no": "0",
+            "verification_case_id": "0",
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/tspr_cases/sat_reset/sat_reset.idf",
                 "idd": "../resources/Energy+V9_2_0.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
@@ -26,9 +26,9 @@
             }
         },
         {
-            "no": "1",
+            "verification_case_id": "1",
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/tspr_cases/sat_reset/sat_reset2.idf",
                 "idd": "../resources/Energy+V9_2_0.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
@@ -51,9 +51,9 @@
             }
         },
         {
-            "no": "2",
+            "verification_case_id": "2",
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/tspr_cases/chw_reset/chw_reset.idf",
                 "idd": "../resources/Energy+V9_2_0.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",

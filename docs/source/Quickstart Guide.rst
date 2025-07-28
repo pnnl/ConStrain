@@ -32,9 +32,9 @@ Running Verifications using **ConStrain**
   {
       "cases": [
           {
-              "no": 1,
+              "verification_case_id": 1,
               "run_simulation": false,
-              "simulation_IO": {
+              "verification_properties": {
                 "idf": "modelica_dataset_set",
                 "idd": "./resources/Energy+V9_0_1.idd",
                 "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -57,9 +57,9 @@ Running Verifications using **ConStrain**
       ]
   }
 
-- :json:`"no"`: A verification case JSON file can contain multiple cases, this corresponds to the ID of a case
+- :json:`"verification_case_id"`: A verification case JSON file can contain multiple cases, this corresponds to the ID of a case
 - :json:`"run_simulation"`: Is a flag (:json:`true` or :json:`false`) that indicates if an EnergyPlus simulation should be performed
-- :json:`"simulation_IO"`: Is a dictionary that contains information about what reference files should be used for the simulation if a simulation is not required the :json:`"output"` is still required, it corresponds to the file that **ConStrain** will use to run verifications
+- :json:`"verification_properties"`: Is a dictionary that contains information about what reference files should be used for the simulation if a simulation is not required the :json:`"output"` is still required, it corresponds to the file that **ConStrain** will use to run verifications
 - :json:`"expected_result"`: Expected result from the verification, either :json:`"pass"` or :json:`"fail"`
 - :json:`"verification_class"`: Name of the verification from the library to carry out
 - :json:`"datapoints_source"`: Dictionary that contains information on the data points used for the verification; They can be of different types: :json:`"parameters"` (constant values), :json:`"dev_settings"` (mapping of the expected datapoint for the verification to column headers in the data), or :json:`"idf_output_variables"` (for EnergyPlus-based simulations); The latter should be defined also as a dictionary where each variable is expressed through a :json:`"subject"` (EnergyPlus output variable name), :json:`"variable"` (EnergyPlus output variable type), and :json:`"frequency"` (EnergyPlus output variable reporting frequency), see an example below

@@ -28,7 +28,7 @@ Query datapoints required for given verification item lib.
     - **Parameters**  
         - **verification_item_lib_name**: `str` or `list` of `str` verification item library to be quried. If only one verification item library is quried, one `str` argument type is paased. If multiple verification item libraries are queried, `list` of `str` argument type is passed.    
         - **energyplus_naming_assembly**: `bool` (default: False) whether to convert the queried datapoints' name to EnergyPlus style variable name.   
-        - **default_verification_case_values**: `dict` that has default key values. ("no", "run_simulation", "idf", "idd", "weather", "output", "ep_path", "expected_result", "parameters",) keys must exist.  
+        - **default_verification_case_values**: `dict` that has default key values. ("verification_case_id", "run_simulation", "idf", "idd", "weather", "output", "ep_path", "expected_result", "parameters",) keys must exist.  
     - **Returns**: `list` of `dict`(s), queried results in verification case format. The return dict only includes `datapoints_source` and `verification_class` keys.    
 
 - `query_with_customized_statement(`_custom_query_statement: str_`, `_energyplus_naming_assembly:bool = False_`, `_*verification_item_lib_name: str_`, `_default_verification_case_values: dict = None_`)`  
@@ -37,6 +37,6 @@ Query datapoints with a customized query statement. When implemented, the qualit
         - **custom_query_statement**: `str` query statement written from users.     
         - **verification_item_lib_name**: `str` verification library item of the `query_statement`.  
          - **energyplus_naming_assembly**: `bool` (default: True) whether to convert the queried datapoints' name to EnergyPlus style variable name. 
-         - **default_verification_case_values**: `dict` that has default key values. ("no", "run_simulation", "idf", "idd", "weather", "output", "ep_path", "expected_result", "parameters",) keys must exist. 
+         - **default_verification_case_values**: `dict` that has default key values. ("verification_case_id", "run_simulation", "idf", "idd", "weather", "output", "ep_path", "expected_result", "parameters",) keys must exist. 
     - **Returns**: `list` of `dict` of queried result in the verification case format. `str` message from the `query_statement`'s quality check result.    
     

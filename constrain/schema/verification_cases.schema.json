@@ -7,14 +7,14 @@
             "items": {
                 "type": "object",
                 "properties": {
-                    "no": {
+                    "verification_case_id": {
                         "type": "integer",
                         "minimum": 1
                     },
                     "run_simulation": {
                         "type": "boolean"
                     },
-                    "simulation_IO": {
+                    "verification_properties": {
                         "type": "object",
                         "properties": {
                             "idf": {
@@ -130,9 +130,9 @@
                     }
                 ],
                 "required": [
-                    "no",
+                    "verification_case_id",
                     "run_simulation",
-                    "simulation_IO",
+                    "verification_properties",
                     "expected_result",
                     "datapoints_source",
                     "verification_class"
@@ -150,7 +150,7 @@
                         },
                         "then": {
                             "properties": {
-                                "simulation_IO": {
+                                "verification_properties": {
                                     "required": [
                                         "idd",
                                         "weather",

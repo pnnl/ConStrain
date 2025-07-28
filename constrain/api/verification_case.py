@@ -152,7 +152,7 @@ class VerificationCase:
                 elif isinstance(value, list):
                     for idx, case in enumerate(casees):
                         if key in [
-                            "no",
+                            "verification_case_id",
                             "run_simulation",
                             "expected_result",
                             "datapoints_source",
@@ -160,7 +160,7 @@ class VerificationCase:
                         ]:
                             case[key] = value[idx]
                         elif key in ["idf", "idd", "weather", "output", "ep_path"]:
-                            case["simulation_IO"][key] = value[idx]
+                            case["verification_properties"][key] = value[idx]
 
                         elif key in ["subject", "variable", "frequency"]:
                             case["datapoints_source"]["idf_output_variables"][
@@ -218,7 +218,7 @@ class VerificationCase:
     def validate_verification_case_structure(
         case: Dict = None, verbose: bool = False
     ) -> bool:
-        """Validate verification case structure (e.g., check whether `run_simulation`, `simulation_IO`, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str.
+        """Validate verification case structure (e.g., check whether `run_simulation`, `verification_properties`, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str.
 
         Args:
             case (Dict): case information that will be validated.
@@ -290,9 +290,9 @@ class VerificationCase:
             return None
 
         case_schema = {
-            "no": int,
+            "verification_case_id": int,
             "run_simulation": bool,
-            "simulation_IO": {
+            "verification_properties": {
                 "output": str,  # all other are optional when data is already there.
             },
             "expected_result": str,

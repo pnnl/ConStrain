@@ -392,7 +392,7 @@ iii) third element in the returned list.
 
 - [x] `static validate_verification_case_structure(`_case: dict, verbose: bool=False_`)`
 
-  Validate verification case structure (e.g., check whether `run_simulation`, `simulation_IO`, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str.
+  Validate verification case structure (e.g., check whether `run_simulation`, `verification_properties`, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str.
 
   -**parameters**:
 
@@ -402,7 +402,7 @@ iii) third element in the returned list.
 
 <!-- - `static validate_verification_cases(`_list_IDs: list, verbose: bool_`)`
 
-  Validate cases (e.g., check whether `run_simulation`, `simulation_IO`, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str
+  Validate cases (e.g., check whether `run_simulation`, `verification_properties`, etc. exist or not). Check if required key / values pairs exist in the case. check if datatype of values are appropriate, e.g. file path is str
 
   -**parameters**: -`_list_IDs_`: list of IDS that will be validated. -`_verbose_`: whether additional explanation is required.
 
@@ -420,7 +420,7 @@ iii) third element in the returned list.
 
 <!-- - `validate_verification_cases_validity(`_list_IDs, verbose: bool_`)`
 
-  Validate the contents in the verification cases (e.g., `simulation_IO` value type is `str`, etc.). Deeper validation to things like, if the idf file path is pointing at a valid idf file. This is more advanced and optional feature.
+  Validate the contents in the verification cases (e.g., `verification_properties` value type is `str`, etc.). Deeper validation to things like, if the idf file path is pointing at a valid idf file. This is more advanced and optional feature.
 
   - **parameters**: -`_list_IDs_`: list of IDS that will be validated. -`_verbose_`: validate output option. If `verbose=True` is used and validation failed, output additional info.
   - **return**: list, the first element indicates whether the file is valid or not (bool). The second element outputs additional info (str)if verbose arg is set to `True`. -->
@@ -455,9 +455,9 @@ import animate as an
 # create verification items in suite
 SAT_case = {
     "id": "example_id",
-    "no": 1,
+    "verification_case_id": 1,
     "run_simulation": true,
-    "simulation_IO": {
+    "verification_properties": {
         "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta.idf",
         "idd": "../resources/Energy+V9_0_1.idd",
         "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -543,9 +543,9 @@ import animate as an
 
 # create verification items in suite
 cases = [{
-            "no": 1,
+            "verification_case_id": 1,
             "run_simulation": True,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "./test_cases/doe_prototype_cases/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
                 "idd": "./resources/Energy+V9_0_1.idd",
                 "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -581,9 +581,9 @@ cases = [{
             "verification_class": "AutomaticOADamperControl"
         },
         {
-            "no": 2,
+            "verification_case_id": 2,
             "run_simulation": True,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "./test_cases/doe_prototype_cases/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
                 "idd": "./resources/Energy+V9_0_1.idd",
                 "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",

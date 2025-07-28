@@ -10,8 +10,8 @@ def run_verification_case(item_dict, run_path_postfix=""):
     item = build_an_item(item_dict)
     run_sim = item.item["run_simulation"]
     if run_sim:
-        original_idf_path = item.item["simulation_IO"]["idf"].strip()
-        idd_path = item.item["simulation_IO"]["idd"].strip()
+        original_idf_path = item.item["verification_properties"]["idf"].strip()
+        idd_path = item.item["verification_properties"]["idd"].strip()
         if ".idf" in original_idf_path.lower():
             run_path = f"{original_idf_path[:-4]}"
         elif ".epjson" in original_idf_path.lower():
@@ -30,7 +30,7 @@ def run_verification_case(item_dict, run_path_postfix=""):
         run_path = ""
 
         df = item.read_points_values(
-            csv_path=f"../resources/{item.item['simulation_IO']['output']}"
+            csv_path=f"../resources/{item.item['verification_properties']['output']}"
         )
 
     verification_class = item.item["verification_class"]
@@ -42,7 +42,7 @@ def run_verification_case(item_dict, run_path_postfix=""):
     )
     verification_obj = cls(df, parameters, f"{run_path}")
     md_content = verification_obj.add_md(None, "../results/imgs", "./imgs", item_dict)
-    return {int(item_dict["no"]): md_content}
+    return {int(item_dict["verification_case_id"]): md_content}
 
 
 def main():

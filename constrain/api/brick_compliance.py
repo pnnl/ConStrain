@@ -17,9 +17,9 @@ sys.path.append("..")
 
 HVAC_ZONE_NAME_PARSE_RE = r"\?(\w+) a brick:HVAC_Zone \."
 CASE_KEY_NAMES = [
-    "no",
+    "verification_case_id",
     "run_simulation",
-    "simulation_IO",
+    "verification_properties",
     "idf",
     "idd",
     "weather",
@@ -100,9 +100,9 @@ class BrickCompliance:
         self.idx = 1
 
         self.verification_case_dict = {
-            "no": None,
+            "verification_case_id": None,
             "run_simulation": None,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "",
                 "idd": "",
                 "weather": "",
@@ -264,7 +264,7 @@ class BrickCompliance:
                 whether the queried datapoint is changed to E+ style variable name or not
 
             default_verification_case_values: dict
-                default key values. ("no", "run_simulation", "idf", "idd", "weather", "output", "ep_path", "expected_result", "parameters",) keys must exist.
+                default key values. ("verification_case_id", "run_simulation", "idf", "idd", "weather", "output", "ep_path", "expected_result", "parameters",) keys must exist.
 
         Returns:
             self.queried_datapoint_all_dict: dict
@@ -339,7 +339,7 @@ class BrickCompliance:
                 whether to convert the queried datapoints' name to EnergyPlus style variable name.
 
             default_verification_case_values: dict
-                default key values. ("no", "run_simulation", "idf", "idd", "weather", "output", "ep_path", "expected_result", "parameters",) keys must exist.
+                default key values. ("verification_case_id", "run_simulation", "idf", "idd", "weather", "output", "ep_path", "expected_result", "parameters",) keys must exist.
 
         Returns:
             queried result in the verification case format. `str` message from the `query_statement`'s quality check result.
@@ -467,7 +467,7 @@ class BrickCompliance:
         ):
             verification_case_dict_copy = copy.deepcopy(self.verification_case_dict)
 
-            verification_case_dict_copy["no"] = self.idx
+            verification_case_dict_copy["verification_case_id"] = self.idx
             self.idx += 1
             verification_case_dict_copy["verification_class"] = verification_case_name
 
@@ -537,8 +537,8 @@ class BrickCompliance:
                     "output",
                     "ep_path",
                 ):
-                    verification_case_dict_copy["simulation_IO"][key_name] = (
-                        default_verification_case_values["simulation_IO"][key_name]
+                    verification_case_dict_copy["verification_properties"][key_name] = (
+                        default_verification_case_values["verification_properties"][key_name]
                     )
 
                 verification_case_dict_copy["expected_result"] = (

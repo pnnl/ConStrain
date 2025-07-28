@@ -28,9 +28,9 @@ def run_sim_for_cases(
 
     item = items[0]
     if need_injection and run_sim:
-        original_idf_path = item.item["simulation_IO"]["idf"].strip()
-        idd_path = item.item["simulation_IO"]["idd"].strip()
-        wth_file = item.item["simulation_IO"]["weather"].strip()
+        original_idf_path = item.item["verification_properties"]["idf"].strip()
+        idd_path = item.item["verification_properties"]["idd"].strip()
+        wth_file = item.item["verification_properties"]["weather"].strip()
         # run_path = f"{original_idf_path.split('.idf')[0]}"
         if ".idf" in original_idf_path.lower():
             run_path = f"{original_idf_path[:-4]}"
@@ -58,13 +58,13 @@ def run_sim_for_cases(
         run_idf_path = original_idf_path
 
     if run_sim:
-        weather_path = item.item["simulation_IO"]["weather"].strip()
+        weather_path = item.item["verification_properties"]["weather"].strip()
     # TODO: the following code block is temperarily commented out for PIC run. Need to be wrapped as an option for local run.
-    #        if "ep_path" in list(item.item["simulation_IO"].keys()):
+    #        if "ep_path" in list(item.item["verification_properties"].keys()):
     #            run_simulation(
     #                idfpath=run_idf_path,
     #                weatherpath=weather_path,
-    #                ep_path=item.item["simulation_IO"]["ep_path"],
+    #                ep_path=item.item["verification_properties"]["ep_path"],
     #            )
     #        else:
     #            run_simulation(idfpath=run_idf_path, weatherpath=weather_path)

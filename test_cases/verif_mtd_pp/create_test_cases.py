@@ -42,11 +42,11 @@ def chwreset(idf, idf_f, id, cases):
         t_chw_min_st = 6.7
 
         chw_case = {}
-        chw_case["no"] = str(id)
+        chw_case["verification_case_id"] = str(id)
 
         # Define simulation IO
         chw_case["run_simulation"] = True
-        chw_case["simulation_IO"] = {
+        chw_case["verification_properties"] = {
             "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(idf_f.split("/")[-1]),
             "idd": "../resources/Energy+V9_0_1.idd",
             "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -108,11 +108,11 @@ def hwreset(idf, idf_f, id, cases):
         t_hw_min_st = 79.4
 
         hw_case = {}
-        hw_case["no"] = str(id)
+        hw_case["verification_case_id"] = str(id)
 
         # Define simulation IO
         hw_case["run_simulation"] = True
-        hw_case["simulation_IO"] = {
+        hw_case["verification_properties"] = {
             "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(idf_f.split("/")[-1]),
             "idd": "../resources/Energy+V9_0_1.idd",
             "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -197,14 +197,14 @@ def sat_reset(idf, idf_f, id, cases):
             tz_coo = airloop_tz_coo[1]
 
             sat_case = {}
-            sat_case["no"] = str(id)
+            sat_case["verification_case_id"] = str(id)
 
             airloop = idf.getobject("AIRLOOPHVAC", airloop)
             sat_node = airloop.Supply_Side_Outlet_Node_Names
 
             # Define simulation IO
             sat_case["run_simulation"] = True
-            sat_case["simulation_IO"] = {
+            sat_case["verification_properties"] = {
                 "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(
                     idf_f.split("/")[-1]
                 ),
@@ -238,11 +238,11 @@ def zone_temp_ctrl(idf, idf_f, id, cases):
     )
     for zone in idf.idfobjects["ZONE"]:
         zone_temp_ctrl = {}
-        zone_temp_ctrl["no"] = str(id)
+        zone_temp_ctrl["verification_case_id"] = str(id)
 
         # Define simulation IO
         zone_temp_ctrl["run_simulation"] = True
-        zone_temp_ctrl["simulation_IO"] = {
+        zone_temp_ctrl["verification_properties"] = {
             "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(idf_f.split("/")[-1]),
             "idd": "../resources/Energy+V9_0_1.idd",
             "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -278,11 +278,11 @@ def zone_temp_ctrl_depth_htg(idf, idf_f, id, cases):
     )
     for zone in idf.idfobjects["ZONE"]:
         zone_temp_ctrl_depth_htg = {}
-        zone_temp_ctrl_depth_htg["no"] = str(id)
+        zone_temp_ctrl_depth_htg["verification_case_id"] = str(id)
 
         # Define simulation IO
         zone_temp_ctrl_depth_htg["run_simulation"] = True
-        zone_temp_ctrl_depth_htg["simulation_IO"] = {
+        zone_temp_ctrl_depth_htg["verification_properties"] = {
             "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(idf_f.split("/")[-1]),
             "idd": "../resources/Energy+V9_0_1.idd",
             "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -313,11 +313,11 @@ def zone_temp_ctrl_depth_clg(idf, idf_f, id, cases):
     )
     for zone in idf.idfobjects["ZONE"]:
         zone_temp_ctrl_depth_clg = {}
-        zone_temp_ctrl_depth_clg["no"] = str(id)
+        zone_temp_ctrl_depth_clg["verification_case_id"] = str(id)
 
         # Define simulation IO
         zone_temp_ctrl_depth_clg["run_simulation"] = True
-        zone_temp_ctrl_depth_clg["simulation_IO"] = {
+        zone_temp_ctrl_depth_clg["verification_properties"] = {
             "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(idf_f.split("/")[-1]),
             "idd": "../resources/Energy+V9_0_1.idd",
             "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -348,11 +348,11 @@ def zone_temp_ctrl_min(idf, idf_f, id, cases):
     )
     for zone in idf.idfobjects["ZONE"]:
         zone_temp_ctrl_min = {}
-        zone_temp_ctrl_min["no"] = str(id)
+        zone_temp_ctrl_min["verification_case_id"] = str(id)
 
         # Define simulation IO
         zone_temp_ctrl_min["run_simulation"] = True
-        zone_temp_ctrl_min["simulation_IO"] = {
+        zone_temp_ctrl_min["verification_properties"] = {
             "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(idf_f.split("/")[-1]),
             "idd": "../resources/Energy+V9_0_1.idd",
             "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -383,11 +383,11 @@ def zone_temp_ctrl_max(idf, idf_f, id, cases):
     )
     for zone in idf.idfobjects["ZONE"]:
         zone_temp_ctrl_max = {}
-        zone_temp_ctrl_max["no"] = str(id)
+        zone_temp_ctrl_max["verification_case_id"] = str(id)
 
         # Define simulation IO
         zone_temp_ctrl_max["run_simulation"] = True
-        zone_temp_ctrl_max["simulation_IO"] = {
+        zone_temp_ctrl_max["verification_properties"] = {
             "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(idf_f.split("/")[-1]),
             "idd": "../resources/Energy+V9_0_1.idd",
             "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -507,11 +507,11 @@ def integrated_econ(idf, idf_f, id, cases):
                                     oa_node = oa_ctrl.Actuator_Node_Name
 
                                     integrated_econ = {}
-                                    integrated_econ["no"] = str(id)
+                                    integrated_econ["verification_case_id"] = str(id)
 
                                     # Define simulation IO
                                     integrated_econ["run_simulation"] = True
-                                    integrated_econ["simulation_IO"] = {
+                                    integrated_econ["verification_properties"] = {
                                         "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(
                                             idf_f.split("/")[-1]
                                         ),
@@ -635,11 +635,11 @@ def diff_enthalpy_econ(idf, idf_f, id, cases):
                     ret_node = oa_ctrl.Return_Air_Node_Name
 
                     diff_enthalpy_econ = {}
-                    diff_enthalpy_econ["no"] = str(id)
+                    diff_enthalpy_econ["verification_case_id"] = str(id)
 
                     # Define simulation IO
                     diff_enthalpy_econ["run_simulation"] = True
-                    diff_enthalpy_econ["simulation_IO"] = {
+                    diff_enthalpy_econ["verification_properties"] = {
                         "idf": "../test_cases/verif_mtd_pp/idfs/{}".format(
                             idf_f.split("/")[-1]
                         ),

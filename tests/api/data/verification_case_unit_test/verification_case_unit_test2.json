@@ -1,9 +1,9 @@
 {
     "cases": [
         {
-            "no": 19,
+            "verification_case_id": 19,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2019_Seattle_case19.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
@@ -34,9 +34,9 @@
             "verification_class": "VentilationFanControl"
         },
         {
-            "no": 20,
+            "verification_case_id": 20,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_ApartmentHighRise_STD2019_Atlanta_case20.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",

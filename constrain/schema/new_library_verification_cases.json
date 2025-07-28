@@ -1,9 +1,9 @@
 {
     "cases": [
         {
-            "no": 1,
+            "verification_case_id": 1,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case1.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -26,9 +26,9 @@
             "verification_class": "SupplyAirTempReset"
         },
         {
-            "no": 2,
+            "verification_case_id": 2,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case2.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -51,9 +51,9 @@
             "verification_class": "SupplyAirTempReset"
         },
         {
-            "no": 3,
+            "verification_case_id": 3,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case3.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -76,9 +76,9 @@
             "verification_class": "SupplyAirTempReset"
         },
         {
-            "no": 4,
+            "verification_case_id": 4,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case4.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -101,9 +101,9 @@
             "verification_class": "SupplyAirTempReset"
         },
         {
-            "no": 5,
+            "verification_case_id": 5,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case5.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -139,9 +139,9 @@
             "verification_class": "EconomizerHighLimitD"
         },
         {
-            "no": 6,
+            "verification_case_id": 6,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case6.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -177,9 +177,9 @@
             "verification_class": "EconomizerHighLimitD"
         },
         {
-            "no": 7,
+            "verification_case_id": 7,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_RetailStandalone_STD2004_Seattle_Case7.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
@@ -207,9 +207,9 @@
             "verification_class": "IntegratedEconomizerControl"
         },
         {
-            "no": 8,
+            "verification_case_id": 8,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_RetailStandalone_STD2004_Buffalo_Case8.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_NY_Buffalo.Niagara.Intl.AP.725280_TMY3.epw",
@@ -237,9 +237,9 @@
             "verification_class": "IntegratedEconomizerControl"
         },
         {
-            "no": 9,
+            "verification_case_id": 9,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case9.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -275,9 +275,9 @@
             "verification_class": "HWReset"
         },
         {
-            "no": 10,
+            "verification_case_id": 10,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case10.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -313,9 +313,9 @@
             "verification_class": "HWReset"
         },
         {
-            "no": 11,
+            "verification_case_id": 11,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case11.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -351,9 +351,9 @@
             "verification_class": "CHWReset"
         },
         {
-            "no": 12,
+            "verification_case_id": 12,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2004_Atlanta_Case12.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -389,9 +389,9 @@
             "verification_class": "CHWReset"
         },
         {
-            "no": 13,
+            "verification_case_id": 13,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2019_Seattle.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_AK_Anchorage-JB.Elmendorf-Richardson.702720_TMY3.epw",
@@ -432,9 +432,9 @@
             "verification_class": "NightCycleOperation"
         },
         {
-            "no": 14,
+            "verification_case_id": 14,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeMedium_STD2019_Atlanta_case14.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -465,9 +465,9 @@
             "verification_class": "AutomaticOADamperControl"
         },
         {
-            "no": 15,
+            "verification_case_id": 15,
             "run_simulation": false,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "",
                 "idd": "",
                 "weather": "",
@@ -513,9 +513,9 @@
             "verification_class": "FanStaticPressureResetControl"
         },
         {
-            "no": 16,
+            "verification_case_id": 16,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case16.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -550,9 +550,9 @@
             "verification_class": "HeatRejectionFanVariableFlowControlsCells"
         },
         {
-            "no": 17,
+            "verification_case_id": 17,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_SchoolSecondary_STD2016_Atlanta_case17.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -573,9 +573,9 @@
             "verification_class": "ServiceWaterHeatingSystemControl"
         },
         {
-            "no": 18,
+            "verification_case_id": 18,
             "run_simulation": false,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "",
                 "idd": "",
                 "weather": "",
@@ -595,9 +595,9 @@
             "verification_class": "VAVStaticPressureSensorLocation"
         },
         {
-            "no": 19,
+            "verification_case_id": 19,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2019_Seattle_case19.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
@@ -628,9 +628,9 @@
             "verification_class": "VentilationFanControl"
         },
         {
-            "no": 20,
+            "verification_case_id": 20,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_ApartmentHighRise_STD2019_Atlanta_case20.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -661,9 +661,9 @@
             "verification_class": "WLHPLoopHeatRejectionControl"
         },
         {
-            "no": 21,
+            "verification_case_id": 21,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2019_Seattle.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
@@ -684,9 +684,9 @@
             "verification_class": "AutomaticShutdown"
         },
         {
-            "no": 22,
+            "verification_case_id": 22,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeSmall_STD2016_Seattle.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
@@ -729,9 +729,9 @@
             "verification_class": "HeatPumpSupplementalHeatLockout"
         },
         {
-            "no": 23,
+            "verification_case_id": 23,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -760,9 +760,9 @@
             "verification_class": "HeatRejectionFanVariableFlowControl"
         },
         {
-            "no": 24,
+            "verification_case_id": 24,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_HotelLarge_STD2016_Seattle.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw",
@@ -792,9 +792,9 @@
             "verification_class": "GuestRoomControlVent"
         },
         {
-            "no": 25,
+            "verification_case_id": 25,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_HotelLarge_STD2019_Atlanta.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -824,9 +824,9 @@
             "verification_class": "GuestRoomControlTemp"
         },
         {
-            "no": 27,
+            "verification_case_id": 27,
             "run_simulation": true,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "../test_cases/doe_prototype_cases/ASHRAE901_OfficeMedium_STD2019_Atlanta_ventilation_revised_dcv_no_vent_opt_no_econ_V900.idf",
                 "idd": "../resources/Energy+V9_0_1.idd",
                 "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",

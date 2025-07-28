@@ -13,9 +13,9 @@ path = pathlib.Path(__file__).parent.resolve()
 class TestVerification(unittest.TestCase):
     cases = [
         {
-            "no": 1,
+            "verification_case_id": 1,
             "run_simulation": False,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "./tests/api/data/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
                 "idd": "./resources/Energy+V9_0_1.idd",
                 "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -55,9 +55,9 @@ class TestVerification(unittest.TestCase):
             "verification_class": "AutomaticOADamperControl",
         },
         {
-            "no": 2,
+            "verification_case_id": 2,
             "run_simulation": False,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "./tests/api/data/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
                 "idd": "./resources/Energy+V9_0_1.idd",
                 "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -100,9 +100,9 @@ class TestVerification(unittest.TestCase):
 
     custom_cases = [
         {
-            "no": 1,
+            "verification_case_id": 1,
             "run_simulation": False,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "./tests/api/data/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
                 "idd": "./resources/Energy+V9_0_1.idd",
                 "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -142,9 +142,9 @@ class TestVerification(unittest.TestCase):
             "verification_class": "UserProvidedVerificationItem1",
         },
         {
-            "no": 2,
+            "verification_case_id": 2,
             "run_simulation": False,
-            "simulation_IO": {
+            "verification_properties": {
                 "idf": "./tests/api/data/ASHRAE901_OfficeMedium_STD2019_Atlanta.idf",
                 "idd": "./resources/Energy+V9_0_1.idd",
                 "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",

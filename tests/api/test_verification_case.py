@@ -9,9 +9,9 @@ from api import VerificationCase
 
 class TestVerificationCase(unittest.TestCase):
     case = {
-        "no": 1,
+        "verification_case_id": 1,
         "run_simulation": True,
-        "simulation_IO": {
+        "verification_properties": {
             "idf": "../test_cases/doe_prototype_cases/ASHRAE901_Hospital_STD2019_Atlanta_Case1.idf",
             "idd": "../resources/Energy+V9_0_1.idd",
             "weather": "../weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -37,9 +37,9 @@ class TestVerificationCase(unittest.TestCase):
     )
 
     example_base_case = {
-        "no": 1,
+        "verification_case_id": 1,
         "run_simulation": True,
-        "simulation_IO": {
+        "verification_properties": {
             "idf": "../testing.idf",
             "idd": "../Energy+V9_0_1.idd",
             "weather": "./USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
@@ -65,7 +65,7 @@ class TestVerificationCase(unittest.TestCase):
         "verification_class": "Testing",
     }
     update_key_value = {
-        "simulation_IO": {
+        "verification_properties": {
             "idf": ["Testing_file1.idf", "Testing_file2.idf"],
         },
         "datapoints_source": {
@@ -357,7 +357,7 @@ class TestVerificationCase(unittest.TestCase):
     def test_validate_verification_case_structure_missing_leaf_key(self):
         with self.assertLogs() as logobs:
             case_missing_subject = copy.deepcopy(self.case)
-            del case_missing_subject["simulation_IO"][
+            del case_missing_subject["verification_properties"][
                 "output"
             ]  # intentionally missed subject key
             validation_result = VerificationCase.validate_verification_case_structure(

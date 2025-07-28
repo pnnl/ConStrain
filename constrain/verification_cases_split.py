@@ -19,7 +19,7 @@ i = 0
 for item in items:
     idf_path = None
     if item["run_simulation"]:
-        idf_path = item["simulation_IO"]["idf"]
+        idf_path = item["verification_properties"]["idf"]
         if idf_path not in unique_idfs_to_items:
             unique_idfs_to_items[idf_path] = []
         unique_idfs_to_items[idf_path].append(item)
