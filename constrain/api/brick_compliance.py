@@ -538,7 +538,9 @@ class BrickCompliance:
                     "ep_path",
                 ):
                     verification_case_dict_copy["verification_properties"][key_name] = (
-                        default_verification_case_values["verification_properties"][key_name]
+                        default_verification_case_values["verification_properties"][
+                            key_name
+                        ]
                     )
 
                 verification_case_dict_copy["expected_result"] = (
