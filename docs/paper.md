@@ -7,6 +7,30 @@ tags:
   - control
   - simulation
   - hvac
+authors:
+  - name: Xuechen Lei
+    orcid: 0000-0003-3310-9750
+    affiliation: 1
+  - name: Jérémy Lerond
+    orcid: 0000-0002-1630-6886
+    affiliation: 1
+  - name: Yun Joon Jung
+    orcid: 0000-0003-1311-8932
+    affiliation: 1
+  - name: Julian Slane-Holloway
+    orcid: 0009-0008-9572-9123
+    affiliation: 1
+  - name: Fan Feng
+    orcid: 0000-0002-6230-0063
+    affiliation: 1
+  - name: Yan Chen
+    orcid: 0000-0002-2988-9136
+    affiliation: 1
+
+affiliations:
+ - name: Pacific Northwest National Laboratory, Richland, WA, USA
+   index: 1
+date: 28 May 2024
 
 bibliography: paper.bib
 ---
