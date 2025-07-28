@@ -45,7 +45,8 @@
                     "position_damper_air_outdoor_min": "min_oa_p",
                     "position_damper_air_outdoor_max": "max_oa_p",
                     "flag_economizer_limit": "economizer_high_limit_reached"
-                }
+                },
+                "parameters": {}
             },
             "verification_class": "G36OutdoorAirDamperPositionForReliefDamperOrFan"
         },
