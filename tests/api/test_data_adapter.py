@@ -1,8 +1,9 @@
 import unittest, sys, os, datetime, copy, pandas
 
-sys.path.append("./constrain")
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from api import DataAdapter
+from constrain.api import DataAdapter
 
 
 class TestDataAdapter(unittest.TestCase):

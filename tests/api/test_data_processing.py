@@ -1,10 +1,12 @@
 import unittest, sys, datetime, copy, pandas
+import os
 
 import matplotlib
 
-sys.path.append("./constrain")
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from api import DataProcessing
+from constrain.api import DataProcessing
 
 
 # Helper
