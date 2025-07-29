@@ -14,9 +14,10 @@ class CheckLibBase(ABC):
     """Abstract class defining interfaces for item-specific verification classes"""
 
     points = None
-    result = pd.DataFrame()
 
     def __init__(self, df: pd.DataFrame, params=None, results_folder=None):
+        self.result = pd.DataFrame()
+        self.points_list = self.points
         full_df = df.copy(deep=True)
         if params is not None:
             for k, v in params.items():
@@ -34,10 +35,6 @@ class CheckLibBase(ABC):
         self.results_folder = results_folder
         self.verify()
         self.result.name = ""
-
-    @property
-    def points_list(self) -> List[str]:
-        return self.points
 
     @abstractmethod
     def check_bool(self) -> bool:
