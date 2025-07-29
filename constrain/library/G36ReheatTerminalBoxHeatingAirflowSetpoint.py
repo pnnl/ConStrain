@@ -115,6 +115,7 @@ elif 50 < signal_heat <= 100:
   - Data Point Affiliation: Terminal box control
 
 """
+import logging
 
 from constrain.checklib import RuleCheckBase
 
@@ -170,7 +171,7 @@ class G36ReheatTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
                 heating_max = v_heat_max
                 heating_min = v_cool_max
             case _:
-                print("invalid operation mode value")
+                logging.info("invalid operation mode value")
                 return "Untested"
 
         if 0 < signal_heat <= 50:

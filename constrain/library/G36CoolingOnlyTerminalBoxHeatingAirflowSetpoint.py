@@ -71,6 +71,7 @@ end
   - Data Point Affiliation: Zone airflow control
 
 """
+import logging
 
 from constrain.checklib import RuleCheckBase
 
@@ -101,7 +102,7 @@ class G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint(RuleCheckBase):
                 heating_max = v_cool_max
                 heating_min = 0
             case _:
-                print("invalid operation mode value")
+                logging.info("invalid operation mode value")
                 return "Untested"
 
         if heating_min <= v_sp <= heating_max:

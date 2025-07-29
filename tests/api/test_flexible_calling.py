@@ -272,7 +272,7 @@ class TestFlexibleCalling(unittest.TestCase):
             json_case_path = "./tests/api/data/flexible_calling_unit_test/verification_case_unit_test_Path.json"
 
             # Change working_dir value in the json file to a valid path
-            print(os.getcwd())
+            logging.info(os.getcwd())
 
             with open(json_case_path, "r") as f:
                 workflow_dict = json.load(f)

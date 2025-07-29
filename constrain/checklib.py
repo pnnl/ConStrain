@@ -245,7 +245,7 @@ class CheckLibBase(ABC):
                 i += 1
                 axx.ticklabel_format(useOffset=False, axis="y")
             except:
-                logging.error(f"{pt} cannot be plotted by itself, ignored in the plot.")
+                logging.warning(f"{pt} cannot be plotted by itself, ignored in the plot.")
 
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/All_plot_obo.png")
@@ -357,7 +357,7 @@ class CheckLibBase(ABC):
                 i += 1
                 axx.ticklabel_format(useOffset=False, axis="y")
             except:
-                logging.error(f"{pt} cannot be plotted by itself, ignored in the plot.")
+                logging.warning(f"{pt} cannot be plotted by itself, ignored in the plot.")
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/Day_plot_obo.png")
 

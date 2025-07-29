@@ -68,6 +68,7 @@ else:
 
 """
 
+import logging
 import pandas as pd
 from constrain.checklib import CheckLibBase
 from scipy.stats import pearsonr
@@ -114,7 +115,7 @@ class DemandControlVentilation(CheckLibBase):
         self.result = pd.Series(data=self.bool_result, index=self.df.index)
 
     def check_detail(self):
-        print("Verification results dict: ")
+        logging.info("Verification results dict: ")
         output = {
             "Sample #": len(self.result),
             "Pass #": len(self.result[self.result == True]),
@@ -122,7 +123,7 @@ class DemandControlVentilation(CheckLibBase):
             "Verification Passed?": self.check_bool(),
             "Message": self.msg,
         }
-        print(output)
+        logging.info(output)
         return output
 
     def check_bool(self):

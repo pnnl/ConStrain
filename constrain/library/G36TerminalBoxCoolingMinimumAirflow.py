@@ -71,6 +71,7 @@ else:
   - Data Point Affiliation: Zone monitoring
   
 """
+import logging
 
 from constrain.checklib import RuleCheckBase
 
@@ -104,7 +105,7 @@ class G36TerminalBoxCoolingMinimumAirflow(RuleCheckBase):
             case "cooldown" | "setup" | "warmup" | "setback" | "unoccupied":
                 airflowmin = 0
             case _:
-                print("invalid operation mode value")
+                logging.info("invalid operation mode value")
                 return "Untested"
 
         if v_sp - self.get_tolerance("airflow", "general") > airflowmin:

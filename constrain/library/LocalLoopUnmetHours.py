@@ -59,6 +59,7 @@ else:
   - Data Point Affiliation: Control loop configuration
 
 """
+import logging
 
 import pandas as pd
 from constrain.checklib import RuleCheckBase
@@ -123,7 +124,7 @@ class LocalLoopUnmetHours(RuleCheckBase):
             return True
 
     def check_detail(self):
-        print("Verification results dict: ")
+        logging.info("Verification results dict: ")
         output = {
             "Sample #": len(self.result),
             "Pass #": len(self.result[self.result == True]),
@@ -133,5 +134,5 @@ class LocalLoopUnmetHours(RuleCheckBase):
             "Total Unmet Hours": self.total_unmet_hours,
             "Total Unmet Hours Ratio": self.total_unmet_hours / self.total_hours,
         }
-        print(output)
+        logging.info(output)
         return output

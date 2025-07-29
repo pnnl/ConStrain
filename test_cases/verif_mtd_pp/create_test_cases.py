@@ -8,6 +8,7 @@ from constrain.workflowsteps import *
 from constrain.library import *
 from constrain.libcases import *
 from eppy.modeleditor import IDF
+import logging
 
 IDF.setiddname("../../resources/Energy+V9_0_1.idd")
 
@@ -17,7 +18,7 @@ def chwreset(idf, idf_f, id, cases):
     plantloops = idf.idfobjects["PlantLoop".upper()]
     chwloops = [p for p in plantloops if "cool" in p.Name.lower()]
     if len(chwloops):
-        print(
+        logging.info(
             "Adding CHWReset verification items for {}".format(
                 idf_f.split("/")[-1].replace(".idf", "")
             )
@@ -90,7 +91,7 @@ def hwreset(idf, idf_f, id, cases):
     plantloops = idf.idfobjects["PlantLoop".upper()]
     hwloops = [p for p in plantloops if "heat" in p.Name.lower()]
     if len(hwloops):
-        print(
+        logging.info(
             "Adding HWReset verification items for {}".format(
                 idf_f.split("/")[-1].replace(".idf", "")
             )
@@ -186,7 +187,7 @@ def sat_reset(idf, idf_f, id, cases):
             bldg_type = k
 
     if bldg_type != "":
-        print(
+        logging.info(
             "Adding SupplyAirTempReset verification items for {}".format(
                 idf_f.split("/")[-1].replace(".idf", "")
             )
@@ -231,7 +232,7 @@ def sat_reset(idf, idf_f, id, cases):
 
 
 def zone_temp_ctrl(idf, idf_f, id, cases):
-    print(
+    logging.info(
         "Adding ZoneTempControl verification items for {}".format(
             idf_f.split("/")[-1].replace(".idf", "")
         )
@@ -271,7 +272,7 @@ def zone_temp_ctrl(idf, idf_f, id, cases):
 
 
 def zone_temp_ctrl_depth_htg(idf, idf_f, id, cases):
-    print(
+    logging.info(
         "Adding ZoneHeatingResetDepth verification items for {}".format(
             idf_f.split("/")[-1].replace(".idf", "")
         )
@@ -306,7 +307,7 @@ def zone_temp_ctrl_depth_htg(idf, idf_f, id, cases):
 
 
 def zone_temp_ctrl_depth_clg(idf, idf_f, id, cases):
-    print(
+    logging.info(
         "Adding ZoneCoolingResetDepth verification items for {}".format(
             idf_f.split("/")[-1].replace(".idf", "")
         )
@@ -341,7 +342,7 @@ def zone_temp_ctrl_depth_clg(idf, idf_f, id, cases):
 
 
 def zone_temp_ctrl_min(idf, idf_f, id, cases):
-    print(
+    logging.info(
         "Adding ZoneHeatSetpointMinimum verification items for {}".format(
             idf_f.split("/")[-1].replace(".idf", "")
         )
@@ -376,7 +377,7 @@ def zone_temp_ctrl_min(idf, idf_f, id, cases):
 
 
 def zone_temp_ctrl_max(idf, idf_f, id, cases):
-    print(
+    logging.info(
         "Adding ZoneCoolingSetpointMaximum verification items for {}".format(
             idf_f.split("/")[-1].replace(".idf", "")
         )
@@ -497,7 +498,7 @@ def integrated_econ(idf, idf_f, id, cases):
                                     clg_coil = brc[brc.fieldnames[i + 1]]
 
                                     if rep:
-                                        print(
+                                        logging.info(
                                             "Adding IntegratedEconomizerControl verification items for {}".format(
                                                 idf_f.split("/")[-1].replace(".idf", "")
                                             )
@@ -624,7 +625,7 @@ def diff_enthalpy_econ(idf, idf_f, id, cases):
             for oa_ctrl in idf.idfobjects["CONTROLLER:OUTDOORAIR"]:
                 if airloop_name in oa_ctrl.Name:
                     if rep:
-                        print(
+                        logging.info(
                             "Adding EconomizerHighLimitD verification items for {}".format(
                                 idf_f.split("/")[-1].replace(".idf", "")
                             )

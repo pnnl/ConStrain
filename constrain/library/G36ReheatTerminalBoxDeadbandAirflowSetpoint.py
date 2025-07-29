@@ -73,6 +73,7 @@ else:
   - Data Value Unit: temperature
   - Data Point Affiliation: Terminal box control
 """
+import logging
 
 from constrain.checklib import RuleCheckBase
 
@@ -112,7 +113,7 @@ class G36ReheatTerminalBoxDeadbandAirflowSetpoint(RuleCheckBase):
             case "cooldown" | "setup" | "warmup" | "setback" | "unoccupied":
                 dbmin = 0
             case _:
-                print("invalid operation mode value")
+                logging.info("invalid operation mode value")
                 return "Untested"
 
         if abs(v_sp - dbmin) <= self.get_tolerance("airflow", "general"):
