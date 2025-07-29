@@ -268,7 +268,7 @@ class VerificationCase:
                             return False
                         else:
                             if verbose:
-                                print(
+                                logging.info(
                                     f"The type of {key} has the correct type {schema_value}"
                                 )
             return True
