@@ -1,6 +1,6 @@
 from constrain.workflowsteps import *
 from constrain.library import *
-import sys, json, pathlib
+import sys, json, pathlib, logging
 from tqdm import tqdm
 
 PATH = pathlib.Path(__file__).parent.resolve()
@@ -48,7 +48,7 @@ def run_verification_case(item_dict, run_path_postfix=""):
 def main():
     num_argv = len(sys.argv)
     if num_argv == 1:
-        print("No command line argument provided, ABORT!")
+        logging.error("No command line argument provided, ABORT!")
         return
     cases_path = sys.argv[1]
     lib_items_path = f"{PATH}/schema/library.json"
@@ -57,36 +57,36 @@ def main():
     )
 
     if num_argv == 2:
-        print(f"Running all verification cases in {cases_path}")
+        logging.info(f"Running all verification cases in {cases_path}")
     elif num_argv == 3:
         case_no = int(sys.argv[2])
         items = [items[case_no]]
-        print(
+        logging.info(
             f"Running verification case sequence no {case_no} (not case id) for {cases_path}"
         )
     elif num_argv == 4:
         cases_no_start = int(sys.argv[2])
         cases_no_stop = int(sys.argv[3])
         items = items[cases_no_start:cases_no_stop]
-        print(
+        logging.info(
             f"Running verification cases sequence no ranging from {cases_no_start} to {cases_no_stop} (not case id) for {cases_path}"
         )
     else:
-        print(f"Error: Invalid number of arguments provided: {sys.argv}")
+        logging.error(f"Error: Invalid number of arguments provided: {sys.argv}")
         return
 
     rp_postfix = "_" + cases_path.strip().replace(".json", "").split("_")[-1]
 
     md_dict = {}
     for item in tqdm(items):
-        print(json.dumps(item, indent=2))
+        logging.info(json.dumps(item, indent=2))
         this_dict = run_verification_case(item, run_path_postfix=rp_postfix)
         md_dict.update(this_dict)
 
     cases_name = cases_path.split("/")[-1].replace(".json", "").strip()
     cases_file = f"../results/{cases_name}_md.json"
 
-    print(f"DONE! Saving markdown results to {cases_file}")
+    logging.info(f"DONE! Saving markdown results to {cases_file}")
     with open(cases_file, "w") as fw:
         json.dump(md_dict, fw)
 

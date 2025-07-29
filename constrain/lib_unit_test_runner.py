@@ -52,7 +52,7 @@ def main():
     """
     case = json.loads(case_str)
     results = run_test_verification_with_data("AutomaticOADamperControl", df)
-    print(results)
+    logging.info(results)
 
 
 if __name__ == "__main__":
