@@ -178,7 +178,7 @@ class TestDataProcessing(unittest.TestCase):
             s = dp.slice(
                 datetime.datetime(2000, 1, 1, 11), datetime.datetime(2000, 1, 1, 11)
             )
-            self.assertEqual(
+            self.assertTrue(
                 f"WARNING:root:Data slice contains no sample." in logobs.output
             )
 
