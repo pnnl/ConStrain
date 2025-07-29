@@ -12,8 +12,7 @@ import yaml
 import pathlib
 from pydash import filter_, flatten_deep
 
-path = pathlib.Path(__file__).parent.resolve()
-
+PATH = pathlib.Path(__file__).parent.resolve()
 HVAC_ZONE_NAME_PARSE_RE = r"\?(\w+) a brick:HVAC_Zone \."
 CASE_KEY_NAMES = [
     "no",
@@ -157,7 +156,7 @@ class BrickCompliance:
             return None
 
         try:
-            with open(f"{path}/../schema/library.json", "r") as file:
+            with open(f"{PATH}/../schema/library.json", "r") as file:
                 self.library_json = json.load(file)
         except FileNotFoundError:
             logging.error(

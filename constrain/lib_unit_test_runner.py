@@ -5,12 +5,12 @@ import json
 import pandas as pd
 
 
-items_json = "./library/library.json"
+ITEMS_JSON = "./library/library.json"
 
 
 def get_verification_cases(cases_json):
     items = assemble_verification_items(
-        cases_path=cases_json, lib_items_path=items_json
+        cases_path=cases_json, lib_items_path=ITEMS_JSON
     )
     return items
 

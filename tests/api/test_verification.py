@@ -9,7 +9,7 @@ from constrain.api import VerificationCase
 from constrain.api import Verification
 from constrain.api import DataProcessing
 
-path = pathlib.Path(__file__).parent.resolve()
+PATH = pathlib.Path(__file__).parent.resolve()
 
 
 class TestVerification(unittest.TestCase):
