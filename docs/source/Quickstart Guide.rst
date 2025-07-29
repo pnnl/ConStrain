@@ -217,9 +217,15 @@ Using **ConStrain**'s Graphical User Interface (GUI)
 
 Workflow can be pretty complex and difficult to fully visualise from JSON files. **ConStrain** includes a GUI to help user create, edit, and picture workflows. If **ConStrain** has been installed, the GUI can be run by just running :bash:`constrain` in a command prompt or terminal. It is documented in this file_.
 
+Brick Schema and **ConStrain**
+--------------------------------
+**ConStrain** uses the the Brick Schema to automate the verification process. For additional information, see the how-to guide_.
+
 .. _schema: https://github.com/pnnl/ConStrain/blob/develop/constrain/schema/verification_cases.schema.json
 .. _here: https://pnnl.github.io/ConStrain/Code%20Documentation.html#api.verification.Verification.configure
 .. _library: https://github.com/pnnl/ConStrain/blob/develop/constrain/schema/library.json
 .. _API: https://pnnl.github.io/ConStrain/Code%20Documentation.html#data-processing-py
 .. _file: https://github.com/pnnl/ConStrain/blob/develop/constrain/app/README.md
 .. _workflow: https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/G36_demo_workflow.json
+.. _guide: https://github.com/pnnl/ConStrain/blob/develop/docs/brick_guide/brick_comment_new.md
+
