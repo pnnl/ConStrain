@@ -48,7 +48,6 @@ class CheckLibBase(ABC):
         self.result.name = ""
         self.df["Verification Result"] = self.result
 
-
     @abstractmethod
     def check_bool(self) -> bool:
         """implementation of the checking boolean return"""
