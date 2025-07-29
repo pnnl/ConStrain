@@ -37,7 +37,7 @@ bibliography: paper.bib
 
 # Summary
 
-The Control Strainer, or `ConStrain`, is a python-based framework that can be used by energy modelers, building engineers, and researchers to conduct consistent and automated verification of building system controls using either timeseries data generated from whole-building energy simulations (e.g. EnergyPlus [@energyplus]) or from actual building automation system (BAS) trend data. `ConStrain` is made of three main components: an expandable control verification algorithms library, a streamlined verification case and data preparation process, and a standardized performance evaluation and reporting process. 
+The Control Strainer (ConStrain) is a Python-based, open-source framework that enables commissioning agents, controls engineers, building automation specialists, facility managers, and energy modelers to conduct consistent and automated verification of building system controls. It utilizes real-time Building Automation System (BAS) trend data or time-series data generated from whole-building energy system simulations (e.g., EnergyPlus [@energyplus], Spawn-of-EnergyPlus [@spawn], Modelica [@modelica]).
 
 At its roots, `ConStrain`'s verification library was developed to check for compliance with control-related requirements in building energy codes—such as scheduling, economizer logic, demand-controlled ventilation, or equipment staging. These requirements specify how Heating, Ventilation, and Air Conditioning (HVAC) systems should behave to ensure energy efficiency. ConStrain formalizes and automates the control verification process, which involves checking time-series sensor and actuator data to determine whether actual system operation aligns with those intended control sequences. Meanwhile, the verification library is implemented in a way such that it is expandable and can cover user-customized control verifications.
 
@@ -56,9 +56,7 @@ Current control verification is often conducted manually, which is time-consumin
 
 ### Comparison with existing tools and industry practices
 
-In current industry practice, control verification is often done manually by commissioning agents or energy auditors using general-purpose tools such as spreadsheets, scripting environments (e.g., Excel, MATLAB, or Python), or proprietary solutions bundled with Building Automation Systems (BAS). These approaches are typically ad hoc, time-consuming, and lack reproducibility and standardization across projects.
-
-A few commercial tools do support some level of automated trend data analysis, such as SkySpark [@skyspark], CopperTree [@coppertree], or Fault Detection and Diagnostics (FDD) modules embedded in modern BAS platforms [@fdd_review]. However, these are typically closed-source, require vendor-specific data formats, and are not tailored for code-compliance or standards-based control verification.
+In current industry practices, HVAC control verification is often conducted manually by commissioning agents or facilities teams, or through proprietary trend data analytics solutions integrated into Building Automation Systems (BAS). These tools, while valuable for fault detection and system monitoring, are generally vendor-specific, offer limited transparency, and are not purpose-built to ensure that control strategies intended to deliver energy savings, such as those specified in energy codes or design standards, are functioning as intended in actual operation. 
 
 To our knowledge, ConStrain is the only open-source software framework focused specifically on automated control verification aligned with building energy code and advanced building control guidelines (e.g., ASHRAE 90.1, Guideline 36). It distinguishes itself by offering:
 
