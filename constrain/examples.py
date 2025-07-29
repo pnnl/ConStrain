@@ -38,8 +38,6 @@ class Examples:
                 data_path=self.info[example_name]["path_to_data"],
                 data_source="EnergyPlus",
             ).data
-        else:
-            return
 
     def library(self):
         return f"{PATH}/schema/library.json"
@@ -47,5 +45,3 @@ class Examples:
     def verifications(self, example_name):
         if self.check_example(example_name):
             return self.info[example_name]["path_to_verifications"]
-        else:
-            return
