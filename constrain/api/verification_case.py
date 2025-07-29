@@ -8,8 +8,6 @@ import sys, os, logging, glob, json, uuid, copy
 
 from typing import Dict, List, Tuple, Union
 
-sys.path.append("..")
-
 
 class VerificationCase:
     def __init__(self, cases: List = None, json_case_path: str = None) -> None:

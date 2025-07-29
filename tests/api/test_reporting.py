@@ -2,8 +2,9 @@ import os
 import sys
 import unittest
 
-sys.path.append("./constrain")
-from api import Reporting
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from constrain.api import Reporting
 
 VERIFICATION_JSON = "./tests/api/data/verification_output/*_md.json"
 RESULT_MD_NAME = "testing.md"

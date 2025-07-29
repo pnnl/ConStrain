@@ -1,7 +1,9 @@
-import unittest, sys, json
+import unittest, sys, json, os
 
-sys.path.append("./constrain")
-from api import VerificationLibrary
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+
+from constrain.api import VerificationLibrary
 
 LIB_PATH = "./constrain/schema/library.json"
 

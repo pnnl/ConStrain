@@ -13,8 +13,6 @@ import pathlib
 from pydash import filter_, flatten_deep
 
 PATH = pathlib.Path(__file__).parent.resolve()
-sys.path.append("..")
-
 HVAC_ZONE_NAME_PARSE_RE = r"\?(\w+) a brick:HVAC_Zone \."
 CASE_KEY_NAMES = [
     "no",

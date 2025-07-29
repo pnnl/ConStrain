@@ -1,10 +1,12 @@
 import warnings
+import unittest
+import sys
+import os
 
-import unittest, sys
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
-sys.path.append("./constrain")
-
-from api import Workflow
+from constrain.api import Workflow
 
 
 class TestWorkflow(unittest.TestCase):

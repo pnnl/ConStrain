@@ -9,9 +9,7 @@ import sys, logging, json, os, datetime, platform
 from pathlib import Path
 from typing import Union
 
-sys.path.append("./constrain")
-sys.path.append("..")
-from constrain.api import (
+from . import (
     BrickCompliance,
     VerificationLibrary,
     DataProcessing,

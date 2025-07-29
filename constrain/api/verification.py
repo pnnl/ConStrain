@@ -10,12 +10,10 @@ import pandas as pd
 from typing import Dict, List, Tuple, Union
 from pathlib import Path
 
-sys.path.append("..")
-
 from .verification_case import *
-from constrain.run_verification_case import *
-from constrain.workflowsteps import *
-from constrain.libcases import *
+from ..run_verification_case import *
+from ..workflowsteps import *
+from ..libcases import *
 
 
 class Verification:

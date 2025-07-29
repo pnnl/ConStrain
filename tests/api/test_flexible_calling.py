@@ -2,10 +2,10 @@ import unittest, sys, logging, json, os
 import platform
 from unittest.mock import patch
 
-import constrain
-from constrain.api import Workflow
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
-sys.path.append("./constrain")
+from constrain.api import Workflow
 
 
 class TestFlexibleCalling(unittest.TestCase):

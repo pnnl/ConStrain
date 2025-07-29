@@ -7,8 +7,7 @@ Verification Library API
 import sys, logging, glob, json, inspect
 from typing import Dict, List, Union
 
-sys.path.append("..")
-from constrain.library import *
+from ..library import *
 
 LIBRARY_SCHEMA = {
     "library_item_id": (int, str, float),

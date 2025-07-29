@@ -7,8 +7,7 @@ Data Adapter API
 import sys, os, logging, datetime, copy
 import pandas as pd
 
-sys.path.append("..")
-from constrain.datetimeep import *
+from ..datetimeep import *
 
 
 class DataAdapter:
