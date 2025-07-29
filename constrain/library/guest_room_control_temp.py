@@ -1,13 +1,82 @@
-from constrain.checklib import RuleCheckBase
+"""
+### Description
+
+Section 6.4.3.3.5.1 Guest Room HVAC Set-Point Control
+- Within 30 minutes of all occupants leaving the guest room, HVAC set points shall be automatically raised by at least 4°F from the occupant set point in the cooling mode and automatically
+lowered by at least 4°F from the occupant set point in the heating mode. When the guest room is unrented and unoccupied, HVAC set points shall be automatically reset to 80°F or higher in the cooling mode and to 60°F or lower in the heating mode.
+
+### Code requirement
+
+- Code Name: ASHRAE 90.1
+- Code Year: 2016
+- Code Section: 6.4.3.3.5.1 Guest Room HVAC Set-Point Control
+
+### Verification Approach
+
+The verification checks two scenarios:
+1. For unrented rooms (daily occupancy ≈ 0):
+   - Heating setpoint should be below 15.6°C (60°F)
+   - Cooling setpoint should be above 26.7°C (80°F)
+2. For rented rooms with temporary vacancy:
+   - Heating setpoint should decrease by at least 2.22°C (4°F)
+   - Cooling setpoint should increase by at least 2.22°C (4°F)
+
+### Verification Applicability
+
+- Building Type(s): hotels, motels
+- Space Type(s): guest rooms
+- System(s): room HVAC units
+- Climate Zone(s): any
+- Component(s): thermostats, occupancy sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+for each day:
+    if room_not_rented (occupancy ≈ 0 all day):
+        if temperature_air_zone_heat_setpoint < 15.6°C and temperature_air_zone_cool_setpoint > 26.7°C:
+            pass  # Proper setback for unrented room
+        else:
+            fail  # Setback not implemented
+    else:  # room is rented
+        occupied_heating_sp = max(temperature_air_zone_heat_setpoint during occupied periods)
+        occupied_cooling_sp = min(temperature_air_zone_cool_setpoint during occupied periods)
+        
+        if temperature_air_zone_heat_setpoint < (occupied_heating_sp - 2.22°C) or
+           temperature_air_zone_cool_setpoint > (occupied_cooling_sp + 2.22°C):
+            pass  # Proper setback when guests leave
+        else:
+            fail  # Insufficient setback
+```
+
+### Data requirements
+
+- temperature_air_zone_heat_setpoint: Heating setpoint
+  - Data Value Unit: °C
+  - Data Point Affiliation: Zone temperature control
+
+- temperature_air_zone_cool_setpoint: Cooling setpoint
+  - Data Value Unit: °C
+  - Data Point Affiliation: Zone temperature control
+
+- schedule_occupancy: Occupancy schedule
+  - Data Value Unit: fraction (0-1)
+  - Data Point Affiliation: Zone occupancy
+
+"""
+
 import pandas as pd
+from constrain.checklib import RuleCheckBase
 
 
 class GuestRoomControlTemp(RuleCheckBase):
-    points = ["T_z_hea_set", "T_z_coo_set", "O_sch", "tol_occ", "tol_temp"]
+    points = [
+        "temperature_air_zone_heat_setpoint",
+        "temperature_air_zone_cool_setpoint",
+        "schedule_occupancy",
+    ]
 
     def verify(self):
-        tol_occ = self.df["tol_occ"][0]
-        tol_temp = self.df["tol_temp"][0]
         year_info = 2000
         result_repo = []
         for idx, day in self.df.groupby(self.df.index.date):
@@ -21,10 +90,15 @@ class GuestRoomControlTemp(RuleCheckBase):
                 pass
             else:
                 if (
-                    day["O_sch"] <= tol_occ
+                    day["schedule_occupancy"]
+                    <= self.get_tolerance("ratio", "occupancy")
                 ).all():  # confirmed this room is NOT rented out
-                    if (day["T_z_hea_set"] < 15.6 + tol_temp).all() and (
-                        day["T_z_coo_set"] > 26.7 - tol_temp
+                    if (
+                        day["temperature_air_zone_heat_setpoint"]
+                        < 15.6 + self.get_tolerance("temperature", "zone")
+                    ).all() and (
+                        day["temperature_air_zone_cool_setpoint"]
+                        > 26.7 - self.get_tolerance("temperature", "zone")
                     ).all():
                         result_repo.append(
                             1
@@ -34,13 +108,23 @@ class GuestRoomControlTemp(RuleCheckBase):
                             0
                         )  # fail, zone temperature setpoint was not reset correctly
                 else:  # room is rented out
-                    T_z_hea_occ_set = day.query("O_sch > 0.0")["T_z_hea_set"].max()
-                    T_z_coo_occ_set = day.query("O_sch > 0.0")["T_z_coo_set"].min()
+                    T_z_hea_occ_set = day.query("schedule_occupancy > 0.0")[
+                        "temperature_air_zone_heat_setpoint"
+                    ].max()
+                    T_z_coo_occ_set = day.query("schedule_occupancy > 0.0")[
+                        "temperature_air_zone_cool_setpoint"
+                    ].min()
 
                     if (
-                        day["T_z_hea_set"] < T_z_hea_occ_set - 2.22 + tol_temp
+                        day["temperature_air_zone_heat_setpoint"]
+                        < T_z_hea_occ_set
+                        - 2.22
+                        + self.get_tolerance("temperature", "zone")
                     ).all() or (
-                        day["T_z_coo_set"] > T_z_coo_occ_set + 2.22 - tol_temp
+                        day["temperature_air_zone_cool_setpoint"]
+                        > T_z_coo_occ_set
+                        + 2.22
+                        - self.get_tolerance("temperature", "zone")
                     ).all():
                         result_repo.append(
                             1

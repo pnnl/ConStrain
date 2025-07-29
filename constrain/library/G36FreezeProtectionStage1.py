@@ -1,29 +1,55 @@
 """
-G36 2021
-
 ### Description
 
-5.16.12.1.	If the supply air temperature drops below 4.4°C (40°F) for 5 minutes, send two (or more, as required to ensure that heating plant is active) heating hot-water plant requests, override the outdoor air damper to the minimum position, and modulate the heating coil to maintain a supply air temperature of at least 6°C (42°F). Disable this function when supply air temperature rises above 7°C (45°F) for 5 minutes.
+Section 5.16.12.1.
+- If the supply air temperature drops below 4.4°C (40°F) for 5 minutes, send two (or more, as required to ensure that heating plant is active) heating hot-water plant requests, override the outdoor air damper to the minimum position, and modulate the heating coil to maintain a supply air temperature of at least 6°C (42°F). Disable this function when supply air temperature rises above 7°C (45°F) for 5 minutes.
 
-### Verification logic
+### Code requirement
+
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.16.12 Freeze Protection
+- Code Subsection: 5.16.12.1 Stage 1
+
+### Verification Approach
+
+The verification monitors supply air temperature and outdoor air damper position. When temperature drops below 4.4°C (40°F) for 5 minutes, it verifies that the outdoor air damper moves to minimum position. The protection should remain active until temperature rises above 7°C (45°F) for 5 minutes.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): Air handling units
+- Climate Zone(s): any
+- Component(s): supply air temperature sensors, outdoor air dampers
+
+### Verification Algorithm Pseudo Code
 
 ```python
-if supply_air_temp < 4.4 (continuously 5 minutes) and outdoor_damper_command > outdoor_damper_minimum:
-  fail
-elif outdoor_damper_command > outdoor_damper_minimum and not (supply_air_temp > 7 (continuously 5 minutes)):
-  fail
+if temperature_air_supply_setpoint < 4.4 (continuously 5 minutes) and position_damper_air_outdoor > position_damper_air_outdoor_min:
+    fail
+elif position_damper_air_outdoor > position_damper_air_outdoor_min and not (temperature_air_supply_setpoint > 7 (continuously 5 minutes)):
+    fail
 else:
-  pass
+    pass
 
-if never (supply_air_temp < 4.4 (continuously 5 minutes)):
-  untested
+if never (temperature_air_supply_setpoint < 4.4 (continuously 5 minutes)):
+    untested
 ```
 
 ### Data requirements
 
-- supply_air_temp: supply air temperature
-- outdoor_damper_command: outdoor air damper
-- outdoor_damper_minimum: outdoor air damper minimum position
+- temperature_air_supply_setpoint: Supply air temperature setpoint
+  - Data Value Unit: °C
+  - Data Point Affiliation: Air handling unit
+
+- position_damper_air_outdoor: Outdoor air damper position
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
+
+- position_damper_air_outdoor_min: Minimum outdoor air damper position
+  - Data Value Unit: percent
+  - Data Point Affiliation: Air handling unit
 
 """
 
@@ -31,18 +57,26 @@ from constrain.checklib import RuleCheckBase
 
 
 class G36FreezeProtectionStage1(RuleCheckBase):
-    points = ["supply_air_temp", "outdoor_damper_command", "outdoor_damper_minimum"]
+    points = [
+        "temperature_air_supply_setpoint",
+        "position_damper_air_outdoor",
+        "position_damper_air_outdoor_min",
+    ]
 
     def ts_verify_logic(self, t):
         if not t["freeze_status"]:
             return True
         if (t["sat_lowerthan_4.4_timer"] > 5) and (
-            t["outdoor_damper_command"] > t["outdoor_damper_minimum"]
+            t["position_damper_air_outdoor"]
+            > t["position_damper_air_outdoor_min"]
+            - self.get_tolerance("damper", "position")
         ):
             return False
-        elif (t["outdoor_damper_command"] > t["outdoor_damper_minimum"]) and (
-            not (t["sat_higherthan_7_timer"] >= 5)
-        ):
+        elif (
+            t["position_damper_air_outdoor"]
+            > t["position_damper_air_outdoor_min"]
+            - self.get_tolerance("damper", "position")
+        ) and (not (t["sat_higherthan_7_timer"] >= 5)):
             return False
         else:
             return True
@@ -55,7 +89,9 @@ class G36FreezeProtectionStage1(RuleCheckBase):
         ht7_timer_start = None
         freeze_status = False
         for i, t in self.df.iterrows():
-            if t["supply_air_temp"] < 4.4:
+            if t["temperature_air_supply_setpoint"] < (
+                4.4 + self.get_tolerance("temperature", "supply_air")
+            ):
                 if lt4p4_timer_start is None:
                     lt4p4_timer_start = i
                     lt4p4_timer_list.append(0)
@@ -68,7 +104,9 @@ class G36FreezeProtectionStage1(RuleCheckBase):
                 lt4p4_timer_start = None
                 lt4p4_timer_list.append(0)
 
-            if t["supply_air_temp"] > 7:
+            if t["temperature_air_supply_setpoint"] > (
+                7 - self.get_tolerance("temperature", "supply_air")
+            ):
                 if ht7_timer_start is None:
                     ht7_timer_start = i
                     ht7_timer_list.append(0)

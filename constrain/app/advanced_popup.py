@@ -3,11 +3,11 @@ import json
 from PyQt6.QtWidgets import (
     QLabel,
     QVBoxLayout,
-    QPushButton,
     QDialog,
     QTextEdit,
     QMessageBox,
 )
+from constrain.app.components.button import StandardButton
 from PyQt6.QtGui import QFontMetricsF
 
 
@@ -47,7 +47,7 @@ class AdvancedPopup(QDialog):
         spaceWidth = fontMetrics.horizontalAdvance(" ")
         self.state_input.setTabStopDistance(spaceWidth * 4)
 
-        self.save_button = QPushButton("Save")
+        self.save_button = StandardButton("Save")
         self.save_button.clicked.connect(self.check_state)
 
         # finalize layout

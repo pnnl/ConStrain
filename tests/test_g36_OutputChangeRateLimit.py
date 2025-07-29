@@ -12,7 +12,7 @@ import numpy as np
 
 class TestG36OutputChangeRateLimit(unittest.TestCase):
     def test_output_change_rate_pass(self):
-        points = ["command", "max_rate_of_change_per_min"]
+        points = ["command_control", "rate_change_max"]
         data = [[50, 25], [40, 25], [30, 25], [50, 25], [74, 25], [44, 25]]
         timestamp = [
             datetime(2023, 1, 1, 15, 0, 2),
@@ -29,12 +29,12 @@ class TestG36OutputChangeRateLimit(unittest.TestCase):
             list(run_test_verification_with_data("G36OutputChangeRateLimit", df).result)
         )
 
-        expected_results = pd.Series([np.nan, True, True, True, True, True])
+        expected_results = pd.Series(["Untested", True, True, True, True, True])
 
         self.assertTrue(results.equals(expected_results))
 
     def test_output_change_rate_fail(self):
-        points = ["command", "max_rate_of_change_per_min"]
+        points = ["command_control", "rate_change_max"]
         data = [[50, 25], [40, 25], [30, 25], [50, 25], [74, 25], [44, 25]]
         timestamp = [
             datetime(2023, 1, 1, 15, 0, 2),
@@ -51,7 +51,7 @@ class TestG36OutputChangeRateLimit(unittest.TestCase):
             list(run_test_verification_with_data("G36OutputChangeRateLimit", df).result)
         )
 
-        expected_results = pd.Series([np.nan, True, True, True, True, False])
+        expected_results = pd.Series(["Untested", True, True, True, True, False])
 
         self.assertTrue(results.equals(expected_results))
 

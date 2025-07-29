@@ -11,9 +11,9 @@ import numpy as np
 class TestG36ReheatTerminalBoxHeatingCoilLowerBound(unittest.TestCase):
     def test_g36_reheat_terminal_box_heating_coil_lower_bound(self):
         points = [
-            "operation_mode",
-            "heating_coil_command",
-            "dat",
+            "mode_operation",
+            "command_coil_heat",
+            "temperature_air_discharge",
         ]
 
         data = [
@@ -28,7 +28,7 @@ class TestG36ReheatTerminalBoxHeatingCoilLowerBound(unittest.TestCase):
         ]
 
         expected_results = pd.Series(
-            [True, True, False, True, np.nan, np.nan, np.nan, np.nan]
+            [True, True, False, True, "Untested", "Untested", "Untested", "Untested"]
         )
 
         df = pd.DataFrame(data, columns=points)

@@ -576,11 +576,7 @@ cases = [{
                         "frequency": "TimeStep"
                     }
                 },
-                "parameters": {
-                    "tol_o": 0.03,
-                    "tol_m_ea": 50,
-                    "tol_m_oa": 50,
-                }
+                "parameters": {}
             },
             "verification_class": "AutomaticOADamperControl"
         },
@@ -618,11 +614,7 @@ cases = [{
                         "frequency": "TimeStep"
                     }
                 },
-                "parameters": {
-                    "tol_o": 0.03,
-                    "tol_m_ea": 50,
-                    "tol_m_oa": 50,
-                }
+                "parameters": {}
             },
             "verification_class": "AutomaticOADamperControl"
         }
