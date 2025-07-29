@@ -10,9 +10,8 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 
-sys.path.append("..")
-from constrain.epreader import *
-from constrain.datetimeep import *
+from ..epreader import *
+from ..datetimeep import *
 from typing import Union
 
 

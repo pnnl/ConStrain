@@ -12,7 +12,7 @@ import pandas as pd
 from datetime import datetime
 import json, logging, pathlib
 
-path = pathlib.Path(__file__).parent.resolve()
+PATH = pathlib.Path(__file__).parent.resolve()
 
 
 def read_json_file(jsonpath: str) -> List[dict]:
@@ -102,11 +102,11 @@ def run_simulation(idfpath: str, weatherpath: str, ep_path: str) -> None:
 
     """
     eprun = EPRunner(idf_path=idfpath, weather_path=weatherpath, ep_path=ep_path)
-    print(f"Running simulation: {idfpath} -- {datetime.now()}")
+    logging.info(f"Running simulation: {idfpath} -- {datetime.now()}")
     eprun.run_simulation()
-    print(f"Simulation complete -- {datetime.now()}")
+    logging.info(f"Simulation complete -- {datetime.now()}")
     eprun.save_log()
-    print(f"Simulation log saved to output folder -- {datetime.now()}")
+    logging.info(f"Simulation log saved to output folder -- {datetime.now()}")
 
 
 def read_points(
@@ -165,7 +165,7 @@ def assemble_verification_items(
     Returns:
         List: list of assembled verification items
     """
-    lib_items_path_list = [f"{path}/schema/library.json"]
+    lib_items_path_list = [f"{PATH}/schema/library.json"]
     if (
         lib_items_path is not None
     ):  # add user provided verification item list, if the default verification file path is passed in here (as in previous implementation, that is okay too).
@@ -201,24 +201,21 @@ def main():
     wosim = True
     idd_path = "../resources/Energy+V9_0_1.idd"
     items = read_json_file("../schema/item2_poc.json")
-    print("Workflow: Json File Read Complete")
-    # print(items)
+    logging.info("Workflow: Json File Read Complete")
 
     item = build_an_item(items[0])
-    print("Workflow: Items Build Complete")
-    # print(item.__dict__)
-    # print(item.buildpoints[0].__dict__)
+    logging.info("Workflow: Items Build Complete")
 
     idf_outputs = []
     idf_outputs.extend(read_injection_points(item))
-    print("Workflow: Output Extraction Complete")
-    print(
+    logging.info("Workflow: Output Extraction Complete")
+    logging.info(
         f"A total of {len(idf_outputs)} EP Output variables objecs are extracted from {len(items)} items"
     )
 
     unique_output = combine_injection_points(idf_outputs)
     idf_final = "../resources/ASHRAE901_SchoolPrimary_STD2004_ElPaso_Injected.idf"
-    print(
+    logging.info(
         f"{len(unique_output)} unique output variables will be added to file: {idf_final}"
     )
 
@@ -228,16 +225,16 @@ def main():
         objstoinject=unique_output,
         idfpath_out=idf_final,
     )
-    print("Workflow: Injection Complete")
+    logging.info("Workflow: Injection Complete")
 
     if wosim:
-        print("Simulation Skipped, already completed (Use in Dev)")
+        logging.info("Simulation Skipped, already completed (Use in Dev)")
     else:
         run_simulation(
             idfpath=idf_final,
             weatherpath="../weather/USA_TX_El.Paso.Intl.AP.722700_TMY3.epw",
         )
-        print("Workflow: simulation complete")
+        logging.info("Workflow: simulation complete")
 
     df = read_points(
         runpath="../resources/ASHRAE901_SchoolPrimary_STD2004_ElPaso_Injected",
@@ -247,19 +244,18 @@ def main():
         item=item,
     )
 
-    print(f"Points Read Complete, data frame contains {df.columns.tolist()}")
-    print(df.head())
+    logging.info(f"Points Read Complete, data frame contains {df.columns.tolist()}")
+    logging.info(df.head())
 
     results, testerdf = run_rules(item, df)
-    # print(results)
-    print(len(results))
-    print(sum(results))
-    print(
+    logging.info(len(results))
+    logging.info(sum(results))
+    logging.info(
         testerdf[testerdf["$OA_timestep > $OA_min_sys and $Cool_sys_out > 0"] is True][
             testerdf.columns[0:4]
         ].head()
     )
-    print(
+    logging.info(
         testerdf[testerdf["$OA_timestep > $OA_min_sys and $Cool_sys_out > 0"] is False][
             testerdf.columns[0:4]
         ].head()

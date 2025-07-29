@@ -4,6 +4,7 @@ checklib.py
 This file containing the high level interface for implementing verification item classes in library.py
 """
 
+import logging
 import warnings
 import datetime
 from datetime import timedelta, date
@@ -35,8 +36,10 @@ class CheckLibBase(ABC):
 
         col_list = full_df.columns.values.tolist()
         if not set(self.points_list).issubset(set(col_list)):
-            print(f"Dataset is not sufficient for running {self.__class__.__name__}")
-            print(set(col_list))
+            logging.warning(
+                f"Dataset is not sufficient for running {self.__class__.__name__}"
+            )
+            logging.warning(set(col_list))
         self.df = full_df[self.points_list]
         self.df.index = pd.to_datetime(self.df.index)
         self.df = self.df.sort_index()
@@ -182,7 +185,7 @@ class CheckLibBase(ABC):
         elif plot_option == "day-expand":
             self.day_plot_obo(plt_pts, fig_size)
         else:
-            print("Invalid plot option!")
+            logging.warning("Invalid plot option!")
         plt.close("all")
         return
 
@@ -212,7 +215,6 @@ class CheckLibBase(ABC):
         plt.title(f"All samples data points plot - {self.__class__.__name__}")
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/All_plot_aio.png")
-        print()
 
     def all_plot_obo(self, plt_pts, fig_size):
         """One by one plot of all samples"""
@@ -245,11 +247,12 @@ class CheckLibBase(ABC):
                 i += 1
                 axx.ticklabel_format(useOffset=False, axis="y")
             except:
-                print(f"{pt} cannot be plotted by itself, ignored in the plot.")
+                logging.warning(
+                    f"{pt} cannot be plotted by itself, ignored in the plot."
+                )
 
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/All_plot_obo.png")
-        print()
 
     def calculate_plot_day(self):
         trueday = None
@@ -274,12 +277,10 @@ class CheckLibBase(ABC):
             if (trueday is None) and len(day[day == True]) > 0:
                 trueday = day
                 truedaydf = daydf
-                # print("reach true")
                 continue
             if (falseday is None) and len(day[day == False]) > 0:
                 falseday = day
                 falsedaydf = daydf
-                # print("reach false")
                 continue
 
             if len(day[day == False]) == 0 or len(day[day == True]) == 0:
@@ -328,7 +329,6 @@ class CheckLibBase(ABC):
         plt.title(f"Example day data points plot - {self.__class__.__name__}")
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/Day_plot_aio.png")
-        print()
 
     def day_plot_obo(self, plt_pts, fig_size):
         """One by one plot of all samples"""
@@ -361,10 +361,11 @@ class CheckLibBase(ABC):
                 i += 1
                 axx.ticklabel_format(useOffset=False, axis="y")
             except:
-                print(f"{pt} cannot be plotted by itself, ignored in the plot.")
+                logging.warning(
+                    f"{pt} cannot be plotted by itself, ignored in the plot."
+                )
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/Day_plot_obo.png")
-        print()
 
     def daterange(self, start_date, end_date):
         for n in range(int((end_date - start_date).days)):
@@ -389,8 +390,8 @@ class RuleCheckBase(CheckLibBase):
             "Verification Passed?": self.check_bool(),
         }
 
-        print("Verification results dict: ")
-        print(output)
+        logging.info("Verification results dict: ")
+        logging.info(output)
         return output
 
 
@@ -580,7 +581,6 @@ def main():
     # new_df1 = df1.rename(str.strip, axis="columns")
     # new_df1 = new_df1.rename(columns=point_map_reverse)
     # cdc = ContinuousDimmingCompliance(new_df1["2000-07-21"]).get_checks
-    # print(cdc)
 
     # check rule based examples
     df_rule = DateTimeEP(
@@ -609,8 +609,8 @@ def main():
         )
         outcome = cls(new_df, item["datapoints_source"]["parameters"]).get_checks
 
-        print(f"{item['verification_class']}:")
-        print(outcome)
+        logging.info(f"{item['verification_class']}:")
+        logging.info(outcome)
 
 
 if __name__ == "__main__":

@@ -74,6 +74,8 @@ for each day:
 
 """
 
+import logging
+
 import pandas as pd
 from constrain.checklib import CheckLibBase
 
@@ -141,14 +143,14 @@ class GuestRoomControlVent(CheckLibBase):
             return False
 
     def check_detail(self):
-        print("Verification results dict: ")
+        logging.info("Verification results dict: ")
         output = {
             "Sample #": len(self.result),
             "Pass #": len(self.result[self.result == 1]),
             "Fail #": len(self.result[self.result == 0]),
             "Verification Passed?": self.check_bool(),
         }
-        print(output)
+        logging.info(output)
         return output
 
     def day_plot_aio(self, plt_pts):

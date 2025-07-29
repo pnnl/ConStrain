@@ -1,9 +1,9 @@
 from constrain.workflowsteps import *
 from constrain.library import *
 from tqdm import tqdm
-import sys, shutil, pathlib
+import sys, shutil, pathlib, logging
 
-path = pathlib.Path(__file__).parent.resolve()
+PATH = pathlib.Path(__file__).parent.resolve()
 
 
 def run_sim_for_cases(
@@ -13,13 +13,15 @@ def run_sim_for_cases(
         cases_path=cases_path, lib_items_path=lib_items_path
     )
     items = [build_an_item(item_dict) for item_dict in items_dict]
-    print("Merging idf output injection points...")
+    logging.info("Merging idf output injection points...")
     idf_outputs = []
     for item in tqdm(items, desc="Reading injection points from cases"):
         idf_outputs.extend(read_injection_points(item))
-    print(f"A total of {len(idf_outputs)} injection points extracted, Merging...")
+    logging.info(
+        f"A total of {len(idf_outputs)} injection points extracted, Merging..."
+    )
     unique_output = combine_injection_points(idf_outputs)
-    print(
+    logging.info(
         f"After merging, a total of {len(unique_output)} output points will be injected."
     )
 
@@ -68,15 +70,15 @@ def run_sim_for_cases(
     #            )
     #        else:
     #            run_simulation(idfpath=run_idf_path, weatherpath=weather_path)
-    #        print("simulation done")
-    print(f"Run path: {run_path}")
+
+    logging.info(f"Run path: {run_path}")
     return run_path
 
 
 def main():
     num_argv = len(sys.argv)
     if num_argv == 1:
-        print(
+        logging.info(
             "No command line argument provided. Error!\n Please provide cases_path and lib_items_path, both relative to the current run path (constrain/)"
         )
         cases_path = None
@@ -84,21 +86,21 @@ def main():
         return
     if num_argv == 2:
         cases_path = sys.argv[1]
-        lib_items_path = f"{path}/schema/library.json"
-        print(
+        lib_items_path = f"{PATH}/schema/library.json"
+        logging.info(
             f"One command line argument provided.\nRunning verification cases in {cases_path}\nUsing default verification library json at {lib_items_path}"
         )
     if num_argv == 3:
         cases_path = sys.argv[1]
         lib_items_path = sys.argv[2]
-        print(
+        logging.info(
             f"Two command line arguments provided.\nRunning verification cases in {cases_path}\nUsing default verification library json at {lib_items_path}"
         )
     postfix = cases_path.strip().replace(".json", "").split("_")[-1]
     run_sim_for_cases(
         cases_path=cases_path, lib_items_path=lib_items_path, batch_postfix=postfix
     )
-    print("run_sim_for_cases DONE!")
+    logging.info("run_sim_for_cases DONE!")
 
 
 if __name__ == "__main__":

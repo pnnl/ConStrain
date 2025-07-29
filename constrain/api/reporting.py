@@ -11,8 +11,6 @@ import sys
 import os
 from typing import List
 
-sys.path.append("..")
-
 
 class Reporting:
     def __init__(

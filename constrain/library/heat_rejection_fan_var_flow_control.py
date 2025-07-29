@@ -74,6 +74,7 @@ else:
 
 """
 
+import logging
 from typing import Dict
 
 from constrain.checklib import RuleCheckBase
@@ -131,8 +132,8 @@ class HeatRejectionFanVariableFlowControl(RuleCheckBase):
             "Verification Passed?": self.check_bool(),
         }
 
-        print("Verification results dict: ")
-        print(output)
+        logging.info("Verification results dict: ")
+        logging.info(output)
         return output
 
     def all_plot_aio(self, plt_pts):

@@ -1,10 +1,12 @@
 import unittest, sys, datetime, copy, pandas
+import os
 
 import matplotlib
 
-sys.path.append("./constrain")
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
-from api import DataProcessing
+from constrain.api import DataProcessing
 
 
 # Helper
@@ -43,32 +45,31 @@ class TestDataProcessing(unittest.TestCase):
     def test_constructor_empty(self):
         with self.assertLogs() as logobs:
             dp = DataProcessing()
-            self.assertEqual(
-                "ERROR:root:A `data_path` argument should be provided.",
-                logobs.output[0],
+            self.assertTrue(
+                "ERROR:root:A `data_path` argument should be provided." in logobs.output
             )
             filep = "./tests/api/data/data_complete.csv"
             dp = DataProcessing(data_path=filep)
-            self.assertEqual(
-                "ERROR:root:A `data_source` argument should be provided.",
-                logobs.output[1],
+            self.assertTrue(
+                "ERROR:root:A `data_source` argument should be provided."
+                in logobs.output
             )
 
     def test_missing_datafile(self):
         with self.assertLogs() as logobs:
             filep = "./data/missing_file.csv"
             dp = DataProcessing(data_path=filep, data_source="EnergyPlus")
-            self.assertEqual(
-                f"ERROR:root:The file {filep} does not exists.", logobs.output[0]
+            self.assertTrue(
+                f"ERROR:root:The file {filep} does not exists." in logobs.output
             )
 
     def test_missing_datafile_error(self):
         with self.assertLogs() as logobs:
             filep = "./tests/api/data/data_non_ep_head.csv"
             dp = DataProcessing(data_path=filep, data_source="EnergyPlus")
-            self.assertEqual(
-                f"ERROR:root:An error occured when opening {filep}. Please make sure that the file can be opened, and/or that it contains the correct headers.",
-                logobs.output[0],
+            self.assertTrue(
+                f"ERROR:root:An error occured when opening {filep}. Please make sure that the file can be opened, and/or that it contains the correct headers."
+                in logobs.output
             )
 
     def test_ep_data_file(self):
@@ -103,27 +104,27 @@ class TestDataProcessing(unittest.TestCase):
             dp = DataProcessing(
                 data_path=filep, data_source="BMS", timestamp_column_name="Date/Time"
             )
-            self.assertEqual(
-                f"ERROR:root:The data in Date/Time could not be converted to Python datetime object. Make sure that the data is consistent defined as a set of date strings.",
-                logobs.output[0],
+            self.assertTrue(
+                f"ERROR:root:The data in Date/Time could not be converted to Python datetime object. Make sure that the data is consistent defined as a set of date strings."
+                in logobs.output
             )
 
     def test_datafile_missing_datetimecol(self):
         with self.assertLogs() as logobs:
             filep = "./tests/api/data/data_non_ep_head.csv"
             dp = DataProcessing(data_path=filep, data_source="BMS")
-            self.assertEqual(
-                "ERROR:root:timestamp_column_name is required when data_source = 'BMS'",
-                logobs.output[0],
+            self.assertTrue(
+                "ERROR:root:timestamp_column_name is required when data_source = 'BMS'"
+                in logobs.output
             )
 
     def test_datafile_missing_datetimecol(self):
         with self.assertLogs() as logobs:
             filep = "./tests/api/data/data_non_ep_head.csv"
             dp = DataProcessing(data_path=filep, data_source="Make up source")
-            self.assertEqual(
-                "ERROR:root:data_source = Make up source is not allowed.",
-                logobs.output[0],
+            self.assertTrue(
+                "ERROR:root:data_source = Make up source is not allowed."
+                in logobs.output
             )
 
     def test_slice_add_parameter(self):
@@ -131,24 +132,22 @@ class TestDataProcessing(unittest.TestCase):
             filep = "./tests/api/data/data_complete.csv"
             dp = DataProcessing(data_path=filep, data_source="EnergyPlus")
             dp.slice("2000-01-01 11:00", "2000-01-01 11:00")
-            self.assertEqual(
-                f"ERROR:root:The start_time argument is not a Python datetime object.",
-                logobs.output[0],
+            self.assertTrue(
+                f"ERROR:root:The start_time argument is not a Python datetime object."
+                in logobs.output
             )
             dp.slice(datetime.datetime(2000, 1, 1, 11), "2000-01-01 11:00")
-            self.assertEqual(
-                f"ERROR:root:The end_time argument is not a Python datetime object.",
-                logobs.output[1],
+            self.assertTrue(
+                f"ERROR:root:The end_time argument is not a Python datetime object."
+                in logobs.output
             )
             dp.add_parameter()
-            self.assertEqual(
-                f"ERROR:root:A parameter name should be specified.",
-                logobs.output[2],
+            self.assertTrue(
+                f"ERROR:root:A parameter name should be specified." in logobs.output
             )
             dp.add_parameter(name="test")
-            self.assertEqual(
-                f"ERROR:root:A parameter value should be specified.",
-                logobs.output[3],
+            self.assertTrue(
+                f"ERROR:root:A parameter value should be specified." in logobs.output
             )
         df_w_param = dp.add_parameter(name="test", value=-999)
         assert "test" in list(df_w_param)
@@ -170,18 +169,17 @@ class TestDataProcessing(unittest.TestCase):
             dp.slice(
                 datetime.datetime(2000, 1, 1, 12), datetime.datetime(2000, 1, 1, 11)
             )
-            self.assertEqual(
-                f"ERROR:root:The end_time cannot be an earlier data than start_time.",
-                logobs.output[0],
+            self.assertTrue(
+                f"ERROR:root:The end_time cannot be an earlier data than start_time."
+                in logobs.output
             )
 
         with self.assertLogs() as logobs:
             s = dp.slice(
                 datetime.datetime(2000, 1, 1, 11), datetime.datetime(2000, 1, 1, 11)
             )
-            self.assertEqual(
-                f"WARNING:root:Data slice contains no sample.",
-                logobs.output[0],
+            self.assertTrue(
+                f"WARNING:root:Data slice contains no sample." in logobs.output
             )
 
     def test_apply_function(self):
@@ -189,14 +187,12 @@ class TestDataProcessing(unittest.TestCase):
             filep = "./tests/api/data/data_complete.csv"
             dp = DataProcessing(data_path=filep, data_source="EnergyPlus")
             dp.apply_function()
-            self.assertEqual(
-                f"ERROR:root:A list of variables was not specified.",
-                logobs.output[len(logobs.output) - 1],
+            self.assertTrue(
+                f"ERROR:root:A list of variables was not specified." in logobs.output
             )
             dp.apply_function([])
-            self.assertEqual(
-                f"ERROR:root:The variable name list is empty.",
-                logobs.output[len(logobs.output) - 1],
+            self.assertTrue(
+                f"ERROR:root:The variable name list is empty." in logobs.output
             )
             dp.apply_function(
                 variable_names=[
@@ -207,14 +203,14 @@ class TestDataProcessing(unittest.TestCase):
                 new_variable_name="subset mean",
                 function_to_apply="mean",
             )
-            self.assertEqual(
-                f"ERROR:root:Variable name(s) {['VariableNotInDataset']} not in the dataset.",
-                logobs.output[len(logobs.output) - 1],
+            self.assertTrue(
+                f"ERROR:root:Variable name(s) {['VariableNotInDataset']} not in the dataset."
+                in logobs.output
             )
             dp.apply_function(variable_names={})
-            self.assertEqual(
-                f"ERROR:root:A list of variable names should be passed as an argument not a <class 'dict'>.",
-                logobs.output[len(logobs.output) - 1],
+            self.assertTrue(
+                f"ERROR:root:A list of variable names should be passed as an argument not a <class 'dict'>."
+                in logobs.output
             )
             dp.apply_function(
                 [
@@ -222,9 +218,8 @@ class TestDataProcessing(unittest.TestCase):
                     "CORE_BOTTOM:Zone Air Temperature [C](Hourly)",
                 ]
             )
-            self.assertEqual(
-                f"ERROR:root:A new variable name should be provided.",
-                logobs.output[len(logobs.output) - 1],
+            self.assertTrue(
+                f"ERROR:root:A new variable name should be provided." in logobs.output
             )
             dp.apply_function(
                 [
@@ -234,9 +229,9 @@ class TestDataProcessing(unittest.TestCase):
                 "Agg",
                 "EXP",
             )
-            self.assertEqual(
-                f"ERROR:root:The function to apply should be `sum`, `min`, `max`, or `average, not exp.",
-                logobs.output[len(logobs.output) - 1],
+            self.assertTrue(
+                f"ERROR:root:The function to apply should be `sum`, `min`, `max`, or `average, not exp."
+                in logobs.output
             )
 
         assert (
@@ -351,14 +346,14 @@ class TestDataProcessing(unittest.TestCase):
             filep = "./tests/api/data/data_complete.csv"
             dp = DataProcessing(data_path=filep, data_source="EnergyPlus")
             dp.concatenate()
-            self.assertEqual(
-                f"ERROR:root:A list of datasets must be provided. The datasets argument that was passed is <class 'NoneType'>.",
-                logobs.output[0],
+            self.assertTrue(
+                f"ERROR:root:A list of datasets must be provided. The datasets argument that was passed is <class 'NoneType'>."
+                in logobs.output
             )
             dp.concatenate([])
-            self.assertEqual(
-                f"ERROR:root:The list of dataset that was provided is empty.",
-                logobs.output[1],
+            self.assertTrue(
+                f"ERROR:root:The list of dataset that was provided is empty."
+                in logobs.output
             )
             df_b = dp.slice(
                 datetime.datetime(2000, 1, 1, 14), datetime.datetime(2000, 1, 1, 16)
@@ -369,18 +364,18 @@ class TestDataProcessing(unittest.TestCase):
             datasets_b = [df_b]
             datasets_b_original = [df_b]
             dp.concatenate(datasets=datasets_b, axis=3)
-            self.assertEqual(
-                f"ERROR:root:The axis argument should either be 1, or 0.",
-                logobs.output[2],
+            self.assertTrue(
+                f"ERROR:root:The axis argument should either be 1, or 0."
+                in logobs.output
             )
 
             df_c = dp.concatenate(datasets=datasets_b, axis=1)
             assert len(df_c) == 6
             dp.data["test"] = 12.0
             df_d = dp.concatenate(datasets=datasets_b, axis=1)
-            self.assertEqual(
-                f"ERROR:root:The datasets must contain the same column headers.",
-                logobs.output[3],
+            self.assertTrue(
+                f"ERROR:root:The datasets must contain the same column headers."
+                in logobs.output
             )
             assert datasets_b == datasets_b_original
 
@@ -391,9 +386,8 @@ class TestDataProcessing(unittest.TestCase):
             datasets_c_original = [df_c]
             df_f = dp.concatenate(datasets=datasets_c, axis=0)
             assert datasets_c == datasets_c_original
-            self.assertEqual(
-                f"ERROR:root:The datasets must have the same indexes.",
-                logobs.output[4],
+            self.assertTrue(
+                f"ERROR:root:The datasets must have the same indexes." in logobs.output
             )
 
             datasets_e = [df_e["test"]]
@@ -409,9 +403,8 @@ class TestDataProcessing(unittest.TestCase):
             datasets_e_original = [df_e["test"]]
             df_h = dp.concatenate(datasets=datasets_e, axis=0)
             assert datasets_e == datasets_e_original
-            self.assertEqual(
-                f"ERROR:root:The datasets must have the same indexes.",
-                logobs.output[5],
+            self.assertTrue(
+                f"ERROR:root:The datasets must have the same indexes." in logobs.output
             )
 
             # vertical concatenation of the same dataset doubles number of rows
@@ -475,27 +468,27 @@ class TestDataProcessing(unittest.TestCase):
             filep = "./tests/api/data/data_missing_outliers.csv"
             dp = DataProcessing(data_path=filep, data_source="EnergyPlus")
             dp.fill_missing_values()
-            self.assertEqual(
-                f"ERROR:root:The method should either be linear or bad but not None.",
-                logobs.output[0],
+            self.assertTrue(
+                f"ERROR:root:The method should either be linear or bad but not None."
+                in logobs.output
             )
             dp.fill_missing_values(method="wrong_method")
-            self.assertEqual(
-                f"ERROR:root:The method should either be linear or bad but not wrong_method.",
-                logobs.output[1],
+            self.assertTrue(
+                f"ERROR:root:The method should either be linear or bad but not wrong_method."
+                in logobs.output
             )
             dp.fill_missing_values(method="linear", variable_names="variable 1")
-            self.assertEqual(
-                f"ERROR:root:A list of variable names must be provided. The variables_name argument that was passed is <class 'str'>.",
-                logobs.output[2],
+            self.assertTrue(
+                f"ERROR:root:A list of variable names must be provided. The variables_name argument that was passed is <class 'str'>."
+                in logobs.output
             )
 
             incorrect_vars = list(dp.data.columns)
             incorrect_vars[1] = "wrong var name"
             dp.fill_missing_values(method="pad", variable_names=incorrect_vars)
-            self.assertEqual(
-                f"ERROR:root:Variable(s) {['wrong var name']} not included in the data.",
-                logobs.output[3],
+            self.assertTrue(
+                f"ERROR:root:Variable(s) {['wrong var name']} not included in the data."
+                in logobs.output
             )
 
         # fill some missing data

@@ -1,3 +1,5 @@
+import logging
+
 from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
@@ -65,7 +67,7 @@ class MetaForm(QWidget):
             if isStr(workflow_name):
                 self.name_input.setText(workflow_name)
             else:
-                print("error")
+                logging.error("error")
 
         if isinstance(meta, dict):
             if "author" in meta.keys():
@@ -73,26 +75,26 @@ class MetaForm(QWidget):
                 if isStr(author):
                     self.author_input.setText(author)
                 else:
-                    print("invalid author")
+                    logging.error("invalid author")
             if "date" in meta.keys():
                 date = meta["date"]
                 if isStr(date):
                     d = QDate.fromString(date, self.date_format)
                     self.date_input.setDate(d)
                 else:
-                    print("invalid date")
+                    logging.error("invalid date")
             if "version" in meta.keys():
                 version = meta["version"]
                 if isStr(version):
                     self.version_input.setText(version)
                 else:
-                    print("invalid version")
+                    logging.error("invalid version")
             if "description" in meta.keys():
                 description = meta["description"]
                 if isStr(description):
                     self.description_input.setText(description)
                 else:
-                    print("invalid description")
+                    logging.error("invalid description")
         self.update()
 
     def get_workflow_name(self):

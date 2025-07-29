@@ -1,5 +1,7 @@
 """Reader module is used to read information from EP artifacts"""
 
+import logging
+
 from eppy.modeleditor import IDF
 import pandas as pd
 from fuzzywuzzy import fuzz
@@ -58,7 +60,7 @@ class IDFReader(EPReader):
         filteredobjs = self.fieldsfilter(filters_dict, objs)
         excluteredobjs = self.fieldsexcluter(excluters_dict, filteredobjs)
         if len(excluteredobjs) != 1:
-            print("ERROR: retrieved non-single idf obj")
+            logging.error("ERROR: retrieved non-single idf obj")
             return None
         return excluteredobjs[0][fieldname]
 
@@ -108,7 +110,7 @@ class CSVReader(EPReader):
                         if current_ratio > maxratio:
                             reset = True
                         if current_ratio == maxratio:
-                            print(
+                            logging.error(
                                 "ERROR: observe same fuzzywuzzy match ratio for two columns, investigation needed."
                             )
                             return None
@@ -122,7 +124,7 @@ class CSVReader(EPReader):
             pickedcols_original_format.append(requestcol)
 
         if len(cols) != len(pickedcols):
-            print("ERROR: time series query does not match")
+            logging.error("ERROR: time series query does not match")
             return None
 
         if "Date/Time" in pickedcols:

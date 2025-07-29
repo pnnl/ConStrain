@@ -60,6 +60,7 @@ from datetime import date
 import matplotlib.pyplot as plt
 import seaborn as sns
 from constrain.checklib import RuleCheckBase
+import logging
 
 
 class SupplyAirTempReset(RuleCheckBase):
@@ -77,7 +78,7 @@ class SupplyAirTempReset(RuleCheckBase):
         ) * 0.25 * (100 - self.get_tolerance("ratio", "temperature") * 100)
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
-        print(
+        logging.info(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
         sns.histplot(self.df["temperature_air_supply_setpoint"])

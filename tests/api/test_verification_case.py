@@ -1,10 +1,10 @@
 import json
 import os, sys, unittest, copy
 
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
-sys.path.append("./constrain")
-
-from api import VerificationCase
+from constrain.api import VerificationCase
 
 
 class TestVerificationCase(unittest.TestCase):
@@ -236,13 +236,12 @@ class TestVerificationCase(unittest.TestCase):
             suite_keys = list(vc.case_suite.keys())
             partial_good_keys = suite_keys[:2] + ["wrong-key-1", 2]
             vc.save_case_suite_to_json(saving_file_path, case_ids=partial_good_keys)
-            self.assertEqual(
-                "WARNING:root:case_id wrong-key-1 is not in self.case_suite!",
-                logobs.output[0],
+            self.assertTrue(
+                "WARNING:root:case_id wrong-key-1 is not in self.case_suite!"
+                in logobs.output
             )
-            self.assertEqual(
-                "WARNING:root:case_id 2 is not in self.case_suite!",
-                logobs.output[1],
+            self.assertTrue(
+                "WARNING:root:case_id 2 is not in self.case_suite!" in logobs.output
             )
 
         with open(saving_file_path, "r") as f:

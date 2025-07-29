@@ -88,6 +88,7 @@ elif temperature_air_outdoor_min < temperature_air_outdoor < temperature_air_out
 import matplotlib.pyplot as plt
 import seaborn as sns
 from constrain.checklib import RuleCheckBase
+import logging
 
 
 class HWReset(RuleCheckBase):
@@ -160,7 +161,7 @@ class HWReset(RuleCheckBase):
 
     # Add a correlation scatter plot of t_oa and t_hw
     def plot(self, plot_option, fig_size, plt_pts=None):
-        print(
+        logging.info(
             "Specific plot method implemented, additional scatter plot is being added!"
         )
         plt.subplots()
