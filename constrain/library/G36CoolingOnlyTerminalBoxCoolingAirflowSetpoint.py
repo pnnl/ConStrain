@@ -67,6 +67,7 @@ end
   - Data Point Affiliation: Zone airflow control
 
 """
+
 import logging
 
 from constrain.checklib import RuleCheckBase

@@ -64,6 +64,7 @@ for each day:
   - Data Point Affiliation: Zone occupancy
 
 """
+
 import logging
 
 import pandas as pd

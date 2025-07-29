@@ -83,6 +83,7 @@ else:
   - Data Point Affiliation: Terminal box control
 
 """
+
 import logging
 
 from constrain.checklib import RuleCheckBase

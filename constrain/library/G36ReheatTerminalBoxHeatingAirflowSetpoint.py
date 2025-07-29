@@ -115,6 +115,7 @@ elif 50 < signal_heat <= 100:
   - Data Point Affiliation: Terminal box control
 
 """
+
 import logging
 
 from constrain.checklib import RuleCheckBase

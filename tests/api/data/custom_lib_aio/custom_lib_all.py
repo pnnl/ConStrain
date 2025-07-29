@@ -24,7 +24,9 @@ class CheckLibBase(ABC):
 
         col_list = full_df.columns.values.tolist()
         if not set(self.points_list).issubset(set(col_list)):
-            logging.warning(f"Dataset is not sufficient for running {self.__class__.__name__}")
+            logging.warning(
+                f"Dataset is not sufficient for running {self.__class__.__name__}"
+            )
             logging.warning(set(col_list))
         self.df = full_df[self.points_list]
         self.df.index = pd.to_datetime(self.df.index)
@@ -198,7 +200,9 @@ class CheckLibBase(ABC):
                 i += 1
                 axx.ticklabel_format(useOffset=False, axis="y")
             except:
-                logging.warning(f"{pt} cannot be plotted by itself, ignored in the plot.")
+                logging.warning(
+                    f"{pt} cannot be plotted by itself, ignored in the plot."
+                )
 
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/All_plot_obo.png")
@@ -306,7 +310,9 @@ class CheckLibBase(ABC):
                 i += 1
                 axx.ticklabel_format(useOffset=False, axis="y")
             except:
-                logging.warning(f"{pt} cannot be plotted by itself, ignored in the plot.")
+                logging.warning(
+                    f"{pt} cannot be plotted by itself, ignored in the plot."
+                )
         plt.tight_layout()
         plt.savefig(f"{self.results_folder}/Day_plot_obo.png")
 
