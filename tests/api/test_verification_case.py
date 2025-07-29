@@ -2,7 +2,7 @@ import json
 import os, sys, unittest, copy
 
 # Add the project root to the path so we can import constrain
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from constrain.api import VerificationCase
 
