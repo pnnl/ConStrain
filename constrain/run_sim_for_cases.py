@@ -3,7 +3,7 @@ from constrain.library import *
 from tqdm import tqdm
 import sys, shutil, pathlib
 
-path = pathlib.Path(__file__).parent.resolve()
+PATH = pathlib.Path(__file__).parent.resolve()
 
 
 def run_sim_for_cases(
@@ -84,7 +84,7 @@ def main():
         return
     if num_argv == 2:
         cases_path = sys.argv[1]
-        lib_items_path = f"{path}/schema/library.json"
+        lib_items_path = f"{PATH}/schema/library.json"
         print(
             f"One command line argument provided.\nRunning verification cases in {cases_path}\nUsing default verification library json at {lib_items_path}"
         )

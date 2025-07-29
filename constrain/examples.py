@@ -7,21 +7,21 @@ This modules provide helper functions to retrieve data and information for examp
 import logging, pathlib
 from .api import DataProcessing
 
-path = pathlib.Path(__file__).parent.resolve()
+PATH = pathlib.Path(__file__).parent.resolve()
 
 # TODO: move this to a JSON file
-examples = {
+EXAMPLES = {
     "example_1": {
         "description": "Perform verification of ASHRAE Guideline 36-2021 sequence of operation on a dataset generated through the simulation of an AHU in Modelica. The verifications include the following: supply temperature reset, outdoor air damper psition for relief damper/fan, and return air damper psition for relief damper/fan",
-        "path_to_data": f"{path}/demo/G36_demo/data/G36_Modelica_Jan.csv",
-        "path_to_verifications": f"{path}/demo/G36_demo/data/G36_library_verification_cases.json",
+        "path_to_data": f"{PATH}/demo/G36_demo/data/G36_Modelica_Jan.csv",
+        "path_to_verifications": f"{PATH}/demo/G36_demo/data/G36_library_verification_cases.json",
     }
 }
 
 
 class Examples:
     def __init__(self):
-        self.info = examples
+        self.info = EXAMPLES
 
     def check_example(self, example_name):
         if example_name in self.info.keys():
@@ -42,7 +42,7 @@ class Examples:
             return
 
     def library(self):
-        return f"{path}/schema/library.json"
+        return f"{PATH}/schema/library.json"
 
     def verifications(self, example_name):
         if self.check_example(example_name):
