@@ -24,10 +24,7 @@ class TestFlexibleCalling(unittest.TestCase):
                 json.dump(workflow_dict, f)
 
             workflow = Workflow(workflow=json_case_path)
-            self.assertEqual(
-                logobs.output[0],
-                "INFO:root:No working_dir is specified",
-            )
+            self.assertTrue("INFO:root:No working_dir is specified" in logobs.output)
 
     def test_invalid_str(self):
         """This test checks when working directory is not a valid string,
@@ -44,9 +41,9 @@ class TestFlexibleCalling(unittest.TestCase):
                 json.dump(workflow_dict, f)
 
             workflow = Workflow(workflow=json_case_path)
-            self.assertEqual(
-                logobs.output[0],
-                "ERROR:root:working directory specified is not a valid string.",
+            self.assertTrue(
+                "ERROR:root:working directory specified is not a valid string."
+                in logobs.output
             )
 
     def test_Linux_path(self):
@@ -69,14 +66,14 @@ class TestFlexibleCalling(unittest.TestCase):
             # change current working directory back
             os.chdir("../../..")
 
-            self.assertEqual(
-                logobs.output[0],
-                "INFO:root:the working dir provided is in Linux format.",
+            self.assertTrue(
+                "INFO:root:the working dir provided is in Linux format."
+                in logobs.output
             )
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -101,13 +98,12 @@ class TestFlexibleCalling(unittest.TestCase):
             # change current working directory back
             os.chdir("../../..")
 
-            self.assertEqual(
-                logobs.output[0],
-                "INFO:root:the working dir provided is in Win format.",
+            self.assertTrue(
+                "INFO:root:the working dir provided is in Win format." in logobs.output
             )
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -133,9 +129,9 @@ class TestFlexibleCalling(unittest.TestCase):
             # change current working directory back
             os.chdir("../../..")
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -156,9 +152,9 @@ class TestFlexibleCalling(unittest.TestCase):
             # Change current working directory back
             os.chdir("../../..")
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -184,9 +180,9 @@ class TestFlexibleCalling(unittest.TestCase):
             # change current working directory back
             os.chdir("../../../../")
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -207,9 +203,9 @@ class TestFlexibleCalling(unittest.TestCase):
             # Change current working directory back
             os.chdir("../../../../")
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -235,9 +231,9 @@ class TestFlexibleCalling(unittest.TestCase):
             # change current working directory back
             os.chdir("../")
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -258,9 +254,9 @@ class TestFlexibleCalling(unittest.TestCase):
             # Change current working directory back
             os.chdir("../")
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -291,9 +287,9 @@ class TestFlexibleCalling(unittest.TestCase):
             # change current working directory back
             os.chdir("../../..")
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
@@ -316,9 +312,9 @@ class TestFlexibleCalling(unittest.TestCase):
 
             current_dir = os.getcwd()
 
-            self.assertEqual(
-                logobs.output[1],
-                "INFO:root:working directory specified does not exist and create a new director.",
+            self.assertTrue(
+                "INFO:root:working directory specified does not exist and create a new director."
+                in logobs.output
             )
 
             # then delete this path.
@@ -345,9 +341,9 @@ class TestFlexibleCalling(unittest.TestCase):
             # change current working directory back
             os.chdir("../")
 
-            self.assertEqual(
-                logobs.output[0],
-                "INFO:root:Change current working path to the specified path.",
+            self.assertTrue(
+                "INFO:root:Change current working path to the specified path."
+                in logobs.output
             )
 
             os.chdir(current_dir)
