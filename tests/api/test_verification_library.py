@@ -3,7 +3,7 @@ import unittest, sys, json
 sys.path.append("./constrain")
 from api import VerificationLibrary
 
-lib_path = "./constrain/schema/library.json"
+LIB_PATH = "./constrain/schema/library.json"
 
 
 class TestVerificationLibrary(unittest.TestCase):
@@ -24,18 +24,18 @@ class TestVerificationLibrary(unittest.TestCase):
             )
 
     def test_constructor_load_json(self):
-        with open(lib_path) as f:
+        with open(LIB_PATH) as f:
             exp_items = json.load(f)
 
         self.assertTrue(len(exp_items) >= 2)
 
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
         self.assertEqual(len(vl_obj.lib_items), len(exp_items))
         self.assertEqual(len(vl_obj.lib_items_json_path), len(exp_items))
         self.assertEqual(len(vl_obj.lib_items_python_path), len(exp_items))
 
     def test_get_library_item(self):
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
 
         item = vl_obj.get_library_item("AutomaticShutdown")
         self.assertEqual(item["library_item_name"], "AutomaticShutdown")
@@ -44,7 +44,7 @@ class TestVerificationLibrary(unittest.TestCase):
         self.assertEqual(item["library_json_path"].split(".")[-1], "json")
 
     def test_get_library_item_invalid(self):
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
 
         with self.assertLogs() as logobs:
             item = vl_obj.get_library_item("NonExistLibItem")
@@ -54,7 +54,7 @@ class TestVerificationLibrary(unittest.TestCase):
             )
 
     def test_validate_library(self):
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
 
         # test if the returned dataframe (validity_info) is in the correct format
         validity_info = vl_obj.validate_library(
@@ -85,7 +85,7 @@ class TestVerificationLibrary(unittest.TestCase):
         )
 
     def test_validate_library_invalid(self):
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
 
         # test when the wrong items arg type is provided.
         with self.assertLogs() as logobs:
@@ -120,7 +120,7 @@ class TestVerificationLibrary(unittest.TestCase):
             )
 
         # test when the datapoints in the library file and class don't match
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
         # intentionally modify `description_datapoints` key in `AutomaticShutdown`
         vl_obj.lib_items["AutomaticShutdown"]["description_datapoints"] = {
             "hvac_setpoint": "HVAC Operation Schedule"
@@ -135,7 +135,7 @@ class TestVerificationLibrary(unittest.TestCase):
             )
 
     def test_get_applicable_library_items_by_datapoints(self):
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
         applicable_lib_items = vl_obj.get_applicable_library_items_by_datapoints(
             [
                 "temperature_air_supply_setpoint",
@@ -162,7 +162,7 @@ class TestVerificationLibrary(unittest.TestCase):
         )
 
     def test_get_applicable_library_items_by_datapoints_invalid_datapoints(self):
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
 
         with self.assertLogs() as logobs:
             vl_obj.get_applicable_library_items_by_datapoints(
@@ -196,7 +196,7 @@ class TestVerificationLibrary(unittest.TestCase):
             )
 
     def test_get_library_items(self):
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
 
         items = vl_obj.get_library_items(
             ["AutomaticShutdown", "DemandControlVentilation"]
@@ -212,7 +212,7 @@ class TestVerificationLibrary(unittest.TestCase):
         self.assertEqual(items[1]["library_json_path"].split(".")[-1], "json")
 
     def test_get_library_items_invalid(self):
-        vl_obj = VerificationLibrary(lib_path)
+        vl_obj = VerificationLibrary(LIB_PATH)
 
         # check `items` arg type
         with self.assertLogs() as logobs:

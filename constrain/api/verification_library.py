@@ -10,7 +10,7 @@ from typing import Dict, List, Union
 sys.path.append("..")
 from constrain.library import *
 
-library_schema = {
+LIBRARY_SCHEMA = {
     "library_item_id": (int, str, float),
     "description_brief": str,
     "description_detailed": str,
@@ -143,7 +143,7 @@ class VerificationLibrary:
             validity_info[item] = {}
 
             # verify the library.json file
-            for lib_key in library_schema.keys():
+            for lib_key in LIBRARY_SCHEMA.keys():
                 # check if lib keys exist. "description_detailed" key is optional
                 if lib_key not in ["description_detailed"] and not self.lib_items[
                     item
@@ -156,10 +156,10 @@ class VerificationLibrary:
                 # check if key is in the correct type
                 try:
                     if not isinstance(
-                        self.lib_items[item][lib_key], library_schema[lib_key]
+                        self.lib_items[item][lib_key], LIBRARY_SCHEMA[lib_key]
                     ):
                         logging.error(
-                            f"The type of `{lib_key}` key needs to be {str(library_schema[lib_key])}. It cannot be a {type(self.lib_items[item][lib_key])}."
+                            f"The type of `{lib_key}` key needs to be {str(LIBRARY_SCHEMA[lib_key])}. It cannot be a {type(self.lib_items[item][lib_key])}."
                         )
                         return None
 

@@ -7,7 +7,7 @@ from api import VerificationCase
 from api import Verification
 from api import DataProcessing
 
-path = pathlib.Path(__file__).parent.resolve()
+PATH = pathlib.Path(__file__).parent.resolve()
 
 
 class TestVerification(unittest.TestCase):
