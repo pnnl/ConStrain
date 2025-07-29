@@ -7,7 +7,6 @@ from PyQt6.QtWidgets import (
     QMainWindow,
     QVBoxLayout,
     QWidget,
-    QPushButton,
     QHBoxLayout,
     QListWidget,
     QFrame,
@@ -16,8 +15,8 @@ from PyQt6.QtWidgets import (
     QFileDialog,
     QMessageBox,
 )
-from PyQt6.QtCore import Qt, QRectF
-from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor
+from PyQt6.QtCore import Qt, QRectF, QUrl
+from PyQt6.QtGui import QAction, QPixmap, QPainter, QColor, QDesktopServices
 
 from constrain.app.import_form import ImportForm
 from constrain.app.meta_form import MetaForm
@@ -25,6 +24,7 @@ from constrain.app.workflow_diagram import WorkflowDiagram
 from constrain.app.rect_connect import CustomItem
 from constrain.app.submit import Worker, SubmitPopup
 from constrain.app import utils
+from constrain.app.components.button import StandardButton
 
 from constrain.api.workflow import Workflow
 
@@ -52,6 +52,17 @@ class GUI(QMainWindow):
         )
         self.column_list.setCurrentItem(self.column_list.item(0))
 
+        meta_item = self.column_list.item(0)
+        meta_item.setToolTip("Metadata about the workflow")
+
+        import_item = self.column_list.item(1)
+        import_item.setToolTip("Python package import needed to run the workflow")
+
+        state_item = self.column_list.item(2)
+        state_item.setToolTip(
+            "Sequential steps to follow to perform the verification; 'states' can either be 'MethodCall' which represent a method call to one of ConStrain’s APIs or a 'Choice' which can be used to help define alternative steps in a workflow based on the result (referred to as payloads in a workflow)."
+        )
+
         # make and reposition frame containing meta, imports, and state
         self.column_frame = QFrame()
         self.column_frame.setFrameStyle(QFrame.Shape.NoFrame)
@@ -76,15 +87,12 @@ class GUI(QMainWindow):
         middle_layout.addWidget(self.states_form)
 
         # validate and submit buttons
-        validate_button = QPushButton("Validate")
+        validate_button = StandardButton("Validate")
         validate_button.setToolTip("Validate workflow")
-        validate_button.setFixedSize(100, 23)
         validate_button.clicked.connect(self.validate_form)
 
-        self.submit_button = QPushButton("Submit")
-        self.submit_button.setToolTip("Submit workflow")
-        # self.submit_button.setEnabled(False)
-        self.submit_button.setFixedSize(100, 23)
+        self.submit_button = StandardButton("Evaluate Workflow")
+        self.submit_button.setFixedSize(150, 30)
         self.submit_button.clicked.connect(self.submit_form)
 
         # group validate and submit buttons
@@ -111,11 +119,11 @@ class GUI(QMainWindow):
 
         file_menu = QMenu("File", self)
 
-        import_action = QAction("Import", self)
+        import_action = QAction("Import Workflow", self)
         import_action.triggered.connect(self.importFile)
         file_menu.addAction(import_action)
 
-        export_menu = QMenu("Export", self)
+        export_menu = QMenu("Export Workflow", self)
         file_menu.addMenu(export_menu)
 
         json_export_action = QAction("JSON", self)
@@ -140,8 +148,26 @@ class GUI(QMainWindow):
 
         settings_menu.addMenu(popup_settings_menu)
 
+        help_menu = QMenu("Help", self)
+
+        open_github_action = QAction("GitHub Repository", self)
+        open_github_action.triggered.connect(self.open_github)
+
+        open_docs_action = QAction("Documentation", self)
+        open_docs_action.triggered.connect(self.open_docs)
+
+        help_menu.addAction(open_github_action)
+        help_menu.addAction(open_docs_action)
+
         toolbar.addAction(file_menu.menuAction())
         toolbar.addAction(settings_menu.menuAction())
+        toolbar.addAction(help_menu.menuAction())
+
+    def open_docs(self):
+        QDesktopServices.openUrl(QUrl("https://pnnl.github.io/ConStrain/index.html"))
+
+    def open_github(self):
+        QDesktopServices.openUrl(QUrl("https://github.com/pnnl/ConStrain"))
 
     def basicPopupSetting(self):
         self.states_form.setting = "basic"

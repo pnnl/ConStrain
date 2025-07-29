@@ -2,7 +2,6 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QVBoxLayout,
-    QPushButton,
     QComboBox,
     QListWidget,
     QDialog,
@@ -12,6 +11,8 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 
+from constrain.app.components.button import StandardButton
+
 import os
 import re
 import json
@@ -19,7 +20,7 @@ import json
 # mapping from object to its methods and its methods to its parameters for display in popup
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
-dependencies_path = os.path.join(script_directory, "dependencies.json")
+dependencies_path = os.path.join(script_directory, "schema.json")
 api_to_method_path = os.path.join(script_directory, "api_to_method.json")
 
 with open(dependencies_path) as f:
@@ -64,7 +65,7 @@ class ListPopup(QDialog):
         self.line_edit = QLineEdit()
         layout.addWidget(self.line_edit)
 
-        add_button = QPushButton("Add")
+        add_button = StandardButton("Add")
         add_button.clicked.connect(self.add_input)
         layout.addWidget(add_button)
 
@@ -223,7 +224,7 @@ class ChoicesPopup(QDialog):
         self.next_input = QLineEdit()
 
         # add
-        add_button = QPushButton("Add")
+        add_button = StandardButton("Add")
         add_button.clicked.connect(self.add_input)
 
         # buttons for accept or reject

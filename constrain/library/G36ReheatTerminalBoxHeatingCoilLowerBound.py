@@ -1,51 +1,73 @@
 """
-G36 2021
 ### Description
 
 Section 5.6.5.4.
-
 - In Occupied Mode, the heating coil shall be modulated to maintain a DAT no lower than 10°C.
 
-### Verification logic
+### Code requirement
 
-'''
-if operation_mode != 'occupied':
+- Code Name: ASHRAE Guideline 36
+- Code Year: 2021
+- Code Section: 5.6.5 Terminal Box Airflow Control with Reheat
+- Code Subsection: 5.6.5.4 Heating Coil Minimum Temperature Control
+
+### Verification Approach
+
+The verification checks that during occupied mode, if the discharge air temperature falls below 10°C, the heating coil should be at maximum output (trying its best to maintain temperature). If the temperature is below minimum and the coil is not at maximum, this indicates a control failure.
+
+### Verification Applicability
+
+- Building Type(s): any
+- Space Type(s): any
+- System(s): VAV terminal boxes with reheat
+- Climate Zone(s): any
+- Component(s): terminal box controllers, heating coils, temperature sensors
+
+### Verification Algorithm Pseudo Code
+
+```python
+if mode_operation != 'occupied':
     untested
-if operation_mode == 'occupied':
-    if dat < 10 and heating_coil_command < 99:
+else:
+    if temperature_air_discharge >= 10 and command_coil_heat < 100:
         fail
     else:
         pass
-end
-'''
+```
 
 ### Data requirements
 
-- operation_mode: System operation mode
-- heating_coil_command: Heating coil command
-- dat: Discharge air temperature
+- mode_operation: System operation mode (if mode_operation is not "occupied", this verification item falls into the "untested" result)
+  - Data Value Unit: enumeration
+  - Data Point Affiliation: System control
+
+- command_coil_heat: Heating coil command
+  - Data Value Unit: percent
+  - Data Point Affiliation: Terminal box control
+
+- temperature_air_discharge: Discharge air temperature
+  - Data Value Unit: temperature
+  - Data Point Affiliation: Terminal box monitoring
 
 """
 
 from constrain.checklib import RuleCheckBase
-import numpy as np
-import pandas as pd
 
 
 class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     points = [
-        "operation_mode",
-        "heating_coil_command",
-        "dat",
+        "mode_operation",
+        "command_coil_heat",
+        "temperature_air_discharge",
     ]
 
-    def heating_coil_working(self, operation_mode, heating_coil_command, dat):
-        if operation_mode.lower().strip() != "occupied":
-            return np.nan
-        if dat >= 10:
+    def heating_coil_working(self, mode_operation, cmd_coil_heat, t_discharge):
+        if mode_operation.lower().strip() != "occupied":
+            return "Untested"
+        if t_discharge >= (10 - self.get_tolerance("temperature", "discharge_air")):
             return True
         else:
-            if heating_coil_command < 99:
+            if cmd_coil_heat < 100 - self.get_tolerance("damper", "command") * 100:
                 return False
             else:
                 return True  # heating coil tried its best
@@ -53,7 +75,9 @@ class G36ReheatTerminalBoxHeatingCoilLowerBound(RuleCheckBase):
     def verify(self):
         self.result = self.df.apply(
             lambda t: self.heating_coil_working(
-                t["operation_mode"], t["heating_coil_command"], t["dat"]
+                t["mode_operation"],
+                t["command_coil_heat"],
+                t["temperature_air_discharge"],
             ),
             axis=1,
         )

@@ -22,15 +22,16 @@ class DataProcessing:
         data_path: str = None,
         data_source: str = None,
         timestamp_column_name: str = None,
+        timestamp_datetime_format: str = None,
     ):
         """Instantiate a data processing object to load datasets and manipulate data before feeding it to the verification process.
 
         Args:
-            data (str): Path to the data (CSV format) to be loaded for processing.
-            data_source (str): Data source name. Use `EnergyPlus` or `Other`.
-            timestamp_column_name (str): Name of the column header that contains the time series timestamps.
+            data_path (str, optional): Path to the data (CSV format) to be loaded for processing.
+            data_source (str, optional): Data source name. Use `EnergyPlus` or `bms`.
+            timestamp_column_name (str, optional): Name of the column header that contains the time series timestamps.
+            timestamp_datetime_format (str, optional): Python datetime format code https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes. Example: "%Y-%m-%dT%H:%M:%S%z".
         """
-
         self.data = None
 
         if data_path is None:
@@ -44,16 +45,16 @@ class DataProcessing:
         # check if data file exists
         if os.path.isfile(data_path):
             try:
-                if data_source == "EnergyPlus":
+                if data_source.lower() == "energyplus":
                     # Use CSVReader to parse EnergyPlus timestamps
                     data = CSVReader(csv_file=data_path).getseries()
                     data = DateTimeEP(data, 2000).transform()
                     data.drop("Date/Time", inplace=True, axis=1)
 
-                elif data_source == "Other":
+                elif data_source.lower() == "bms":
                     if timestamp_column_name is None:
                         logging.error(
-                            "timestamp_column_name is required when data_source = 'Other'"
+                            "timestamp_column_name is required when data_source = 'bms'"
                         )
                         return None
 
@@ -65,7 +66,21 @@ class DataProcessing:
                         return None
                     data.set_index(timestamp_column_name, inplace=True)
                     try:
-                        data = pd.to_datetime(data.index)
+                        if timestamp_datetime_format is None:
+                            data.index = pd.to_datetime(data.index)
+                        else:
+                            try:
+                                data_index = data.index.to_series()
+                                data.index = data_index.apply(
+                                    lambda x: datetime.datetime.strptime(
+                                        x, timestamp_datetime_format
+                                    )
+                                )
+                            except:
+                                logging.error(
+                                    f"The data in {timestamp_column_name} does not match the timestamp datetime formate provided."
+                                )
+                                return None
                     except:
                         logging.error(
                             f"The data in {timestamp_column_name} could not be converted to Python datetime object. Make sure that the data is consistent defined as a set of date strings."

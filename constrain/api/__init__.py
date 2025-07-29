@@ -5,6 +5,7 @@ from .verification_case import *
 from .verification import *
 from .reporting import *
 from .workflow import *
+from .data_adapter import *
 
 __all__ = [
     "BrickCompliance",
@@ -14,4 +15,5 @@ __all__ = [
     "Verification",
     "Reporting",
     "Workflow",
+    "DataAdapter",
 ]

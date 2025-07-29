@@ -2,10 +2,10 @@ from PyQt6.QtWidgets import (
     QHBoxLayout,
     QVBoxLayout,
     QWidget,
-    QPushButton,
     QGraphicsView,
     QGraphicsTextItem,
     QGraphicsRectItem,
+    QMenu,
 )
 from PyQt6.QtCore import Qt, pyqtSignal, QRectF
 from PyQt6.QtGui import (
@@ -16,11 +16,15 @@ from PyQt6.QtGui import (
     QColor,
     QPen,
     QBrush,
+    QAction,
 )
 from constrain.app.popup_window import PopupWindow
 from constrain.app.advanced_popup import AdvancedPopup
 from constrain.app.rect_connect import Scene, CustomItem, ControlPoint, Path
+from constrain.app.utils import send_error
+from constrain.app.components.button import StandardButton
 import json
+from collections import Counter
 
 
 class Zoom(QGraphicsView):
@@ -56,6 +60,8 @@ class Zoom(QGraphicsView):
 
         self.max_x = 0
 
+        self.setBackgroundBrush(QBrush(QColor(255, 255, 255)))
+
     def wheelEvent(self, event: QWheelEvent):
         """Zooms in or out on view"""
         factor = self.zoom ** (event.angleDelta().y() / 240.0)
@@ -71,6 +77,55 @@ class Zoom(QGraphicsView):
             event.accept()
         else:
             super().keyPressEvent(event)
+
+    def contextMenuEvent(self, event):
+        menu = QMenu(self)
+
+        # Check if there's an item under the mouse cursor
+        selected_states = [
+            item
+            for item in self.scene.items()
+            if item.isSelected() and isinstance(item, CustomItem)
+        ]
+        if selected_states:
+            delete_action = QAction("Delete", self)
+            delete_action.triggered.connect(lambda: self.delete_items(selected_states))
+            menu.addAction(delete_action)
+        else:
+            item = self.itemAt(event.pos())
+
+            if isinstance(item, CustomItem):
+                delete_action = QAction("Delete", self)
+                delete_action.triggered.connect(item.delete)
+                menu.addAction(delete_action)
+
+        menu.exec(event.globalPos())
+
+    def delete_items(self, item_list):
+        all_objects_in_use = Counter(self.scene.getObjectsinUse())
+        objects_used_in_items = Counter(
+            [
+                item_object
+                for item in item_list
+                for item_object in item.get_objects_used()
+            ]
+        )
+        objects_not_used_in_items = set(all_objects_in_use - objects_used_in_items)
+        objects_created_in_items = set()
+        for item in item_list:
+            objects_created_in_items |= set(item.get_objects_created())
+
+        intersection = objects_created_in_items & objects_not_used_in_items
+        if intersection:
+            error_msg_object = ", ".join(intersection)
+            error_msg = f"{error_msg_object} being used by other state"
+            if len(intersection) > 1:
+                error_msg += "s"
+            send_error("Error deleting state", error_msg)
+            return
+
+        for item in item_list:
+            item.delete()
 
     def mouseDoubleClickEvent(self, event):
         super().mouseDoubleClickEvent(event)
@@ -142,7 +197,6 @@ class Zoom(QGraphicsView):
                 if isinstance(item, CustomItem) and rect.intersects(
                     item.mapRectToScene(item.rect)
                 ):
-                    print(item.state["Title"])
                     selected_items.append(item)
                     item.setSelected(True)
 
@@ -197,21 +251,13 @@ class WorkflowDiagram(QWidget):
         add_buttons = QHBoxLayout()
         reformat_button_layout = QHBoxLayout()
 
-        basic_button = QPushButton("Add Basic")
-        basic_button.setToolTip("Create a state using the basic popup")
-        basic_button.setFixedSize(100, 23)
-        basic_button.clicked.connect(self.call_popup)
-        add_buttons.addWidget(basic_button)
+        add_state_button = StandardButton("Add State")
+        add_state_button.setToolTip("Create a state to add to your workflow")
+        add_state_button.clicked.connect(self.add_state)
+        add_buttons.addWidget(add_state_button)
 
-        advanced_button = QPushButton("Add Advanced")
-        advanced_button.setToolTip("Create a state using the advanced popup")
-        advanced_button.setFixedSize(100, 23)
-        advanced_button.clicked.connect(self.call_advanced_popup)
-        add_buttons.addWidget(advanced_button)
-
-        reformat_button = QPushButton("Rearrange")
+        reformat_button = StandardButton("Rearrange")
         reformat_button.setToolTip("Rearrange diagram to a tree layout")
-        reformat_button.setFixedSize(100, 23)
         reformat_button.clicked.connect(self.get_workflow)
         reformat_button_layout.addWidget(reformat_button)
 
@@ -227,7 +273,7 @@ class WorkflowDiagram(QWidget):
         layout.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.setLayout(layout)
 
-    def add_state(self):
+    def check_popup_and_add_state(self):
         """Creates CustomItem based on state described in self.popup if there was no error"""
         if self.popup.error:
             return
@@ -368,6 +414,12 @@ class WorkflowDiagram(QWidget):
                 dfs_helper(root, [])
             root.setBrush("green")
 
+    def add_state(self):
+        if self.setting == "basic":
+            self.call_popup(None, False)
+        elif self.setting == "advanced":
+            self.call_advanced_popup(None, False)
+
     def call_popup(self, rect=None, edit=False):
         """Calls popup on click of CustomItem, or if 'Add Basic' button is pressed
 
@@ -392,11 +444,13 @@ class WorkflowDiagram(QWidget):
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.add_state)
+                self.popup.save_button.clicked.disconnect(
+                    self.check_popup_and_add_state
+                )
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
-            self.popup.save_button.clicked.connect(self.add_state)
+            self.popup.save_button.clicked.connect(self.check_popup_and_add_state)
         self.popup.exec()
 
     def call_advanced_popup(self, rect=None, edit=False):
@@ -406,11 +460,13 @@ class WorkflowDiagram(QWidget):
 
         if edit and rect:
             try:
-                self.popup.save_button.clicked.disconnect(self.add_state)
+                self.popup.save_button.clicked.disconnect(
+                    self.check_popup_and_add_state
+                )
             except TypeError:
                 self.popup.save_button.clicked.connect(lambda: self.edit_state(rect))
         else:
-            self.popup.save_button.clicked.connect(self.add_state)
+            self.popup.save_button.clicked.connect(self.check_popup_and_add_state)
         self.popup.exec()
 
     def item_clicked(self):
@@ -443,3 +499,4 @@ class WorkflowDiagram(QWidget):
         self.scene.clear()
         self.view.resetTransform()
         self.update()
+        self.popup = None

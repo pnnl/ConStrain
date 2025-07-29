@@ -5,14 +5,27 @@ sys.path.append("./constrain")
 from lib_unit_test_runner import *
 from library import *
 
-import json
 import pandas as pd
-import numpy as np
 
 
 class TestG36FreezeProtectionStage1(unittest.TestCase):
+    tolerances = {
+        "damper": {
+            "unit": "%",
+            "types": {"position": 0.0, "command": 0.01, "general": 0.0},
+        },
+        "temperature": {
+            "unit": "deg. C",
+            "types": {"supply_air": 0.0, "general": 0.0},
+        },
+    }
+
     def test_freeze_protection_1_pass(self):
-        points = ["supply_air_temp", "outdoor_damper_command", "outdoor_damper_minimum"]
+        points = [
+            "temperature_air_supply_setpoint",
+            "position_damper_air_outdoor",
+            "position_damper_air_outdoor_min",
+        ]
 
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -28,7 +41,7 @@ class TestG36FreezeProtectionStage1(unittest.TestCase):
         expected_results = pd.Series([True, True, True, True, True])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage1", df
+            "G36FreezeProtectionStage1", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -37,7 +50,11 @@ class TestG36FreezeProtectionStage1(unittest.TestCase):
         self.assertTrue(binaryflag)
 
     def test_freeze_protection_1_fail(self):
-        points = ["supply_air_temp", "outdoor_damper_command", "outdoor_damper_minimum"]
+        points = [
+            "temperature_air_supply_setpoint",
+            "position_damper_air_outdoor",
+            "position_damper_air_outdoor_min",
+        ]
 
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -53,7 +70,7 @@ class TestG36FreezeProtectionStage1(unittest.TestCase):
         expected_results = pd.Series([True, False, False, False, True])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage1", df
+            "G36FreezeProtectionStage1", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
@@ -62,7 +79,11 @@ class TestG36FreezeProtectionStage1(unittest.TestCase):
         self.assertFalse(binaryflag)
 
     def test_freeze_protection_1_untested(self):
-        points = ["supply_air_temp", "outdoor_damper_command", "outdoor_damper_minimum"]
+        points = [
+            "temperature_air_supply_setpoint",
+            "position_damper_air_outdoor",
+            "position_damper_air_outdoor_min",
+        ]
 
         timestamp = [
             datetime(2023, 3, 1, 2, 0, 0),
@@ -78,7 +99,7 @@ class TestG36FreezeProtectionStage1(unittest.TestCase):
         expected_results = pd.Series([True, True, True, True, True])
 
         verification_obj = run_test_verification_with_data(
-            "G36FreezeProtectionStage1", df
+            "G36FreezeProtectionStage1", df, tolerances=self.tolerances
         )
         results = pd.Series(list(verification_obj.result))
         binaryflag = verification_obj.check_bool()
