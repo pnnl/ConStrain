@@ -8,12 +8,12 @@ from lib_unit_test_runner import *
 from library import *
 
 
-class TestChilledWaterPlantSizingChillerMaxLoading(unittest.TestCase):
+class TestChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading(unittest.TestCase):
     def test_chilled_water_plant_sizing_chiller_max_loading_pass(self):
         points = [
-            "ratio_loading_chiller",
-            "ratio_loading_chiller_max_min",
-            "ratio_loading_chiller_average_min",
+            "ratio_loading",
+            "ratio_loading_max_min",
+            "ratio_loading_average_min",
         ]
         timestamp = [
             datetime(2023, 8, 1, 11, 0, 0),
@@ -28,7 +28,7 @@ class TestChilledWaterPlantSizingChillerMaxLoading(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series([True, True, True])
         verification_obj = run_test_verification_with_data(
-            "ChilledWaterPlantSizingChillerMaxLoading", df
+            "ChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading", df
         )
 
         results = pd.Series(list(verification_obj.result))
@@ -38,9 +38,9 @@ class TestChilledWaterPlantSizingChillerMaxLoading(unittest.TestCase):
 
     def test_chilled_water_plant_sizing_chiller_max_loading_fail(self):
         points = [
-            "ratio_loading_chiller",
-            "ratio_loading_chiller_max_min",
-            "ratio_loading_chiller_average_min",
+            "ratio_loading",
+            "ratio_loading_max_min",
+            "ratio_loading_average_min",
         ]
         timestamp = [
             datetime(2023, 8, 1, 11, 0, 0),
@@ -55,7 +55,7 @@ class TestChilledWaterPlantSizingChillerMaxLoading(unittest.TestCase):
         df = pd.DataFrame(data, columns=points, index=timestamp)
         expected_results = pd.Series([False, False, False])
         verification_obj = run_test_verification_with_data(
-            "ChilledWaterPlantSizingChillerMaxLoading", df
+            "ChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading", df
         )
 
         results = pd.Series(list(verification_obj.result))

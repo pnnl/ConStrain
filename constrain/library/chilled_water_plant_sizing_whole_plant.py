@@ -59,8 +59,6 @@ else
 
 from constrain.checklib import RuleCheckBase
 
-Cp = 4184  # J/(kg*K)
-
 
 class ChilledWaterPlantSizingWholePlant(RuleCheckBase):
     points = [

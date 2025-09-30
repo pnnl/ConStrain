@@ -8,12 +8,12 @@ from lib_unit_test_runner import *
 from library import *
 
 
-class TestChilledWaterPlantSizingChillerShortCycling(unittest.TestCase):
+class TestChilledWaterHotWaterPlantSizingChillerBoilerShortCycling(unittest.TestCase):
     def test_chilled_water_plant_sizing_chiller_short_cycling_pass(
         self,
     ):
         points = [
-            "status_chiller",
+            "status_equipment",
             "cycles_number_maximum",
         ]
         timestamp = [
@@ -44,7 +44,7 @@ class TestChilledWaterPlantSizingChillerShortCycling(unittest.TestCase):
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         verification_obj = run_test_verification_with_data(
-            "ChilledWaterPlantSizingChillerShortCycling", df
+            "ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling", df
         )
 
         results = pd.Series(list(verification_obj.result))
@@ -55,7 +55,7 @@ class TestChilledWaterPlantSizingChillerShortCycling(unittest.TestCase):
         self,
     ):
         points = [
-            "status_chiller",
+            "status_equipment",
             "cycles_number_maximum",
         ]
         timestamp = [
@@ -92,7 +92,7 @@ class TestChilledWaterPlantSizingChillerShortCycling(unittest.TestCase):
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         verification_obj = run_test_verification_with_data(
-            "ChilledWaterPlantSizingChillerShortCycling", df
+            "ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling", df
         )
 
         results = pd.Series(list(verification_obj.result))

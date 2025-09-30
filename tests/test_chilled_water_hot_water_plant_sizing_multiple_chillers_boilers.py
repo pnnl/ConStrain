@@ -8,11 +8,11 @@ from lib_unit_test_runner import *
 from library import *
 
 
-class TestChilledWaterPlantSizingMultipleChillers(unittest.TestCase):
+class TestChilledWaterHotWaterPlantSizingMultipleChillersBoilers(unittest.TestCase):
     def test_chilled_water_plant_sizing_multiple_chiller_pass(self):
         points = [
-            "status_chiller",
-            "load_plant_water_chilled",
+            "status_equipment",
+            "load_plant_water",
         ]
 
         timestamp = [
@@ -31,7 +31,7 @@ class TestChilledWaterPlantSizingMultipleChillers(unittest.TestCase):
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         verification_obj = run_test_verification_with_data(
-            "ChilledWaterPlantSizingMultipleChillers", df
+            "ChilledWaterHotWaterPlantSizingMultipleChillersBoilers", df
         )
 
         binaryflag = verification_obj.check_bool()
@@ -39,8 +39,8 @@ class TestChilledWaterPlantSizingMultipleChillers(unittest.TestCase):
 
     def test_chilled_water_plant_sizing_multiple_chiller_fail(self):
         points = [
-            "status_chiller",
-            "load_plant_water_chilled",
+            "status_equipment",
+            "load_plant_water",
         ]
 
         timestamp = [
@@ -59,7 +59,7 @@ class TestChilledWaterPlantSizingMultipleChillers(unittest.TestCase):
         ]
         df = pd.DataFrame(data, columns=points, index=timestamp)
         verification_obj = run_test_verification_with_data(
-            "ChilledWaterPlantSizingMultipleChillers", df
+            "ChilledWaterHotWaterPlantSizingMultipleChillersBoilers", df
         )
 
         binaryflag = verification_obj.check_bool()
