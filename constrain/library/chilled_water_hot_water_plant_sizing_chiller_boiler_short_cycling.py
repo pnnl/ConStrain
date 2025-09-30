@@ -1,7 +1,7 @@
 """
 ### Description
 
-- Chillers should be designed and controlled to prevent excessive cycling.
+- Chillers/Boilers should be designed and controlled to prevent excessive cycling.
 
 ### Code requirement
 
@@ -12,22 +12,22 @@
 
 ### Verification Approach
 
-We aim to identify the number of on/off transitions for each chiller in the system for each hour of operation. The verification passes if the number of transitions per hour does not exceed the maximum allowed cycles.
+We aim to identify the number of on/off transitions for each chiller/boiler in the system for each hour of operation. The verification passes if the number of transitions per hour does not exceed the maximum allowed cycles.
 
 ### Verification Applicability
 
-- Building Type(s): any with chilled water plant
+- Building Type(s): any with chilled/hot water plant
 - Space Type(s): N/A
-- System(s): chilled water plant
+- System(s): chilled/hot water plant
 - Climate Zone(s): any
-- Component(s): chillers
+- Component(s): chillers/boilers
 
 ### Verification Algorithm Pseudo Code
 
 The algorithm counts the number of status transitions (from on to off or off to on) for each hour
 
 ```python
-# Normalize chiller status to 0s and 1s if needed
+# Normalize chiller/boiler status to 0s and 1s if needed
 # For each hour, count the number of transitions between on and off states
 # Compare the count with the maximum allowed cycles
 if transitions_count <= cycles_number_maximum for all hours:
@@ -39,44 +39,50 @@ end
 
 ### Data requirements
 
-- status_chiller: Chiller operation status
+- status_equipment: Chiller/Boiler operation status
   - Data Value Unit: binary
-  - Data Point Affiliation: Chiller operation status
+  - Data Point Affiliation: Chiller/Boiler operation status
 
 - cycles_number_maximum: Maximum allowed number of cycles per hour
   - Data Value Unit: count
   - Data Point Affiliation: Design specification
+
+- system_type: System type (Chiller or Boiler)
+  - Data Value Unit: N/A
+  - Data Point Affiliation: N/A
 """
 
-from math import ceil
 import pandas as pd
 
 from constrain.checklib import RuleCheckBase
 
 
-class ChilledWaterPlantSizingChillerShortCycling(RuleCheckBase):
+class ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling(RuleCheckBase):
     points = [
-        "status_chiller",
+        "status_equipment",
         "cycles_number_maximum",
+        "system_type",
     ]
 
     def verify(self):
-        # Normalize the status of the chiller
-        self.df["status_chiller"] = self.df.apply(
-            lambda x: 1 if x["status_chiller"] > 0 else 0, axis=1
+        # Normalize the status of the chiller/boiler
+        self.df["status_equipment"] = self.df.apply(
+            lambda x: 1 if x["status_equipment"] > 0 else 0, axis=1
         )
 
         # Identify transitions of operation
-        transitions = self.df["status_chiller"].diff()
+        transitions = self.df["status_equipment"].diff()
 
         # Initialization
         cycle_ends = []
         on_time = None
         # Iterate over the transitions to find cycles
         for i in range(1, len(transitions)):
-            if transitions[i] == 1:  # Transition from 0 to 1 (chiller coming on)
+            if transitions[i] == 1:  # Transition from 0 to 1 (chiller/boiler coming on)
                 on_time = self.df.index[i]
-            elif transitions[i] == -1:  # Transition from 1 to 0 (chiller coming off)
+            elif (
+                transitions[i] == -1
+            ):  # Transition from 1 to 0 (chiller/boiler coming off)
                 if on_time is not None:
                     cycle_ends.append(self.df.index[i])
                     on_time = None

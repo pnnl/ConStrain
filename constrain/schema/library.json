@@ -1634,7 +1634,7 @@
         "assertions_type": "pass",
         "description_assertions": [
             "if temperature_drybulb_day_design_cooling is in dataset",
-            "    if peak_load >= nominal_chilled_water_plant_capacity / oversizing_factor",
+            "    if peak_load >= capacity_nominal_plant_water_chilled / factor_oversizing",
             "        return True",
             "    else",
             "        return False",
@@ -1642,36 +1642,37 @@
             "    return 'Untested'"
         ]
     },
-	"ChilledWaterPlantSizingMultipleChillers": {
+	"ChilledWaterHotWaterPlantSizingMultipleChillersBoilers": {
         "library_item_id": 72,
         "description_brief": "",
         "description_index": [
             "N/A"
         ],
         "description_datapoints": {
-            "status_chiller": "Chiller Status",
-            "load_plant_water_chilled": "Chilled water plant load"		
+            "status_equipment": "Equipment status",
+            "load_plant_water": "Chilled water/Hot water plant load",
+            "system_type": "System type (Chiller or Boiler)"			
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
         "description_assertions": [
             "For each timestep i:",
-            "  If status_chiller[i] > 0: ",
-            "    duration_chiller[i] = timestep[i] - timestep[i-1]",
+            "  If status_equipment[i] > 0: ",
+            "    duration_equipment[i] = timestep[i] - timestep[i-1]",
             "  else: ",
-            "    duration_chiller[i] = 0",
+            "    duration_equipment[i] = 0",
             "  end",
-            "chiller_load_hours = Sum(duration_chiller)",
+            "equipment_load_hours = Sum(duration_equipment)",
             "",
             "For each timestep i:",
-            "  If load_plant_water_chilled[i] > 0: ",
+            "  If load_plant_water[i] > 0: ",
             "    duration_plant[i] = timestep[i] - timestep[i-1] ",
             "  else:",
             "    duration_plant[i] = 0",
             "  end",
             "plant_load_hours = Sum(duration_plant)",
             " ",
-            "operation_ratio = chiller_load_hours / plant_load_hours",
+            "operation_ratio = equipment_load_hours / plant_load_hours",
             "If operation_ratio >= tolerance",
             "  pass",
             "else: ",
@@ -1679,37 +1680,39 @@
             "end"
         ]
     },
-	"ChilledWaterPlantSizingChillerMaxLoading": {
+	"ChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading": {
         "library_item_id": 73,
         "description_brief": "",
         "description_index": [
             "N/A"
         ],
         "description_datapoints": {
-            "ratio_loading_chiller": "Chiller loading ratio",
-            "ratio_loading_chiller_max_min": "Minimum acceptable maximum loading ratio",
-            "ratio_loading_chiller_average_min": "Minimum acceptable average loading ratio"
+            "ratio_loading": "loading ratio",
+            "ratio_loading_max_min": "Minimum acceptable maximum loading ratio",
+            "ratio_loading_average_min": "Minimum acceptable average loading ratio",
+            "system_type": "System type (Chiller or Boiler)"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
         "description_assertions": [
             "For each timestep i:",
-            "  if ratio_loading_chiller_max > ratio_loading_chiller_max_min and ratio_loading_chiller_average > ratio_loading_chiller_average_min",
+            "  if ratio_loading_max > ratio_loading_max_min and ratio_loading_average > ratio_loading_average_min",
             "    pass",
             "  else",
             "    fail",
             "  end"
         ]
     },
-	"ChilledWaterPlantSizingChillerShortCycling": {
+	"ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling": {
         "library_item_id": 74,
         "description_brief": "",
         "description_index": [
             "N/A"
         ],
         "description_datapoints": {
-            "status_chiller": "Chiller status",
-            "cycles_number_maximum": "Maximum allowed number of cycles per hour"		
+            "status_equipment": "Equipment status",
+            "cycles_number_maximum": "Maximum allowed number of cycles per hour",
+            "system_type": "System type (Chiller or Boiler)"			
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
@@ -1717,11 +1720,36 @@
             "For each hour, count the number of transitions between on and off states",
             "Compare the count with the maximum allowed cycles",
             "For each timestep i:",
-            "  if ratio_loading_chiller_max > ratio_loading_chiller_max_min",
+            "  if ratio_loading_max > ratio_loading_max_min",
             "    pass",
             "  else",
             "    fail",
             "  end"
+        ]
+    },
+	"HotWaterPlantSizingWholePlant": {
+        "library_item_id": 75,
+        "description_brief": "",
+        "description_index": [
+            "N/A"
+        ],
+        "description_datapoints": {
+            "load_plant_water_hot": "Hot water plant load",
+			"temperature_air_outdoor": "Outdoor air temperature",
+            "capacity_nominal_plant_water_hot": "Nominal capacity of the Hot water plant",
+            "temperature_drybulb_day_design_heating": "Heating design day drybulb temperature",
+            "factor_oversizing": "Oversizing factor"
+        },
+        "description_verification_type": "procedure-based",
+        "assertions_type": "pass",
+        "description_assertions": [
+            "if temperature_drybulb_day_design_heating is in dataset",
+            "    if peak_load >= capacity_nominal_plant_water_hot / factor_oversizing",
+            "        return True",
+            "    else",
+            "        return False",
+            "else",
+            "    return 'Untested'"
         ]
     }
 }
