@@ -75,8 +75,6 @@ The algorithm calculates the total operation time for chillers/boilers and the c
 
 from constrain.checklib import RuleCheckBase
 
-TOL_RATIO_GENERAL = 0.8
-
 
 class ChilledWaterHotWaterPlantSizingMultipleChillersBoilers(RuleCheckBase):
     points = [
