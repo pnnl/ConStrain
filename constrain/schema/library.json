@@ -1650,7 +1650,8 @@
         ],
         "description_datapoints": {
             "status_equipment": "Equipment status",
-            "load_plant_water": "Chilled water/Hot water plant load"		
+            "load_plant_water": "Chilled water/Hot water plant load",
+            "system_type": "System type (Chiller or Boiler)"			
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -1688,7 +1689,8 @@
         "description_datapoints": {
             "ratio_loading": "loading ratio",
             "ratio_loading_max_min": "Minimum acceptable maximum loading ratio",
-            "ratio_loading_average_min": "Minimum acceptable average loading ratio"
+            "ratio_loading_average_min": "Minimum acceptable average loading ratio",
+            "system_type": "System type (Chiller or Boiler)"
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",
@@ -1709,7 +1711,8 @@
         ],
         "description_datapoints": {
             "status_equipment": "Equipment status",
-            "cycles_number_maximum": "Maximum allowed number of cycles per hour"		
+            "cycles_number_maximum": "Maximum allowed number of cycles per hour",
+            "system_type": "System type (Chiller or Boiler)"			
         },
         "description_verification_type": "rule-based",
         "assertions_type": "pass",

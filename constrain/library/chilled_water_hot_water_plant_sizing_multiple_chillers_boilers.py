@@ -24,9 +24,9 @@ We aim to verify that multiple chillers/boilers in a chilled/hot water plant are
 
 ### Verification Algorithm Pseudo Code
 
-The algorithm calculates the total operation time for chillers and the chilled/hot water plant:
+The algorithm calculates the total operation time for chillers/boilers and the chilled/hot water plant:
 
-1. Calculate the total operation time for chillers based on chiller status:
+1. Calculate the total operation time for chillers/Boilers based on equipment status:
    ```
    For each timestep i:
      If status_equipment[i] > 0:
@@ -48,7 +48,7 @@ The algorithm calculates the total operation time for chillers and the chilled/h
    plant_load_hours = Sum(duration_plant)
    ```
 
-3. Calculate the ratio of chiller operation time to plant operation time:
+3. Calculate the ratio of chiller/boiler operation time to plant operation time:
    ```
    operation_ratio = equipment_load_hours / plant_load_hours
    ```
@@ -67,6 +67,10 @@ The algorithm calculates the total operation time for chillers and the chilled/h
 - load_plant_water: Chilled/Hot water plant cooling/heating load
   - Data Value Unit: kW
   - Data Point Affiliation: Chilled/Hot water plant
+
+- system_type: System type (Chiller or Boiler)
+  - Data Value Unit: N/A
+  - Data Point Affiliation: N/A
 """
 
 from constrain.checklib import RuleCheckBase
@@ -78,6 +82,7 @@ class ChilledWaterHotWaterPlantSizingMultipleChillersBoilers(RuleCheckBase):
     points = [
         "status_equipment",
         "load_plant_water",
+        "system_type",
     ]
 
     def get_runtimes(self, point, name):

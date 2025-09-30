@@ -8,7 +8,7 @@ from lib_unit_test_runner import *
 from library import *
 
 
-class TestChilledWaterPlantSizingWholePlant(unittest.TestCase):
+class TestHotWaterPlantSizingWholePlant(unittest.TestCase):
     def test_hot_water_plant_sizing_plant_pass(self):
         points = [
             "load_plant_water_hot",

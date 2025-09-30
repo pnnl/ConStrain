@@ -50,6 +50,10 @@ end
 - ratio_loading_average_min: Minimum acceptable average loading ratio
   - Data Value Unit: dimensionless (0-1)
   - Data Point Affiliation: design parameter
+
+- system_type: System type (Chiller or Boiler)
+  - Data Value Unit: N/A
+  - Data Point Affiliation: N/A
 """
 
 from constrain.checklib import RuleCheckBase
@@ -60,6 +64,7 @@ class ChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading(RuleCheckBase):
         "ratio_loading",
         "ratio_loading_max_min",
         "ratio_loading_average_min",
+        "system_type",
     ]
 
     def verify(self):
