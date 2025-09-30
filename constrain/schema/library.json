@@ -1737,7 +1737,7 @@
             "load_plant_water_hot": "Hot water plant load",
 			"temperature_air_outdoor": "Outdoor air temperature",
             "capacity_nominal_plant_water_hot": "Nominal capacity of the Hot water plant",
-            "temperature_drybulb_day_design_heating": "Cooling design day drybulb temperature",
+            "temperature_drybulb_day_design_heating": "Heating design day drybulb temperature",
             "factor_oversizing": "Oversizing factor"
         },
         "description_verification_type": "procedure-based",
