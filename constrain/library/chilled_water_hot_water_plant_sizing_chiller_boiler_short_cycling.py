@@ -78,11 +78,11 @@ class ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling(RuleCheckBase):
         on_time = None
         # Iterate over the transitions to find cycles
         for i in range(1, len(transitions)):
-            if transitions[i] == 1:  # Transition from 0 to 1 (chiller/Boiler coming on)
+            if transitions[i] == 1:  # Transition from 0 to 1 (chiller/boiler coming on)
                 on_time = self.df.index[i]
             elif (
                 transitions[i] == -1
-            ):  # Transition from 1 to 0 (chiller/Boiler coming off)
+            ):  # Transition from 1 to 0 (chiller/boiler coming off)
                 if on_time is not None:
                     cycle_ends.append(self.df.index[i])
                     on_time = None
