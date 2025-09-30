@@ -30,11 +30,11 @@ The algorithm calculates the total operation time for chillers and the chilled/h
    ```
    For each timestep i:
      If status_equipment[i] > 0:
-       duration_chiller[i] = timestep[i] - timestep[i-1]
+       duration_equipment[i] = timestep[i] - timestep[i-1]
      Else:
-       duration_chiller[i] = 0
+       duration_equipment[i] = 0
    
-   equipment_load_hours = Sum(duration_chiller)
+   equipment_load_hours = Sum(duration_equipment)
    ```
 
 2. Calculate the total operation time for the chilled/hot water plant based on plant load:

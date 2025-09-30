@@ -1657,11 +1657,11 @@
         "description_assertions": [
             "For each timestep i:",
             "  If status_equipment[i] > 0: ",
-            "    duration_chiller[i] = timestep[i] - timestep[i-1]",
+            "    duration_equipment[i] = timestep[i] - timestep[i-1]",
             "  else: ",
-            "    duration_chiller[i] = 0",
+            "    duration_equipment[i] = 0",
             "  end",
-            "chiller_load_hours = Sum(duration_chiller)",
+            "equipment_load_hours = Sum(duration_equipment)",
             "",
             "For each timestep i:",
             "  If load_plant_water[i] > 0: ",
@@ -1671,7 +1671,7 @@
             "  end",
             "plant_load_hours = Sum(duration_plant)",
             " ",
-            "operation_ratio = chiller_load_hours / plant_load_hours",
+            "operation_ratio = equipment_load_hours / plant_load_hours",
             "If operation_ratio >= tolerance",
             "  pass",
             "else: ",
@@ -1686,7 +1686,7 @@
             "N/A"
         ],
         "description_datapoints": {
-            "ratio_loading": "Chiller loading ratio",
+            "ratio_loading": "loading ratio",
             "ratio_loading_max_min": "Minimum acceptable maximum loading ratio",
             "ratio_loading_average_min": "Minimum acceptable average loading ratio"
         },
@@ -1741,7 +1741,7 @@
         "assertions_type": "pass",
         "description_assertions": [
             "if temperature_drybulb_day_design_heating is in dataset",
-            "    if peak_load >= nominal_chilled_water_plant_capacity / oversizing_factor",
+            "    if peak_load >= capacity_nominal_plant_water_hot / oversizing_factor",
             "        return True",
             "    else",
             "        return False",
