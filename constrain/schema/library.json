@@ -1634,7 +1634,7 @@
         "assertions_type": "pass",
         "description_assertions": [
             "if temperature_drybulb_day_design_cooling is in dataset",
-            "    if peak_load >= nominal_chilled_water_plant_capacity / oversizing_factor",
+            "    if peak_load >= capacity_nominal_plant_water_chilled / factor_oversizing",
             "        return True",
             "    else",
             "        return False",
@@ -1744,7 +1744,7 @@
         "assertions_type": "pass",
         "description_assertions": [
             "if temperature_drybulb_day_design_heating is in dataset",
-            "    if peak_load >= capacity_nominal_plant_water_hot / oversizing_factor",
+            "    if peak_load >= capacity_nominal_plant_water_hot / factor_oversizing",
             "        return True",
             "    else",
             "        return False",
