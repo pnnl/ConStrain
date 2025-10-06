@@ -20,7 +20,7 @@ from constrain.libcases import *
 # Change the following according to your system configuration
 energy_plus_simulation = False
 energy_plus_path = "/Applications/EnergyPlus-25-1-0/energyplus"
-energy_plus_idd = "/Applications/EnergyPlus-25-1-0/Energy+.idd"
+energy_plus_idd = "../../../resources/Energy+V25_1_0.idd"
 energy_plus_weather_file = (
     "/Applications/EnergyPlus-25-1-0/WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw"
 )
