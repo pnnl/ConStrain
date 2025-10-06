@@ -37,32 +37,13 @@ See the Publications section for more information and example of uses of the fra
 
 ## Get Started
 
-- Demos are located in `demo/`
+- [General project documentation](https://pnnl.github.io/ConStrain/index.html)
+- Demos are located in the [demo](https://github.com/pnnl/ConStrain/tree/develop/constrain/demo) folder. Current valid demos
+  - [TSPR simulation cases](https://github.com/pnnl/ConStrain/tree/develop/constrain/demo/tspr_cases/tspr_cases.py)
 - Visit [API documentation page](https://pnnl.github.io/ConStrain/) to learn about how to use the ConStrain API.
 - Visit [Guideline 36 Verification Items List](./design/g36_lib_contents.md) to learn more about the ASHRAE Guideline 36 related verification in ConStrain verification library.
 - Visit [Local Loop Verification Items List](./design/local_loop_verification_items_list.md) to learn more about local loop performance verification library.
 - Visit [Brick Integration Doc](./design/brick_integration_doc.md) to learn more about the beta version of brick schema integration API.
-
-<!-- ## Note
-
-- Currently the master branch is setup to run simulation and verification batches in parralel on PNNL's PIC platform. Updates are expected to properly expose setup options for different environments and use cases.
-
-## Key files in the repository
-
-| File                                         | Description                                                                          |
-| -------------------------------------------- | ------------------------------------------------------------------------------------ |
-| src/library.py                               | verification library                                                                 |
-| src/run_sim_for_cases.py                     | idf file instrumenter and runner                                                     |
-| src/run_verification_case.py                 | batch verification cases runner                                                      |
-| src/summarize_md.py                          | batch verification cases results report generator                                    |
-| src/verification_cases_split.py              | split instantiated verification cases by idf with batch size limit                   |
-| schema/library.json                          | verification library meta data                                                       |
-| schema/library_verification_cases.json       | library verification test cases input file (outdated)                                |
-| other files in src/                          | verification framework implementation                                                |
-| test_cases/                                  | verification test cases input and related files                                      |
-| test_cases/verif_mtd_pp/create_test_cases.py | verification case instantiator                                                       |
-| demo/verification_approach_demo              | 3 different verification methods demo outputs                                        |
-| demo/library_item_demo                       | verification cases demo run in Ipython Notebook with associated case definition json | -->
 
 ## Publications
 
