@@ -28,6 +28,7 @@ pyyaml = "^6.0.1"
 pyqt6 = "^6.6.1"
 click = "^8.1.7"
 jsonschema= "^4.21.1"
+python-levenshtein = "^0.27.1"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.6.0"

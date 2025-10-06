@@ -270,9 +270,7 @@ class WorkflowEngine:
             state_count += 1
 
             if verbose:
-                logging.info(
-                    f"Running state {state_count}: [{current_state_name}] ...", end=" "
-                )
+                logging.info(f"Running state {state_count}: [{current_state_name}] ...")
 
             self.running_sequence.append(current_state_name)
             current_state_name = self.run_state(current_state_name)

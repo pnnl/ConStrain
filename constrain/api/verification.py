@@ -168,8 +168,8 @@ class Verification:
                     Path(__file__).parent.parent / "tolerances.json"
                 )
         else:
-            logging.error(
-                f"path_to_custom_tolerance_file should be a string. The default tolerances will be used."
+            logging.info(
+                f"path_to_custom_tolerance_file was not specified. The default tolerances will be used."
             )
             path_to_custom_tolerance_file = (
                 Path(__file__).parent.parent / "tolerances.json"

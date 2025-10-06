@@ -75,7 +75,7 @@ class SupplyAirTempReset(RuleCheckBase):
 
         self.result = (t_sa_set_max - t_sa_set_min) >= (
             self.df["temperature_air_zone_design_cool_setpoint"] - t_sa_set_min
-        ) * 0.25 * (100 - self.get_tolerance("ratio", "temperature") * 100)
+        ) * 0.25 * (1 - self.get_tolerance("ratio", "temperature") * 1)
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
         logging.info(

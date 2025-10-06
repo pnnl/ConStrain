@@ -5,6 +5,7 @@ from .chilled_water_plant_sizing_chiller_max_loading import *
 from .chilled_water_plant_sizing_chiller_short_cycling import *
 from .chilled_water_plant_sizing_multiple_chillers import *
 from .chilled_water_plant_sizing_whole_plant import *
+from .chilled_water_reset import *
 from .demand_control_vent import *
 from .ExteriorLightingControlDaylightOff import *
 from .ExteriorLightingControlOccupancySensingReduction import *
@@ -62,6 +63,7 @@ from .zone_temp_control import *
 __all__ = [
     "AutomaticOADamperControl",
     "AutomaticShutdown",
+    "CHWReset",
     "DemandControlVentilation",
     # "economizer_humidification_system_impact", # missing
     "FanStaticPressureResetControl",
