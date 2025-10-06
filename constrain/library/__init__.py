@@ -1,11 +1,12 @@
 from .AppendixGHVACSystemFanOperation import *
 from .automatic_oa_damper_controls import *
 from .automatic_shutdown import *
-from .chilled_water_plant_sizing_chiller_max_loading import *
-from .chilled_water_plant_sizing_chiller_short_cycling import *
-from .chilled_water_plant_sizing_multiple_chillers import *
+from .chilled_water_hot_water_plant_sizing_chiller_boiler_max_loading import *
+from .chilled_water_hot_water_plant_sizing_chiller_boiler_short_cycling import *
+from .chilled_water_hot_water_plant_sizing_multiple_chillers_boilers import *
 from .chilled_water_plant_sizing_whole_plant import *
 from .chilled_water_reset import *
+from .hot_water_plant_sizing_whole_plant import *
 from .demand_control_vent import *
 from .ExteriorLightingControlDaylightOff import *
 from .ExteriorLightingControlOccupancySensingReduction import *
@@ -123,7 +124,8 @@ __all__ = [
     "G36ReheatTerminalBoxDeadbandAirflowSetpoint",
     "G36TerminalBoxCoolingMinimumAirflow",
     "ChilledWaterPlantSizingWholePlant",
-    "ChilledWaterPlantSizingMultipleChillers",
-    "ChilledWaterPlantSizingChillerMaxLoading",
-    "ChilledWaterPlantSizingChillerShortCycling",
+    "HotWaterPlantSizingWholePlant",
+    "ChilledWaterHotWaterPlantSizingMultipleChillersBoilers",
+    "ChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading",
+    "ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling",
 ]
