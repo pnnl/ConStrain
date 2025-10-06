@@ -1,6 +1,4 @@
-"""The goal of this demo cases is to showcase how verification cases can be semi-automatically created for building energy simulation timeseries
-
-The 
+"""The goal of this demo cases is to showcase how verification cases can be semi-automatically created for building energy simulation timeseries.
 """
 
 import matplotlib.pyplot as plt
