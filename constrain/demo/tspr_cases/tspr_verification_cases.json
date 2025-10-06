@@ -2,7 +2,7 @@
     "cases": [
         {
             "no": 0,
-            "run_simulation": true,
+            "run_simulation": false,
             "simulation_IO": {
                 "idf": "./sat_reset/sat_reset.idf",
                 "idd": "/Applications/EnergyPlus-25-1-0/Energy+.idd",
@@ -27,7 +27,7 @@
         },
         {
             "no": 1,
-            "run_simulation": true,
+            "run_simulation": false,
             "simulation_IO": {
                 "idf": "./chw_reset/chw_reset.idf",
                 "idd": "/Applications/EnergyPlus-25-1-0/Energy+.idd",

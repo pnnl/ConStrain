@@ -17,7 +17,7 @@ from constrain.library import *
 from constrain.libcases import *
 
 # Input/Output params
-energy_plus_simulation = True
+energy_plus_simulation = False
 energy_plus_path = "/Applications/EnergyPlus-25-1-0/energyplus"
 energy_plus_idd = "/Applications/EnergyPlus-25-1-0/Energy+.idd"
 energy_plus_weather_file = (
