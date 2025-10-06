@@ -17,6 +17,7 @@ from constrain.library import *
 from constrain.libcases import *
 
 # Input/Output params
+# Change the following according to your system configuration
 energy_plus_simulation = False
 energy_plus_path = "/Applications/EnergyPlus-25-1-0/energyplus"
 energy_plus_idd = "/Applications/EnergyPlus-25-1-0/Energy+.idd"
@@ -142,13 +143,11 @@ for idf in glob.glob("./chw_reset/*.idf"):
         case_counter += 1
 json.dump(cases, open(verification_case_file, "w"), indent=4)
 
-#    cases_path="../test_cases/tspr_cases/tspr_verification_cases.json",
-#    lib_items_path="../schema/library.json",
-
 # Loading the verification cases
 cases = cs.api.VerificationCase(json_case_path=verification_case_file)
 assert cases.validate(), "Verification case file is not valid."
 
+# Configure verification
 verif = cs.api.Verification(verifications=cases)
 verif.configure(
     output_path="./",
@@ -158,4 +157,12 @@ verif.configure(
     fig_size=(10, 5),
     num_threads=1,
 )
+
+# Run verification and create reports
 verif.run()
+reporting = cs.api.Reporting(
+    verification_json="./*_md.json",
+    result_md_name="report_summary.md",
+    report_format="markdown",
+)
+reporting.report_multiple_cases()
