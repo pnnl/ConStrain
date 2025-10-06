@@ -5,7 +5,7 @@
             "run_simulation": false,
             "simulation_IO": {
                 "idf": "./sat_reset/sat_reset.idf",
-                "idd": "/Applications/EnergyPlus-25-1-0/Energy+.idd",
+                "idd": "../../../resources/Energy+V25_1_0.idd",
                 "weather": "/Applications/EnergyPlus-25-1-0/WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw",
                 "output": "eplusout.csv",
                 "ep_path": "/Applications/EnergyPlus-25-1-0/energyplus"
@@ -30,7 +30,7 @@
             "run_simulation": false,
             "simulation_IO": {
                 "idf": "./chw_reset/chw_reset.idf",
-                "idd": "/Applications/EnergyPlus-25-1-0/Energy+.idd",
+                "idd": "../../../resources/Energy+V25_1_0.idd",
                 "weather": "/Applications/EnergyPlus-25-1-0/WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw",
                 "output": "eplusout.csv",
                 "ep_path": "/Applications/EnergyPlus-25-1-0/energyplus"

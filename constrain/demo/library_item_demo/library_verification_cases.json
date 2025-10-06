@@ -193,7 +193,7 @@
                     "T_hw_min_st": 48.89
                 }
             },
-            "verification_class": "SupplyWaterReset"
+            "verification_class": "HWReset"
         },
         {
             "no": 12,
