@@ -1,20 +1,34 @@
-"""The goal of this demo cases is to showcase how verification cases can be semi-automatically created for building energy simulation timeseries.
+"""
+The goal of this demo cases is to showcase how verification cases can be semi-automatically created for building energy simulation timeseries.
+
+Two verification cases are setup and run: a chilled-water reset and supply air temperature reset control strategies.
+
+This demo leverages the ConStrain APIs to conduct this analysis.
+
+Notes:
+- The simulations for this demonstration have already been run, however, by changing the `energy_plus_*` variables to match one's local configuration/settings and the `energy_plus_simulation` to `Yes`, ConStrain will automatically run the EnergyPlus simulation for the test models.
+- Users shall have all dependencies required by ConStrain installed to run this script:
+  - The project uses `poetry` to manage its dependencies, install it following the official installation instructions
+  - In the root folder run `poetry install`
+- Once the dependencies have been installed, this script can be run using `python tspr_cases.py`
 """
 
+# %% Imports
 import matplotlib.pyplot as plt
 import json, glob
 
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+# Insert the root directory at the beginning of sys.path to prioritize local constrain package
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 import constrain as cs
 from constrain.workflowsteps import *
 from constrain.library import *
 from constrain.libcases import *
 
-# Input/Output params
+# %% Input/Output params
 # Change the following according to your system configuration
 energy_plus_simulation = False
 energy_plus_path = "/Applications/EnergyPlus-25-1-0/energyplus"
@@ -24,25 +38,28 @@ energy_plus_weather_file = (
 )
 energy_plus_output_file_name = "eplusout.csv"
 
-# Verification cases intialization
+# %% Verification cases initialization
+# We retrieve information from the model to create the verification cases
 verification_case_list = {"sat_reset": "SupplyAirTempReset", "chw_reset": "CHWReset"}
 verification_case_file = "./tspr_verification_cases.json"
 cases = {}
 cases["cases"] = []
 case_counter = 0
+# First, we get information for supply air temperature reset verification
 for idf in glob.glob("./sat_reset/*.idf"):
     if not "injected" in idf:
         sat_case = {}
         sat_case["no"] = case_counter
-
         idf_json = json.load(open(idf.replace(".idf", ".epJSON")))
 
-        # Retrieve supply inlet node name of first airloop
+        # Retrieve supply outlet node name of first airloop
+        # This is where the supply air temperature setpoint is assigned
         airloops = idf_json["AirLoopHVAC"]
         airloop = list(airloops.keys())[0]
         sat_node = airloops[airloop]["supply_side_outlet_node_names"]
         if sat_node in idf_json["NodeList"]:
             sat_node = idf_json["NodeList"][sat_node]["nodes"][0]["node_name"]
+
         # Retrieve zone design cooling temperature
         schs = idf_json["Schedule:Day:Interval"]
         sch = [
@@ -52,6 +69,7 @@ for idf in glob.glob("./sat_reset/*.idf"):
         for d in schs[sch]["data"]:
             if d["value_until_time"] < tz_coo:
                 tz_coo = d["value_until_time"]
+
         # Define simulation IO
         sat_case["run_simulation"] = energy_plus_simulation
         sat_case["simulation_IO"] = {
@@ -77,14 +95,14 @@ for idf in glob.glob("./sat_reset/*.idf"):
         case_counter += 1
 json.dump(cases, open("./tspr_verification_cases.json", "w"), indent=4)
 
+# Second, we get information for chilled water reset verification
 for idf in glob.glob("./chw_reset/*.idf"):
     if not "injected" in idf:
         chw_case = {}
         chw_case["no"] = case_counter
-
         idf_json = json.load(open(idf.replace(".idf", ".epJSON")))
 
-        # Retrieve supply inlet node name of first airloop
+        # Retrieve node name that is used to set the chilled water temperature setpoint for the plant
         plantloops = idf_json["PlantLoop"]
         chloop = [p for p in plantloops if "chiller" in p.lower()][0]
         chw_node = plantloops[chloop]["loop_temperature_setpoint_node_name"]
@@ -141,11 +159,11 @@ for idf in glob.glob("./chw_reset/*.idf"):
         case_counter += 1
 json.dump(cases, open(verification_case_file, "w"), indent=4)
 
-# Loading the verification cases
+# %% Loading the verification cases
 cases = cs.api.VerificationCase(json_case_path=verification_case_file)
 assert cases.validate(), "Verification case file is not valid."
 
-# Configure verification
+# %% Configure verifications
 verif = cs.api.Verification(verifications=cases)
 verif.configure(
     output_path="./",
@@ -156,7 +174,9 @@ verif.configure(
     num_threads=1,
 )
 
-# Run verification and create reports
+# %% Run verification and create reports in a markdown format
+# The logs and report should show that both verification pass without any failures
+# Users are encouraged to check the markdown reports to see plots and summary of the verification parameters
 verif.run()
 reporting = cs.api.Reporting(
     verification_json="./*_md.json",
