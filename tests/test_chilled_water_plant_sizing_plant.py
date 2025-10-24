@@ -1,6 +1,5 @@
 import datetime
 import sys
-import os
 import unittest
 
 sys.path.append("./constrain")

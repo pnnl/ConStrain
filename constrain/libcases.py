@@ -74,10 +74,12 @@ def run_libcase(
 
     if run_sim:
         weather_path = item.item["simulation_IO"]["weather"].strip()
+        idd_path = item.item["simulation_IO"]["idd"].strip()
         if "ep_path" in list(item.item["simulation_IO"].keys()):
             run_simulation(
                 idfpath=run_idf_path,
                 weatherpath=weather_path,
+                idd_path=idd_path,
                 ep_path=item.item["simulation_IO"]["ep_path"],
             )
         else:
