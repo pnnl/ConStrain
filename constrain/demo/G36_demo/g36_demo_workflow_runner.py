@@ -22,7 +22,7 @@ except NameError:
 # Change dir to align with workflow json file verification specification
 os.chdir(os.path.join(base_path, "..", ".."))
 # Insert the root directory at the beginning of sys.path to prioritize local constrain package
-sys.path.insert(0, os.path.join('..'))
+sys.path.insert(0, os.path.join(".."))
 
 from constrain.api import Workflow
 
