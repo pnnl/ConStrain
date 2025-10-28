@@ -13,7 +13,7 @@ PATH = pathlib.Path(__file__).parent.resolve()
 EXAMPLES = {
     "example_1": {
         "description": "Perform verification of ASHRAE Guideline 36-2021 sequence of operation on a dataset generated through the simulation of an AHU in Modelica. The verifications include the following: supply temperature reset, outdoor air damper psition for relief damper/fan, and return air damper psition for relief damper/fan",
-        "path_to_data": f"{PATH}/demo/G36_demo/data/G36_Modelica_Jan.csv",
+        "path_to_data": f"{PATH}/demo/G36_demo/data/G36_demo.csv",
         "path_to_verifications": f"{PATH}/demo/G36_demo/data/G36_library_verification_cases.json",
     }
 }

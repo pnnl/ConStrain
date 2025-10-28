@@ -44,7 +44,7 @@ Running Verifications using **ConStrain**
                 "idf": "modelica_dataset_set",
                 "idd": "./resources/Energy+V9_0_1.idd",
                 "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
-                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+                "output": "./demo/G36_demo/data/G36_demo.csv",
                 "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
               },
               "expected_result": "pass",
@@ -174,9 +174,9 @@ Running a workflow can be done as follows:
         f.write(response.content)
 
     # 2 - Get the timeseries
-    url_data = "https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/data/G36_Modelica_Jan.csv"
+    url_data = "https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/data/G36_demo.csv"
     response = requests.get(url_data)
-    with open("./G36_Modelica_Jan.csv", "wb") as f:
+    with open("./G36_demo.csv", "wb") as f:
         f.write(response.content)
 
     # 3 - Get the verification cases
@@ -192,7 +192,7 @@ Running a workflow can be done as follows:
         f.write(response.content)
 
     # 4 - Change data path
-    data["states"]["load data"]["Parameters"]["data_path"] = str("./G36_Modelica_Jan.csv")
+    data["states"]["load data"]["Parameters"]["data_path"] = str("./G36_demo.csv")
     data["states"]["load verification cases"]["Parameters"]["json_case_path"] = str("./G36_library_verification_cases.json")
     data["states"]["configure verification runner"]["Parameters"]["output_path"] = "./"
     data["states"]["configure verification runner"]["Parameters"]["lib_items_path"] = ("./library.json")
