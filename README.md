@@ -38,8 +38,9 @@ See the Publications section for more information and example of uses of the fra
 ## Get Started
 
 - [General project documentation](https://pnnl.github.io/ConStrain/index.html)
-- Demos are located in the [demo](https://github.com/pnnl/ConStrain/tree/develop/constrain/demo) folder. Current valid demos
-  - [TSPR simulation cases](https://github.com/pnnl/ConStrain/tree/develop/constrain/demo/tspr_cases/tspr_cases.py)
+-Jupyter notebook demos are located in the [demo](https://github.com/pnnl/ConStrain/tree/develop/constrain/demo) folder:
+  - [TSPR simulation cases](https://github.com/pnnl/ConStrain/tree/develop/constrain/demo/tspr_cases/tspr_cases.ipynb)
+  - [Guideline 36 workflow verification](https://github.com/pnnl/ConStrain/blob/develop/constrain/demo/G36_demo/g36_demo_workflow_runner.ipynb)
 - Visit [API documentation page](https://pnnl.github.io/ConStrain/) to learn about how to use the ConStrain API.
 - Visit [Guideline 36 Verification Items List](./design/g36_lib_contents.md) to learn more about the ASHRAE Guideline 36 related verification in ConStrain verification library.
 - Visit [Local Loop Verification Items List](./design/local_loop_verification_items_list.md) to learn more about local loop performance verification library.

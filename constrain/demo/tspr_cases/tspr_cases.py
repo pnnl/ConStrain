@@ -1,27 +1,33 @@
-"""
-The goal of this demo cases is to showcase how verification cases can be semi-automatically created for building energy simulation timeseries.
-
-Two verification cases are setup and run: a chilled-water reset and supply air temperature reset control strategies.
-
-This demo leverages the ConStrain APIs to conduct this analysis.
-
-Notes:
-- The simulations for this demonstration have already been run, however, by changing the `energy_plus_*` variables to match one's local configuration/settings and the `energy_plus_simulation` to `Yes`, ConStrain will automatically run the EnergyPlus simulation for the test models.
-- Users shall have all dependencies required by ConStrain installed to run this script:
-  - The project uses `poetry` to manage its dependencies, install it following the official installation instructions
-  - In the root folder run `poetry install`
-- Once the dependencies have been installed, this script can be run using `python tspr_cases.py`
-"""
+# %% [markdown]
+# The goal of this demo cases is to showcase how verification cases can be semi-automatically created for building energy simulation timeseries.
+#
+# Two verification cases are setup and run: a chilled-water reset and supply air temperature reset control strategies.
+#
+# This demo leverages the ConStrain APIs to conduct this analysis.
+#
+# Notes:
+# - The simulations for this demonstration have already been run, however, by changing the `energy_plus_*` variables to match one's local configuration/settings and the `energy_plus_simulation` to `Yes`, ConStrain will automatically run the EnergyPlus simulation for the test models.
+# - Users shall have all dependencies required by ConStrain installed to run this script:
+#   - The project uses `poetry` to manage its dependencies, install it following the official installation instructions
+#   - In the root folder run `poetry install`
 
 # %% Imports
+# Load dependencies
 import matplotlib.pyplot as plt
 import json, glob
 
 import sys
 import os
 
+try:
+    # works in scripts
+    base_path = os.path.dirname(__file__)
+except NameError:
+    # fallback for notebooks
+    base_path = os.getcwd()
+
 # Insert the root directory at the beginning of sys.path to prioritize local constrain package
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+sys.path.insert(0, os.path.join(base_path, "..", "..", ".."))
 
 import constrain as cs
 from constrain.workflowsteps import *
@@ -39,7 +45,7 @@ energy_plus_weather_file = (
 energy_plus_output_file_name = "eplusout.csv"
 
 # %% Verification cases initialization
-# We retrieve information from the model to create the verification cases
+# In this cell, we retrieve information from the model to create the verification cases
 verification_case_list = {"sat_reset": "SupplyAirTempReset", "chw_reset": "CHWReset"}
 verification_case_file = "./tspr_verification_cases.json"
 cases = {}
@@ -157,13 +163,17 @@ for idf in glob.glob("./chw_reset/*.idf"):
         }
         cases["cases"].append(chw_case)
         case_counter += 1
+
+# save verification case json file
 json.dump(cases, open(verification_case_file, "w"), indent=4)
 
 # %% Loading the verification cases
+# load verification case json file
 cases = cs.api.VerificationCase(json_case_path=verification_case_file)
 assert cases.validate(), "Verification case file is not valid."
 
 # %% Configure verifications
+# Instantiate and configure verification object
 verif = cs.api.Verification(verifications=cases)
 verif.configure(
     output_path="./",
@@ -175,6 +185,7 @@ verif.configure(
 )
 
 # %% Run verification and create reports in a markdown format
+# Run verification and report results
 # The logs and report should show that both verification pass without any failures
 # Users are encouraged to check the markdown reports to see plots and summary of the verification parameters
 verif.run()
