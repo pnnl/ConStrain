@@ -79,7 +79,7 @@ for idf in glob.glob("./sat_reset/*.idf"):
         # Define simulation IO
         sat_case["run_simulation"] = energy_plus_simulation
         sat_case["simulation_IO"] = {
-            "idf": "{}".format(idf.split("\\")[-1]),
+            "idf": idf,
             "idd": f"{energy_plus_idd}",
             "weather": f"{energy_plus_weather_file}",
             "output": f"{energy_plus_output_file_name}",
@@ -128,7 +128,7 @@ for idf in glob.glob("./chw_reset/*.idf"):
         # Define simulation IO
         chw_case["run_simulation"] = energy_plus_simulation
         chw_case["simulation_IO"] = {
-            "idf": "{}".format(idf.split("\\")[-1]),
+            "idf": idf,
             "idd": f"{energy_plus_idd}",
             "weather": f"{energy_plus_weather_file}",
             "output": f"{energy_plus_output_file_name}",
