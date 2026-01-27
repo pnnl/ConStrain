@@ -82,6 +82,14 @@ class BrickCompliance:
                 f"datapoint_name_conversion_path must be str, got {type(datapoint_name_conversion_path)}"
             )
 
+        if not isinstance(query_statement_path, str):
+            logging.error(
+                f"The `query_statement_path` argument type must be str, but {type(query_statement_path)} type is provided."
+            )
+            raise TypeError(
+                f"query_statement_path must be str, got {type(query_statement_path)}"
+            )
+
         if not isinstance(perform_reasoning, bool):
             logging.error(
                 f"The `perform_reasoning` argument type must be bool, but {type(perform_reasoning)} type is provided."
