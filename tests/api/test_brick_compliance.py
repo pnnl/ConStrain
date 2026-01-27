@@ -10,30 +10,37 @@ from constrain.api import BrickCompliance
 
 class TestBrickCompliance(unittest.TestCase):
     def test_constructor(self):
-        # test `brick_schema_path` type
-        with self.assertLogs() as logobs:
+        # test `brick_schema_path` type - should raise TypeError and log error
+        with self.assertLogs() as logobs, self.assertRaises(TypeError) as context:
             BrickCompliance(
                 brick_schema_path=["./resources/brick/Brick.ttl"],
                 brick_instance_path="./resources/brick/brick_instance.ttl",
             )
-            self.assertTrue(
-                "ERROR:root:The `brick_schema_path` argument type must be str, but <class 'list'> type is provided."
-                in logobs.output
-            )
+        self.assertIn(
+            "brick_schema_path must be str, got <class 'list'>", str(context.exception)
+        )
+        self.assertTrue(
+            "ERROR:root:The `brick_schema_path` argument type must be str, but <class 'list'> type is provided."
+            in logobs.output
+        )
 
-        # test `brick_instance_path` type
-        with self.assertLogs() as logobs:
+        # test `brick_instance_path` type - should raise TypeError and log error
+        with self.assertLogs() as logobs, self.assertRaises(TypeError) as context:
             BrickCompliance(
                 brick_schema_path="./resources/brick/Brick.ttl",
                 brick_instance_path=["./resources/brick/brick_instance.ttl"],
             )
-            self.assertTrue(
-                "ERROR:root:The `brick_instance_path` argument type must be str, but <class 'list'> type is provided."
-                in logobs.output
-            )
+        self.assertIn(
+            "brick_instance_path must be str, got <class 'list'>",
+            str(context.exception),
+        )
+        self.assertTrue(
+            "ERROR:root:The `brick_instance_path` argument type must be str, but <class 'list'> type is provided."
+            in logobs.output
+        )
 
-        # test `datapoint_name_conversion_path` type
-        with self.assertLogs() as logobs:
+        # test `datapoint_name_conversion_path` type - should raise TypeError and log error
+        with self.assertLogs() as logobs, self.assertRaises(TypeError) as context:
             BrickCompliance(
                 brick_schema_path="./resources/brick/Brick.ttl",
                 brick_instance_path="./resources/brick/brick_instance.ttl",
@@ -41,93 +48,128 @@ class TestBrickCompliance(unittest.TestCase):
                     "./resources/brick/query_statement.yml"
                 ],
             )
-            self.assertTrue(
-                "ERROR:root:The `datapoint_name_conversion_path` argument type must be str, but <class 'list'> type is provided."
-                in logobs.output
-            )
+        self.assertIn(
+            "datapoint_name_conversion_path must be str, got <class 'list'>",
+            str(context.exception),
+        )
+        self.assertTrue(
+            "ERROR:root:The `datapoint_name_conversion_path` argument type must be str, but <class 'list'> type is provided."
+            in logobs.output
+        )
 
-        # test `datapoint_name_conversion_path` type
-        with self.assertLogs() as logobs:
+        # test `query_statement_path` type - should raise TypeError and log error
+        with self.assertLogs() as logobs, self.assertRaises(TypeError) as context:
             BrickCompliance(
                 brick_schema_path="./resources/brick/Brick.ttl",
                 brick_instance_path="./resources/brick/brick_instance.ttl",
-                datapoint_name_conversion_path=[
-                    "./resources/brick/verification_datapoint_info.yml"
-                ],
+                query_statement_path=["./resources/brick/query_statement.yml"],
             )
-            self.assertTrue(
-                "ERROR:root:The `datapoint_name_conversion_path` argument type must be str, but <class 'list'> type is provided."
-                in logobs.output
-            )
+        self.assertIn(
+            "query_statement_path must be str, got <class 'list'>",
+            str(context.exception),
+        )
+        self.assertTrue(
+            "ERROR:root:The `query_statement_path` argument type must be str, but <class 'list'> type is provided."
+            in logobs.output
+        )
 
-        # test `perform_reasoning` type
-        with self.assertLogs() as logobs:
+        # test `perform_reasoning` type - should raise TypeError and log error
+        with self.assertLogs() as logobs, self.assertRaises(TypeError) as context:
             BrickCompliance(
                 brick_schema_path="./resources/brick/Brick.ttl",
                 brick_instance_path="./resources/brick/brick_instance.ttl",
                 perform_reasoning="False",
             )
-            self.assertTrue(
-                "ERROR:root:The `perform_reasoning` argument type must be bool, but <class 'str'> type is provided."
-                in logobs.output
-            )
+        self.assertIn(
+            "perform_reasoning must be bool, got <class 'str'>", str(context.exception)
+        )
+        self.assertTrue(
+            "ERROR:root:The `perform_reasoning` argument type must be bool, but <class 'str'> type is provided."
+            in logobs.output
+        )
 
-        # test if `brick_schema_path` exists
-        with self.assertLogs() as logobs:
+        # test if `brick_schema_path` exists - should raise FileNotFoundError and log error
+        with self.assertLogs() as logobs, self.assertRaises(
+            FileNotFoundError
+        ) as context:
             BrickCompliance(
                 brick_schema_path="./wrong_path.ttl",
                 brick_instance_path="./resources/brick/brick_instance.ttl",
             )
-            self.assertTrue(
-                "ERROR:root:The file doesn't exist in the provided directory. Please make sure to provide a correct `brick_schema_path`."
-                in logobs.output
-            )
+        self.assertIn(
+            "Brick schema file not found: ./wrong_path.ttl", str(context.exception)
+        )
+        self.assertTrue(
+            "ERROR:root:The file doesn't exist in the provided directory. Please make sure to provide a correct `brick_schema_path`."
+            in logobs.output
+        )
 
-        # test if `brick_instance_path` exists
-        with self.assertLogs() as logobs:
+        # test if `brick_instance_path` exists - should raise FileNotFoundError and log error
+        with self.assertLogs() as logobs, self.assertRaises(
+            FileNotFoundError
+        ) as context:
             BrickCompliance(
                 brick_schema_path="./resources/brick/Brick.ttl",
                 brick_instance_path="./wrong.ttl",
             )
-            self.assertTrue(
-                "ERROR:root:The file doesn't exist in the provided directory. Please make sure to provide a correct `brick_instance_path`."
-                in logobs.output
-            )
+        self.assertIn(
+            "Brick instance file not found: ./wrong.ttl", str(context.exception)
+        )
+        self.assertTrue(
+            "ERROR:root:The file doesn't exist in the provided directory. Please make sure to provide a correct `brick_instance_path`."
+            in logobs.output
+        )
 
-        # test if `brick_instance_path` exists
-        with self.assertLogs() as logobs:
+        # test if `brick_instance_path` exists (different path) - should raise FileNotFoundError and log error
+        with self.assertLogs() as logobs, self.assertRaises(
+            FileNotFoundError
+        ) as context:
             BrickCompliance(
                 brick_schema_path="./resources/brick/Brick.ttl",
                 brick_instance_path="./wrong_path.ttl",
             )
-            self.assertTrue(
-                "ERROR:root:The file doesn't exist in the provided directory. Please make sure to provide a correct `brick_instance_path`."
-                in logobs.output
-            )
+        self.assertIn(
+            "Brick instance file not found: ./wrong_path.ttl", str(context.exception)
+        )
+        self.assertTrue(
+            "ERROR:root:The file doesn't exist in the provided directory. Please make sure to provide a correct `brick_instance_path`."
+            in logobs.output
+        )
 
-        # test if `query_statement_path` exists
-        with self.assertLogs() as logobs:
+        # test if `query_statement_path` exists - should raise FileNotFoundError and log error
+        with self.assertLogs() as logobs, self.assertRaises(
+            FileNotFoundError
+        ) as context:
             BrickCompliance(
                 brick_schema_path="./resources/brick/Brick.ttl",
                 brick_instance_path="./resources/brick/brick_instance.ttl",
                 query_statement_path="./wrong_path.ttl",
             )
-            self.assertTrue(
-                "ERROR:root:The query statement file isn't found. Please verify the ./wrong_path.ttl path."
-                in logobs.output
-            )
+        self.assertIn(
+            "Query statement file not found: ./wrong_path.ttl", str(context.exception)
+        )
+        self.assertTrue(
+            "ERROR:root:The query statement file isn't found. Please verify the ./wrong_path.ttl path."
+            in logobs.output
+        )
 
-        # test if `datapoint_name_conversion_path` exists
-        with self.assertLogs() as logobs:
+        # test if `datapoint_name_conversion_path` exists - should raise FileNotFoundError and log error
+        with self.assertLogs() as logobs, self.assertRaises(
+            FileNotFoundError
+        ) as context:
             BrickCompliance(
                 brick_schema_path="./resources/brick/Brick.ttl",
                 brick_instance_path="./resources/brick/brick_instance.ttl",
                 datapoint_name_conversion_path="./wrong_path.ttl",
             )
-            self.assertTrue(
-                "ERROR:root:The datapoint name conversion file isn't found. Please verify the ./wrong_path.ttl path."
-                in logobs.output
-            )
+        self.assertIn(
+            "Datapoint name conversion file not found: ./wrong_path.ttl",
+            str(context.exception),
+        )
+        self.assertTrue(
+            "ERROR:root:The datapoint name conversion file isn't found. Please verify the ./wrong_path.ttl path."
+            in logobs.output
+        )
 
     def test_validate_instance(self):
         # validate the instance against the brick schema
