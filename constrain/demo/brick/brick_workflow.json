@@ -27,7 +27,7 @@
             "Parameters": {
                 "verification_item_lib_name": "ZoneTempControl",
                 "energyplus_naming_assembly": false,
-						    "default_verification_case_values": "{'run_simulation': False, 'simulation_IO': {'idf': 'EnergyPlus_data', 'idd': '../../../resourcesEnergy+V9_0_1.idd', 'weather': './weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw', 'output': './data/data_file.csv', 'ep_path': 'C:\\\\\\\\EnergyPlusV9-0-1\\\\\\\\energyplus.exe'}, 'expected_result': 'pass', 'parameters': {}}"},
+						    "default_verification_case_values": "{'run_simulation': False, 'simulation_IO': {'idf': 'EnergyPlus_data', 'idd': '', 'weather': '', 'output': './data/data_file.csv', 'ep_path': ''}, 'expected_result': 'pass', 'parameters': {}}"},
             "Payloads": {"query_result": "$"},
             "Next": "instantiate verification case"
 			  },
