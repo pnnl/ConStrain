@@ -33,8 +33,8 @@ WORKDIR /app
 # Copy only the installed packages from builder
 COPY --from=builder /install /usr/local
 
-# Install packaging module directly in the final image (required by matplotlib)
-RUN pip install --no-cache-dir packaging
+# Install missing runtime dependencies directly in the final image
+RUN pip install --no-cache-dir packaging typing_extensions
 
 # Copy only necessary project files
 COPY constrain/ ./constrain/
