@@ -29,11 +29,11 @@ jobs:
           
           # Check if workflow completed successfully
           if grep -q "Workflow completed successfully!" docker_output.log; then
-            echo "✅ Docker workflow test PASSED - Workflow completed successfully"
+            echo "[PASS] Docker workflow test PASSED - Workflow completed successfully"
             cat docker_output.log
             exit 0
           else
-            echo "❌ Docker workflow test FAILED - 'Workflow completed successfully!' not found in output"
+            echo "[FAIL] Docker workflow test FAILED - 'Workflow completed successfully!' not found in output"
             echo "Docker output:"
             cat docker_output.log
             exit 1
@@ -41,7 +41,7 @@ jobs:
       
       - name: Upload Docker output log
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docker-workflow-output
           path: docker_output.log
