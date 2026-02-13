@@ -33,7 +33,6 @@ setup(
         "eppy",
         "fuzzywuzzy",
         "tqdm",
-        "scikit-learn",
         "uuid",
         "pydash",
         "PyYAML",
