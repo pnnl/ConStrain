@@ -1,0 +1,114 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Testing - exclude all test files and outputs
+tests/
+.pytest_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Documentation - exclude all docs
+docs/
+design/
+README.md
+CITATION.cff
+LICENSE.md
+DOCKER.md
+
+# Development files
+.pre-commit-config.yaml
+makefile
+setup.py
+
+# Images and media
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Notebooks and sandbox files
+*.ipynb
+sandbox*.ipynb
+
+# Results and outputs (exclude from image, mount as volumes instead)
+results/
+VerificationCase*/
+
+# Weather data (mount as volume instead)
+weather/
+
+# Test cases (mount as volume instead)
+test_cases/
+
+# Build artifacts
+build/
+
+# Mac OS
+.DS_Store
+
+# Other
+*.log
+.env
+.env.*
+*.csv
+mm_convention_center_data.csv
+
+# Demo files (keep only the essential demo workflow)
+constrain/demo/brick/
+constrain/demo/brick_demo/
+constrain/demo/G36_demo/
+constrain/demo/library_item_demo/
+constrain/demo/tspr_cases/
+constrain/demo/verification_approach_demo/

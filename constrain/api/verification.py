@@ -86,8 +86,11 @@ class Verification:
             logging.error("An output_path argument should be specified.")
             return None
         elif not os.path.isdir(output_path):
-            logging.error("The specified output directory does not exist.")
-            return None
+            # Create the output directory if it doesn't exist
+            logging.warning(
+                f"Output directory {output_path} does not exist. Creating it."
+            )
+            os.makedirs(output_path, exist_ok=True)
 
         if time_series_csv_export_name_prefix is not None:
             if not isinstance(time_series_csv_export_name_prefix, str):
