@@ -220,7 +220,7 @@ class TestVerification(unittest.TestCase):
         # Clean up test directory if it exists from previous run
         if os.path.exists("./test"):
             os.rmdir("./test")
-            
+
         with self.assertLogs() as logobs:
             vc = VerificationCase(cases=self.cases)
             v_obj = Verification(verifications=vc)
@@ -231,7 +231,7 @@ class TestVerification(unittest.TestCase):
                 "ERROR:root:An output_path argument should be specified.",
                 logobs.output[0],
             )
-            
+
             # When output_path doesn't exist, it will be created automatically (with a warning)
             # and proceed to check lib_items_path
             v_obj.configure(output_path="./test")
@@ -341,10 +341,10 @@ class TestVerification(unittest.TestCase):
                 preprocessed_data=df.data,
                 path_to_custom_tolerance_file="./constrain/tolerances.json",
             )
-            # Total: 1 ERROR + 1 WARNING + 1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR + 
+            # Total: 1 ERROR + 1 WARNING + 1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR +
             #        1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR = 12 messages
             assert len(logobs.output) == 12
-            
+
         # Clean up the created test directory
         if os.path.exists("./test"):
             os.rmdir("./test")
