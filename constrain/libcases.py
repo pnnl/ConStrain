@@ -49,7 +49,8 @@ def run_libcase(
 
     if need_injection or run_sim:
         original_idf_path = item.item["simulation_IO"]["idf"].strip()
-
+    
+    instrumented_idf_path = None
     if need_injection:
         idd_path = item.item["simulation_IO"]["idd"].strip()
         if ".idf" in original_idf_path.lower():
@@ -96,9 +97,13 @@ def run_libcase(
             year=2000,
         ).transform()
     else:
+        if instrumented_idf_path is None:
+            csv_path = f"{item.item['simulation_IO']['output']}"
+        else:
+            csv_path = f"{instrumented_idf_path.replace('.idf', '')}/{item.item['simulation_IO']['output']}"
         df = DateTimeEP(
             item.read_points_values(
-                csv_path=f"{instrumented_idf_path.replace('.idf', '')}/{item.item['simulation_IO']['output']}"
+                csv_path=csv_path
             )
         ).transform()
     verification_class = item.item["verification_class"]

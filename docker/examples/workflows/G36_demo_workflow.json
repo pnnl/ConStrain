@@ -15,7 +15,7 @@
       "Type": "MethodCall",
       "MethodCall": "DataProcessing",
       "Parameters": {
-        "data_path": "./workflows/G36_Modelica_Jan.csv",
+        "data_path": "./data/G36_Modelica_Jan.csv",
         "data_source": "EnergyPlus"
       },
       "Payloads": {
@@ -29,7 +29,7 @@
       "Type": "MethodCall",
       "MethodCall": "VerificationCase",
       "Parameters": {
-        "json_case_path": "./workflows/G36_library_verification_cases.json"
+        "json_case_path": "./verification_cases/G36_library_verification_cases.json"
       },
       "Payloads": {
         "verification_case_obj": "$",
@@ -75,7 +75,7 @@
       "MethodCall": "Payloads['verification_obj'].configure",
       "Parameters": {
         "output_path": "./results",
-        "lib_items_path": "./workflows/library.json",
+        "lib_items_path": "./schema/library.json",
         "plot_option": "+x None",
         "fig_size": "+x (6, 5)",
         "num_threads": 1,

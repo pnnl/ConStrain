@@ -1,4 +1,4 @@
-# Multi-stage build for a leaner workflow-focused image
+# Multi-stage build for a leaner verification-focused image
 FROM python:3.10-slim as builder
 
 # Set working directory
@@ -17,7 +17,7 @@ COPY pyproject.toml setup.py ./
 RUN pip install --no-cache-dir poetry poetry-plugin-export && \
     poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev
 
-# Remove PyQt6 from requirements as it's not needed for headless workflow execution
+# Remove PyQt6 from requirements as it's not needed for headless verification execution
 RUN sed -i '/^pyqt6/d' requirements.txt
 
 # Install all dependencies including packaging (ensure it gets installed to /install prefix)
@@ -38,17 +38,17 @@ RUN pip install --no-cache-dir packaging typing_extensions
 
 # Copy only necessary project files
 COPY constrain/ ./constrain/
-COPY docker/run_workflow.py ./
+COPY docker/run_verification.py ./
 COPY resources/ ./resources/
 
 # Set Python path to include the constrain module
 ENV PYTHONPATH=/app:${PYTHONPATH}
 
-# Create directories for workflows and results
-RUN mkdir -p /app/workflows /app/results
+# Create directories for data and results
+RUN mkdir -p /app/data /app/results
 
-# Set the entrypoint to run workflows
-ENTRYPOINT ["python", "/app/run_workflow.py"]
+# Set the entrypoint to run verifications
+ENTRYPOINT ["python", "/app/run_verification.py"]
 
-# Default to demo workflow if no argument provided
-CMD []
+# Default command shows help
+CMD ["--help"]
