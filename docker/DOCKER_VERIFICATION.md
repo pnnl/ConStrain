@@ -5,6 +5,7 @@ This guide explains how to run ConStrain verification cases using the verificati
 ## Prerequisites
 
 - Docker installed on your system
+- Verification case file in JSON format
 
 ## Quick Start
 
@@ -33,6 +34,7 @@ docker run --rm constrain-verification:latest [case_file] [OPTIONS]
 - `--plot-option`: Type of plots to generate - choices: `all-compact`, `all-expand`, `day-compact`, `day-expand` (default: `all-compact`)
 - `--fig-size`: Figure size as width,height (default: `6.4,4.8`)
 - `--tolerances`: Path to custom tolerances JSON file (optional)
+- `--log-level`: Logging level - choices: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` (default: `INFO`)
 
 ## Running Custom Verification Cases
 

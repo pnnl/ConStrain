@@ -5,6 +5,7 @@ This guide explains how to run ConStrain workflows using the workflow Docker con
 ## Prerequisites
 
 - Docker installed on your system
+- Workflow file in JSON format
 
 ## Quick Start
 
@@ -25,6 +26,11 @@ docker run --rm constrain-workflow:latest
 ```
 
 This runs the default demo workflow located at `./constrain/demo/api_demo/demo_workflow.json`.
+
+### Available Options
+
+- `workflow_path` (optional): Path to the workflow JSON file. If not provided, uses default demo workflow
+- `--log-level`: Logging level - choices: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` (default: `INFO`)
 
 ## Running Custom Workflows
 

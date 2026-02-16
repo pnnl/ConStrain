@@ -90,12 +90,12 @@ jobs:
             --lib-items /app/schema/library.json > docker_verification_output.log 2>&1
           
           # Check if verification completed successfully
-          if grep -q "✓ Verification completed successfully!" docker_verification_output.log; then
+          if grep -q "Verification completed successfully!" docker_verification_output.log; then
             echo "[PASS] Docker verification test PASSED - Verification completed successfully"
             cat docker_verification_output.log
             exit 0
           else
-            echo "[FAIL] Docker verification test FAILED - '✓ Verification completed successfully!' not found in output"
+            echo "[FAIL] Docker verification test FAILED - 'Verification completed successfully!' not found in output"
             echo "Docker output:"
             cat docker_verification_output.log
             exit 1
@@ -115,4 +115,121 @@ jobs:
         with:
           name: docker-verification-help
           path: docker_verification_help.log
+          retention-days: 7
+
+  test-docker-reporting:
+    name: Test Docker Reporting Image
+    runs-on: ubuntu-latest
+    needs: test-docker-verification  # Run after verification to use its results
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build Docker reporting image
+        run: |
+          docker build -f docker/Dockerfile.reporting -t constrain-reporting:test .
+      
+      - name: Test help command
+        run: |
+          echo "Testing help command..."
+          docker run --rm constrain-reporting:test --help > docker_reporting_help.log 2>&1
+          
+          # Check if help text is displayed
+          if grep -qi "usage:" docker_reporting_help.log || grep -q "Generate summary reports from verification case results" docker_reporting_help.log; then
+            echo "[PASS] Help command test PASSED"
+            cat docker_reporting_help.log
+          else
+            echo "[FAIL] Help command test FAILED - Expected help text not found"
+            cat docker_reporting_help.log
+            exit 1
+          fi
+      
+      - name: Build verification image for test data
+        run: |
+          docker build -f docker/Dockerfile.verification -t constrain-verification:test .
+      
+      - name: Generate test verification results
+        run: |
+          echo "Generating verification results for reporting test..."
+          mkdir -p ${{ github.workspace }}/docker/examples_results_test
+          docker run --rm \
+            -v ${{ github.workspace }}/docker/examples/verification_cases:/app/workflows \
+            -v ${{ github.workspace }}/docker/examples/data:/app/data \
+            -v ${{ github.workspace }}/docker/examples/schema:/app/schema \
+            -v ${{ github.workspace }}/docker/examples_results_test:/app/results \
+            constrain-verification:test \
+            /app/workflows/G36_library_verification_cases.json \
+            --data /app/data/G36_Modelica_Jan.csv \
+            --lib-items /app/schema/library.json \
+            --output /app/results > docker_verification_setup.log 2>&1 || true
+          
+          echo "Verification results generated (or using existing results)"
+      
+      - name: Test reporting execution
+        run: |
+          echo "Running reporting with verification results..."
+          docker run --rm \
+            -v ${{ github.workspace }}/docker/examples_results_test:/app/results \
+            constrain-reporting:test \
+            "/app/results/*_md.json" \
+            --output test_summary.md > docker_reporting_output.log 2>&1
+          
+          # Check if reporting completed successfully
+          if grep -q "Report generated successfully!" docker_reporting_output.log; then
+            echo "[PASS] Docker reporting test PASSED - Report generated successfully"
+            cat docker_reporting_output.log
+            exit 0
+          else
+            echo "[FAIL] Docker reporting test FAILED - 'Report generated successfully!' not found in output"
+            echo "Docker output:"
+            cat docker_reporting_output.log
+            exit 1
+          fi
+      
+      - name: Test log-level option
+        run: |
+          echo "Testing --log-level option..."
+          docker run --rm \
+            -v ${{ github.workspace }}/docker/examples_results_test:/app/results \
+            constrain-reporting:test \
+            "/app/results/*_md.json" \
+            --output test_summary.md \
+            --log-level DEBUG > docker_reporting_loglevel.log 2>&1 || true
+          
+          # Check that --log-level is accepted (no "unrecognized arguments" error)
+          if grep -q "unrecognized arguments.*--log-level" docker_reporting_loglevel.log; then
+            echo "[FAIL] Log level test FAILED - --log-level not recognized"
+            cat docker_reporting_loglevel.log
+            exit 1
+          else
+            echo "[PASS] Log level test PASSED - --log-level option accepted"
+            cat docker_reporting_loglevel.log
+          fi
+      
+      - name: Upload Docker reporting output log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-reporting-output
+          path: docker_reporting_output.log
+          retention-days: 7
+      
+      - name: Upload Docker reporting help log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-reporting-help
+          path: docker_reporting_help.log
+          retention-days: 7
+      
+      - name: Upload Docker reporting log-level test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-reporting-loglevel
+          path: docker_reporting_loglevel.log
           retention-days: 7

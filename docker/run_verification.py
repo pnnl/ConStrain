@@ -7,6 +7,7 @@ import sys
 import os
 import json
 import argparse
+import logging
 from constrain.api import Verification, VerificationCase
 
 
@@ -60,21 +61,36 @@ Examples:
         "--tolerances", help="Path to custom tolerances JSON file (optional)"
     )
 
+    parser.add_argument(
+        "--log-level",
+        default="INFO",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        help="Logging level (default: INFO)",
+    )
+
     args = parser.parse_args()
+
+    # Configure logging with the specified level
+    logging.basicConfig(
+        level=getattr(logging, args.log_level),
+        format="%(levelname)s: %(message)s",
+        force=True,  # Force reconfiguration even if logging was already configured
+    )
+    logger = logging.getLogger(__name__)
 
     # Validate case file exists
     if not os.path.exists(args.case_file):
-        print(f"Error: Verification case file not found: {args.case_file}")
+        logger.error(f"Verification case file not found: {args.case_file}")
         sys.exit(1)
 
     # Validate output directory exists
     if not os.path.exists(args.output):
-        print(f"Creating output directory: {args.output}")
+        logger.info(f"Creating output directory: {args.output}")
         os.makedirs(args.output, exist_ok=True)
 
     # Validate library file exists
     if not os.path.exists(args.lib_items):
-        print(f"Error: Library items file not found: {args.lib_items}")
+        logger.error(f"Library items file not found: {args.lib_items}")
         sys.exit(1)
 
     # Parse figure size
@@ -82,29 +98,29 @@ Examples:
         fig_width, fig_height = map(float, args.fig_size.split(","))
         fig_size = (fig_width, fig_height)
     except:
-        print(f"Error: Invalid figure size format: {args.fig_size}")
-        print("Expected format: width,height (e.g., 6.4,4.8)")
+        logger.error(f"Invalid figure size format: {args.fig_size}")
+        logger.error("Expected format: width,height (e.g., 6.4,4.8)")
         sys.exit(1)
 
-    print(f"Loading verification case from: {args.case_file}")
+    logger.info(f"Loading verification case from: {args.case_file}")
 
     # Load the verification case
     try:
         verification_case = VerificationCase(json_case_path=args.case_file)
     except Exception as e:
-        print(f"Error loading verification case: {e}")
+        logger.error(f"Error loading verification case: {e}")
         import traceback
 
         traceback.print_exc()
         sys.exit(1)
 
-    print(f"Creating Verification object...")
+    logger.info("Creating Verification object...")
 
     # Create verification object
     try:
         verification = Verification(verifications=verification_case)
     except Exception as e:
-        print(f"Error creating Verification object: {e}")
+        logger.error(f"Error creating Verification object: {e}")
         import traceback
 
         traceback.print_exc()
@@ -114,10 +130,10 @@ Examples:
     preprocessed_data = None
     if args.data:
         if not os.path.exists(args.data):
-            print(f"Warning: Data file not found: {args.data}")
-            print("Continuing without preprocessed data...")
+            logger.warning(f"Data file not found: {args.data}")
+            logger.warning("Continuing without preprocessed data...")
         else:
-            print(f"Loading preprocessed data from: {args.data}")
+            logger.info(f"Loading preprocessed data from: {args.data}")
             try:
                 from constrain.api import DataProcessing
 
@@ -126,10 +142,10 @@ Examples:
                 )
                 preprocessed_data = data_processing.data
             except Exception as e:
-                print(f"Warning: Could not load data file: {e}")
-                print("Continuing without preprocessed data...")
+                logger.warning(f"Could not load data file: {e}")
+                logger.warning("Continuing without preprocessed data...")
 
-    print(f"Configuring verification...")
+    logger.info("Configuring verification...")
 
     # Configure verification
     try:
@@ -147,21 +163,21 @@ Examples:
 
         verification.configure(**config_kwargs)
     except Exception as e:
-        print(f"Error configuring verification: {e}")
+        logger.error(f"Error configuring verification: {e}")
         import traceback
 
         traceback.print_exc()
         sys.exit(1)
 
-    print(f"Running verification cases...")
+    logger.info("Running verification cases...")
 
     # Run verification
     try:
         verification.run()
-        print(f"\n✓ Verification completed successfully!")
-        print(f"Results saved to: {args.output}")
+        logger.info("Verification completed successfully!")
+        logger.info(f"Results saved to: {args.output}")
     except Exception as e:
-        print(f"\nError running verification: {e}")
+        logger.error(f"Error running verification: {e}")
         import traceback
 
         traceback.print_exc()

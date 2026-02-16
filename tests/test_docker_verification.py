@@ -127,8 +127,8 @@ class TestDockerVerification:
         output = result.stdout + result.stderr
 
         # Check for success message
-        assert "✓ Verification completed successfully!" in output, (
-            f"Expected '✓ Verification completed successfully!' in output, but it was not found.\n"
+        assert "Verification completed successfully!" in output, (
+            f"Expected 'Verification completed successfully!' in output, but it was not found.\n"
             f"Docker output:\n{output}"
         )
 
