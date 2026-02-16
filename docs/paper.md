@@ -50,7 +50,7 @@ Current control verification is often conducted manually, which is time-consumin
 
 `ConStrain` focuses on formalizing and automating verification of HVAC controls by analyzing sensor and actuator data streams from building control systems.
 
-`ConStrain` is an open-source library and application programming interface (API) for analyzing BAS data streams for adherence to an operational specification, which can correspond to code (e.g., ASHRAE 90.1) or to a high-performance control guideline (e.g., ASHRAE Guideline 36 @[g36]).
+`ConStrain` is an open-source library and application programming interface (API) for analyzing BAS data streams for adherence to an operational specification, which can correspond to code (e.g., ASHRAE 90.1) or to a high-performance control guideline (e.g., ASHRAE Guideline 36 [@g36]).
 
 `ConStrain` is also incorporating semantic modeling capabilities to enable automated configuration and deployment of verification. ConStrain has applications to code-compliance building performance standards (BPS), and commissioning.
 
