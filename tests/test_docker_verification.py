@@ -68,7 +68,10 @@ class TestDockerVerification:
         output = result.stdout + result.stderr
 
         # Check for help text
-        assert "usage:" in output.lower() or "Run a single ConStrain verification case" in output, (
+        assert (
+            "usage:" in output.lower()
+            or "Run a single ConStrain verification case" in output
+        ), (
             f"Expected help text in output, but it was not found.\n"
             f"Docker output:\n{output}"
         )
@@ -183,8 +186,7 @@ class TestDockerVerification:
         # Should fail with error message
         assert result.returncode != 0, "Expected non-zero return code for missing file"
         assert "not found" in output.lower() or "error" in output.lower(), (
-            f"Expected error message about missing file.\n"
-            f"Docker output:\n{output}"
+            f"Expected error message about missing file.\n" f"Docker output:\n{output}"
         )
 
         print("[PASS] Error handling works correctly")
