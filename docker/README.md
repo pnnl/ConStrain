@@ -13,7 +13,6 @@ This directory contains all Docker-related files for running ConStrain workflows
 ### Configuration Files
 
 - **.dockerignore** - Specifies files to exclude from Docker build context
-- **docker-compose.yml** - Docker Compose configuration for all services
 
 ### Documentation
 
@@ -28,20 +27,16 @@ This directory contains all Docker-related files for running ConStrain workflows
 ### Build Images
 
 ```bash
-# Using docker build (from project root)
+# From project root
 docker build -f docker/Dockerfile.workflow -t constrain:latest .
 docker build -f docker/Dockerfile.verification -t constrain-verification:latest .
 docker build -f docker/Dockerfile.reporting -t constrain-reporting:latest .
-
-# Or using docker-compose (from docker/ directory)
-cd docker
-docker-compose build
 ```
 
 ### Run Containers
 
 ```bash
-# Using docker run (from project root)
+# From project root
 docker run --rm \
   -v $(pwd)/workflows:/app/workflows \
   -v $(pwd)/results:/app/results \
@@ -54,11 +49,10 @@ docker run --rm \
   constrain-verification:latest \
   /app/workflows/case.json
 
-# Or using docker-compose (from docker/ directory)
-cd docker
-docker-compose run --rm constrain-workflow /app/workflows/my_workflow.json
-docker-compose run --rm constrain-verification /app/workflows/case.json
-docker-compose run --rm constrain-reporting "/app/results/*_md.json" --output results.md
+docker run --rm \
+  -v $(pwd)/results:/app/results \
+  constrain-reporting:latest \
+  "/app/results/*_md.json" --output results.md
 ```
 
 ## Image Specifications
@@ -119,23 +113,6 @@ docker build --no-cache -f docker/Dockerfile.workflow -t constrain:latest .
 
 # Check .dockerignore is being used
 docker build -f docker/Dockerfile.workflow -t constrain:latest . 2>&1 | grep "Sending build context"
-```
-
-### Path Issues
-
-When using docker-compose from the docker/ directory:
-
-- **Build context** should point to parent: `context: ..`
-- **Dockerfile paths** are relative to project root: `dockerfile: docker/Dockerfile.workflow`
-- **Volume mounts** should use parent paths: `../workflows:/app/workflows`
-
-```yaml
-# Correct (when docker-compose.yml is in docker/ directory)
-build:
-  context: ..
-  dockerfile: docker/Dockerfile.workflow
-volumes:
-  - ../workflows:/app/workflows
 ```
 
 ### Permission Issues

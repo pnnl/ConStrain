@@ -89,9 +89,6 @@ VerificationCase*/
 # Weather data (mount as volume instead)
 weather/
 
-# Test cases (mount as volume instead)
-test_cases/
-
 # Build artifacts
 build/
 
