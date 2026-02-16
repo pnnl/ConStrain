@@ -1,4 +1,4 @@
-name: Docker Workflow Test
+name: Docker Tests
 
 on:
   push:
@@ -25,24 +25,94 @@ jobs:
       - name: Test default workflow execution
         run: |
           echo "Running default G36 demo workflow..."
-          docker run --rm constrain:test > docker_output.log 2>&1
+          docker run --rm constrain:test > docker_workflow_output.log 2>&1
           
           # Check if workflow completed successfully
-          if grep -q "Workflow completed successfully!" docker_output.log; then
+          if grep -q "Workflow completed successfully!" docker_workflow_output.log; then
             echo "[PASS] Docker workflow test PASSED - Workflow completed successfully"
-            cat docker_output.log
+            cat docker_workflow_output.log
             exit 0
           else
             echo "[FAIL] Docker workflow test FAILED - 'Workflow completed successfully!' not found in output"
             echo "Docker output:"
-            cat docker_output.log
+            cat docker_workflow_output.log
             exit 1
           fi
       
-      - name: Upload Docker output log
+      - name: Upload Docker workflow output log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: docker-workflow-output
-          path: docker_output.log
+          path: docker_workflow_output.log
+          retention-days: 7
+
+  test-docker-verification:
+    name: Test Docker Verification Image
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build Docker verification image
+        run: |
+          docker build -f docker/Dockerfile.verification -t constrain-verification:test .
+      
+      - name: Test help command
+        run: |
+          echo "Testing help command..."
+          docker run --rm constrain-verification:test --help > docker_verification_help.log 2>&1
+          
+          # Check if help text is displayed
+          if grep -qi "usage:" docker_verification_help.log || grep -q "Run a single ConStrain verification case" docker_verification_help.log; then
+            echo "[PASS] Help command test PASSED"
+            cat docker_verification_help.log
+          else
+            echo "[FAIL] Help command test FAILED - Expected help text not found"
+            cat docker_verification_help.log
+            exit 1
+          fi
+      
+      - name: Test verification execution with example data
+        run: |
+          echo "Running verification case with example data..."
+          docker run --rm \
+            -v ${{ github.workspace }}/docker/examples/verification_cases:/app/workflows \
+            -v ${{ github.workspace }}/docker/examples/data:/app/data \
+            -v ${{ github.workspace }}/docker/examples/schema:/app/schema \
+            constrain-verification:test \
+            /app/workflows/G36_library_verification_cases.json \
+            --data /app/data/G36_Modelica_Jan.csv \
+            --lib-items /app/schema/library.json > docker_verification_output.log 2>&1
+          
+          # Check if verification completed successfully
+          if grep -q "✓ Verification completed successfully!" docker_verification_output.log; then
+            echo "[PASS] Docker verification test PASSED - Verification completed successfully"
+            cat docker_verification_output.log
+            exit 0
+          else
+            echo "[FAIL] Docker verification test FAILED - '✓ Verification completed successfully!' not found in output"
+            echo "Docker output:"
+            cat docker_verification_output.log
+            exit 1
+          fi
+      
+      - name: Upload Docker verification output log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-verification-output
+          path: docker_verification_output.log
+          retention-days: 7
+      
+      - name: Upload Docker verification help log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-verification-help
+          path: docker_verification_help.log
           retention-days: 7
