@@ -8,9 +8,9 @@ font = "sans serif"
 
 [ui]
 hideTopBar = false
-hideSidebarNav = false
 
 [client]
+showSidebarNavigation = true
 showErrorDetails = true
 
 [browser]
@@ -20,4 +20,4 @@ gatherUsageStats = false
 headless = true
 port = 8501
 enableCORS = false
-enableXsrfProtection = true
+enableXsrfProtection = false

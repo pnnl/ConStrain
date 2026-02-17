@@ -23,12 +23,13 @@ def test_streamlit_docker_build():
             "-t",
             "constrain-streamlit:test",
             "-f",
-            "docker/Dockerfile.streamlit",
+            "Dockerfile.streamlit",
             ".",
         ],
         capture_output=True,
         text=True,
         timeout=300,
+        cwd="docker",  # Run from docker directory to match docker-compose context
     )
     assert result.returncode == 0, f"Docker build failed: {result.stderr}"
 

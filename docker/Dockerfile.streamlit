@@ -19,8 +19,9 @@ RUN pip install --no-cache-dir \
     streamlit==1.31.0 \
     pandas==2.2.0
 
-# Copy the Streamlit app
+# Copy the Streamlit app and config
 COPY streamlit_app.py ./streamlit_app.py
+COPY .streamlit /app/.streamlit
 
 # Create directories for file uploads and results
 RUN mkdir -p /app/uploads /app/results
