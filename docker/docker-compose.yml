@@ -70,15 +70,26 @@ services:
     networks:
       - constrain-network
 
+  # Streamlit UI service - web interface for running verifications
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    image: constrain-streamlit:latest
+    container_name: constrain-streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      # Mount Docker socket to allow Streamlit container to run other containers
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Mount uploads directory so spawned containers can access files
+      - ./uploads:/app/uploads
+    environment:
+      - PYTHONPATH=/app
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    networks:
+      - constrain-network
+
 networks:
   constrain-network:
     driver: bridge
-
-# Optional named volumes for persistent data
-# Uncomment and configure if you want to use named volumes instead of bind mounts
-# volumes:
-#   workflows:
-#   data:
-#   verification_cases:
-#   schema:
-#   results:
