@@ -30,9 +30,10 @@ docker build -f docker/Dockerfile.reporting -t constrain-reporting:latest .
 
 For detailed usage instructions, see:
 
-- **Workflow Container**: [DOCKER_WORKFLOW.md](./DOCKER_WORKFLOW.md)
-- **Verification Container**: [DOCKER_VERIFICATION.md](./DOCKER_VERIFICATION.md)
-- **Reporting Container**: [DOCKER_REPORTING.md](./DOCKER_REPORTING.md)
+- **Workflow Container**: [DOCKER_WORKFLOW.md](./container_docs/DOCKER_WORKFLOW.md)
+- **Verification Container**: [DOCKER_VERIFICATION.md](./container_docs/DOCKER_VERIFICATION.md)
+- **Reporting Container**: [DOCKER_REPORTING.md](./container_docs/DOCKER_REPORTING.md)
+- **Streamlit UI**: [STREAMLIT_DOCKER.md](./container_docs/STREAMLIT_DOCKER.md)
 
 ## Additional Resources
 
