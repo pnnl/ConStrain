@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # Workflow service - runs ConStrain workflows
+  workflow:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.workflow
+    image: constrain-workflow:latest
+    container_name: constrain-workflow
+    volumes:
+      # Mount directories for workflow execution
+      - ./examples/workflows:/app/workflows
+      - ./examples/data:/app/data
+      - ./examples/verification_cases:/app/verification_cases
+      - ./examples/schema:/app/schema
+      - ./examples_results:/app/results
+      - ../weather:/app/weather:ro
+      - ../resources:/app/resources:ro
+    environment:
+      - PYTHONPATH=/app
+    # Override default command - specify your workflow file
+    # command: ["/app/workflows/my_workflow.json"]
+    # Or use demo workflow (default)
+    command: []
+    networks:
+      - constrain-network
+
+  # Verification service - runs verification cases
+  verification:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.verification
+    image: constrain-verification:latest
+    container_name: constrain-verification
+    volumes:
+      # Mount directories for verification execution
+      - ./examples/data:/app/data
+      - ./examples/verification_cases:/app/verification_cases
+      - ./examples/schema:/app/schema
+      - ./examples_results:/app/results
+      - ../weather:/app/weather:ro
+      - ../resources:/app/resources:ro
+      - ../constrain/tolerances.json:/app/tolerances.json:ro
+    environment:
+      - PYTHONPATH=/app
+    # Override default command - specify your verification case file
+    # Example: command: ["/app/verification_cases/G36_library_verification_cases.json", "--output", "/app/results"]
+    command: ["--help"]
+    networks:
+      - constrain-network
+
+  # Reporting service - generates summary reports from verification results
+  reporting:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.reporting
+    image: constrain-reporting:latest
+    container_name: constrain-reporting
+    volumes:
+      # Mount results directory for report generation
+      - ./examples_results:/app/results
+    environment:
+      - PYTHONPATH=/app
+    # Override default command - specify input files and output report name
+    # Example: command: ["/app/results/*_md.json", "--output", "summary.md"]
+    command: ["--help"]
+    depends_on:
+      - verification
+    networks:
+      - constrain-network
+
+networks:
+  constrain-network:
+    driver: bridge
+
+# Optional named volumes for persistent data
+# Uncomment and configure if you want to use named volumes instead of bind mounts
+# volumes:
+#   workflows:
+#   data:
+#   verification_cases:
+#   schema:
+#   results:
