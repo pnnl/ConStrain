@@ -7,7 +7,7 @@ authors = [
     "Chen, Yan <yan.chen@pnnl.gov>",
     "Lerond, Jeremy <jeremy.lerond@pnnl.gov>",
     "Jung, Yun Joon <yunjoon.jung@pnnl.gov>",
-    "Pacific Northwest National Laboratory <yan.chen@pnnl.gov>"
+    "Pacific Northwest National Laboratory"
 ]
 readme = "README.md"
 homepage = "https://github.com/pnnl/ConStrain"
