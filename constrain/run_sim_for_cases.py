@@ -59,6 +59,16 @@ def run_sim_for_cases(
 
     if run_sim:
         weather_path = item.item["simulation_IO"]["weather"].strip()
+    # TODO: the following code block is temperarily commented out for PIC run. Need to be wrapped as an option for local run.
+    #        if "ep_path" in list(item.item["simulation_IO"].keys()):
+    #            run_simulation(
+    #                idfpath=run_idf_path,
+    #                weatherpath=weather_path,
+    #                ep_path=item.item["simulation_IO"]["ep_path"],
+    #            )
+    #        else:
+    #            run_simulation(idfpath=run_idf_path, weatherpath=weather_path)
+    #        print("simulation done")
     print(f"Run path: {run_path}")
     return run_path
 
