@@ -14,7 +14,7 @@ However, one of the challenges to realizing those savings is the correct impleme
 
 ConStrain is a data-driven knowledge-integrated framework that automatically verifies that controls function as intended. The figure below shows an overview of ConStrain and how it can be used. ConStrain was born out of the need of automating the verification of time-series data describing the behavior of building components, especially the control functions.
 
-ConStrain is designed around three key features: building control knowledge integration, analytics, and automation. The framework includes three major components: a control verification algorithm library (rule-based, procedure-based, and AI-based), an automated preparation process and verification case generation, a standardized performance evaluation and reporting process.
+ConStrain is designed around three key features: building control knowledge integration, analytics, and automation. The framework includes three major components: a control verification algorithm library, an automated preparation process and verification case generation, a standardized performance evaluation and reporting process.
 
 While the development of ConStrain was motivated by use cases with building energy modeling (BEM), it is now evolved for more application scenarios towards real building control verification.
 
