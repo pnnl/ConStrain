@@ -1,3 +1,5 @@
+BSD 2-Clause License
+
 Copyright (c) 2021, Battelle Memorial Institute
 
 Redistribution and use in source and binary forms, with or without
