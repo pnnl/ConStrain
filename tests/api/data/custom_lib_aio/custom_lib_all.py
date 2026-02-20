@@ -226,12 +226,10 @@ class CheckLibBase(ABC):
             if (trueday is None) and len(day[day == True]) > 0:
                 trueday = day
                 truedaydf = daydf
-                # print("reach true")
                 continue
             if (falseday is None) and len(day[day == False]) > 0:
                 falseday = day
                 falsedaydf = daydf
-                # print("reach false")
                 continue
 
             if len(day[day == False]) == 0 or len(day[day == True]) == 0:
