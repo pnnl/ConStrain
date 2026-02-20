@@ -60,6 +60,6 @@ At present, `ConStrain` expects pre-harmonized input units for each verification
 
 # Acknowledgements
 
-ConStrain was developed at the Pacific Northwest National Laboratory and was funded under contract with the U.S. Department of Energy (DOE). It is actively being developed as an open-source project.
+ConStrain is developed at the Pacific Northwest National Laboratory and is funded by the U.S. Department of Energy (DOE) under Contract DE-AC05-76RL01830. It is actively being developed as an open-source project.
 
 # References
