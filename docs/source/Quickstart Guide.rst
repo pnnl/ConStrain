@@ -92,8 +92,8 @@ First, let's import the package.
     # Load examples
     examples = cs.Examples()
     
-    # Get the data
-    data = examples.info
+    # Get the information about the examples
+    print(examples.info)
 
 Let's proceed with :python:`example_1` which according to its description aims to:
 

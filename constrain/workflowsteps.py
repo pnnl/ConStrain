@@ -202,12 +202,9 @@ def main():
     idd_path = "../resources/Energy+V9_0_1.idd"
     items = read_json_file("../schema/item2_poc.json")
     print("Workflow: Json File Read Complete")
-    # print(items)
 
     item = build_an_item(items[0])
     print("Workflow: Items Build Complete")
-    # print(item.__dict__)
-    # print(item.buildpoints[0].__dict__)
 
     idf_outputs = []
     idf_outputs.extend(read_injection_points(item))
