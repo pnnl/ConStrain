@@ -41,6 +41,7 @@ See the Publications section for more information and example of uses of the fra
 -Jupyter notebook demos are located in the [demo](https://github.com/pnnl/ConStrain/tree/develop/constrain/demo) folder:
   - [TSPR simulation cases](https://github.com/pnnl/ConStrain/tree/develop/constrain/demo/tspr_cases/tspr_cases.ipynb)
   - [Guideline 36 workflow verification](https://github.com/pnnl/ConStrain/blob/develop/constrain/demo/G36_demo/g36_demo_workflow_runner.ipynb)
+  - [Brick demo](https://github.com/pnnl/ConStrain/blob/develop/constrain/demo/brick/brick_workflow_demo.ipynb)
 - Visit [API documentation page](https://pnnl.github.io/ConStrain/) to learn about how to use the ConStrain API.
 - Visit [Guideline 36 Verification Items List](./design/g36_lib_contents.md) to learn more about the ASHRAE Guideline 36 related verification in ConStrain verification library.
 - Visit [Local Loop Verification Items List](./design/local_loop_verification_items_list.md) to learn more about local loop performance verification library.
@@ -49,7 +50,7 @@ See the Publications section for more information and example of uses of the fra
 ## Publications
 
 - [Chen Y., M. Wetter, X. Lei, J. Lerond, P.K. Anand, Y. Jung, P. Ehrlich, and D.L. Vrabie. 2023. "Control Performance Verification – The Hidden Opportunity of Ensuring High Performance of Building Control System." In Building Simulation 2023 Conference](https://publications.ibpsa.org/conference/paper/?id=bs2023_1660)
-- Lei X., J. Lerond, Y. Jung, and Y. Chen. 2023. "Development of an Application Programming Interface for a Building Systems Control Performance Verification Framework." In 2023 ASHRAE Annual Conference
+- [Lei X., J. Lerond, Y. Jung, and Y. Chen. 2023. "Development of an Application Programming Interface for a Building Systems Control Performance Verification Framework." In 2023 ASHRAE Annual Conference](https://doi.org/10.63044/s23lei50)
 - [Chen Y., J. Lerond, X. Lei, and M.I. Rosenberg. 2021. "A Knowledge-based Framework for Building Energy Model Performance Verification." In Building Simulation 2021 Conference](https://publications.ibpsa.org/conference/paper/?id=bs2021_30725)
 
 ## Referencing
