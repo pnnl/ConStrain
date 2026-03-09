@@ -118,6 +118,7 @@ def compose(
 def run(
     request: Request,
     workflow_json: str = Form(...),
+    cases_json: str = Form(""),
     goal: str = Form(""),
 ) -> HTMLResponse:
     """Run the provided workflow JSON using the ConStrain API."""
@@ -143,7 +144,7 @@ def run(
         {
             "request": request,
             "workflow_json": workflow_json,
-            "cases_json": "",
+            "cases_json": cases_json,
             "workflow_issues": wf_validation.issues if wf_validation else [],
             "cases_issues": [],
             "goal": goal,

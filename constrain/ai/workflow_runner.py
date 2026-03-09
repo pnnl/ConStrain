@@ -8,11 +8,18 @@ and UI to run AI-generated workflows after they have been validated.
 from __future__ import annotations
 
 import json
+import logging
+import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 from constrain.api.workflow import Workflow
+
+logger = logging.getLogger(__name__)
+
+# Package root (constrain/) so that workflow paths like ./demo/G36_demo/... resolve correctly
+_PACKAGE_ROOT = Path(__file__).resolve().parent.parent
 
 
 @dataclass
@@ -32,8 +39,10 @@ def _ensure_parent_dir(path: Path) -> None:
 
 def run_workflow_from_files(workflow_path: str, verbose: bool = True) -> WorkflowExecutionResult:
     """Run a workflow from a JSON file path."""
-    wf = Workflow(workflow=workflow_path)
+    cwd_before = os.getcwd()
     try:
+        os.chdir(_PACKAGE_ROOT)
+        wf = Workflow(workflow=workflow_path)
         wf.run_workflow(verbose=verbose)
         summary = None
         try:
@@ -46,12 +55,19 @@ def run_workflow_from_files(workflow_path: str, verbose: bool = True) -> Workflo
             summary=summary,
         )
     except Exception as exc:
+        logger.exception(
+            "Workflow execution failed (run_workflow_from_files): %s",
+            exc,
+            extra={"workflow_path": workflow_path},
+        )
         return WorkflowExecutionResult(
             success=False,
             saved_to=workflow_path,
             summary=None,
             error=str(exc),
         )
+    finally:
+        os.chdir(cwd_before)
 
 
 def run_workflow_from_dict(
@@ -72,8 +88,10 @@ def run_workflow_from_dict(
     else:
         workflow_input = workflow_dict
 
-    wf = Workflow(workflow=workflow_input)
+    cwd_before = os.getcwd()
     try:
+        os.chdir(_PACKAGE_ROOT)
+        wf = Workflow(workflow=workflow_input)
         wf.run_workflow(verbose=verbose)
         summary = None
         try:
@@ -86,12 +104,19 @@ def run_workflow_from_dict(
             summary=summary,
         )
     except Exception as exc:
+        logger.exception(
+            "Workflow execution failed (run_workflow_from_dict): %s",
+            exc,
+            extra={"saved_to": saved_to},
+        )
         return WorkflowExecutionResult(
             success=False,
             saved_to=saved_to,
             summary=None,
             error=str(exc),
         )
+    finally:
+        os.chdir(cwd_before)
 
 
 __all__ = ["WorkflowExecutionResult", "run_workflow_from_files", "run_workflow_from_dict"]

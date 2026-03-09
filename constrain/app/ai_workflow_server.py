@@ -169,21 +169,23 @@ def api_execute_workflow(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
     """Validate and execute a workflow definition."""
     vr = validate_workflow_dict(req.workflow)
     if not vr.valid:
-        return {
-            "success": False,
-            "validation": {
-                "valid": vr.valid,
-                "issues": [
-                    {
-                        "loc": issue.loc,
-                        "message": issue.message,
-                        "validator": issue.validator,
-                    }
-                    for issue in vr.issues
-                ],
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "validation": {
+                    "valid": vr.valid,
+                    "issues": [
+                        {
+                            "loc": issue.loc,
+                            "message": issue.message,
+                            "validator": issue.validator,
+                        }
+                        for issue in vr.issues
+                    ],
+                },
+                "execution": None,
             },
-            "execution": None,
-        }
+        )
 
     result = run_workflow_from_dict(req.workflow, save_path=req.save_path, verbose=True)
     return {

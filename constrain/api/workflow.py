@@ -184,10 +184,21 @@ class WorkflowEngine:
         if "imports" in self.workflow_dict:
             import_list = self.workflow_dict["imports"]
         for line in import_list:
-            cp = line
-            if " as " in line:
-                cp = line.split(" as ")[-1]
-            exec(f"import {line}", globals())
+            _line = line.strip()
+            # ConStrain API is already imported at module top; skip so we do not exec redundant or invalid statements.
+            if _line.lower().startswith("from constrain.") or _line.lower().startswith("import constrain."):
+                continue
+            # Full "from ... import ..." (e.g. other packages): run as-is.
+            if _line.lower().startswith("from "):
+                exec(_line, globals())
+            else:
+                # Module-only form: engine prepends "import "; strip leading "import " if present to avoid "import import ..."
+                if _line.lower().startswith("import "):
+                    _line = _line[7:].strip()
+                cp = line
+                if " as " in line:
+                    cp = line.split(" as ")[-1]
+                exec(f"import {_line}", globals())
 
     def load_workflow_json(self, workflow_path: str) -> None:
         """Load workflow from a json workflow definition.
