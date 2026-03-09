@@ -14,12 +14,30 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from constrain.api.workflow import Workflow
-
 logger = logging.getLogger(__name__)
 
 # Package root (constrain/) so that workflow paths like ./demo/G36_demo/... resolve correctly
 _PACKAGE_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _configure_matplotlib_backend() -> None:
+    """Force a non-interactive backend so workflow execution is thread-safe on macOS."""
+    # Respect user override if provided, otherwise default to a thread-safe backend.
+    os.environ.setdefault("MPLBACKEND", "Agg")
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg", force=True)
+    except Exception:
+        # Avoid failing workflow execution if matplotlib isn't imported/available here.
+        pass
+
+
+def _get_workflow_class():
+    # Lazy import so backend configuration runs before any plotting modules import pyplot.
+    from constrain.api.workflow import Workflow
+
+    return Workflow
 
 
 @dataclass
@@ -39,6 +57,8 @@ def _ensure_parent_dir(path: Path) -> None:
 
 def run_workflow_from_files(workflow_path: str, verbose: bool = True) -> WorkflowExecutionResult:
     """Run a workflow from a JSON file path."""
+    _configure_matplotlib_backend()
+    Workflow = _get_workflow_class()
     cwd_before = os.getcwd()
     try:
         os.chdir(_PACKAGE_ROOT)
@@ -76,6 +96,8 @@ def run_workflow_from_dict(
     verbose: bool = True,
 ) -> WorkflowExecutionResult:
     """Run a workflow from an in-memory dict, optionally saving it first."""
+    _configure_matplotlib_backend()
+    Workflow = _get_workflow_class()
     saved_to: Optional[str] = None
 
     if save_path is not None:
@@ -120,4 +142,3 @@ def run_workflow_from_dict(
 
 
 __all__ = ["WorkflowExecutionResult", "run_workflow_from_files", "run_workflow_from_dict"]
-
