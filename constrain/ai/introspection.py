@@ -13,9 +13,16 @@ from __future__ import annotations
 
 import inspect
 from dataclasses import dataclass, asdict
-from typing import Any, Dict, List, Optional, Sequence
+from importlib import resources
+from typing import Any, Dict, List, Optional
 
-from constrain.api import DataProcessing, Reporting, Verification, VerificationCase, VerificationLibrary
+from constrain.api import (
+    DataProcessing,
+    Reporting,
+    Verification,
+    VerificationCase,
+    VerificationLibrary,
+)
 
 
 @dataclass
@@ -106,28 +113,41 @@ def list_verification_classes() -> List[VerificationClassInfo]:
     - descriptions
     - required datapoints, if available
     """
-    vlib = VerificationLibrary()
-    library_items = vlib.library_items
+    # Locate the built-in verification library JSON using package resources.
+    try:
+        lib_resource = resources.files("constrain.schema").joinpath("library.json")
+        lib_path = str(lib_resource)
+    except Exception:
+        # Fallback to a relative path; if this fails, VerificationLibrary will log errors.
+        lib_path = "constrain/schema/library.json"
+
+    vlib = VerificationLibrary(lib_path)
+
+    # If instantiation failed, there may be no lib_items attribute.
+    if not hasattr(vlib, "lib_items"):
+        return []
 
     results: List[VerificationClassInfo] = []
-    for item in library_items:
-        name = item.get("verification_class") or item.get("class_name") or item.get("library_item_id")
-        if not name:
+    for lib_name, lib_def in vlib.lib_items.items():
+        # Only expose items that have a corresponding Python class loaded into globals(),
+        # i.e., items that are actually executable.
+        if lib_name not in globals():
             continue
 
+        # The JSON schema uses description_* keys; the key name itself serves as the class identifier.
         description = (
-            item.get("description")
-            or item.get("description_long")
-            or item.get("description_short")
+            lib_def.get("description_brief")
+            or lib_def.get("description_detailed")
+            or lib_def.get("description_index")
         )
-        datapoints = item.get("description_datapoints") or item.get("datapoints")
+        datapoints = lib_def.get("description_datapoints") or lib_def.get("datapoints")
 
         results.append(
             VerificationClassInfo(
-                name=name,
+                name=lib_name,
                 description=description,
                 datapoints=datapoints,
-                raw=item,
+                raw=lib_def,
             )
         )
 
