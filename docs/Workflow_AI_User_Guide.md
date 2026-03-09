@@ -8,6 +8,8 @@ This guide walks you through:
 - Using the AI agent to generate a workflow + verification cases similar to the G36 demo.
 - Running the generated workflow with the ConStrain API.
 
+**Related documentation:** For design and architecture details see [AI_Workflow_Composer_Design.md](AI_Workflow_Composer_Design.md). For a short overview and use-case summary (including diagrams suitable for slides) see [AI_Workflow_Composer_Overview.md](AI_Workflow_Composer_Overview.md).
+
 This guide assumes you are working from the project root:
 
 ```bash
