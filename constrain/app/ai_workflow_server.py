@@ -34,6 +34,7 @@ from constrain.ai.workflow_composer import (
     suggest_verification_cases,
     suggest_workflow,
 )
+from constrain.ai.workflow_runner import run_workflow_from_dict
 
 
 app = FastAPI(title="ConStrain AI Workflow Composer")
@@ -58,6 +59,11 @@ class ValidateWorkflowRequest(BaseModel):
 
 class ValidateCasesRequest(BaseModel):
     cases: Dict[str, Any]
+
+
+class ExecuteWorkflowRequest(BaseModel):
+    workflow: Dict[str, Any]
+    save_path: Optional[str] = None
 
 
 def _ensure_llm_available() -> None:
@@ -155,6 +161,42 @@ def api_catalog() -> Dict[str, Any]:
     return {
         "callables": as_serializable(list_workflow_callables()),
         "verification_classes": as_serializable(list_verification_classes()),
+    }
+
+
+@app.post("/ai/workflow/execute")
+def api_execute_workflow(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
+    """Validate and execute a workflow definition."""
+    vr = validate_workflow_dict(req.workflow)
+    if not vr.valid:
+        return {
+            "success": False,
+            "validation": {
+                "valid": vr.valid,
+                "issues": [
+                    {
+                        "loc": issue.loc,
+                        "message": issue.message,
+                        "validator": issue.validator,
+                    }
+                    for issue in vr.issues
+                ],
+            },
+            "execution": None,
+        }
+
+    result = run_workflow_from_dict(req.workflow, save_path=req.save_path, verbose=True)
+    return {
+        "success": result.success,
+        "validation": {
+            "valid": True,
+            "issues": [],
+        },
+        "execution": {
+            "saved_to": result.saved_to,
+            "summary": result.summary,
+            "error": result.error,
+        },
     }
 
 

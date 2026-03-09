@@ -12,17 +12,17 @@ import json
 from typing import Any, Dict, Optional
 
 from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from constrain.ai.schema_utils import (
-    validate_case_suite_json_str,
     validate_workflow_json_str,
 )
 from constrain.ai.workflow_composer import (
     suggest_verification_cases,
     suggest_workflow,
 )
+from constrain.ai.workflow_runner import run_workflow_from_dict
 
 
 app = FastAPI(title="ConStrain AI Workflow Composer UI")
@@ -40,6 +40,8 @@ def index(request: Request) -> HTMLResponse:
             "workflow_issues": [],
             "cases_issues": [],
             "goal": "",
+            "execution_summary": None,
+            "execution_error": None,
         },
     )
 
@@ -106,6 +108,47 @@ def compose(
             "workflow_issues": wf_result.validation.issues,
             "cases_issues": cases_result.validation.issues,
             "goal": goal,
+            "execution_summary": None,
+            "execution_error": None,
+        },
+    )
+
+
+@app.post("/run", response_class=HTMLResponse)
+def run(
+    request: Request,
+    workflow_json: str = Form(...),
+    goal: str = Form(""),
+) -> HTMLResponse:
+    """Run the provided workflow JSON using the ConStrain API."""
+    wf_dict, wf_validation = validate_workflow_json_str(workflow_json)
+
+    execution_summary = None
+    execution_error = None
+
+    if wf_dict is not None and wf_validation.valid:
+        result = run_workflow_from_dict(wf_dict, save_path=None, verbose=True)
+        if result.success:
+            execution_summary = result.summary
+        else:
+            execution_error = result.error
+    elif wf_dict is None:
+        execution_error = "Invalid workflow JSON: could not be parsed."
+    else:
+        # Validation failed
+        execution_error = "Workflow failed validation; see issues below."
+
+    return templates.TemplateResponse(
+        "ai_workflow_index.html",
+        {
+            "request": request,
+            "workflow_json": workflow_json,
+            "cases_json": "",
+            "workflow_issues": wf_validation.issues if wf_validation else [],
+            "cases_issues": [],
+            "goal": goal,
+            "execution_summary": execution_summary,
+            "execution_error": execution_error,
         },
     )
 
