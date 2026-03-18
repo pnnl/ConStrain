@@ -1,6 +1,6 @@
 Contributing
 ==============
-Contributions are welcome and greatly appreciated.
+Contributions are welcome and greatly appreciated. The source code is available on `GitHub <https://github.com/pnnl/ConStrain>`_.
 
 Issues
 -------
