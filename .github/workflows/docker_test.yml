@@ -60,8 +60,11 @@ jobs:
 
       - name: Start compose stack
         run: |
+          # Ensure examples_results directory exists and is writable by all users (for container access)
           export APP_UID=$(id -u)
           export APP_GID=$(id -g)
+          mkdir -p docker/examples_results
+          chmod 777 docker/examples_results
           docker compose -f docker/docker-compose.yml up -d
 
       - name: Wait for healthy services
@@ -89,6 +92,7 @@ jobs:
         run: |
           printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\nCONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000\nAPP_UID=%s\nAPP_GID=%s\n' "$(id -u)" "$(id -g)" > docker/.env
           docker compose -f docker/docker-compose.yml down
+          chmod 777 docker/examples_results
           docker compose --env-file docker/.env -f docker/docker-compose.yml up -d
           timeout 120 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-server 2>/dev/null)" = "healthy" ] && [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-ui 2>/dev/null)" = "healthy" ]; do sleep 2; done'
           docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q '^LOG_LEVEL=DEBUG$'
