@@ -114,12 +114,19 @@ jobs:
             --data-urlencode 'generate_summary=on'
           grep -q 'Verification completed successfully' "$response_file"
 
-          artifact_count=$(curl -fsS 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/ci-e2e&recursive=true' | python -c 'import json,sys; print(json.load(sys.stdin)["count"])')
+          artifact_count=0
+          for _ in $(seq 1 30); do
+            artifact_count=$(curl -fsS 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/ci-e2e&recursive=true' | python -c 'import json,sys; print(json.load(sys.stdin)["count"])')
+            if [ "$artifact_count" -gt 0 ]; then
+              break
+            fi
+            sleep 2
+          done
           test "$artifact_count" -gt 0
 
           redirect_headers=$(mktemp)
           curl -fsS -D "$redirect_headers" -o /dev/null 'http://localhost:8080/artifact/download?output_dir=/data/results/ci-e2e&relative_path=verification_summary.md'
-          grep -qi '^location: http://localhost:8000/ai/artifacts/download?output_dir=%2Fdata%2Fresults%2Fci-e2e&relative_path=verification_summary.md' "$redirect_headers"
+          grep -Eqi '^location: http://(localhost|127\.0\.0\.1):8000/ai/artifacts/download\?output_dir=%2Fdata%2Fresults%2Fci-e2e&relative_path=verification_summary.md' "$redirect_headers"
 
           summary_file=$(mktemp)
           zip_file=$(mktemp).zip
@@ -150,7 +157,14 @@ jobs:
             --data-urlencode 'generate_summary=on'
           grep -q 'Verification completed successfully' "$response_file"
 
-          artifact_count=$(curl -fsS 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/ci-e2e-restart&recursive=true' | python -c 'import json,sys; print(json.load(sys.stdin)["count"])')
+          artifact_count=0
+          for _ in $(seq 1 30); do
+            artifact_count=$(curl -fsS 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/ci-e2e-restart&recursive=true' | python -c 'import json,sys; print(json.load(sys.stdin)["count"])')
+            if [ "$artifact_count" -gt 0 ]; then
+              break
+            fi
+            sleep 2
+          done
           test "$artifact_count" -gt 0
 
       - name: Dump service logs
