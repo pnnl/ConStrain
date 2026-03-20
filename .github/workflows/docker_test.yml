@@ -128,6 +128,31 @@ jobs:
           grep -q '# Verification Results:' "$summary_file"
           test -s "$zip_file"
 
+      - name: Verify restart resilience for api-server
+        run: |
+          docker-compose -f docker/docker-compose.yml restart api-server
+          timeout 120 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-server 2>/dev/null)" = "healthy" ]; do sleep 2; done'
+
+          curl -f http://localhost:8000/health
+          curl -f http://localhost:8080/health
+
+          response_file=$(mktemp)
+          curl -fsS -o "$response_file" -X POST http://localhost:8080/verify \
+            --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
+            --data-urlencode 'output_dir=/data/results/ci-e2e-restart' \
+            --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
+            --data-urlencode 'library_json_path=/data/schema/library.json' \
+            --data-urlencode 'plot_option=all-compact' \
+            --data-urlencode 'fig_width=6.4' \
+            --data-urlencode 'fig_height=4.8' \
+            --data-urlencode 'log_level=INFO' \
+            --data-urlencode 'summary_file_name=verification_summary.md' \
+            --data-urlencode 'generate_summary=on'
+          grep -q 'Verification completed successfully' "$response_file"
+
+          artifact_count=$(curl -fsS 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/ci-e2e-restart&recursive=true' | python -c 'import json,sys; print(json.load(sys.stdin)["count"])')
+          test "$artifact_count" -gt 0
+
       - name: Dump service logs
         if: always()
         run: |
