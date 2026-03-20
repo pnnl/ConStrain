@@ -43,13 +43,14 @@ jobs:
 
       - name: Validate env override behavior
         run: |
-          printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\n' > docker/.env
+          printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\nCONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000\n' > docker/.env
           docker-compose -f docker/docker-compose.yml down
           docker-compose --env-file docker/.env -f docker/docker-compose.yml up -d
           timeout 120 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-server 2>/dev/null)" = "healthy" ] && [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-ui 2>/dev/null)" = "healthy" ]; do sleep 2; done'
           docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q '^LOG_LEVEL=DEBUG$'
           docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^LOG_LEVEL=DEBUG$'
           docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^CONSTRAIN_API_BASE_URL=http://api-server:8000$'
+          docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^CONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000$'
 
       - name: Dump service logs
         if: always()

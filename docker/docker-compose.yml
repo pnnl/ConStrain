@@ -48,6 +48,7 @@ services:
       - PYTHONPATH=/app
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - CONSTRAIN_API_BASE_URL=${CONSTRAIN_API_BASE_URL:-http://api-server:8000}
+      - CONSTRAIN_PUBLIC_API_BASE_URL=${CONSTRAIN_PUBLIC_API_BASE_URL:-http://localhost:8000}
     depends_on:
       api-server:
         condition: service_healthy

@@ -67,6 +67,7 @@ EXPOSE 8000
 # Default environment variables
 ENV LOG_LEVEL=INFO
 ENV CONSTRAIN_API_BASE_URL=http://api-server:8000
+ENV CONSTRAIN_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
 
 # Run FastAPI application with Uvicorn
 CMD ["uvicorn", "constrain.app.ai_workflow_ui:app", "--host", "0.0.0.0", "--port", "8000"]

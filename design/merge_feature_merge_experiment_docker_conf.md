@@ -366,24 +366,23 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
    - Secret management
 
 4. **Phase 4.7: End-to-End Testing** (Requires Docker daemon)
-   - Build images: `docker-compose build`
-   - Start services: `docker-compose up`
-   - Verify web UI at <http://localhost:8080>
-   - Run verification case through web UI
-   - Confirm artifacts generated and downloadable
-   - Verify no docker socket mounted
-   - Verify services are networked properly
+   - Completed on 2026-03-20 against the compose-backed API/UI stack.
+   - Verified web UI at <http://localhost:8080>
+   - Ran mounted G36 verification case through the web UI
+   - Confirmed artifacts were generated and downloadable from the host browser path
+   - Verified no docker socket mounted
+   - Verified services were networked properly
 
 ### Current Validation Notes
 
 - The "8 integration tests" claim refers to the current API-first UI suite in `tests/test_ai_workflow_ui_integration.py`, which contains 8 endpoint-level integration tests for compose, verify, and artifact download flows.
 - Legacy Streamlit runtime assets are retained only as deprecated fallback/reference material during the transition cycle. They are no longer part of the supported compose runtime.
-- Backend async job submission and polling are now available for workflow and verification execution; frontend polling integration is still pending.
+- Backend async job submission and polling are now available for workflow and verification execution, and the FastAPI UI now uses that job model for both `/run` and `/verify`.
+- A live compose-backed UI verification run succeeded using mounted sample data and produced 10 artifacts under `/data/results/e2e-ui`, including downloadable summary markdown and zip output.
+- Public browser downloads now use a dedicated public API base URL instead of leaking the internal compose DNS hostname.
 
 ### Known Open Gaps
 
-- The backend execution-status model is implemented, but the web UI still needs to adopt job polling instead of relying only on synchronous execution paths.
-- End-to-end compose-backed verification through the web UI is still pending; current automated UI integration tests mock the backend API boundary.
 - Runtime hardening follow-up items remain open: non-root users, image vulnerability scanning, and stricter network policy controls.
 - Legacy Streamlit code remains as archived fallback/reference material until feature-parity cleanup is complete.
 

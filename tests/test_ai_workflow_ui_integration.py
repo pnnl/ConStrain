@@ -308,24 +308,26 @@ def test_verify_parses_report_item_names(
 
 def test_artifact_download_redirect() -> None:
     """Verify /artifact/download redirects to the backend API endpoint."""
-    response = client.get(
-        "/artifact/download",
-        params={"output_dir": "/results", "relative_path": "file.md"},
-        follow_redirects=False,
-    )
+    with patch.dict("os.environ", {"CONSTRAIN_PUBLIC_API_BASE_URL": "http://localhost:8000"}):
+        response = client.get(
+            "/artifact/download",
+            params={"output_dir": "/results", "relative_path": "file.md"},
+            follow_redirects=False,
+        )
 
     assert response.status_code == 307
-    assert "/ai/artifacts/download" in response.headers["location"]
+    assert response.headers["location"].startswith("http://localhost:8000/ai/artifacts/download")
     assert "output_dir=%2Fresults" in response.headers["location"]
     assert "relative_path=file.md" in response.headers["location"]
 
 
 def test_artifact_download_zip_redirect() -> None:
     """Verify /artifact/download-zip redirects to the backend API endpoint."""
-    response = client.get(
-        "/artifact/download-zip", params={"output_dir": "/results"}, follow_redirects=False
-    )
+    with patch.dict("os.environ", {"CONSTRAIN_PUBLIC_API_BASE_URL": "http://localhost:8000"}):
+        response = client.get(
+            "/artifact/download-zip", params={"output_dir": "/results"}, follow_redirects=False
+        )
 
     assert response.status_code == 307
-    assert "/ai/artifacts/download-zip" in response.headers["location"]
+    assert response.headers["location"].startswith("http://localhost:8000/ai/artifacts/download-zip")
     assert "output_dir=%2Fresults" in response.headers["location"]

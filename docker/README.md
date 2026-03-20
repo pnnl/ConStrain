@@ -37,12 +37,13 @@ docker-compose -f docker/docker-compose.yml down
 Compose supports defaults and `.env` overrides for:
 
 - `LOG_LEVEL` (default `INFO`)
-- `CONSTRAIN_API_BASE_URL` (default `http://api-server:8000`)
+- `CONSTRAIN_API_BASE_URL` (default `http://api-server:8000`) for server-side UI-to-API calls inside Compose
+- `CONSTRAIN_PUBLIC_API_BASE_URL` (default `http://localhost:8000`) for browser-facing artifact download redirects
 
 Example override (from `docker/` directory):
 
 ```bash
-printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\n' > .env
+printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\nCONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000\n' > .env
 docker-compose up -d
 ```
 

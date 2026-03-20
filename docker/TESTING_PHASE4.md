@@ -294,6 +294,7 @@ LOG_LEVEL=INFO
 OUTPUT_DIR=/data/results
 PYTHONPATH=/app
 CONSTRAIN_API_BASE_URL=http://api-server:8000
+CONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000
 ```
 
 ### 4.7.2 Test Environment Variable Overrides
@@ -303,6 +304,7 @@ CONSTRAIN_API_BASE_URL=http://api-server:8000
 cat > docker/.env << EOF
 LOG_LEVEL=DEBUG
 CONSTRAIN_API_BASE_URL=http://api-server:8000
+CONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000
 EOF
 
 # Restart services
@@ -319,6 +321,35 @@ docker-compose exec api-server env | grep LOG_LEVEL
 - ✅ .env file is read
 - ✅ Variables overridden correctly
 - ✅ Services restart successfully
+
+### 4.8.3 Verify UI-End-to-End Verification and Artifact Downloads
+
+```bash
+curl -X POST http://localhost:8080/verify \
+  --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
+  --data-urlencode 'output_dir=/data/results/e2e-ui' \
+  --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
+  --data-urlencode 'library_json_path=/data/schema/library.json' \
+  --data-urlencode 'plot_option=all-compact' \
+  --data-urlencode 'fig_width=6.4' \
+  --data-urlencode 'fig_height=4.8' \
+  --data-urlencode 'log_level=INFO' \
+  --data-urlencode 'summary_file_name=verification_summary.md' \
+  --data-urlencode 'generate_summary=on'
+
+curl 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/e2e-ui&recursive=true'
+curl -L -o /tmp/verification_summary.md \
+  'http://localhost:8080/artifact/download?output_dir=/data/results/e2e-ui&relative_path=verification_summary.md'
+curl -L -o /tmp/e2e-ui.zip \
+  'http://localhost:8080/artifact/download-zip?output_dir=/data/results/e2e-ui'
+```
+
+**Expected Results:**
+
+- ✅ UI returns a success page for the mounted G36 verification suite
+- ✅ Backend artifact list reports generated markdown/json/image outputs
+- ✅ Browser-facing download redirects resolve via `localhost:8000`, not the internal `api-server` DNS name
+- ✅ Summary markdown and zip bundle download successfully from the host
 
 ## Test Phase 4.8: Service Dependencies and Startup Order
 
@@ -459,6 +490,9 @@ docker-compose exec api-ui nslookup api-server
 - Added runtime `packaging` dependency to API UI image to prevent startup crash.
 - Enabled compose env overrides via `${VAR:-default}` for `LOG_LEVEL` and `CONSTRAIN_API_BASE_URL`.
 - Validated backend-dependent UI behavior: UI page renders while backend is down and verify route returns handled error text.
+- Executed a live compose-backed `/verify` request through the FastAPI UI using mounted sample inputs under `/data/...`.
+- Verified artifact generation under `/data/results/e2e-ui`: 10 files including `1_md.json`, `2_md.json`, `3_md.json`, per-case plots/markdown, and `verification_summary.md`.
+- Verified browser-facing artifact downloads through the UI redirect routes after splitting internal API routing from public download URLs.
 
 ## Post-Test Checklist
 

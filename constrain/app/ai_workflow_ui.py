@@ -36,6 +36,10 @@ def _api_base_url() -> str:
     return os.getenv("CONSTRAIN_API_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
 
 
+def _public_api_base_url() -> str:
+    return os.getenv("CONSTRAIN_PUBLIC_API_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
+
+
 def _api_post(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
     request = UrlRequest(
         f"{_api_base_url()}{path}",
@@ -88,7 +92,7 @@ def _base_context(request: Request) -> Dict[str, Any]:
         "verification_error": None,
         "artifacts": [],
         "artifacts_output_dir": "",
-        "api_base_url": _api_base_url(),
+        "api_base_url": _public_api_base_url(),
         "verification_inputs": {
             "case_file_path": "",
             "output_dir": "",
@@ -294,13 +298,13 @@ def verify(
 @app.get("/artifact/download")
 def artifact_download(output_dir: str, relative_path: str) -> RedirectResponse:
     query = urlencode({"output_dir": output_dir, "relative_path": relative_path})
-    return RedirectResponse(url=f"{_api_base_url()}/ai/artifacts/download?{query}")
+    return RedirectResponse(url=f"{_public_api_base_url()}/ai/artifacts/download?{query}")
 
 
 @app.get("/artifact/download-zip")
 def artifact_download_zip(output_dir: str) -> RedirectResponse:
     query = urlencode({"output_dir": output_dir})
-    return RedirectResponse(url=f"{_api_base_url()}/ai/artifacts/download-zip?{query}")
+    return RedirectResponse(url=f"{_public_api_base_url()}/ai/artifacts/download-zip?{query}")
 
 
 __all__ = ["app"]
