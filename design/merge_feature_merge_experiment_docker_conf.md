@@ -282,16 +282,80 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 - Dropdown/constrained UI controls
 - Comprehensive error scenario tests
 
-### Phase 4 Objectives
-1. Audit current docker_conf containerization patterns
-2. Identify redundancies and inefficiencies
-3. Standardize runtime contracts (env vars, paths, startup, health checks)
-4. Remove security risks (e.g., docker socket exposure)
-5. Define minimal and extended compose profiles
-6. Test docker-compose orchestration end-to-end
+### Phase 4 Progress (Checkpoint 1: API Services)
 
-### Current Status
-Starting Phase 4 containerization adoption and hardening.
+**✅ Completed:**
+1. **Dockerfile.api-server** - Unified backend API
+   - Replaces separate workflow/verification/reporting services
+   - Multi-stage build for minimal image size
+   - Consolidates all business logic in single FastAPI service
+   - Healthcheck on GET /health endpoint
+   - Standardized environment variables: OUTPUT_DIR, LOG_LEVEL
+   - Listens on port 8000
+
+2. **Dockerfile.api-ui** - FastAPI web frontend
+   - Replaces Streamlit service (eliminates docker socket security risk)
+   - Lightweight FastAPI + Jinja2 templates
+   - ✅ **Removes docker socket mount** (critical security improvement)
+   - ✅ **No docker daemon installation** (eliminates DinD anti-pattern)
+   - Healthcheck on GET /health endpoint
+   - Configurable API_BASE_URL via environment
+   - Listens on port 8000 (mapped to 8080 via compose)
+
+3. **Updated docker-compose.yml** - Simplified orchestration
+   - api-server: Unified backend (port 8000)
+   - api-ui: Web frontend (port 8080, 8001)
+   - Removed: workflow, verification, reporting, streamlit services
+   - Added: Service health checks with dependencies
+   - Improved network: bridge with explicit subnet (172.20.0.0/16)
+   - Service discovery via DNS names
+
+4. **Health check endpoints** - Added to both FastAPI apps
+   - GET /health returns {"status": "ok", "service": "..."}
+   - Enables container orchestration monitoring
+   - Docker healthcheck directives configured
+
+5. **Design documentation:**
+   - phase4_containerization_audit.md - Security analysis and roadmap
+   - Identified security risks (docker socket, DinD) - ALL FIXED
+   - Efficiency issues documented (Dockerfile duplication)
+   - Operability standards defined
+
+**Commit:** c4485e4
+
+### Remaining Phase 4 Work
+
+2. **Phase 4.2: Base Image Creation** (Priority: HIGH)
+   - New Dockerfile.base for shared dependencies
+   - Reduces duplication across service images
+   - Benefits: 50MB+ size reduction per service, faster builds
+
+3. **Phase 4.3: Refined Service Dockerfiles**
+   - Simplify workflow/verification/reporting to inherit from base
+   - Apply consistent patterns
+
+4. **Phase 4.4-4.6: Runtime Hardening**
+   - User isolation (run as non-root)
+   - Network policies
+   - Secret management
+
+5. **Phase 4.7: End-to-End Testing** (Requires Docker daemon)
+   - Build images: `docker-compose build`
+   - Start services: `docker-compose up`
+   - Verify web UI at http://localhost:8080
+   - Run verification case through web UI
+   - Confirm artifacts generated and downloadable
+   - Verify no docker socket mounted
+   - Verify services are networked properly
+
+### Security Improvements Summary
+
+| Risk | Previous State | Current State | Status |
+|------|---|---|---|
+| Docker socket mount | ✅ Mounted in Streamlit | ❌ No mounts in new setup | ✅ FIXED |
+| Docker-in-Docker | ✅ Installed in container | ❌ Not installed | ✅ FIXED |
+| Arbitrary code execution | ⚠️ Possible via socket | ❌ Not possible | ✅ FIXED |
+| Service communication auth | ❌ None | ⚠️ Network isolation only | Partial (Enhanced) |
 
 ## 14. Decision Log (Confirmed)
 
@@ -301,3 +365,4 @@ Starting Phase 4 containerization adoption and hardening.
 - Desktop GUI: keep optional fallback.
 - Containerization: adopt docker_conf baseline and optimize where inefficient.
 - API compatibility: breaking changes allowed if they improve merged architecture.
+- **Phase 4 decision:** Use FastAPI for both backend API and web UI tier (not separate frameworks).
