@@ -85,6 +85,12 @@ def _base_context(request: Request) -> Dict[str, Any]:
     }
 
 
+@app.get("/health")
+def health_check() -> Dict[str, str]:
+    """Health check endpoint for container orchestration."""
+    return {"status": "ok", "service": "constrain-api-ui"}
+
+
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request) -> HTMLResponse:
     return templates.TemplateResponse("ai_workflow_index.html", _base_context(request))

@@ -240,7 +240,60 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 - docker-compose local/dev runtime with updated docs and tests.
 - Migration notes and deprecation guidance.
 
-## 12. Decision Log (Confirmed)
+## 12. Wish List (Out of Scope, Future Phases)
+
+### Frontend Enhancements
+- File upload support (multipart/form-data) - Replace path-based verification inputs with real file uploads for improved UX
+- Dropdown/constrained UI controls - Replace free-text inputs with validated dropdowns for plot_option, log_level, report items
+- Progress streaming - WebSocket or Server-Sent Events for real-time verification execution progress
+
+### Testing and Validation
+- Comprehensive error scenarios - API timeouts, invalid parameters, permission errors, malformed files
+- End-to-end scenario tests - Real workflows from case file upload through artifact download
+- Performance/load tests - Artifact listing and download with large file sets
+- Manual acceptance checklist - Documented scenarios for human sign-off
+
+### Documentation and Tooling
+- Migration guide for contributors - Document architecture changes, new run commands, deprecated paths
+- Troubleshooting runbook - Common issues and resolution steps for unified frontend + container runtime
+- CLI adapter updates - Ensure CLI calls same REST APIs as web frontend
+
+### Operational Hardening
+- Authentication/authorization layer - Role-based access control if needed for multi-user deployments
+- Audit logging - Track who accessed what artifacts and execution results
+- Secret management improvements - Secure handling of API keys, credentials in containerized environment
+
+### Containerization Polish
+- Health check hardening - Comprehensive readiness probes for all services
+- Resource limit tuning - Memory/CPU constraints for containers
+- Extended compose profiles - Optional advanced services (caching, monitoring, worker scaling)
+
+## 13. Phase 4: Containerization Adoption (In Progress)
+
+### Phase C Status
+✅ **Completed:**
+- REST API endpoints for verification execution and artifact management
+- Web UI wired to call backend REST APIs
+- 8 integration tests for verification route and artifact downloads
+- Feature mapping matrix and design documentation
+
+**Remaining Phase C items (Wish List section 12):**
+- File upload support (multipart/form-data)
+- Dropdown/constrained UI controls
+- Comprehensive error scenario tests
+
+### Phase 4 Objectives
+1. Audit current docker_conf containerization patterns
+2. Identify redundancies and inefficiencies
+3. Standardize runtime contracts (env vars, paths, startup, health checks)
+4. Remove security risks (e.g., docker socket exposure)
+5. Define minimal and extended compose profiles
+6. Test docker-compose orchestration end-to-end
+
+### Current Status
+Starting Phase 4 containerization adoption and hardening.
+
+## 14. Decision Log (Confirmed)
 
 - Merge style: true merge first.
 - Primary frontend approach: current branch API-calling web style.

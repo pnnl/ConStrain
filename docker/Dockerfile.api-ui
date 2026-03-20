@@ -1,0 +1,50 @@
+# Dockerfile for ConStrain AI Workflow Web UI
+# FastAPI-based web interface with Jinja2 templates
+# This replaces the Streamlit service and removes docker socket dependency
+
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install runtime dependencies only (no build tools needed in final image)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies for web tier
+RUN pip install --no-cache-dir \
+    fastapi==0.104.1 \
+    uvicorn==0.24.0 \
+    jinja2==3.1.2 \
+    python-multipart==0.0.6
+
+# Copy web UI application
+COPY constrain/app/ai_workflow_ui.py ./constrain/app/
+COPY constrain/app/templates ./constrain/app/templates/
+
+# Copy AI modules needed for workflow composition
+COPY constrain/ai ./constrain/ai/
+
+# Copy package init files for imports to work
+COPY constrain/__init__.py ./constrain/
+
+# Create directories for volumes
+RUN mkdir -p /data/results /data/uploads
+
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Health check - verify HTTP endpoint is responsive
+HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/ || exit 1
+
+# Default port for web UI
+EXPOSE 8000
+
+# Default environment variables
+ENV LOG_LEVEL=INFO
+ENV CONSTRAIN_API_BASE_URL=http://api-server:8000
+
+# Run FastAPI application with Uvicorn
+CMD ["uvicorn", "constrain.app.ai_workflow_ui:app", "--host", "0.0.0.0", "--port", "8000"]

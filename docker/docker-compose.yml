@@ -1,95 +1,71 @@
 version: '3.8'
 
 services:
-  # Workflow service - runs ConStrain workflows
-  workflow:
+  # Backend API Server - Unified REST API for verification, reporting, and workflow execution
+  # Replaces separate workflow, verification, and reporting services
+  api-server:
     build:
       context: ..
-      dockerfile: docker/Dockerfile.workflow
-    image: constrain-workflow:latest
-    container_name: constrain-workflow
+      dockerfile: docker/Dockerfile.api-server
+    image: constrain-api-server:latest
+    container_name: constrain-api-server
+    ports:
+      - "8000:8000"
     volumes:
-      # Mount directories for workflow execution
-      - ./examples/workflows:/app/workflows
-      - ./examples/data:/app/data
-      - ./examples/verification_cases:/app/verification_cases
-      - ./examples/schema:/app/schema
-      - ./examples_results:/app/results
-      - ../weather:/app/weather:ro
-      - ../resources:/app/resources:ro
-    environment:
-      - PYTHONPATH=/app
-    # Override default command - specify your workflow file
-    # command: ["/app/workflows/my_workflow.json"]
-    # Or use demo workflow (default)
-    command: []
-    networks:
-      - constrain-network
-
-  # Verification service - runs verification cases
-  verification:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.verification
-    image: constrain-verification:latest
-    container_name: constrain-verification
-    volumes:
-      # Mount directories for verification execution
-      - ./examples/data:/app/data
-      - ./examples/verification_cases:/app/verification_cases
-      - ./examples/schema:/app/schema
-      - ./examples_results:/app/results
+      # Mount directories for data access and results storage
+      - ./examples/data:/data/data:ro
+      - ./examples/verification_cases:/data/verification_cases:ro
+      - ./examples/schema:/data/schema:ro
+      - ./examples_results:/data/results
       - ../weather:/app/weather:ro
       - ../resources:/app/resources:ro
       - ../constrain/tolerances.json:/app/tolerances.json:ro
     environment:
       - PYTHONPATH=/app
-    # Override default command - specify your verification case file
-    # Example: command: ["/app/verification_cases/G36_library_verification_cases.json", "--output", "/app/results"]
-    command: ["--help"]
+      - OUTPUT_DIR=/data/results
+      - LOG_LEVEL=INFO
     networks:
       - constrain-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
-  # Reporting service - generates summary reports from verification results
-  reporting:
+  # Web UI Service - FastAPI-based frontend with Jinja2 templates
+  # Replaces Streamlit service and removes docker socket dependency
+  api-ui:
     build:
       context: ..
-      dockerfile: docker/Dockerfile.reporting
-    image: constrain-reporting:latest
-    container_name: constrain-reporting
-    volumes:
-      # Mount results directory for report generation
-      - ./examples_results:/app/results
-    environment:
-      - PYTHONPATH=/app
-    # Override default command - specify input files and output report name
-    # Example: command: ["/app/results/*_md.json", "--output", "summary.md"]
-    command: ["--help"]
-    depends_on:
-      - verification
-    networks:
-      - constrain-network
-
-  # Streamlit UI service - web interface for running verifications
-  streamlit:
-    build:
-      context: .
-      dockerfile: Dockerfile.streamlit
-    image: constrain-streamlit:latest
-    container_name: constrain-streamlit
+      dockerfile: docker/Dockerfile.api-ui
+    image: constrain-api-ui:latest
+    container_name: constrain-api-ui
     ports:
-      - "8501:8501"
+      - "8080:8080"
+      - "8001:8000"  # Alternative port mapping for API testing
     volumes:
-      # Mount Docker socket to allow Streamlit container to run other containers
-      - /var/run/docker.sock:/var/run/docker.sock
-      # Mount uploads directory so spawned containers can access files
-      - ./uploads:/app/uploads
+      # Mount template directory for live updates during development
+      - ../constrain/app/templates:/app/constrain/app/templates
     environment:
       - PYTHONPATH=/app
-      - DOCKER_HOST=unix:///var/run/docker.sock
+      - LOG_LEVEL=INFO
+      - CONSTRAIN_API_BASE_URL=http://api-server:8000
+    depends_on:
+      api-server:
+        condition: service_healthy
     networks:
       - constrain-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 networks:
   constrain-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

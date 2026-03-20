@@ -120,6 +120,12 @@ def _resolve_artifact_path(output_dir_path: Path, relative_path: str) -> Path:
     return artifact_path
 
 
+@app.get("/health")
+def health_check() -> Dict[str, str]:
+    """Health check endpoint for container orchestration."""
+    return {"status": "ok", "service": "constrain-api-server"}
+
+
 @app.post("/ai/workflow/suggest")
 def api_suggest_workflow(req: WorkflowSuggestRequest) -> Dict[str, Any]:
     _ensure_llm_available()
