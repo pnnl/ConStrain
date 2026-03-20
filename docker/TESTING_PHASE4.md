@@ -3,6 +3,7 @@
 ## Prerequisites
 
 Before running tests, ensure:
+
 - Docker daemon is running (`docker ps` returns container list)
 - docker-compose is installed (`docker-compose --version`)
 - You have sufficient disk space (base images ~300-500MB)
@@ -26,6 +27,7 @@ docker images | grep constrain-api
 ```
 
 **Expected Results:**
+
 - ✅ Both Dockerfiles build without errors
 - ✅ constrain-api-server:test created (should be ~400-500MB)
 - ✅ constrain-api-ui:test created (should be ~300-400MB)
@@ -41,6 +43,7 @@ docker run --rm constrain-api-ui:test python -c "import constrain.app.ai_workflo
 ```
 
 **Expected Results:**
+
 - ✅ Both imports succeed
 - ✅ Modules print OK messages
 
@@ -62,7 +65,8 @@ docker-compose ps
 ```
 
 **Expected Results:**
-```
+
+```text
 NAME                       STATUS
 constrain-api-server       Up X seconds (health: starting)
 constrain-api-ui           Up X seconds (health: starting)
@@ -82,7 +86,8 @@ curl http://localhost:8080/health
 ```
 
 **Expected Results:**
-```
+
+```json
 {"status":"ok","service":"constrain-api-server"}
 {"status":"ok","service":"constrain-api-ui"}
 ```
@@ -98,6 +103,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 ```
 
 **Expected Results:**
+
 - api-server: Running, health check passing
 - api-ui: Running, health check passing
 
@@ -114,6 +120,7 @@ docker-compose exec api-ui curl -s http://api-server:8000/health | jq .
 ```
 
 **Expected Results:**
+
 - ✅ api-ui can call api-server via DNS name
 - ✅ JSON response received and parsed
 
@@ -127,6 +134,7 @@ curl -v http://localhost:8080/
 ```
 
 **Expected Results:**
+
 - ✅ HTTP 200 response
 - ✅ HTML content returned (ConStrain AI Workflow Composer page)
 
@@ -142,7 +150,8 @@ docker inspect constrain-api-ui | jq '.[] | .Mounts'
 ```
 
 **Expected Results:**
-```
+
+```json
 [
   {
     "Type": "bind",
@@ -165,6 +174,7 @@ docker-compose exec api-server which docker
 ```
 
 **Expected Results:**
+
 - ✅ Docker not found inside container
 - ✅ No docker daemon running
 
@@ -179,6 +189,7 @@ docker-compose exec api-ui whoami
 ```
 
 **Expected Results:**
+
 - ✅ Returns valid user (root or configured)
 
 ## Test Phase 4.5: API Functionality
@@ -196,6 +207,7 @@ curl -X POST http://localhost:8000/ai/workflow/suggest \
 ```
 
 **Expected Results:**
+
 - ✅ HTTP 503 if LLM not configured (with proper error message)
 - ✅ HTTP 200 with workflow data if LLM configured
 
@@ -210,6 +222,7 @@ curl http://localhost:8080/health
 ```
 
 **Expected Results:**
+
 ```json
 {"status":"ok","service":"constrain-api-server"}
 {"status":"ok","service":"constrain-api-ui"}
@@ -224,6 +237,7 @@ curl 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results'
 ```
 
 **Expected Results:**
+
 - ✅ HTTP 200
 - ✅ JSON response with artifacts array
 
@@ -240,6 +254,7 @@ docker-compose exec api-server ls -la /data/results/
 ```
 
 **Expected Results:**
+
 - ✅ Directory exists and is writable
 
 ### 4.6.2 Write Test File
@@ -256,6 +271,7 @@ rm docker/examples_results/test-file.txt
 ```
 
 **Expected Results:**
+
 - ✅ File created in container appears on host
 - ✅ Bidirectional mount working
 
@@ -272,7 +288,8 @@ docker-compose exec api-ui env | grep -E "LOG_LEVEL|CONSTRAIN_API_BASE"
 ```
 
 **Expected Results:**
-```
+
+```text
 LOG_LEVEL=INFO
 OUTPUT_DIR=/data/results
 PYTHONPATH=/app
@@ -298,6 +315,7 @@ docker-compose exec api-server env | grep LOG_LEVEL
 ```
 
 **Expected Results:**
+
 - ✅ .env file is read
 - ✅ Variables overridden correctly
 - ✅ Services restart successfully
@@ -318,6 +336,7 @@ docker-compose logs | head -50
 ```
 
 **Expected Results:**
+
 - ✅ api-server logs appear before api-ui logs
 - ✅ api-ui waits for api-server healthcheck
 - ✅ Both services eventually reach healthy state
@@ -340,6 +359,7 @@ curl http://localhost:8080/
 ```
 
 **Expected Results:**
+
 - ✅ api-ui responds but backend calls fail gracefully
 - ✅ After api-server restart, full functionality returns
 
@@ -358,12 +378,14 @@ docker images | grep constrain
 ```
 
 **Expected Results:**
+
 - ✅ No containers running
 - ✅ Images removed (if requested)
 
 ## Troubleshooting
 
 ### Images won't build
+
 ```bash
 # Check Docker disk space
 docker system df
@@ -376,6 +398,7 @@ docker-compose build --no-cache
 ```
 
 ### Services won't start
+
 ```bash
 # Check logs
 docker-compose logs api-server
@@ -390,6 +413,7 @@ kill -9 <PID>
 ```
 
 ### Healthchecks failing
+
 ```bash
 # Check healthcheck manually
 docker-compose exec api-server curl http://localhost:8000/health
@@ -399,6 +423,7 @@ docker-compose exec api-server python -c "from constrain.app.ai_workflow_server 
 ```
 
 ### Services can't communicate
+
 ```bash
 # Verify network exists
 docker network ls | grep constrain
@@ -413,6 +438,7 @@ docker-compose exec api-ui nslookup api-server
 ## Success Criteria
 
 ✅ All tests pass if:
+
 - [x] Both Dockerfiles build successfully
 - [x] docker-compose up creates healthy services
 - [x] Health endpoints respond with 200 OK
@@ -437,6 +463,7 @@ docker-compose exec api-ui nslookup api-server
 ## Post-Test Checklist
 
 After successful testing:
+
 - [x] Document any deployed differences from expected
 - [x] Update docker/README.md with quick-start
 - [x] Create troubleshooting guide for operators

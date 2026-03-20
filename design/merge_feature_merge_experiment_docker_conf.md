@@ -5,6 +5,7 @@
 Combine the new features on feature_merge_experiment with docker_conf (PR #105 Containerization) while preserving designed capabilities from both branches.
 
 Primary goals:
+
 - Preserve features from both branches as much as possible, especially feature design intent.
 - Merge two frontend apps into one unified frontend.
 - Keep strict frontend/backend separation through REST APIs.
@@ -14,6 +15,7 @@ Primary goals:
 ## 2. Scope
 
 In scope:
+
 - True merge of docker_conf into feature_merge_experiment.
 - Unified frontend architecture and feature migration plan.
 - Backend/API consolidation to support frontend and direct API consumers.
@@ -21,6 +23,7 @@ In scope:
 - Test and documentation updates for merged architecture.
 
 Out of scope:
+
 - Cloud deployment hardening beyond docker-compose local/dev baseline.
 - Full deprecation/removal of legacy UI on day one.
 
@@ -36,10 +39,12 @@ Out of scope:
 ### 3.2 Frontend Strategy
 
 Decision:
+
 - Do not require Streamlit as target technology.
 - Preserve Streamlit-designed user features/workflows by migrating them into the unified API-driven frontend.
 
 Principles:
+
 - Frontend remains orchestration/presentation only.
 - Business logic, validation, and execution remain in backend APIs.
 - No backend-coupled local logic in frontend that cannot be called via REST.
@@ -47,9 +52,11 @@ Principles:
 ### 3.3 API Strategy
 
 Decision:
+
 - Breaking API changes are allowed to achieve cleaner merged design.
 
 Principles:
+
 - Keep API-first architecture so any client (web UI, CLI, external platform) uses same backend contract.
 - Group APIs by domain (workflow, verification, reporting, jobs/status).
 - Define explicit request/response schemas and validation behavior.
@@ -58,10 +65,12 @@ Principles:
 ### 3.4 Containerization Strategy
 
 Decision:
+
 - Reuse docker_conf container setup as baseline.
 - Replace components that are inefficient or operationally inconvenient.
 
 Principles:
+
 - docker-compose local/dev is first-class runtime.
 - Standardize env var and volume path contracts.
 - Prefer minimal service set for baseline run; enable optional extended services.
@@ -72,6 +81,7 @@ Principles:
 ### 4.1 Why merge-first
 
 A true merge from docker_conf into feature_merge_experiment best preserves:
+
 - Contribution history
 - Existing implementation context
 - Lower risk of unintentionally dropping collaborator work
@@ -115,6 +125,7 @@ Every meaningful Streamlit feature/workflow from docker_conf must map to a corre
 ### 6.1 API shape
 
 Target grouped domains:
+
 - Workflow composition and validation
 - Verification case generation and validation
 - Execution submission
@@ -141,12 +152,14 @@ Target grouped domains:
 Adopt docker_conf compose/service structure initially.
 
 Baseline profiles:
+
 - Minimal: backend API + unified frontend
 - Extended: additional processing/worker/reporting services as needed
 
 ### 7.2 Runtime contracts
 
 Standardize:
+
 - Environment variable names and defaults
 - Mounted volume locations for inputs/resources/results
 - Startup ordering and health checks
@@ -155,6 +168,7 @@ Standardize:
 ### 7.3 Efficiency and convenience checks
 
 Refactor if needed:
+
 - Excessive Dockerfile duplication
 - Oversized image dependencies
 - Brittle path assumptions
@@ -205,16 +219,19 @@ Refactor if needed:
 ## 9. Verification Plan
 
 Functional verification:
+
 - Feature parity checks for migrated Streamlit design features.
 - Unified frontend full flow tests.
 - Direct REST API invocation tests for external/CLI consumers.
 
 Runtime verification:
+
 - docker-compose up/down reliability.
 - Service health and startup correctness.
 - Correct output artifact generation in mounted paths.
 
 Regression verification:
+
 - Existing core tests pass.
 - New integration tests for merged flows pass.
 
@@ -243,27 +260,32 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 ## 12. Wish List (Out of Scope, Future Phases)
 
 ### Frontend Enhancements
+
 - File upload support (multipart/form-data) - Replace path-based verification inputs with real file uploads for improved UX
 - Dropdown/constrained UI controls - Replace free-text inputs with validated dropdowns for plot_option, log_level, report items
 - Progress streaming - WebSocket or Server-Sent Events for real-time verification execution progress
 
 ### Testing and Validation
+
 - Comprehensive error scenarios - API timeouts, invalid parameters, permission errors, malformed files
 - End-to-end scenario tests - Real workflows from case file upload through artifact download
 - Performance/load tests - Artifact listing and download with large file sets
 - Manual acceptance checklist - Documented scenarios for human sign-off
 
 ### Documentation and Tooling
+
 - Migration guide for contributors - Document architecture changes, new run commands, deprecated paths
 - Troubleshooting runbook - Common issues and resolution steps for unified frontend + container runtime
 - CLI adapter updates - Ensure CLI calls same REST APIs as web frontend
 
 ### Operational Hardening
+
 - Authentication/authorization layer - Role-based access control if needed for multi-user deployments
 - Audit logging - Track who accessed what artifacts and execution results
 - Secret management improvements - Secure handling of API keys, credentials in containerized environment
 
 ### Containerization Polish
+
 - Health check hardening - Comprehensive readiness probes for all services
 - Resource limit tuning - Memory/CPU constraints for containers
 - Extended compose profiles - Optional advanced services (caching, monitoring, worker scaling)
@@ -271,13 +293,16 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 ## 13. Phase 4: Containerization Adoption (In Progress)
 
 ### Phase C Status
+
 ✅ **Completed:**
+
 - REST API endpoints for verification execution and artifact management
 - Web UI wired to call backend REST APIs
 - 8 integration tests for verification route and artifact downloads
 - Feature mapping matrix and design documentation
 
 **Remaining Phase C items (Wish List section 12):**
+
 - File upload support (multipart/form-data)
 - Dropdown/constrained UI controls
 - Comprehensive error scenario tests
@@ -285,6 +310,7 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 ### Phase 4 Progress (Checkpoint 1: API Services)
 
 **✅ Completed:**
+
 1. **Dockerfile.api-server** - Unified backend API
    - Replaces separate workflow/verification/reporting services
    - Multi-stage build for minimal image size
@@ -325,24 +351,24 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 
 ### Remaining Phase 4 Work
 
-2. **Phase 4.2: Base Image Creation** (Priority: HIGH)
+1. **Phase 4.2: Base Image Creation** (Priority: HIGH)
    - New Dockerfile.base for shared dependencies
    - Reduces duplication across service images
    - Benefits: 50MB+ size reduction per service, faster builds
 
-3. **Phase 4.3: Refined Service Dockerfiles**
+2. **Phase 4.3: Refined Service Dockerfiles**
    - Simplify workflow/verification/reporting to inherit from base
    - Apply consistent patterns
 
-4. **Phase 4.4-4.6: Runtime Hardening**
+3. **Phase 4.4-4.6: Runtime Hardening**
    - User isolation (run as non-root)
    - Network policies
    - Secret management
 
-5. **Phase 4.7: End-to-End Testing** (Requires Docker daemon)
+4. **Phase 4.7: End-to-End Testing** (Requires Docker daemon)
    - Build images: `docker-compose build`
    - Start services: `docker-compose up`
-   - Verify web UI at http://localhost:8080
+   - Verify web UI at <http://localhost:8080>
    - Run verification case through web UI
    - Confirm artifacts generated and downloadable
    - Verify no docker socket mounted
@@ -363,7 +389,7 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 ### Security Improvements Summary
 
 | Risk | Previous State | Current State | Status |
-|------|---|---|---|
+| ------ | --- | --- | --- |
 | Docker socket mount | ✅ Mounted in Streamlit | ❌ No mounts in new setup | ✅ FIXED |
 | Docker-in-Docker | ✅ Installed in container | ❌ Not installed | ✅ FIXED |
 | Arbitrary code execution | ⚠️ Possible via socket | ❌ Not possible | ✅ FIXED |
