@@ -109,7 +109,8 @@ jobs:
           curl -f http://localhost:8080/health
 
           echo "Submitting verification request..."
-          curl -fsSL -X POST http://localhost:8080/verify \
+          response_file=$(mktemp)
+          http_code=$(curl -sS -o "$response_file" -w '%{http_code}' -X POST http://localhost:8080/verify \
             --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
             --data-urlencode 'output_dir=/data/results/ci-e2e' \
             --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
@@ -119,7 +120,18 @@ jobs:
             --data-urlencode 'fig_height=4.8' \
             --data-urlencode 'log_level=INFO' \
             --data-urlencode 'summary_file_name=verification_summary.md' \
-            --data-urlencode 'generate_summary=on' > /dev/null
+            --data-urlencode 'generate_summary=on')
+
+          if [ "$http_code" != "200" ]; then
+            echo "Verify request failed with HTTP $http_code"
+            echo "----- /verify response body (first 120 lines) -----"
+            sed -n '1,120p' "$response_file" || true
+            echo "----- api-ui logs (last 200 lines) -----"
+            docker compose -f docker/docker-compose.yml logs --no-color --tail=200 api-ui || true
+            echo "----- api-server logs (last 200 lines) -----"
+            docker compose -f docker/docker-compose.yml logs --no-color --tail=200 api-server || true
+            exit 1
+          fi
           echo "Verification request completed successfully"
 
       - name: Wait for host artifacts
