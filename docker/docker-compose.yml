@@ -49,9 +49,6 @@ services:
     user: "${APP_UID:-1000}:${APP_GID:-1000}"
     ports:
       - "8080:8000"
-    volumes:
-      # Mount template directory for live updates during development
-      - ../constrain/app/templates:/app/constrain/app/templates
     environment:
       - PYTHONPATH=/app
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
