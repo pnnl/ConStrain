@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import time
+from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request as UrlRequest, urlopen
 from typing import Any, Dict, Optional
@@ -29,7 +30,7 @@ from constrain.ai.workflow_composer import (
 
 
 app = FastAPI(title="ConStrain AI Workflow Composer UI")
-templates = Jinja2Templates(directory="constrain/app/templates")
+templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
 
 
 def _api_base_url() -> str:
