@@ -51,3 +51,4 @@ docker-compose up -d
 - UI host port is `8080` mapped to container port `8000`.
 - Backend API is exposed on host port `8000`.
 - No Docker socket is mounted in containers.
+- Legacy Streamlit Docker assets are deprecated and retained only as archived reference material.

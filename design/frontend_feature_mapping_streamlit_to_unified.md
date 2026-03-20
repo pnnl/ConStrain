@@ -4,6 +4,8 @@
 
 Track one-to-one preservation of user-facing features from `docker/streamlit_app.py` into the unified API-driven frontend.
 
+Legacy Streamlit assets are now deprecated fallback/reference material. They are retained temporarily to preserve feature intent during migration, but they are no longer the supported container runtime.
+
 ## Feature Mapping Matrix
 
 | Streamlit Feature (docker_conf) | Existing Coverage in Current Frontend | Target Unified Frontend Behavior | Backend/API Contract Needed | Status |
@@ -36,3 +38,4 @@ Track one-to-one preservation of user-facing features from `docker/streamlit_app
 
 - Current Streamlit app is coupled to Docker CLI orchestration; unified frontend target must call backend APIs only.
 - Desktop PyQt remains fallback and should not become the primary path for new verification UX features.
+- `docker/streamlit_app.py` remains as archived reference during the transition cycle, not as an actively supported deployment path.

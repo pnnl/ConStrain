@@ -6,7 +6,7 @@ Before running tests, ensure:
 - Docker daemon is running (`docker ps` returns container list)
 - docker-compose is installed (`docker-compose --version`)
 - You have sufficient disk space (base images ~300-500MB)
-- Port 8000, 8080, 8001 are available on localhost
+- Port 8000 and 8080 are available on localhost
 
 ## Test Phase 4.1: Docker Image Build
 
@@ -79,7 +79,6 @@ curl http://localhost:8000/health
 
 # Check api-ui health
 curl http://localhost:8080/health
-curl http://localhost:8001/health
 ```
 
 **Expected Results:**

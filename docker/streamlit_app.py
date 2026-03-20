@@ -2,6 +2,10 @@
 ConStrain Verification Streamlit Chatbot UI
 A simple interface for uploading data files and running verification cases.
 
+DEPRECATED: This legacy Streamlit UI is retained temporarily as reference/fallback
+material while the API-first FastAPI UI reaches full feature parity. It is not
+part of the supported docker-compose runtime.
+
 Run this script directly on your host machine with:
     streamlit run streamlit_app.py
 

@@ -1,3 +1,5 @@
+## DEPRECATED: Legacy Streamlit runtime kept temporarily as reference/fallback.
+## This image is not part of the supported docker-compose stack.
 FROM python:3.10-slim
 
 WORKDIR /app

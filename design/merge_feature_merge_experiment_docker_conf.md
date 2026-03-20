@@ -299,12 +299,12 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
    - ✅ **Removes docker socket mount** (critical security improvement)
    - ✅ **No docker daemon installation** (eliminates DinD anti-pattern)
    - Healthcheck on GET /health endpoint
-   - Configurable API_BASE_URL via environment
+   - Configurable `CONSTRAIN_API_BASE_URL` via environment
    - Listens on port 8000 (mapped to 8080 via compose)
 
 3. **Updated docker-compose.yml** - Simplified orchestration
    - api-server: Unified backend (port 8000)
-   - api-ui: Web frontend (port 8080, 8001)
+   - api-ui: Web frontend (host port 8080 -> container port 8000)
    - Removed: workflow, verification, reporting, streamlit services
    - Added: Service health checks with dependencies
    - Improved network: bridge with explicit subnet (172.20.0.0/16)
@@ -347,6 +347,18 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
    - Confirm artifacts generated and downloadable
    - Verify no docker socket mounted
    - Verify services are networked properly
+
+### Current Validation Notes
+
+- The "8 integration tests" claim refers to the current API-first UI suite in `tests/test_ai_workflow_ui_integration.py`, which contains 8 endpoint-level integration tests for compose, verify, and artifact download flows.
+- Legacy Streamlit runtime assets are retained only as deprecated fallback/reference material during the transition cycle. They are no longer part of the supported compose runtime.
+
+### Known Open Gaps
+
+- Long-running execution still runs inline in the API process; the async execution-status model described earlier in this design has not been implemented yet.
+- End-to-end compose-backed verification through the web UI is still pending; current automated UI integration tests mock the backend API boundary.
+- Runtime hardening follow-up items remain open: non-root users, image vulnerability scanning, and stricter network policy controls.
+- Legacy Streamlit code remains as archived fallback/reference material until feature-parity cleanup is complete.
 
 ### Security Improvements Summary
 
