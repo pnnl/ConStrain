@@ -98,7 +98,7 @@ Both live under the `constrain.app` package.
 Run this from the project root:
 
 ```bash
-uv run uvicorn constrain.app.ai_workflow_server:app --reload
+uv run uvicorn constrain.app.ai_workflow_server:app --reload --host 127.0.0.1 --port 8000
 ```
 
 Key endpoints (default base: `http://127.0.0.1:8000`):
@@ -117,6 +117,29 @@ Key endpoints (default base: `http://127.0.0.1:8000`):
   - Output: Structural validation of a verification-case suite.
 - `GET /ai/catalog`
   - Output: Catalog of available callables and verification classes discovered via introspection.
+- `POST /ai/workflow/execute`
+  - Input: `{ "workflow": { ... }, "save_path": "..." }`
+  - Output: Synchronous workflow execution result.
+- `POST /ai/workflow/jobs`
+  - Input: `{ "workflow": { ... }, "save_path": "..." }`
+  - Output: Asynchronous workflow job handle (`job_id`) for polling.
+- `POST /ai/verification/execute`
+  - Input: verification payload (case file, output dir, plotting/report options).
+  - Output: Synchronous verification/reporting result.
+- `POST /ai/verification/jobs`
+  - Input: same verification payload as `/ai/verification/execute`.
+  - Output: Asynchronous verification job handle (`job_id`) for polling.
+- `GET /ai/jobs/{job_id}`
+  - Output: Job status and result metadata (`queued/running/succeeded/failed`).
+- `GET /ai/artifacts/list`
+  - Input: `output_dir` and optional `recursive`.
+  - Output: Generated artifact metadata.
+- `GET /ai/artifacts/download`
+  - Input: `output_dir` + `relative_path`.
+  - Output: Direct file download.
+- `GET /ai/artifacts/download-zip`
+  - Input: `output_dir`.
+  - Output: Zip of all artifacts under the output directory.
 
 These endpoints are implemented in:
 
@@ -130,14 +153,18 @@ These endpoints are implemented in:
 For a browser-based experience, start the UI server:
 
 ```bash
-uv run uvicorn constrain.app.ai_workflow_ui:app --reload
+export CONSTRAIN_API_BASE_URL="http://127.0.0.1:8000"
+export CONSTRAIN_PUBLIC_API_BASE_URL="http://127.0.0.1:8000"
+uv run uvicorn constrain.app.ai_workflow_ui:app --reload --host 127.0.0.1 --port 8080
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:8000/
+http://127.0.0.1:8080/
 ```
+
+Run API and UI on different ports (8000 and 8080) so they can run simultaneously.
 
 The UI is defined in:
 
@@ -177,7 +204,7 @@ The AI agent will propose new JSONs following the same structure but tailored to
 
 With `constrain.app.ai_workflow_ui` running:
 
-1. Navigate to `http://127.0.0.1:8000/`.
+1. Navigate to `http://127.0.0.1:8080/`.
 2. In the **Goal** text area, describe what you want, for example:
 
    ```text
@@ -298,13 +325,31 @@ curl -X POST http://127.0.0.1:8000/ai/workflow/execute \
 
 **From the command line (after saving JSON)**
 
-Save the workflow and cases to files (see 5.2), then run via the ConStrain API, for example:
+Save the workflow and cases to files (see 5.3), then run via the ConStrain API, for example:
 
 ```bash
 uv run python -c "from constrain.api import Workflow; Workflow('./demo/ai_runs/ai_workflow.json').run_workflow(verbose=True)"
 ```
 
-### 5.2 Save the JSON files
+### 5.2 Run verification from the UI (current behavior)
+
+The verification form in the web UI (`POST /verify`) currently uses synchronous execution via:
+
+- `POST /ai/verification/execute`
+
+Behavior to expect:
+
+- The request blocks until verification/reporting finishes (or fails).
+- After completion, the UI immediately calls:
+  - `GET /ai/artifacts/list`
+- The page then renders artifact links and summary status.
+
+Concurrency model (current implementation):
+
+- Users are expected to submit one verification request at a time.
+- Submitting a new verification while one is still running is not a supported usage pattern.
+
+### 5.3 Save the JSON files
 
 Copy the **Workflow JSON** from the UI and save it to a file, for example:
 
@@ -320,7 +365,7 @@ constrain/demo/my_demo/my_verification_cases.json
 
 Make sure the paths inside the workflow (e.g., `data_path`, `json_case_path`, `output_path`) are relative to where you will run the workflow from (typically the project root).
 
-### 5.3 Create a small runner script
+### 5.4 Create a small runner script
 
 Create a Python script (for instance, `constrain/demo/my_demo/run_my_workflow.py`) similar to the existing G36 runner:
 
@@ -349,7 +394,7 @@ This will:
 - Execute the states in sequence.
 - Produce verification result files (typically `*_md.json`) and reports, depending on how the workflow is configured.
 
-### 5.4 Verifying outputs
+### 5.5 Verifying outputs
 
 After the run completes:
 
@@ -392,6 +437,32 @@ curl -X POST http://127.0.0.1:8000/ai/cases/suggest \
 
 You can then save `workflow` and `cases` from the responses to JSON files and run them as described in Section 5.
 
+Example for synchronous verification execution:
+
+```bash
+curl -X POST http://127.0.0.1:8000/ai/verification/execute \
+  -H "Content-Type: application/json" \
+  -d '{
+    "case_file_path": "./docker/examples/verification_cases/G36_library_verification_cases.json",
+    "output_dir": "./docker/examples_results/manual_run",
+    "data_file_path": "./docker/examples/data/G36_Modelica_Jan.csv",
+    "library_json_path": "./docker/examples/schema/library.json",
+    "plot_option": "all-compact",
+    "fig_size": [6.4, 4.8],
+    "log_level": "INFO",
+    "generate_summary": true,
+    "summary_file_name": "verification_summary.md"
+  }'
+```
+
+Example for listing and downloading artifacts:
+
+```bash
+curl "http://127.0.0.1:8000/ai/artifacts/list?output_dir=./docker/examples_results/manual_run&recursive=true"
+curl -L -o verification_summary.md "http://127.0.0.1:8000/ai/artifacts/download?output_dir=./docker/examples_results/manual_run&relative_path=verification_summary.md"
+curl -L -o verification_results.zip "http://127.0.0.1:8000/ai/artifacts/download-zip?output_dir=./docker/examples_results/manual_run"
+```
+
 ---
 
 ## 7. Troubleshooting
@@ -418,4 +489,8 @@ You can then save `workflow` and `cases` from the responses to JSON files and ru
     - Invalid or unknown `verification_class` names.
   - Edit and revalidate until the issues list is empty.
 
-With this setup, you can iteratively design, validate, and execute ConStrain workflows using the AI agent, leveraging both the existing verification library and your own datasets.+
+- **API and UI cannot both start on port 8000**
+  - Start API on `127.0.0.1:8000` and UI on `127.0.0.1:8080`.
+  - Set `CONSTRAIN_API_BASE_URL` and `CONSTRAIN_PUBLIC_API_BASE_URL` before launching the UI.
+
+With this setup, you can iteratively design, validate, and execute ConStrain workflows using the AI agent, leveraging both the existing verification library and your own datasets.
