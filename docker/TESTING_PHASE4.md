@@ -295,6 +295,8 @@ OUTPUT_DIR=/data/results
 PYTHONPATH=/app
 CONSTRAIN_API_BASE_URL=http://api-server:8000
 CONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000
+APP_UID=1000
+APP_GID=1000
 ```
 
 ### 4.7.2 Test Environment Variable Overrides
@@ -305,6 +307,8 @@ cat > docker/.env << EOF
 LOG_LEVEL=DEBUG
 CONSTRAIN_API_BASE_URL=http://api-server:8000
 CONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000
+APP_UID=$(id -u)
+APP_GID=$(id -g)
 EOF
 
 # Restart services
@@ -321,6 +325,21 @@ docker-compose exec api-server env | grep LOG_LEVEL
 - ✅ .env file is read
 - ✅ Variables overridden correctly
 - ✅ Services restart successfully
+
+### 4.7.3 Verify Non-Root Runtime Hardening
+
+```bash
+docker-compose exec api-server id -u
+docker-compose exec api-ui id -u
+docker inspect constrain-api-server --format '{{json .HostConfig.SecurityOpt}}'
+docker inspect constrain-api-ui --format '{{json .HostConfig.CapDrop}}'
+```
+
+**Expected Results:**
+
+- ✅ PID 1 in both containers runs with a non-zero UID
+- ✅ `no-new-privileges:true` is present in container security options
+- ✅ `CapDrop` includes `ALL`
 
 ### 4.8.3 Verify UI-End-to-End Verification and Artifact Downloads
 
@@ -493,6 +512,7 @@ docker-compose exec api-ui nslookup api-server
 - Executed a live compose-backed `/verify` request through the FastAPI UI using mounted sample inputs under `/data/...`.
 - Verified artifact generation under `/data/results/e2e-ui`: 10 files including `1_md.json`, `2_md.json`, `3_md.json`, per-case plots/markdown, and `verification_summary.md`.
 - Verified browser-facing artifact downloads through the UI redirect routes after splitting internal API routing from public download URLs.
+- Hardened the API-first containers so the application processes run as a non-root UID/GID with `no-new-privileges` and all Linux capabilities dropped.
 
 ## Post-Test Checklist
 

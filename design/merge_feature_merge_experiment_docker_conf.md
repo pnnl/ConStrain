@@ -380,10 +380,11 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 - Backend async job submission and polling are now available for workflow and verification execution, and the FastAPI UI now uses that job model for both `/run` and `/verify`.
 - A live compose-backed UI verification run succeeded using mounted sample data and produced 10 artifacts under `/data/results/e2e-ui`, including downloadable summary markdown and zip output.
 - Public browser downloads now use a dedicated public API base URL instead of leaking the internal compose DNS hostname.
+- The API-first compose services now run application processes as a non-root UID/GID, with `no-new-privileges` enabled and all Linux capabilities dropped.
 
 ### Known Open Gaps
 
-- Runtime hardening follow-up items remain open: non-root users, image vulnerability scanning, and stricter network policy controls.
+- Runtime hardening follow-up items remain open: image vulnerability scanning and stricter network policy controls.
 - Legacy Streamlit code remains as archived fallback/reference material until feature-parity cleanup is complete.
 
 ### Security Improvements Summary

@@ -7,6 +7,7 @@ services:
       dockerfile: docker/Dockerfile.api-server
     image: constrain-api-server:latest
     container_name: constrain-api-server
+    user: "${APP_UID:-1000}:${APP_GID:-1000}"
     ports:
       - "8000:8000"
     volumes:
@@ -22,8 +23,14 @@ services:
       - PYTHONPATH=/app
       - OUTPUT_DIR=/data/results
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - APP_UID=${APP_UID:-1000}
+      - APP_GID=${APP_GID:-1000}
     networks:
       - constrain-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 10s
@@ -39,6 +46,7 @@ services:
       dockerfile: docker/Dockerfile.api-ui
     image: constrain-api-ui:latest
     container_name: constrain-api-ui
+    user: "${APP_UID:-1000}:${APP_GID:-1000}"
     ports:
       - "8080:8000"
     volumes:
@@ -49,11 +57,17 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - CONSTRAIN_API_BASE_URL=${CONSTRAIN_API_BASE_URL:-http://api-server:8000}
       - CONSTRAIN_PUBLIC_API_BASE_URL=${CONSTRAIN_PUBLIC_API_BASE_URL:-http://localhost:8000}
+      - APP_UID=${APP_UID:-1000}
+      - APP_GID=${APP_GID:-1000}
     depends_on:
       api-server:
         condition: service_healthy
     networks:
       - constrain-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 10s
