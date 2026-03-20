@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import time
+from html import escape
 from pathlib import Path
 from urllib.parse import urlencode
 from urllib.request import Request as UrlRequest, urlopen
@@ -31,6 +32,64 @@ from constrain.ai.workflow_composer import (
 
 app = FastAPI(title="ConStrain AI Workflow Composer UI")
 templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
+
+
+def _render_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
+    try:
+        return templates.TemplateResponse("ai_workflow_index.html", context)
+    except Exception as exc:
+        verification_result = context.get("verification_result")
+        execution_summary = context.get("execution_summary")
+        artifacts = context.get("artifacts") or []
+        artifact_items = "".join(
+            (
+                "<li><a href=\"/artifact/download?output_dir={output_dir}&relative_path={relative_path}\">{name}</a></li>"
+            ).format(
+                output_dir=escape(str(context.get("artifacts_output_dir", "")), quote=True),
+                relative_path=escape(str(item.get("relative_path", "")), quote=True),
+                name=escape(str(item.get("relative_path", "artifact"))),
+            )
+            for item in artifacts
+        )
+        fallback_sections = []
+        if verification_result is not None:
+            fallback_sections.append(
+                "<h2>Verification Result</h2><pre>{}</pre>".format(
+                    escape(json.dumps(verification_result, indent=2, default=str))
+                )
+            )
+        if context.get("verification_error"):
+            fallback_sections.append(
+                "<h2>Verification Error</h2><pre>{}</pre>".format(
+                    escape(str(context["verification_error"]))
+                )
+            )
+        if execution_summary is not None:
+            fallback_sections.append(
+                "<h2>Execution Summary</h2><pre>{}</pre>".format(
+                    escape(json.dumps(execution_summary, indent=2, default=str))
+                )
+            )
+        if context.get("execution_error"):
+            fallback_sections.append(
+                "<h2>Execution Error</h2><pre>{}</pre>".format(
+                    escape(str(context["execution_error"]))
+                )
+            )
+        if artifacts:
+            fallback_sections.append("<h2>Artifacts</h2><ul>{}</ul>".format(artifact_items))
+
+        html = "".join(
+            [
+                "<!doctype html><html><head><meta charset=\"utf-8\"><title>ConStrain AI Workflow Composer</title></head><body>",
+                "<h1>ConStrain AI Workflow Composer</h1>",
+                "<p>Template rendering fallback was used.</p>",
+                "<p><strong>Template error:</strong> {}</p>".format(escape(str(exc))),
+                *fallback_sections,
+                "</body></html>",
+            ]
+        )
+        return HTMLResponse(content=html, status_code=200)
 
 
 def _api_base_url() -> str:
@@ -121,7 +180,7 @@ def health_check() -> Dict[str, str]:
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse("ai_workflow_index.html", _base_context(request))
+    return _render_page(request, _base_context(request))
 
 
 @app.post("/compose", response_class=HTMLResponse)
@@ -187,7 +246,7 @@ def compose(
             "goal": goal,
         }
     )
-    return templates.TemplateResponse("ai_workflow_index.html", context)
+    return _render_page(request, context)
 
 
 @app.post("/run", response_class=HTMLResponse)
@@ -232,7 +291,7 @@ def run(
             "execution_error": execution_error,
         }
     )
-    return templates.TemplateResponse("ai_workflow_index.html", context)
+    return _render_page(request, context)
 
 
 @app.post("/verify", response_class=HTMLResponse)
@@ -300,7 +359,7 @@ def verify(
         context["verification_error"] = str(exc)
         context["artifacts_output_dir"] = output_dir
 
-    return templates.TemplateResponse("ai_workflow_index.html", context)
+    return _render_page(request, context)
 
 
 @app.get("/artifact/download")
