@@ -98,7 +98,7 @@ jobs:
           docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q "^APP_UID=$(id -u)$"
           docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q "^APP_GID=$(id -g)$"
 
-      - name: Verify host artifact redirects and downloads
+      - name: Trigger host verify run for artifact checks
         run: |
           response_file=$(mktemp)
           curl -fsS -o "$response_file" -X POST http://localhost:8080/verify \
@@ -113,6 +113,8 @@ jobs:
             --data-urlencode 'summary_file_name=verification_summary.md' \
             --data-urlencode 'generate_summary=on'
 
+      - name: Wait for host artifacts
+        run: |
           artifact_count=0
           for _ in $(seq 1 30); do
             artifact_count=$(curl -fsS 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/ci-e2e&recursive=true' | python -c 'import json,sys; print(json.load(sys.stdin)["count"])')
@@ -123,12 +125,16 @@ jobs:
           done
           test "$artifact_count" -gt 0
 
+      - name: Verify host artifact redirect headers
+        run: |
           redirect_headers=$(mktemp)
           curl -fsS -D "$redirect_headers" -o /dev/null 'http://localhost:8080/artifact/download?output_dir=/data/results/ci-e2e&relative_path=verification_summary.md'
           grep -Eqi '^location: http://(localhost|127\.0\.0\.1):8000/ai/artifacts/download\?' "$redirect_headers"
           grep -qi 'relative_path=verification_summary.md' "$redirect_headers"
           grep -Eqi 'output_dir=(%2F)?data(%2F)?results(%2F)?ci-e2e' "$redirect_headers"
 
+      - name: Verify host artifact downloads
+        run: |
           summary_file=$(mktemp)
           zip_file=$(mktemp).zip
           for _ in $(seq 1 30); do
