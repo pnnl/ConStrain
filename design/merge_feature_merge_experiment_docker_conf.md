@@ -381,11 +381,13 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 - A live compose-backed UI verification run succeeded using mounted sample data and produced 10 artifacts under `/data/results/e2e-ui`, including downloadable summary markdown and zip output.
 - Public browser downloads now use a dedicated public API base URL instead of leaking the internal compose DNS hostname.
 - The API-first compose services now run application processes as a non-root UID/GID, with `no-new-privileges` enabled and all Linux capabilities dropped.
-- Docker CI now produces Trivy SARIF reports for the API-first images so HIGH/CRITICAL findings are visible in CI and GitHub code scanning while remediation is still in progress.
+- Docker CI now produces Trivy SARIF reports for the API-first images, and the current API images scan clean for HIGH/CRITICAL vulnerabilities after runtime package remediation.
+- The API runtime images no longer install `curl`; container health checks and in-network probes use Python stdlib HTTP calls to avoid pulling vulnerable `nghttp2` packages into the runtime layer.
+- The runtime images also remove stale `setuptools`/`wheel` dist-info left by the builder copy so vulnerability scanners report the active upgraded versions instead of the superseded metadata.
 
 ### Known Open Gaps
 
-- Runtime hardening follow-up items remain open: remediating remaining image vulnerabilities surfaced by CI scanning and stricter network policy controls.
+- Runtime hardening follow-up items remain open: stricter network policy controls.
 - Legacy Streamlit code remains as archived fallback/reference material until feature-parity cleanup is complete.
 
 ### Security Improvements Summary

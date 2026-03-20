@@ -55,4 +55,5 @@ On Linux hosts, setting `APP_UID` and `APP_GID` to the current user avoids permi
 - UI host port is `8080` mapped to container port `8000`.
 - Backend API is exposed on host port `8000`.
 - No Docker socket is mounted in containers.
+- Container health checks and in-network probes use Python stdlib HTTP calls, so the runtime images do not need `curl`.
 - Legacy Streamlit Docker assets are deprecated and retained only as archived reference material.

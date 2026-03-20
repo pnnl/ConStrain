@@ -75,7 +75,7 @@ jobs:
 
       - name: Verify service connectivity and security posture
         run: |
-          docker exec constrain-api-ui sh -c "curl -fsS http://api-server:8000/health"
+          docker exec constrain-api-ui python -c "import urllib.request; urllib.request.urlopen('http://api-server:8000/health', timeout=5).read()"
           docker inspect constrain-api-ui --format '{{json .Mounts}}' | grep -q docker.sock && { echo "[FAIL] docker.sock mounted"; exit 1; } || echo "[PASS] no docker.sock mount"
           docker exec constrain-api-ui sh -c 'command -v docker >/dev/null && { echo "[FAIL] docker cli found"; exit 1; } || echo "[PASS] docker cli not present"'
           test "$(docker exec constrain-api-server id -u)" != "0"

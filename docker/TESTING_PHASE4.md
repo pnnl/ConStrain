@@ -113,7 +113,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 
 ```bash
 # From api-ui container, verify it can reach api-server
-docker-compose exec api-ui curl -s http://api-server:8000/health | jq .
+docker-compose exec api-ui python -c "import json,urllib.request; print(json.loads(urllib.request.urlopen('http://api-server:8000/health', timeout=5).read().decode()))"
 
 # Should return:
 # {"status":"ok","service":"constrain-api-server"}
@@ -466,7 +466,7 @@ kill -9 <PID>
 
 ```bash
 # Check healthcheck manually
-docker-compose exec api-server curl http://localhost:8000/health
+docker-compose exec api-server python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8000/health', timeout=5).read().decode())"
 
 # Check endpoint exists
 docker-compose exec api-server python -c "from constrain.app.ai_workflow_server import app; print(list(app.routes))"
@@ -513,6 +513,7 @@ docker-compose exec api-ui nslookup api-server
 - Verified artifact generation under `/data/results/e2e-ui`: 10 files including `1_md.json`, `2_md.json`, `3_md.json`, per-case plots/markdown, and `verification_summary.md`.
 - Verified browser-facing artifact downloads through the UI redirect routes after splitting internal API routing from public download URLs.
 - Hardened the API-first containers so the application processes run as a non-root UID/GID with `no-new-privileges` and all Linux capabilities dropped.
+- Remediated the previously reported HIGH image findings by removing runtime `curl`, upgrading `setuptools`/`wheel`, and cleaning stale package metadata; local Docker Scout scans now report `0C 0H 0M 0L` for both API images.
 
 ## Post-Test Checklist
 

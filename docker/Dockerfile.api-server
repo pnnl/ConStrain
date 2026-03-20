@@ -41,12 +41,36 @@ COPY --from=builder /install /usr/local
 
 # Install minimal runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uvicorn (web server) if not in main dependencies
-RUN pip install --no-cache-dir uvicorn[standard]==0.24.0 packaging
+# Install patched packaging toolchain and uvicorn runtime.
+RUN pip install --no-cache-dir --upgrade \
+    "setuptools>=78.1.1" \
+    "wheel>=0.46.2" \
+    uvicorn[standard]==0.24.0 \
+    packaging
+
+# Remove stale dist-info left by the builder layer so SBOM scanners see only the active versions.
+RUN python - <<'PY'
+import glob
+import pathlib
+import shutil
+import setuptools
+import wheel
+
+current_versions = {
+    'setuptools': setuptools.__version__,
+    'wheel': wheel.__version__,
+}
+
+for package, version in current_versions.items():
+    pattern = f'/usr/local/lib/python*/site-packages/{package}-*.dist-info'
+    for path_str in glob.glob(pattern):
+        path = pathlib.Path(path_str)
+        if version not in path.name:
+            shutil.rmtree(path)
+PY
 
 # Copy project source code
 COPY constrain/ ./constrain/
@@ -66,7 +90,7 @@ ENV LOG_LEVEL=INFO
 
 # Health check - verify API is responding
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5).read()" || exit 1
 
 # Expose API port
 EXPOSE 8000
