@@ -21,7 +21,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - OUTPUT_DIR=/data/results
-      - LOG_LEVEL=INFO
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
     networks:
       - constrain-network
     healthcheck:
@@ -46,8 +46,8 @@ services:
       - ../constrain/app/templates:/app/constrain/app/templates
     environment:
       - PYTHONPATH=/app
-      - LOG_LEVEL=INFO
-      - CONSTRAIN_API_BASE_URL=http://api-server:8000
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - CONSTRAIN_API_BASE_URL=${CONSTRAIN_API_BASE_URL:-http://api-server:8000}
     depends_on:
       api-server:
         condition: service_healthy
