@@ -1,0 +1,54 @@
+# Multi-stage build for a leaner workflow-focused image
+FROM python:3.10-slim as builder
+
+# Set working directory
+WORKDIR /app
+
+# Install build dependencies (needed for compiling Python packages)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency files
+COPY pyproject.toml setup.py ./
+
+# Install poetry and export dependencies to requirements.txt (excluding pyqt6)
+RUN pip install --no-cache-dir poetry poetry-plugin-export && \
+    poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev
+
+# Remove PyQt6 from requirements as it's not needed for headless workflow execution
+RUN sed -i '/^pyqt6/d' requirements.txt
+
+# Install all dependencies including packaging (ensure it gets installed to /install prefix)
+RUN pip install --no-cache-dir --prefix=/install --no-warn-script-location packaging && \
+    pip install --no-cache-dir --prefix=/install --no-warn-script-location -r requirements.txt
+
+# Final stage - minimal runtime image
+FROM python:3.10-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy only the installed packages from builder
+COPY --from=builder /install /usr/local
+
+# Install missing runtime dependencies directly in the final image
+RUN pip install --no-cache-dir packaging typing_extensions
+
+# Copy only necessary project files
+COPY constrain/ ./constrain/
+COPY docker/run_workflow.py ./
+COPY resources/ ./resources/
+
+# Set Python path to include the constrain module
+ENV PYTHONPATH=/app:${PYTHONPATH}
+
+# Create directories for workflows and results
+RUN mkdir -p /app/workflows /app/results
+
+# Set the entrypoint to run workflows
+ENTRYPOINT ["python", "/app/run_workflow.py"]
+
+# Default to demo workflow if no argument provided
+CMD []

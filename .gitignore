@@ -21,3 +21,12 @@ docs/_sources
 docs/_static
 docs/.doctrees
 **.DS_Store
+dev/
+*.png
+constrain/demo/api_demo/*.json
+/*.json
+/*.md
+results
+tests/api/data/verification_output/*.md
+tests/outputs/*.csv
+poetry.lock

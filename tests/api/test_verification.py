@@ -217,6 +217,10 @@ class TestVerification(unittest.TestCase):
             assert len(v_obj.cases) == 2
 
     def test_configure(self):
+        # Clean up test directory if it exists from previous run
+        if os.path.exists("./test"):
+            os.rmdir("./test")
+
         with self.assertLogs() as logobs:
             vc = VerificationCase(cases=self.cases)
             v_obj = Verification(verifications=vc)
@@ -227,34 +231,41 @@ class TestVerification(unittest.TestCase):
                 "ERROR:root:An output_path argument should be specified.",
                 logobs.output[0],
             )
+
+            # When output_path doesn't exist, it will be created automatically (with a warning)
+            # and proceed to check lib_items_path
             v_obj.configure(output_path="./test")
             self.assertEqual(
-                "ERROR:root:The specified output directory does not exist.",
+                "WARNING:root:Output directory ./test does not exist. Creating it.",
                 logobs.output[1],
+            )
+            self.assertEqual(
+                "ERROR:root:A path to the library of verification cases should be provided.",
+                logobs.output[2],
             )
 
             # Valid lib_items_path
             v_obj.configure(output_path="./")
             self.assertEqual(
                 "ERROR:root:A path to the library of verification cases should be provided.",
-                logobs.output[2],
+                logobs.output[3],
             )
             v_obj.configure(output_path="./", lib_items_path=12)
             self.assertEqual(
                 "ERROR:root:The path to the library of verification cases is not valid.",
-                logobs.output[3],
+                logobs.output[4],
             )
             v_obj.configure(output_path="./", lib_items_path="./test")
             self.assertEqual(
                 "ERROR:root:The path to the library of verification cases is not valid.",
-                logobs.output[4],
+                logobs.output[5],
             )
             v_obj.configure(
                 output_path="./", lib_items_path="./resources/Energy+V9_0_1.idd"
             )
             self.assertEqual(
                 "ERROR:root:The library should be a JSON file.",
-                logobs.output[5],
+                logobs.output[6],
             )
 
             # Valid plot_option
@@ -265,7 +276,7 @@ class TestVerification(unittest.TestCase):
             )
             self.assertEqual(
                 "ERROR:root:The plot_option argument should either be all-compact, all-expand, day-compact, day-expand, or None, not test.",
-                logobs.output[6],
+                logobs.output[7],
             )
 
             # Valid fig_size
@@ -277,7 +288,7 @@ class TestVerification(unittest.TestCase):
             )
             self.assertEqual(
                 "ERROR:root:The fig_size argument should be a tuple of integers or floats.",
-                logobs.output[7],
+                logobs.output[8],
             )
             v_obj.configure(
                 output_path="./",
@@ -287,7 +298,7 @@ class TestVerification(unittest.TestCase):
             )
             self.assertEqual(
                 "ERROR:root:The fig_size argument should be a tuple of integers or floats. Here is the variable type that was passed <class 'str'>.",
-                logobs.output[8],
+                logobs.output[9],
             )
 
             # Valid num_threads
@@ -300,7 +311,7 @@ class TestVerification(unittest.TestCase):
             )
             self.assertEqual(
                 "ERROR:root:The number of threads should be an integer greater than 1.",
-                logobs.output[9],
+                logobs.output[10],
             )
 
             # Valid preprocessed data
@@ -315,7 +326,7 @@ class TestVerification(unittest.TestCase):
             )
             self.assertEqual(
                 "ERROR:root:A Pandas DataFrame should be passed as the `preprocessed_data` argument, not a <class 'dict'>.",
-                logobs.output[10],
+                logobs.output[11],
             )
 
             # Correct usage
@@ -330,7 +341,13 @@ class TestVerification(unittest.TestCase):
                 preprocessed_data=df.data,
                 path_to_custom_tolerance_file="./constrain/tolerances.json",
             )
-            assert len(logobs.output) == 11
+            # Total: 1 ERROR + 1 WARNING + 1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR +
+            #        1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR + 1 ERROR = 12 messages
+            assert len(logobs.output) == 12
+
+        # Clean up the created test directory
+        if os.path.exists("./test"):
+            os.rmdir("./test")
 
     def test_run_single_verification(self):
         # Single verification

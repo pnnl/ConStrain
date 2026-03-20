@@ -1,9 +1,15 @@
-import unittest, sys, json
+import unittest, sys, json, os
 
 sys.path.append("./constrain")
 from api import VerificationLibrary
 
-lib_path = "./constrain/schema/library.json"
+# Get absolute path to library.json relative to this test file
+lib_path = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "constrain",
+    "schema",
+    "library.json",
+)
 
 
 class TestVerificationLibrary(unittest.TestCase):
