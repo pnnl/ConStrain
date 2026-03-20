@@ -104,16 +104,12 @@ jobs:
 
       - name: Trigger host verify run for artifact checks
         run: |
-          echo "=== Checking health endpoints ==="
+          echo "Health checks..."
           curl -f http://localhost:8000/health
           curl -f http://localhost:8080/health
 
-          echo "=== Testing verify endpoint connectivity ==="
-          curl -v http://localhost:8080/verify --head 2>&1 | head -20
-
-          echo "=== Submitting POST request to verify endpoint ==="
-          response_file=$(mktemp)
-          http_code=$(curl -w '%{http_code}' -s -o "$response_file" -X POST http://localhost:8080/verify \
+          echo "Submitting verification request..."
+          curl -fsSL -X POST http://localhost:8080/verify \
             --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
             --data-urlencode 'output_dir=/data/results/ci-e2e' \
             --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
@@ -123,17 +119,8 @@ jobs:
             --data-urlencode 'fig_height=4.8' \
             --data-urlencode 'log_level=INFO' \
             --data-urlencode 'summary_file_name=verification_summary.md' \
-            --data-urlencode 'generate_summary=on')
-          
-          if [ "$http_code" != "200" ]; then
-            echo "ERROR: HTTP $http_code returned from /verify"
-            echo "Response content:"
-            head -50 "$response_file"
-            echo "Docker logs:"
-            docker compose -f docker/docker-compose.yml logs api-ui 2>&1 | tail -30
-            docker compose -f docker/docker-compose.yml logs api-server 2>&1 | tail -30
-            exit 1
-          fi
+            --data-urlencode 'generate_summary=on' > /dev/null
+          echo "Verification request completed successfully"
 
       - name: Wait for host artifacts
         run: |
