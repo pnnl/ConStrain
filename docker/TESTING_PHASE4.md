@@ -441,5 +441,5 @@ After successful testing:
 - [x] Document any deployed differences from expected
 - [x] Update docker/README.md with quick-start
 - [x] Create troubleshooting guide for operators
-- [ ] Update CI/CD pipeline if needed
+- [x] Update CI/CD pipeline if needed
 - [x] Tag commit with "phase-4-docker-validated"
