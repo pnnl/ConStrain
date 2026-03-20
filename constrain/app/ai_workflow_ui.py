@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from urllib.parse import urlencode
 from urllib.request import Request as UrlRequest, urlopen
 from typing import Any, Dict, Optional
@@ -25,7 +26,6 @@ from constrain.ai.workflow_composer import (
     suggest_verification_cases,
     suggest_workflow,
 )
-from constrain.ai.workflow_runner import run_workflow_from_dict
 
 
 app = FastAPI(title="ConStrain AI Workflow Composer UI")
@@ -51,6 +51,27 @@ def _api_get(path: str, query: Optional[Dict[str, Any]] = None) -> Dict[str, Any
     query_str = f"?{urlencode(query or {}, doseq=True)}" if query else ""
     with urlopen(f"{_api_base_url()}{path}{query_str}", timeout=120) as response:
         return json.loads(response.read().decode("utf-8"))
+
+
+def _wait_for_job(job_id: str, timeout_seconds: float = 120.0) -> Dict[str, Any]:
+    deadline = time.time() + timeout_seconds
+    last_payload: Optional[Dict[str, Any]] = None
+
+    while time.time() < deadline:
+        last_payload = _api_get(f"/ai/jobs/{job_id}")
+        status = last_payload.get("status")
+        if status == "succeeded":
+            return last_payload.get("result") or {}
+        if status == "failed":
+            error = last_payload.get("error") or {}
+            detail = error.get("detail", "Job execution failed.")
+            raise RuntimeError(str(detail))
+        time.sleep(0.25)
+
+    raise TimeoutError(
+        f"Job {job_id} did not complete within {timeout_seconds:.0f} seconds. Last status: "
+        f"{(last_payload or {}).get('status', 'unknown')}"
+    )
 
 
 def _base_context(request: Request) -> Dict[str, Any]:
@@ -176,11 +197,15 @@ def run(
     execution_error = None
 
     if wf_dict is not None and wf_validation.valid:
-        result = run_workflow_from_dict(wf_dict, save_path=None, verbose=True)
-        if result.success:
-            execution_summary = result.summary
-        else:
-            execution_error = result.error
+        try:
+            job = _api_post("/ai/workflow/jobs", {"workflow": wf_dict, "save_path": None})
+            result = _wait_for_job(job["job_id"])
+            if result.get("success"):
+                execution_summary = result.get("execution", {}).get("summary")
+            else:
+                execution_error = result.get("execution", {}).get("error")
+        except Exception as exc:
+            execution_error = str(exc)
     elif wf_dict is None:
         execution_error = "Invalid workflow JSON: could not be parsed."
     else:
@@ -249,7 +274,8 @@ def verify(
             "summary_file_name": summary_file_name,
             "report_item_names": report_items or None,
         }
-        verification_result = _api_post("/ai/verification/execute", payload)
+        job = _api_post("/ai/verification/jobs", payload)
+        verification_result = _wait_for_job(job["job_id"])
         artifacts_payload = _api_get(
             "/ai/artifacts/list",
             {"output_dir": output_dir, "recursive": True},

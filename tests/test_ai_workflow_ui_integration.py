@@ -49,6 +49,56 @@ def test_compose_endpoint_loads_form(
 
 @patch("constrain.app.ai_workflow_ui._api_post")
 @patch("constrain.app.ai_workflow_ui._api_get")
+def test_run_endpoint_uses_workflow_job_api(
+    mock_api_get: MagicMock, mock_api_post: MagicMock
+) -> None:
+    workflow = {
+        "workflow_name": "Test workflow",
+        "meta": {
+            "author": "Test",
+            "date": "01/01/2024",
+            "version": "1.0",
+            "description": "Minimal valid workflow for UI integration testing",
+        },
+        "imports": [],
+        "states": {
+            "Success": {
+                "Type": "MethodCall",
+                "MethodCall": "print",
+                "Parameters": ["ok"],
+                "Start": "True",
+                "End": "True",
+            }
+        },
+    }
+
+    mock_api_post.return_value = {"job_id": "workflow-job-1", "status": "queued"}
+    mock_api_get.return_value = {
+        "job_id": "workflow-job-1",
+        "status": "succeeded",
+        "result": {
+            "success": True,
+            "validation": {"valid": True, "issues": []},
+            "execution": {"saved_to": None, "summary": {"steps": ["done"]}, "error": None},
+        },
+    }
+
+    response = client.post(
+        "/run",
+        data={
+            "workflow_json": json.dumps(workflow),
+            "cases_json": "",
+            "goal": "Run test workflow",
+        },
+    )
+
+    assert response.status_code == 200
+    mock_api_post.assert_called_once_with("/ai/workflow/jobs", {"workflow": workflow, "save_path": None})
+    mock_api_get.assert_called_once_with("/ai/jobs/workflow-job-1")
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
+@patch("constrain.app.ai_workflow_ui._api_get")
 def test_verify_success_with_artifacts(
     mock_api_get: MagicMock, mock_api_post: MagicMock, tmp_path: Path
 ) -> None:
@@ -57,29 +107,36 @@ def test_verify_success_with_artifacts(
     output_dir.mkdir()
     (output_dir / "summary.md").write_text("# Summary\n")
 
-    mock_api_post.return_value = {
-        "success": True,
-        "verification": {
-            "case_file_path": str(output_dir / "case.json"),
+    mock_api_post.return_value = {"job_id": "verification-job-1", "status": "queued"}
+    mock_api_get.side_effect = [
+        {
+            "job_id": "verification-job-1",
+            "status": "succeeded",
+            "result": {
+                "success": True,
+                "verification": {
+                    "case_file_path": str(output_dir / "case.json"),
+                    "output_dir": str(output_dir),
+                    "md_json_files": [str(output_dir / "1_md.json")],
+                },
+                "reporting": {
+                    "generated": True,
+                    "summary_path": str(output_dir / "summary.md"),
+                },
+            },
+        },
+        {
             "output_dir": str(output_dir),
-            "md_json_files": [str(output_dir / "1_md.json")],
+            "count": 1,
+            "artifacts": [
+                {
+                    "relative_path": "summary.md",
+                    "size_bytes": 10,
+                    "modified_epoch": 1234567890,
+                }
+            ],
         },
-        "reporting": {
-            "generated": True,
-            "summary_path": str(output_dir / "summary.md"),
-        },
-    }
-    mock_api_get.return_value = {
-        "output_dir": str(output_dir),
-        "count": 1,
-        "artifacts": [
-            {
-                "relative_path": "summary.md",
-                "size_bytes": 10,
-                "modified_epoch": 1234567890,
-            }
-        ],
-    }
+    ]
 
     response = client.post(
         "/verify",
@@ -104,7 +161,8 @@ def test_verify_success_with_artifacts(
     assert "summary.md" in response.text
     assert "10 bytes" in response.text
     mock_api_post.assert_called_once()
-    mock_api_get.assert_called_once()
+    assert mock_api_get.call_count == 2
+    assert mock_api_get.call_args_list[0].args == ("/ai/jobs/verification-job-1",)
 
 
 @patch("constrain.app.ai_workflow_ui._api_post")
@@ -145,20 +203,27 @@ def test_verify_handles_missing_artifacts(
     output_dir = tmp_path / "results"
     output_dir.mkdir()
 
-    mock_api_post.return_value = {
-        "success": True,
-        "verification": {
-            "case_file_path": str(output_dir / "case.json"),
-            "output_dir": str(output_dir),
-            "md_json_files": [],
+    mock_api_post.return_value = {"job_id": "verification-job-2", "status": "queued"}
+    mock_api_get.side_effect = [
+        {
+            "job_id": "verification-job-2",
+            "status": "succeeded",
+            "result": {
+                "success": True,
+                "verification": {
+                    "case_file_path": str(output_dir / "case.json"),
+                    "output_dir": str(output_dir),
+                    "md_json_files": [],
+                },
+                "reporting": {"generated": False, "summary_path": None},
+            },
         },
-        "reporting": {"generated": False, "summary_path": None},
-    }
-    mock_api_get.return_value = {
-        "output_dir": str(output_dir),
-        "count": 0,
-        "artifacts": [],
-    }
+        {
+            "output_dir": str(output_dir),
+            "count": 0,
+            "artifacts": [],
+        },
+    ]
 
     response = client.post(
         "/verify",
@@ -191,16 +256,23 @@ def test_verify_parses_report_item_names(
     output_dir.mkdir(parents=True)
 
     # Ensure mocks are configured to respond successfully
-    mock_api_post.return_value = {
-        "success": True,
-        "verification": {"case_file_path": "", "output_dir": str(output_dir), "md_json_files": []},
-        "reporting": {"generated": False, "summary_path": None},
-    }
-    mock_api_get.return_value = {
-        "output_dir": str(output_dir),
-        "count": 0,
-        "artifacts": [],
-    }
+    mock_api_post.return_value = {"job_id": "verification-job-3", "status": "queued"}
+    mock_api_get.side_effect = [
+        {
+            "job_id": "verification-job-3",
+            "status": "succeeded",
+            "result": {
+                "success": True,
+                "verification": {"case_file_path": "", "output_dir": str(output_dir), "md_json_files": []},
+                "reporting": {"generated": False, "summary_path": None},
+            },
+        },
+        {
+            "output_dir": str(output_dir),
+            "count": 0,
+            "artifacts": [],
+        },
+    ]
 
     response = client.post(
         "/verify",
