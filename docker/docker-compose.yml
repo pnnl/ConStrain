@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Backend API Server - Unified REST API for verification, reporting, and workflow execution
   # Replaces separate workflow, verification, and reporting services
@@ -42,8 +40,7 @@ services:
     image: constrain-api-ui:latest
     container_name: constrain-api-ui
     ports:
-      - "8080:8080"
-      - "8001:8000"  # Alternative port mapping for API testing
+      - "8080:8000"
     volumes:
       # Mount template directory for live updates during development
       - ../constrain/app/templates:/app/constrain/app/templates

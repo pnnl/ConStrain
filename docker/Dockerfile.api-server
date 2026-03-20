@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --no-cache-dir poetry poetry-plugin-export
 
 # Copy only dependency files first (for Docker layer caching)
-COPY pyproject.toml setup.py ./
+COPY pyproject.toml ./
 
 # Export dependencies to requirements.txt (exclude dev and desktop dependencies)
 # This reduces image size and removes unnecessary packages like PyQt6
@@ -28,6 +28,7 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 RUN pip install --no-cache-dir \
     --prefix=/install \
     --no-warn-script-location \
+    packaging \
     -r requirements.txt
 
 # Final stage - minimal runtime image
@@ -45,7 +46,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uvicorn (web server) if not in main dependencies
-RUN pip install --no-cache-dir uvicorn[standard]==0.24.0
+RUN pip install --no-cache-dir uvicorn[standard]==0.24.0 packaging
 
 # Copy project source code
 COPY constrain/ ./constrain/

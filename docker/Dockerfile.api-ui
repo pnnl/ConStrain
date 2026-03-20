@@ -2,38 +2,60 @@
 # FastAPI-based web interface with Jinja2 templates
 # This replaces the Streamlit service and removes docker socket dependency
 
+FROM python:3.10-slim as builder
+
+WORKDIR /app
+
+# Install build dependencies needed for compiling Python packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install poetry for dependency management
+RUN pip install --no-cache-dir poetry poetry-plugin-export
+
+# Copy only dependency files
+COPY pyproject.toml ./
+
+# Export dependencies to requirements.txt, excluding dev tools and PyQt6
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev && \
+    sed -i '/^pyqt6/d' requirements.txt && \
+    sed -i '/^streamlit/d' requirements.txt
+
+# Install all dependencies to prefix
+RUN pip install --no-cache-dir \
+    --prefix=/install \
+    --no-warn-script-location \
+    packaging \
+    -r requirements.txt
+
+# Final stage - lightweight runtime image
 FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install runtime dependencies only (no build tools needed in final image)
+# Copy only installed packages from builder stage
+COPY --from=builder /install /usr/local
+
+# Install minimal runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies for web tier
-RUN pip install --no-cache-dir \
-    fastapi==0.104.1 \
-    uvicorn==0.24.0 \
-    jinja2==3.1.2 \
-    python-multipart==0.0.6
+# Install uvicorn if not in main dependencies
+RUN pip install --no-cache-dir uvicorn[standard]==0.24.0 packaging
 
-# Copy web UI application
-COPY constrain/app/ai_workflow_ui.py ./constrain/app/
-COPY constrain/app/templates ./constrain/app/templates/
-
-# Copy AI modules needed for workflow composition
-COPY constrain/ai ./constrain/ai/
-
-# Copy package init files for imports to work
-COPY constrain/__init__.py ./constrain/
-
-# Create directories for volumes
-RUN mkdir -p /data/results /data/uploads
+# Copy web UI and core modules
+COPY constrain/ ./constrain/
+COPY resources/ ./resources/
 
 # Set Python path
 ENV PYTHONPATH=/app
+
+# Create directories for volumes
+RUN mkdir -p /data/results /data/uploads
 
 # Health check - verify HTTP endpoint is responsive
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
