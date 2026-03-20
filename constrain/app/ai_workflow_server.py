@@ -12,12 +12,16 @@ Endpoints (paths are intentionally simple and versionless for now):
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import glob
 import io
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from threading import Lock
+from typing import Any, Dict, List, Literal, Optional
+import time
+import uuid
 import zipfile
 
 from fastapi import FastAPI, HTTPException, Query
@@ -46,6 +50,11 @@ from constrain.ai.workflow_runner import run_workflow_from_dict
 
 
 app = FastAPI(title="ConStrain AI Workflow Composer")
+
+
+_job_executor = ThreadPoolExecutor(max_workers=4)
+_job_store_lock = Lock()
+_job_store: Dict[str, Dict[str, Any]] = {}
 
 
 class WorkflowSuggestRequest(BaseModel):
@@ -89,6 +98,17 @@ class ExecuteVerificationRequest(BaseModel):
     report_item_names: Optional[List[str]] = None
 
 
+class JobStatusResponse(BaseModel):
+    job_id: str
+    job_type: Literal["workflow", "verification"]
+    status: Literal["queued", "running", "succeeded", "failed"]
+    created_at_epoch: float
+    started_at_epoch: Optional[float] = None
+    finished_at_epoch: Optional[float] = None
+    result: Optional[Dict[str, Any]] = None
+    error: Optional[Any] = None
+
+
 def _ensure_llm_available() -> None:
     if get_default_llm_client() is None:
         raise HTTPException(
@@ -120,101 +140,81 @@ def _resolve_artifact_path(output_dir_path: Path, relative_path: str) -> Path:
     return artifact_path
 
 
-@app.get("/health")
-def health_check() -> Dict[str, str]:
-    """Health check endpoint for container orchestration."""
-    return {"status": "ok", "service": "constrain-api-server"}
+def _serialize_validation_issues(issues: List[Any]) -> List[Dict[str, Any]]:
+    return [
+        {
+            "loc": issue.loc,
+            "message": issue.message,
+            "validator": issue.validator,
+        }
+        for issue in issues
+    ]
 
 
-@app.post("/ai/workflow/suggest")
-def api_suggest_workflow(req: WorkflowSuggestRequest) -> Dict[str, Any]:
-    _ensure_llm_available()
-    result: ComposerResult = suggest_workflow(
-        goal_description=req.goal_description,
-        data_context=req.data_context,
-        existing_workflow=req.existing_workflow,
-        cases_context=req.cases_context,
-    )
-    return {
-        "ok": result.ok,
-        "workflow": result.data,
-        "validation": {
-            "valid": result.validation.valid,
-            "issues": [
-                {
-                    "loc": issue.loc,
-                    "message": issue.message,
-                    "validator": issue.validator,
-                }
-                for issue in result.validation.issues
-            ],
-        },
-        "raw_text": result.raw_text,
+def _get_job(job_id: str) -> Dict[str, Any]:
+    with _job_store_lock:
+        job = _job_store.get(job_id)
+        if job is None:
+            raise HTTPException(status_code=404, detail=f"Job not found: {job_id}")
+        return dict(job)
+
+
+def _set_job_state(job_id: str, **updates: Any) -> None:
+    with _job_store_lock:
+        job = _job_store.get(job_id)
+        if job is None:
+            return
+        job.update(updates)
+
+
+def _create_job(job_type: Literal["workflow", "verification"]) -> Dict[str, Any]:
+    job_id = str(uuid.uuid4())
+    job = {
+        "job_id": job_id,
+        "job_type": job_type,
+        "status": "queued",
+        "created_at_epoch": time.time(),
+        "started_at_epoch": None,
+        "finished_at_epoch": None,
+        "result": None,
+        "error": None,
     }
+    with _job_store_lock:
+        _job_store[job_id] = job
+    return dict(job)
 
 
-@app.post("/ai/cases/suggest")
-def api_suggest_cases(req: CasesSuggestRequest) -> Dict[str, Any]:
-    _ensure_llm_available()
-    result: ComposerResult = suggest_verification_cases(
-        goal_description=req.goal_description,
-        signals_available=req.signals_available,
-        existing_cases=req.existing_cases,
-    )
-    return {
-        "ok": result.ok,
-        "cases": result.data,
-        "validation": {
-            "valid": result.validation.valid,
-            "issues": [
-                {
-                    "loc": issue.loc,
-                    "message": issue.message,
-                    "validator": issue.validator,
-                }
-                for issue in result.validation.issues
-            ],
-        },
-        "raw_text": result.raw_text,
-    }
+def _job_response(job: Dict[str, Any]) -> Dict[str, Any]:
+    return JobStatusResponse(**job).model_dump()
 
 
-@app.post("/ai/workflow/validate")
-def api_validate_workflow(req: ValidateWorkflowRequest) -> Dict[str, Any]:
-    vr = validate_workflow_dict(req.workflow)
-    return {
-        "valid": vr.valid,
-        "issues": [
-            {"loc": issue.loc, "message": issue.message, "validator": issue.validator}
-            for issue in vr.issues
-        ],
-    }
+def _run_job(job_id: str, fn: Any, *args: Any) -> None:
+    _set_job_state(job_id, status="running", started_at_epoch=time.time())
+    try:
+        result = fn(*args)
+        _set_job_state(
+            job_id,
+            status="succeeded",
+            result=result,
+            finished_at_epoch=time.time(),
+        )
+    except HTTPException as exc:
+        _set_job_state(
+            job_id,
+            status="failed",
+            error={"status_code": exc.status_code, "detail": exc.detail},
+            finished_at_epoch=time.time(),
+        )
+    except Exception as exc:  # pragma: no cover - defensive serialization path
+        _set_job_state(
+            job_id,
+            status="failed",
+            error={"status_code": 500, "detail": str(exc)},
+            finished_at_epoch=time.time(),
+        )
 
 
-@app.post("/ai/cases/validate")
-def api_validate_cases(req: ValidateCasesRequest) -> Dict[str, Any]:
-    vr = validate_case_suite_dict(req.cases)
-    return {
-        "valid": vr.valid,
-        "issues": [
-            {"loc": issue.loc, "message": issue.message, "validator": issue.validator}
-            for issue in vr.issues
-        ],
-    }
-
-
-@app.get("/ai/catalog")
-def api_catalog() -> Dict[str, Any]:
-    """Return catalogs of callables and verification classes."""
-    return {
-        "callables": as_serializable(list_workflow_callables()),
-        "verification_classes": as_serializable(list_verification_classes()),
-    }
-
-
-@app.post("/ai/workflow/execute")
-def api_execute_workflow(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
-    """Validate and execute a workflow definition."""
+def _run_workflow_execution(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
     vr = validate_workflow_dict(req.workflow)
     if not vr.valid:
         raise HTTPException(
@@ -222,14 +222,7 @@ def api_execute_workflow(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
             detail={
                 "validation": {
                     "valid": vr.valid,
-                    "issues": [
-                        {
-                            "loc": issue.loc,
-                            "message": issue.message,
-                            "validator": issue.validator,
-                        }
-                        for issue in vr.issues
-                    ],
+                    "issues": _serialize_validation_issues(vr.issues),
                 },
                 "execution": None,
             },
@@ -250,9 +243,7 @@ def api_execute_workflow(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
     }
 
 
-@app.post("/ai/verification/execute")
-def api_execute_verification(req: ExecuteVerificationRequest) -> Dict[str, Any]:
-    """Execute verification cases from JSON, and optionally generate a summary report."""
+def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, Any]:
     if not os.path.isfile(req.case_file_path):
         raise HTTPException(
             status_code=400,
@@ -360,6 +351,112 @@ def api_execute_verification(req: ExecuteVerificationRequest) -> Dict[str, Any]:
             status_code=500,
             detail=f"Verification execution failed: {exc}",
         ) from exc
+
+
+@app.get("/health")
+def health_check() -> Dict[str, str]:
+    """Health check endpoint for container orchestration."""
+    return {"status": "ok", "service": "constrain-api-server"}
+
+
+@app.post("/ai/workflow/suggest")
+def api_suggest_workflow(req: WorkflowSuggestRequest) -> Dict[str, Any]:
+    _ensure_llm_available()
+    result: ComposerResult = suggest_workflow(
+        goal_description=req.goal_description,
+        data_context=req.data_context,
+        existing_workflow=req.existing_workflow,
+        cases_context=req.cases_context,
+    )
+    return {
+        "ok": result.ok,
+        "workflow": result.data,
+        "validation": {
+            "valid": result.validation.valid,
+            "issues": _serialize_validation_issues(result.validation.issues),
+        },
+        "raw_text": result.raw_text,
+    }
+
+
+@app.post("/ai/cases/suggest")
+def api_suggest_cases(req: CasesSuggestRequest) -> Dict[str, Any]:
+    _ensure_llm_available()
+    result: ComposerResult = suggest_verification_cases(
+        goal_description=req.goal_description,
+        signals_available=req.signals_available,
+        existing_cases=req.existing_cases,
+    )
+    return {
+        "ok": result.ok,
+        "cases": result.data,
+        "validation": {
+            "valid": result.validation.valid,
+            "issues": _serialize_validation_issues(result.validation.issues),
+        },
+        "raw_text": result.raw_text,
+    }
+
+
+@app.post("/ai/workflow/validate")
+def api_validate_workflow(req: ValidateWorkflowRequest) -> Dict[str, Any]:
+    vr = validate_workflow_dict(req.workflow)
+    return {
+        "valid": vr.valid,
+        "issues": _serialize_validation_issues(vr.issues),
+    }
+
+
+@app.post("/ai/cases/validate")
+def api_validate_cases(req: ValidateCasesRequest) -> Dict[str, Any]:
+    vr = validate_case_suite_dict(req.cases)
+    return {
+        "valid": vr.valid,
+        "issues": _serialize_validation_issues(vr.issues),
+    }
+
+
+@app.get("/ai/catalog")
+def api_catalog() -> Dict[str, Any]:
+    """Return catalogs of callables and verification classes."""
+    return {
+        "callables": as_serializable(list_workflow_callables()),
+        "verification_classes": as_serializable(list_verification_classes()),
+    }
+
+
+@app.post("/ai/workflow/execute")
+def api_execute_workflow(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
+    """Validate and execute a workflow definition."""
+    return _run_workflow_execution(req)
+
+
+@app.post("/ai/workflow/jobs")
+def api_submit_workflow_job(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
+    """Submit a workflow job and return a polling handle."""
+    job = _create_job("workflow")
+    _job_executor.submit(_run_job, job["job_id"], _run_workflow_execution, req)
+    return _job_response(job)
+
+
+@app.post("/ai/verification/execute")
+def api_execute_verification(req: ExecuteVerificationRequest) -> Dict[str, Any]:
+    """Execute verification cases from JSON, and optionally generate a summary report."""
+    return _run_verification_execution(req)
+
+
+@app.post("/ai/verification/jobs")
+def api_submit_verification_job(req: ExecuteVerificationRequest) -> Dict[str, Any]:
+    """Submit a verification job and return a polling handle."""
+    job = _create_job("verification")
+    _job_executor.submit(_run_job, job["job_id"], _run_verification_execution, req)
+    return _job_response(job)
+
+
+@app.get("/ai/jobs/{job_id}")
+def api_get_job(job_id: str) -> Dict[str, Any]:
+    """Return status and result metadata for an asynchronous job."""
+    return _job_response(_get_job(job_id))
 
 
 @app.get("/ai/artifacts/list")

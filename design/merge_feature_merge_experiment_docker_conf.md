@@ -378,10 +378,11 @@ Mitigation: keep PyQt fallback but freeze feature expansion there.
 
 - The "8 integration tests" claim refers to the current API-first UI suite in `tests/test_ai_workflow_ui_integration.py`, which contains 8 endpoint-level integration tests for compose, verify, and artifact download flows.
 - Legacy Streamlit runtime assets are retained only as deprecated fallback/reference material during the transition cycle. They are no longer part of the supported compose runtime.
+- Backend async job submission and polling are now available for workflow and verification execution; frontend polling integration is still pending.
 
 ### Known Open Gaps
 
-- Long-running execution still runs inline in the API process; the async execution-status model described earlier in this design has not been implemented yet.
+- The backend execution-status model is implemented, but the web UI still needs to adopt job polling instead of relying only on synchronous execution paths.
 - End-to-end compose-backed verification through the web UI is still pending; current automated UI integration tests mock the backend API boundary.
 - Runtime hardening follow-up items remain open: non-root users, image vulnerability scanning, and stricter network policy controls.
 - Legacy Streamlit code remains as archived fallback/reference material until feature-parity cleanup is complete.
