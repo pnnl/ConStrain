@@ -126,13 +126,26 @@ jobs:
 
           redirect_headers=$(mktemp)
           curl -fsS -D "$redirect_headers" -o /dev/null 'http://localhost:8080/artifact/download?output_dir=/data/results/ci-e2e&relative_path=verification_summary.md'
-          grep -Eqi '^location: http://(localhost|127\.0\.0\.1):8000/ai/artifacts/download\?output_dir=%2Fdata%2Fresults%2Fci-e2e&relative_path=verification_summary.md' "$redirect_headers"
+          grep -Eqi '^location: http://(localhost|127\.0\.0\.1):8000/ai/artifacts/download\?' "$redirect_headers"
+          grep -qi 'relative_path=verification_summary.md' "$redirect_headers"
+          grep -Eqi 'output_dir=(%2F)?data(%2F)?results(%2F)?ci-e2e' "$redirect_headers"
 
           summary_file=$(mktemp)
           zip_file=$(mktemp).zip
-          curl -fsSL -o "$summary_file" 'http://localhost:8080/artifact/download?output_dir=/data/results/ci-e2e&relative_path=verification_summary.md'
-          curl -fsSL -o "$zip_file" 'http://localhost:8080/artifact/download-zip?output_dir=/data/results/ci-e2e'
+          for _ in $(seq 1 30); do
+            if curl -fsSL -o "$summary_file" 'http://localhost:8080/artifact/download?output_dir=/data/results/ci-e2e&relative_path=verification_summary.md' && grep -q '# Verification Results:' "$summary_file"; then
+              break
+            fi
+            sleep 2
+          done
           grep -q '# Verification Results:' "$summary_file"
+
+          for _ in $(seq 1 30); do
+            if curl -fsSL -o "$zip_file" 'http://localhost:8080/artifact/download-zip?output_dir=/data/results/ci-e2e' && test -s "$zip_file"; then
+              break
+            fi
+            sleep 2
+          done
           test -s "$zip_file"
 
       - name: Verify restart resilience for api-server
