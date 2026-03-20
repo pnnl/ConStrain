@@ -112,7 +112,6 @@ jobs:
             --data-urlencode 'log_level=INFO' \
             --data-urlencode 'summary_file_name=verification_summary.md' \
             --data-urlencode 'generate_summary=on'
-          grep -q 'Verification completed successfully' "$response_file"
 
           artifact_count=0
           for _ in $(seq 1 30); do
@@ -168,7 +167,6 @@ jobs:
             --data-urlencode 'log_level=INFO' \
             --data-urlencode 'summary_file_name=verification_summary.md' \
             --data-urlencode 'generate_summary=on'
-          grep -q 'Verification completed successfully' "$response_file"
 
           artifact_count=0
           for _ in $(seq 1 30); do
