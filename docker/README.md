@@ -20,8 +20,8 @@ This directory contains Docker assets for the API-first ConStrain runtime.
 From repository root:
 
 ```bash
-docker-compose -f docker/docker-compose.yml up -d --build
-docker-compose -f docker/docker-compose.yml ps
+docker compose -f docker/docker-compose.yml up -d --build
+docker compose -f docker/docker-compose.yml ps
 curl http://localhost:8000/health
 curl http://localhost:8080/health
 ```
@@ -29,7 +29,7 @@ curl http://localhost:8080/health
 Stop services:
 
 ```bash
-docker-compose -f docker/docker-compose.yml down
+docker compose -f docker/docker-compose.yml down
 ```
 
 ## Environment Overrides
@@ -45,10 +45,38 @@ Example override (from `docker/` directory):
 
 ```bash
 printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\nCONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000\nAPP_UID=%s\nAPP_GID=%s\n' "$(id -u)" "$(id -g)" > .env
-docker-compose up -d
+docker compose up -d
 ```
 
 On Linux hosts, setting `APP_UID` and `APP_GID` to the current user avoids permission issues on the bind-mounted `docker/examples_results` directory while keeping the application processes non-root.
+
+## Verification and Artifacts
+
+The UI verification form at `http://localhost:8080/verify` is synchronous. A request is expected to run to completion before a new verification is submitted.
+
+Example verification request through UI endpoint:
+
+```bash
+curl -fsS -X POST http://localhost:8080/verify \
+  --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
+  --data-urlencode 'output_dir=/data/results/manual-run' \
+  --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
+  --data-urlencode 'library_json_path=/data/schema/library.json' \
+  --data-urlencode 'plot_option=all-compact' \
+  --data-urlencode 'fig_width=6.4' \
+  --data-urlencode 'fig_height=4.8' \
+  --data-urlencode 'log_level=INFO' \
+  --data-urlencode 'summary_file_name=verification_summary.md' \
+  --data-urlencode 'generate_summary=on'
+```
+
+Artifact endpoints exposed by `api-server`:
+
+```bash
+curl "http://localhost:8000/ai/artifacts/list?output_dir=/data/results/manual-run&recursive=true"
+curl -L -o verification_summary.md "http://localhost:8080/artifact/download?output_dir=/data/results/manual-run&relative_path=verification_summary.md"
+curl -L -o verification_results.zip "http://localhost:8080/artifact/download-zip?output_dir=/data/results/manual-run"
+```
 
 ## Notes
 

@@ -5,7 +5,7 @@
 Before running tests, ensure:
 
 - Docker daemon is running (`docker ps` returns container list)
-- docker-compose is installed (`docker-compose --version`)
+- Docker Compose V2 is installed (`docker compose version`)
 - You have sufficient disk space (base images ~300-500MB)
 - Port 8000 and 8080 are available on localhost
 
@@ -55,13 +55,13 @@ docker run --rm constrain-api-ui:test python -c "import constrain.app.ai_workflo
 cd docker
 
 # Start all services in background
-docker-compose up -d
+docker compose up -d
 
 # Wait 10 seconds for services to initialize
 sleep 10
 
 # Check service status
-docker-compose ps
+docker compose ps
 ```
 
 **Expected Results:**
@@ -75,8 +75,8 @@ constrain-api-ui           Up X seconds (health: starting)
 ### 4.2.2 Health Check Verification
 
 ```bash
-# Wait for healthchecks to complete (after ~15 seconds)
-sleep 10
+# Wait for healthchecks to complete (api-ui waits for api-server healthcheck)
+sleep 15
 
 # Check api-server health
 curl http://localhost:8000/health
@@ -96,7 +96,7 @@ curl http://localhost:8080/health
 
 ```bash
 # Get detailed status
-docker-compose ps
+docker compose ps
 
 # Check healthcheck status in compose output
 docker ps --format "table {{.Names}}\t{{.Status}}"
@@ -113,7 +113,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 
 ```bash
 # From api-ui container, verify it can reach api-server
-docker-compose exec api-ui python -c "import json,urllib.request; print(json.loads(urllib.request.urlopen('http://api-server:8000/health', timeout=5).read().decode()))"
+docker compose exec api-ui python -c "import json,urllib.request; print(json.loads(urllib.request.urlopen('http://api-server:8000/health', timeout=5).read().decode()))"
 
 # Should return:
 # {"status":"ok","service":"constrain-api-server"}
@@ -143,7 +143,7 @@ curl -v http://localhost:8080/
 ### 4.4.1 Verify No Docker Socket Mount
 
 ```bash
-# Inspect api-ui container mounts
+# Inspect api-ui container mounts (requires jq)
 docker inspect constrain-api-ui | jq '.[] | .Mounts'
 
 # Should NOT show /var/run/docker.sock
@@ -167,7 +167,7 @@ docker inspect constrain-api-ui | jq '.[] | .Mounts'
 
 ```bash
 # Try to run docker inside api-server
-docker-compose exec api-server which docker
+docker compose exec api-server which docker
 
 # Should return "docker not found" or empty
 # (not executable)
@@ -182,8 +182,8 @@ docker-compose exec api-server which docker
 
 ```bash
 # Check user inside container
-docker-compose exec api-server whoami
-docker-compose exec api-ui whoami
+docker compose exec api-server whoami
+docker compose exec api-ui whoami
 
 # Should return "root" (for now) or configured non-root user
 ```
@@ -250,7 +250,7 @@ curl 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results'
 ls -la docker/examples_results/
 
 # Check from inside container
-docker-compose exec api-server ls -la /data/results/
+docker compose exec api-server ls -la /data/results/
 ```
 
 **Expected Results:**
@@ -261,7 +261,7 @@ docker-compose exec api-server ls -la /data/results/
 
 ```bash
 # Create test file in container results
-docker-compose exec api-server touch /data/results/test-file.txt
+docker compose exec api-server touch /data/results/test-file.txt
 
 # Verify file exists on host
 ls -la docker/examples_results/test-file.txt
@@ -281,10 +281,10 @@ rm docker/examples_results/test-file.txt
 
 ```bash
 # Check api-server environment
-docker-compose exec api-server env | grep -E "LOG_LEVEL|OUTPUT_DIR|PYTHONPATH"
+docker compose exec api-server env | grep -E "LOG_LEVEL|OUTPUT_DIR|PYTHONPATH"
 
 # Check api-ui environment
-docker-compose exec api-ui env | grep -E "LOG_LEVEL|CONSTRAIN_API_BASE"
+docker compose exec api-ui env | grep -E "LOG_LEVEL|CONSTRAIN_API_BASE"
 ```
 
 **Expected Results:**
@@ -312,11 +312,11 @@ APP_GID=$(id -g)
 EOF
 
 # Restart services
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 
 # Verify override
-docker-compose exec api-server env | grep LOG_LEVEL
+docker compose exec api-server env | grep LOG_LEVEL
 # Should show: LOG_LEVEL=DEBUG
 ```
 
@@ -329,8 +329,8 @@ docker-compose exec api-server env | grep LOG_LEVEL
 ### 4.7.3 Verify Non-Root Runtime Hardening
 
 ```bash
-docker-compose exec api-server id -u
-docker-compose exec api-ui id -u
+docker compose exec api-server id -u
+docker compose exec api-ui id -u
 docker inspect constrain-api-server --format '{{json .HostConfig.SecurityOpt}}'
 docker inspect constrain-api-ui --format '{{json .HostConfig.CapDrop}}'
 ```
@@ -343,7 +343,12 @@ docker inspect constrain-api-ui --format '{{json .HostConfig.CapDrop}}'
 
 ### 4.8.3 Verify UI-End-to-End Verification and Artifact Downloads
 
+The `/verify` form submission is **synchronous**: the POST request blocks until the full
+verification run completes, then redirects to the results page. No polling or job-id
+handling is required.
+
 ```bash
+# Trigger a verification run — response arrives only after execution finishes
 curl -X POST http://localhost:8080/verify \
   --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
   --data-urlencode 'output_dir=/data/results/e2e-ui' \
@@ -356,17 +361,23 @@ curl -X POST http://localhost:8080/verify \
   --data-urlencode 'summary_file_name=verification_summary.md' \
   --data-urlencode 'generate_summary=on'
 
+# List artifacts produced by the run
 curl 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/e2e-ui&recursive=true'
+
+# Download individual file via UI proxy (follows redirect to api-server)
 curl -L -o /tmp/verification_summary.md \
   'http://localhost:8080/artifact/download?output_dir=/data/results/e2e-ui&relative_path=verification_summary.md'
+
+# Download entire result directory as a zip
 curl -L -o /tmp/e2e-ui.zip \
   'http://localhost:8080/artifact/download-zip?output_dir=/data/results/e2e-ui'
 ```
 
 **Expected Results:**
 
-- ✅ UI returns a success page for the mounted G36 verification suite
-- ✅ Backend artifact list reports generated markdown/json/image outputs
+- ✅ POST to `/verify` blocks until execution finishes, then returns an HTML results page
+- ✅ No intermediate job-id or polling required
+- ✅ Backend artifact list reports generated markdown/json/image outputs after the POST returns
 - ✅ Browser-facing download redirects resolve via `localhost:8000`, not the internal `api-server` DNS name
 - ✅ Summary markdown and zip bundle download successfully from the host
 
@@ -376,13 +387,13 @@ curl -L -o /tmp/e2e-ui.zip \
 
 ```bash
 # Stop all services
-docker-compose down
+docker compose down
 
 # Start fresh
-docker-compose up -d
+docker compose up -d
 
 # Check order of startup (api-server starts first)
-docker-compose logs | head -50
+docker compose logs | head -50
 ```
 
 **Expected Results:**
@@ -395,13 +406,13 @@ docker-compose logs | head -50
 
 ```bash
 # Stop api-server only
-docker-compose stop api-server
+docker compose stop api-server
 
 # Try to access api-ui (should fail to call backend)
 curl http://localhost:8080/
 
 # Restart api-server
-docker-compose start api-server
+docker compose start api-server
 sleep 5
 
 # Try again (should work)
@@ -417,7 +428,7 @@ curl http://localhost:8080/
 
 ```bash
 # Stop and remove containers
-docker-compose down
+docker compose down
 
 # Remove images (optional)
 docker rmi constrain-api-server:latest constrain-api-ui:latest
@@ -444,15 +455,15 @@ docker system df
 docker system prune -a
 
 # Rebuild
-docker-compose build --no-cache
+docker compose build --no-cache
 ```
 
 ### Services won't start
 
 ```bash
 # Check logs
-docker-compose logs api-server
-docker-compose logs api-ui
+docker compose logs api-server
+docker compose logs api-ui
 
 # Verify ports are free
 lsof -i :8000
@@ -466,10 +477,10 @@ kill -9 <PID>
 
 ```bash
 # Check healthcheck manually
-docker-compose exec api-server python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8000/health', timeout=5).read().decode())"
+docker compose exec api-server python -c "import urllib.request; print(urllib.request.urlopen('http://localhost:8000/health', timeout=5).read().decode())"
 
 # Check endpoint exists
-docker-compose exec api-server python -c "from constrain.app.ai_workflow_server import app; print(list(app.routes))"
+docker compose exec api-server python -c "from constrain.app.ai_workflow_server import app; print(list(app.routes))"
 ```
 
 ### Services can't communicate
@@ -482,7 +493,7 @@ docker network ls | grep constrain
 docker network inspect docker_constrain-network
 
 # Test DNS resolution from container
-docker-compose exec api-ui nslookup api-server
+docker compose exec api-ui nslookup api-server
 ```
 
 ## Success Criteria
@@ -490,7 +501,7 @@ docker-compose exec api-ui nslookup api-server
 ✅ All tests pass if:
 
 - [x] Both Dockerfiles build successfully
-- [x] docker-compose up creates healthy services
+- [x] `docker compose up` creates healthy services
 - [x] Health endpoints respond with 200 OK
 - [x] No docker socket mounts visible
 - [x] No docker daemon inside containers
@@ -501,6 +512,7 @@ docker-compose exec api-ui nslookup api-server
 - [x] Environment variables are applied
 - [x] Startup order respected
 - [x] Graceful failure handling
+- [x] Synchronous verification: POST `/verify` blocks until execution completes
 
 ## Execution Results (2026-03-20)
 
@@ -509,6 +521,10 @@ docker-compose exec api-ui nslookup api-server
 - Added runtime `packaging` dependency to API UI image to prevent startup crash.
 - Enabled compose env overrides via `${VAR:-default}` for `LOG_LEVEL` and `CONSTRAIN_API_BASE_URL`.
 - Validated backend-dependent UI behavior: UI page renders while backend is down and verify route returns handled error text.
+- Switched `/verify` UI endpoint from async job-polling to direct synchronous call (`POST /ai/verification/execute`); race-condition handling removed — a new request is not expected while an existing one is in flight.
+- Updated UI integration tests to match synchronous behavior; all 9 tests pass locally.
+- Fixed all three standalone Dockerfiles (`Dockerfile.workflow`, `Dockerfile.verification`, `Dockerfile.reporting`): replaced `COPY pyproject.toml setup.py ./` with `COPY pyproject.toml ./` (repo is pyproject-only; `setup.py` does not exist).
+- Cleaned two Dockerfile build warnings: `FROM … as builder` → `FROM … AS builder`; `ENV PYTHONPATH=/app:${PYTHONPATH}` → `ENV PYTHONPATH=/app`.
 - Executed a live compose-backed `/verify` request through the FastAPI UI using mounted sample inputs under `/data/...`.
 - Verified artifact generation under `/data/results/e2e-ui`: 10 files including `1_md.json`, `2_md.json`, `3_md.json`, per-case plots/markdown, and `verification_summary.md`.
 - Verified browser-facing artifact downloads through the UI redirect routes after splitting internal API routing from public download URLs.
