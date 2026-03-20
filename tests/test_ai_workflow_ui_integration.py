@@ -107,36 +107,29 @@ def test_verify_success_with_artifacts(
     output_dir.mkdir()
     (output_dir / "summary.md").write_text("# Summary\n")
 
-    mock_api_post.return_value = {"job_id": "verification-job-1", "status": "queued"}
-    mock_api_get.side_effect = [
-        {
-            "job_id": "verification-job-1",
-            "status": "succeeded",
-            "result": {
-                "success": True,
-                "verification": {
-                    "case_file_path": str(output_dir / "case.json"),
-                    "output_dir": str(output_dir),
-                    "md_json_files": [str(output_dir / "1_md.json")],
-                },
-                "reporting": {
-                    "generated": True,
-                    "summary_path": str(output_dir / "summary.md"),
-                },
-            },
-        },
-        {
+    mock_api_post.return_value = {
+        "success": True,
+        "verification": {
+            "case_file_path": str(output_dir / "case.json"),
             "output_dir": str(output_dir),
-            "count": 1,
-            "artifacts": [
-                {
-                    "relative_path": "summary.md",
-                    "size_bytes": 10,
-                    "modified_epoch": 1234567890,
-                }
-            ],
+            "md_json_files": [str(output_dir / "1_md.json")],
         },
-    ]
+        "reporting": {
+            "generated": True,
+            "summary_path": str(output_dir / "summary.md"),
+        },
+    }
+    mock_api_get.return_value = {
+        "output_dir": str(output_dir),
+        "count": 1,
+        "artifacts": [
+            {
+                "relative_path": "summary.md",
+                "size_bytes": 10,
+                "modified_epoch": 1234567890,
+            }
+        ],
+    }
 
     response = client.post(
         "/verify",
@@ -161,8 +154,11 @@ def test_verify_success_with_artifacts(
     assert "summary.md" in response.text
     assert "10 bytes" in response.text
     mock_api_post.assert_called_once()
-    assert mock_api_get.call_count == 2
-    assert mock_api_get.call_args_list[0].args == ("/ai/jobs/verification-job-1",)
+    assert mock_api_post.call_args_list[0].args[0] == "/ai/verification/execute"
+    mock_api_get.assert_called_once_with(
+        "/ai/artifacts/list",
+        {"output_dir": str(output_dir), "recursive": True},
+    )
 
 
 @patch("constrain.app.ai_workflow_ui._api_post")
@@ -203,27 +199,20 @@ def test_verify_handles_missing_artifacts(
     output_dir = tmp_path / "results"
     output_dir.mkdir()
 
-    mock_api_post.return_value = {"job_id": "verification-job-2", "status": "queued"}
-    mock_api_get.side_effect = [
-        {
-            "job_id": "verification-job-2",
-            "status": "succeeded",
-            "result": {
-                "success": True,
-                "verification": {
-                    "case_file_path": str(output_dir / "case.json"),
-                    "output_dir": str(output_dir),
-                    "md_json_files": [],
-                },
-                "reporting": {"generated": False, "summary_path": None},
-            },
-        },
-        {
+    mock_api_post.return_value = {
+        "success": True,
+        "verification": {
+            "case_file_path": str(output_dir / "case.json"),
             "output_dir": str(output_dir),
-            "count": 0,
-            "artifacts": [],
+            "md_json_files": [],
         },
-    ]
+        "reporting": {"generated": False, "summary_path": None},
+    }
+    mock_api_get.return_value = {
+        "output_dir": str(output_dir),
+        "count": 0,
+        "artifacts": [],
+    }
 
     response = client.post(
         "/verify",
@@ -256,23 +245,16 @@ def test_verify_parses_report_item_names(
     output_dir.mkdir(parents=True)
 
     # Ensure mocks are configured to respond successfully
-    mock_api_post.return_value = {"job_id": "verification-job-3", "status": "queued"}
-    mock_api_get.side_effect = [
-        {
-            "job_id": "verification-job-3",
-            "status": "succeeded",
-            "result": {
-                "success": True,
-                "verification": {"case_file_path": "", "output_dir": str(output_dir), "md_json_files": []},
-                "reporting": {"generated": False, "summary_path": None},
-            },
-        },
-        {
-            "output_dir": str(output_dir),
-            "count": 0,
-            "artifacts": [],
-        },
-    ]
+    mock_api_post.return_value = {
+        "success": True,
+        "verification": {"case_file_path": "", "output_dir": str(output_dir), "md_json_files": []},
+        "reporting": {"generated": False, "summary_path": None},
+    }
+    mock_api_get.return_value = {
+        "output_dir": str(output_dir),
+        "count": 0,
+        "artifacts": [],
+    }
 
     response = client.post(
         "/verify",

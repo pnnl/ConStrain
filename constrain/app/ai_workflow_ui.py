@@ -278,8 +278,7 @@ def verify(
             "summary_file_name": summary_file_name,
             "report_item_names": report_items or None,
         }
-        job = _api_post("/ai/verification/jobs", payload)
-        verification_result = _wait_for_job(job["job_id"])
+        verification_result = _api_post("/ai/verification/execute", payload)
         artifacts_payload = _api_get(
             "/ai/artifacts/list",
             {"output_dir": output_dir, "recursive": True},
