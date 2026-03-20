@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy dependency files
-COPY pyproject.toml setup.py ./
+COPY pyproject.toml ./
 
 # Install poetry and export dependencies to requirements.txt (excluding pyqt6)
 RUN pip install --no-cache-dir poetry poetry-plugin-export && \
