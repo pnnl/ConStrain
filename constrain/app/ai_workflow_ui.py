@@ -31,7 +31,9 @@ from constrain.ai.workflow_composer import (
 
 
 app = FastAPI(title="ConStrain AI Workflow Composer UI")
-templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent / "templates"))
+templates = Jinja2Templates(
+    directory=str(Path(__file__).resolve().parent / "templates")
+)
 
 
 def _render_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
@@ -43,9 +45,11 @@ def _render_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
         artifacts = context.get("artifacts") or []
         artifact_items = "".join(
             (
-                "<li><a href=\"/artifact/download?output_dir={output_dir}&relative_path={relative_path}\">{name}</a></li>"
+                '<li><a href="/artifact/download?output_dir={output_dir}&relative_path={relative_path}">{name}</a></li>'
             ).format(
-                output_dir=escape(str(context.get("artifacts_output_dir", "")), quote=True),
+                output_dir=escape(
+                    str(context.get("artifacts_output_dir", "")), quote=True
+                ),
                 relative_path=escape(str(item.get("relative_path", "")), quote=True),
                 name=escape(str(item.get("relative_path", "artifact"))),
             )
@@ -77,11 +81,13 @@ def _render_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
                 )
             )
         if artifacts:
-            fallback_sections.append("<h2>Artifacts</h2><ul>{}</ul>".format(artifact_items))
+            fallback_sections.append(
+                "<h2>Artifacts</h2><ul>{}</ul>".format(artifact_items)
+            )
 
         html = "".join(
             [
-                "<!doctype html><html><head><meta charset=\"utf-8\"><title>ConStrain AI Workflow Composer</title></head><body>",
+                '<!doctype html><html><head><meta charset="utf-8"><title>ConStrain AI Workflow Composer</title></head><body>',
                 "<h1>ConStrain AI Workflow Composer</h1>",
                 "<p>Template rendering fallback was used.</p>",
                 "<p><strong>Template error:</strong> {}</p>".format(escape(str(exc))),

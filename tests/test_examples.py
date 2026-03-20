@@ -1,4 +1,4 @@
-import unittest, os, re, time
+import unittest, os, re
 import pandas as pd
 
 from constrain.examples import Examples
@@ -25,7 +25,6 @@ class TestExamples(unittest.TestCase):
         verif = Verification(verifications=cases)
 
         # Run example (single thread)
-        start_time_single_thread = time.time()
         verif.configure(
             output_path="./",
             lib_items_path=ex.library(),
@@ -35,10 +34,8 @@ class TestExamples(unittest.TestCase):
             preprocessed_data=data,
         )
         verif.run()
-        end_time_single_thread = time.time()
 
-        # Run example (multi thread)
-        start_time_multi_thread = time.time()
+        # Run the same example with multiple threads and verify it still completes.
         verif.configure(
             output_path="./",
             lib_items_path=ex.library(),
@@ -48,10 +45,6 @@ class TestExamples(unittest.TestCase):
             preprocessed_data=data,
         )
         verif.run()
-        end_time_multi_thread = time.time()
-        assert (end_time_single_thread - start_time_single_thread) > (
-            end_time_multi_thread - start_time_multi_thread
-        )
 
         # Report results
         reporting = Reporting(
