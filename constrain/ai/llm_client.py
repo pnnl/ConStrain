@@ -133,7 +133,9 @@ class HTTPJSONLLMClient(LLMClient):
         temperature: float = 0.2,
         max_tokens: Optional[int] = None,
     ) -> str:
-        body = self._build_request_body(system_prompt, user_prompt, temperature, max_tokens)
+        body = self._build_request_body(
+            system_prompt, user_prompt, temperature, max_tokens
+        )
         data = json.dumps(body).encode("utf-8")
 
         headers = {
@@ -220,4 +222,3 @@ def get_default_llm_client() -> Optional[LLMClient]:
 
 
 __all__ = ["LLMClient", "LLMConfig", "HTTPJSONLLMClient", "get_default_llm_client"]
-

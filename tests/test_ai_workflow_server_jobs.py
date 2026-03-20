@@ -28,18 +28,24 @@ def _wait_for_job(job_id: str, timeout: float = 2.0) -> dict:
         if last_payload["status"] in {"succeeded", "failed"}:
             return last_payload
         time.sleep(0.01)
-    raise AssertionError(f"Job {job_id} did not finish in time. Last payload: {last_payload}")
+    raise AssertionError(
+        f"Job {job_id} did not finish in time. Last payload: {last_payload}"
+    )
 
 
 @patch("constrain.app.ai_workflow_server._run_workflow_execution")
-def test_submit_workflow_job_returns_succeeded_result(mock_run_workflow_execution) -> None:
+def test_submit_workflow_job_returns_succeeded_result(
+    mock_run_workflow_execution,
+) -> None:
     mock_run_workflow_execution.return_value = {
         "success": True,
         "validation": {"valid": True, "issues": []},
         "execution": {"saved_to": None, "summary": {"steps": 1}, "error": None},
     }
 
-    response = client.post("/ai/workflow/jobs", json={"workflow": {"steps": []}, "save_path": None})
+    response = client.post(
+        "/ai/workflow/jobs", json={"workflow": {"steps": []}, "save_path": None}
+    )
 
     assert response.status_code == 200
     payload = response.json()
@@ -53,7 +59,9 @@ def test_submit_workflow_job_returns_succeeded_result(mock_run_workflow_executio
 
 
 @patch("constrain.app.ai_workflow_server._run_verification_execution")
-def test_submit_verification_job_records_failure(mock_run_verification_execution) -> None:
+def test_submit_verification_job_records_failure(
+    mock_run_verification_execution,
+) -> None:
     mock_run_verification_execution.side_effect = HTTPException(
         status_code=400,
         detail="Verification case file not found: /missing.json",

@@ -136,7 +136,9 @@ def _resolve_artifact_path(output_dir_path: Path, relative_path: str) -> Path:
     if artifact_path == output_dir_path or output_dir_path not in artifact_path.parents:
         raise HTTPException(status_code=400, detail="Invalid artifact path.")
     if not artifact_path.exists() or not artifact_path.is_file():
-        raise HTTPException(status_code=404, detail=f"Artifact not found: {relative_path}")
+        raise HTTPException(
+            status_code=404, detail=f"Artifact not found: {relative_path}"
+        )
     return artifact_path
 
 
@@ -255,7 +257,9 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
     if req.library_json_path:
         library_json_path = req.library_json_path
     else:
-        library_json_path = str(Path(__file__).resolve().parents[1] / "schema/library.json")
+        library_json_path = str(
+            Path(__file__).resolve().parents[1] / "schema/library.json"
+        )
 
     if not os.path.isfile(library_json_path):
         raise HTTPException(
@@ -307,7 +311,9 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
 
         tolerances_file_path = req.tolerances_file_path
         if tolerances_file_path is None:
-            tolerances_file_path = str(Path(__file__).resolve().parents[1] / "tolerances.json")
+            tolerances_file_path = str(
+                Path(__file__).resolve().parents[1] / "tolerances.json"
+            )
 
         verification.configure(
             output_path=req.output_dir,
@@ -461,14 +467,14 @@ def api_get_job(job_id: str) -> Dict[str, Any]:
 
 @app.get("/ai/artifacts/list")
 def api_list_artifacts(
-    output_dir: str = Query(..., description="Directory containing generated artifacts."),
+    output_dir: str = Query(
+        ..., description="Directory containing generated artifacts."
+    ),
     recursive: bool = Query(True, description="List files recursively."),
 ) -> Dict[str, Any]:
     output_dir_path = _resolve_output_dir(output_dir)
 
-    file_paths = (
-        output_dir_path.rglob("*") if recursive else output_dir_path.glob("*")
-    )
+    file_paths = output_dir_path.rglob("*") if recursive else output_dir_path.glob("*")
     artifacts = []
     for file_path in sorted(path for path in file_paths if path.is_file()):
         stat = file_path.stat()
@@ -489,8 +495,12 @@ def api_list_artifacts(
 
 @app.get("/ai/artifacts/download")
 def api_download_artifact(
-    output_dir: str = Query(..., description="Directory containing generated artifacts."),
-    relative_path: str = Query(..., description="Relative path of artifact to download."),
+    output_dir: str = Query(
+        ..., description="Directory containing generated artifacts."
+    ),
+    relative_path: str = Query(
+        ..., description="Relative path of artifact to download."
+    ),
 ) -> FileResponse:
     output_dir_path = _resolve_output_dir(output_dir)
     artifact_path = _resolve_artifact_path(output_dir_path, relative_path)
@@ -503,7 +513,9 @@ def api_download_artifact(
 
 @app.get("/ai/artifacts/download-zip")
 def api_download_artifacts_zip(
-    output_dir: str = Query(..., description="Directory containing generated artifacts."),
+    output_dir: str = Query(
+        ..., description="Directory containing generated artifacts."
+    ),
 ) -> StreamingResponse:
     output_dir_path = _resolve_output_dir(output_dir)
     files = sorted(path for path in output_dir_path.rglob("*") if path.is_file())
@@ -526,4 +538,3 @@ def api_download_artifacts_zip(
 
 
 __all__ = ["app"]
-

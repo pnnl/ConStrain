@@ -55,7 +55,9 @@ def _ensure_parent_dir(path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
 
 
-def run_workflow_from_files(workflow_path: str, verbose: bool = True) -> WorkflowExecutionResult:
+def run_workflow_from_files(
+    workflow_path: str, verbose: bool = True
+) -> WorkflowExecutionResult:
     """Run a workflow from a JSON file path."""
     _configure_matplotlib_backend()
     Workflow = _get_workflow_class()
@@ -141,4 +143,8 @@ def run_workflow_from_dict(
         os.chdir(cwd_before)
 
 
-__all__ = ["WorkflowExecutionResult", "run_workflow_from_files", "run_workflow_from_dict"]
+__all__ = [
+    "WorkflowExecutionResult",
+    "run_workflow_from_files",
+    "run_workflow_from_dict",
+]

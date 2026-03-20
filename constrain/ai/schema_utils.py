@@ -117,7 +117,9 @@ def validate_workflow_dict(workflow: Dict[str, Any]) -> ValidationResult:
     return ValidationResult(valid=len(issues) == 0, issues=issues)
 
 
-def validate_workflow_json_str(workflow_json: str) -> Tuple[Optional[Dict[str, Any]], ValidationResult]:
+def validate_workflow_json_str(
+    workflow_json: str,
+) -> Tuple[Optional[Dict[str, Any]], ValidationResult]:
     """Parse and validate a workflow definition from a JSON string."""
     try:
         workflow_dict = json.loads(workflow_json)
@@ -215,4 +217,3 @@ __all__ = [
     "validate_case_suite_dict",
     "validate_case_suite_json_str",
 ]
-

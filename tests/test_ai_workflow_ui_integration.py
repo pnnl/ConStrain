@@ -1,6 +1,7 @@
 """
 Integration tests for AI Workflow UI endpoints that call backend REST APIs.
 """
+
 import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -79,7 +80,11 @@ def test_run_endpoint_uses_workflow_job_api(
         "result": {
             "success": True,
             "validation": {"valid": True, "issues": []},
-            "execution": {"saved_to": None, "summary": {"steps": ["done"]}, "error": None},
+            "execution": {
+                "saved_to": None,
+                "summary": {"steps": ["done"]},
+                "error": None,
+            },
         },
     }
 
@@ -93,7 +98,9 @@ def test_run_endpoint_uses_workflow_job_api(
     )
 
     assert response.status_code == 200
-    mock_api_post.assert_called_once_with("/ai/workflow/jobs", {"workflow": workflow, "save_path": None})
+    mock_api_post.assert_called_once_with(
+        "/ai/workflow/jobs", {"workflow": workflow, "save_path": None}
+    )
     mock_api_get.assert_called_once_with("/ai/jobs/workflow-job-1")
 
 
@@ -247,7 +254,11 @@ def test_verify_parses_report_item_names(
     # Ensure mocks are configured to respond successfully
     mock_api_post.return_value = {
         "success": True,
-        "verification": {"case_file_path": "", "output_dir": str(output_dir), "md_json_files": []},
+        "verification": {
+            "case_file_path": "",
+            "output_dir": str(output_dir),
+            "md_json_files": [],
+        },
         "reporting": {"generated": False, "summary_path": None},
     }
     mock_api_get.return_value = {
@@ -290,7 +301,9 @@ def test_verify_parses_report_item_names(
 
 def test_artifact_download_redirect() -> None:
     """Verify /artifact/download redirects to the backend API endpoint."""
-    with patch.dict("os.environ", {"CONSTRAIN_PUBLIC_API_BASE_URL": "http://localhost:8000"}):
+    with patch.dict(
+        "os.environ", {"CONSTRAIN_PUBLIC_API_BASE_URL": "http://localhost:8000"}
+    ):
         response = client.get(
             "/artifact/download",
             params={"output_dir": "/results", "relative_path": "file.md"},
@@ -298,18 +311,26 @@ def test_artifact_download_redirect() -> None:
         )
 
     assert response.status_code == 307
-    assert response.headers["location"].startswith("http://localhost:8000/ai/artifacts/download")
+    assert response.headers["location"].startswith(
+        "http://localhost:8000/ai/artifacts/download"
+    )
     assert "output_dir=%2Fresults" in response.headers["location"]
     assert "relative_path=file.md" in response.headers["location"]
 
 
 def test_artifact_download_zip_redirect() -> None:
     """Verify /artifact/download-zip redirects to the backend API endpoint."""
-    with patch.dict("os.environ", {"CONSTRAIN_PUBLIC_API_BASE_URL": "http://localhost:8000"}):
+    with patch.dict(
+        "os.environ", {"CONSTRAIN_PUBLIC_API_BASE_URL": "http://localhost:8000"}
+    ):
         response = client.get(
-            "/artifact/download-zip", params={"output_dir": "/results"}, follow_redirects=False
+            "/artifact/download-zip",
+            params={"output_dir": "/results"},
+            follow_redirects=False,
         )
 
     assert response.status_code == 307
-    assert response.headers["location"].startswith("http://localhost:8000/ai/artifacts/download-zip")
+    assert response.headers["location"].startswith(
+        "http://localhost:8000/ai/artifacts/download-zip"
+    )
     assert "output_dir=%2Fresults" in response.headers["location"]

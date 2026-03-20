@@ -55,12 +55,8 @@ def _build_workflow_system_prompt() -> str:
     callables = list_workflow_callables()
     verif_classes = list_verification_classes()
 
-    callables_summary = json.dumps(
-        as_serializable(callables), indent=2, default=str
-    )
-    verif_summary = json.dumps(
-        as_serializable(verif_classes), indent=2, default=str
-    )
+    callables_summary = json.dumps(as_serializable(callables), indent=2, default=str)
+    verif_summary = json.dumps(as_serializable(verif_classes), indent=2, default=str)
 
     return dedent(
         f"""
@@ -101,9 +97,7 @@ def _build_workflow_system_prompt() -> str:
 
 def _build_cases_system_prompt() -> str:
     verif_classes = list_verification_classes()
-    verif_summary = json.dumps(
-        as_serializable(verif_classes), indent=2, default=str
-    )
+    verif_summary = json.dumps(as_serializable(verif_classes), indent=2, default=str)
 
     return dedent(
         f"""
@@ -154,7 +148,11 @@ def _parse_llm_json(raw_text: str) -> Optional[Dict[str, Any]]:
         # Strip markdown fences if present.
         lines = text.splitlines()
         # Drop first and last fence-like lines
-        if len(lines) >= 2 and lines[0].startswith("```") and lines[-1].startswith("```"):
+        if (
+            len(lines) >= 2
+            and lines[0].startswith("```")
+            and lines[-1].startswith("```")
+        ):
             text = "\n".join(lines[1:-1]).strip()
 
     try:
@@ -206,7 +204,9 @@ def suggest_workflow(
         return ComposerResult(ok=False, data=None, validation=vr, raw_text=raw)
 
     validation = validate_workflow_dict(parsed)
-    return ComposerResult(ok=validation.valid, data=parsed, validation=validation, raw_text=raw)
+    return ComposerResult(
+        ok=validation.valid, data=parsed, validation=validation, raw_text=raw
+    )
 
 
 def suggest_verification_cases(
@@ -243,7 +243,9 @@ def suggest_verification_cases(
         return ComposerResult(ok=False, data=None, validation=vr, raw_text=raw)
 
     validation = validate_case_suite_dict(parsed)
-    return ComposerResult(ok=validation.valid, data=parsed, validation=validation, raw_text=raw)
+    return ComposerResult(
+        ok=validation.valid, data=parsed, validation=validation, raw_text=raw
+    )
 
 
 __all__ = [
@@ -251,4 +253,3 @@ __all__ = [
     "suggest_workflow",
     "suggest_verification_cases",
 ]
-

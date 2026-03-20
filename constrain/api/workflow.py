@@ -186,7 +186,9 @@ class WorkflowEngine:
         for line in import_list:
             _line = line.strip()
             # ConStrain API is already imported at module top; skip so we do not exec redundant or invalid statements.
-            if _line.lower().startswith("from constrain.") or _line.lower().startswith("import constrain."):
+            if _line.lower().startswith("from constrain.") or _line.lower().startswith(
+                "import constrain."
+            ):
                 continue
             # Full "from ... import ..." (e.g. other packages): run as-is.
             if _line.lower().startswith("from "):

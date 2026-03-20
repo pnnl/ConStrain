@@ -50,7 +50,9 @@ class VerificationClassInfo:
     raw: Dict[str, Any]
 
 
-def _collect_class_callables(cls: type, *, prefix: Optional[str] = None) -> List[CallableInfo]:
+def _collect_class_callables(
+    cls: type, *, prefix: Optional[str] = None
+) -> List[CallableInfo]:
     """Collect public instance methods of a class as potential MethodCall targets."""
     callables: List[CallableInfo] = []
     for name, member in inspect.getmembers(cls, predicate=inspect.isfunction):
@@ -171,4 +173,3 @@ __all__ = [
     "list_verification_classes",
     "as_serializable",
 ]
-

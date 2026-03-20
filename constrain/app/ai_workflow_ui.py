@@ -37,7 +37,9 @@ def _api_base_url() -> str:
 
 
 def _public_api_base_url() -> str:
-    return os.getenv("CONSTRAIN_PUBLIC_API_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
+    return os.getenv("CONSTRAIN_PUBLIC_API_BASE_URL", "http://127.0.0.1:8000").rstrip(
+        "/"
+    )
 
 
 def _api_post(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -202,7 +204,9 @@ def run(
 
     if wf_dict is not None and wf_validation.valid:
         try:
-            job = _api_post("/ai/workflow/jobs", {"workflow": wf_dict, "save_path": None})
+            job = _api_post(
+                "/ai/workflow/jobs", {"workflow": wf_dict, "save_path": None}
+            )
             result = _wait_for_job(job["job_id"])
             if result.get("success"):
                 execution_summary = result.get("execution", {}).get("summary")
@@ -264,7 +268,9 @@ def verify(
     context["verification_inputs"] = verification_inputs
 
     try:
-        report_items = [item.strip() for item in report_item_names.split(",") if item.strip()]
+        report_items = [
+            item.strip() for item in report_item_names.split(",") if item.strip()
+        ]
         payload = {
             "case_file_path": case_file_path,
             "output_dir": output_dir,
@@ -286,7 +292,9 @@ def verify(
 
         context["verification_result"] = verification_result
         context["artifacts"] = artifacts_payload.get("artifacts", [])
-        context["artifacts_output_dir"] = artifacts_payload.get("output_dir", output_dir)
+        context["artifacts_output_dir"] = artifacts_payload.get(
+            "output_dir", output_dir
+        )
     except Exception as exc:
         context["verification_error"] = str(exc)
         context["artifacts_output_dir"] = output_dir
@@ -297,14 +305,17 @@ def verify(
 @app.get("/artifact/download")
 def artifact_download(output_dir: str, relative_path: str) -> RedirectResponse:
     query = urlencode({"output_dir": output_dir, "relative_path": relative_path})
-    return RedirectResponse(url=f"{_public_api_base_url()}/ai/artifacts/download?{query}")
+    return RedirectResponse(
+        url=f"{_public_api_base_url()}/ai/artifacts/download?{query}"
+    )
 
 
 @app.get("/artifact/download-zip")
 def artifact_download_zip(output_dir: str) -> RedirectResponse:
     query = urlencode({"output_dir": output_dir})
-    return RedirectResponse(url=f"{_public_api_base_url()}/ai/artifacts/download-zip?{query}")
+    return RedirectResponse(
+        url=f"{_public_api_base_url()}/ai/artifacts/download-zip?{query}"
+    )
 
 
 __all__ = ["app"]
-
