@@ -1,5 +1,5 @@
 # Multi-stage build for a leaner verification-focused image
-FROM python:3.10-slim as builder
+FROM python:3.10-slim AS builder
 
 # Set working directory
 WORKDIR /app
@@ -42,7 +42,7 @@ COPY docker/run_verification.py ./
 COPY resources/ ./resources/
 
 # Set Python path to include the constrain module
-ENV PYTHONPATH=/app:${PYTHONPATH}
+ENV PYTHONPATH=/app
 
 # Create directories for data and results
 RUN mkdir -p /app/data /app/results
