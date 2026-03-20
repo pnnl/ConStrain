@@ -1,0 +1,259 @@
+"""
+Integration tests for AI Workflow UI endpoints that call backend REST APIs.
+"""
+import json
+from pathlib import Path
+from unittest.mock import MagicMock, patch
+
+from fastapi.testclient import TestClient
+
+from constrain.app.ai_workflow_ui import app
+
+
+client = TestClient(app)
+
+
+def test_index_returns_empty_form() -> None:
+    """Verify the index page loads with an empty form ready for input."""
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "ConStrain AI Workflow Composer" in response.text
+    assert "Verification execution via REST API" in response.text
+    assert 'action="/verify"' in response.text
+
+
+@patch("constrain.app.ai_workflow_ui.suggest_verification_cases")
+@patch("constrain.app.ai_workflow_ui.suggest_workflow")
+def test_compose_endpoint_loads_form(
+    mock_suggest_workflow: MagicMock, mock_suggest_cases: MagicMock
+) -> None:
+    """Verify the compose endpoint returns a form with prefilled context."""
+    mock_suggest_workflow.return_value.data = {"type": "workflow"}
+    mock_suggest_workflow.return_value.validation.issues = []
+    mock_suggest_cases.return_value.data = {"type": "cases"}
+    mock_suggest_cases.return_value.validation.issues = []
+
+    response = client.post(
+        "/compose",
+        data={
+            "goal": "Test verification",
+            "data_context": "{}",
+            "signals": "{}",
+            "existing_workflow": "",
+            "existing_cases": "",
+        },
+    )
+    assert response.status_code == 200
+    assert "Test verification" in response.text
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
+@patch("constrain.app.ai_workflow_ui._api_get")
+def test_verify_success_with_artifacts(
+    mock_api_get: MagicMock, mock_api_post: MagicMock, tmp_path: Path
+) -> None:
+    """Verify POST /verify calls API and renders artifact list on success."""
+    output_dir = tmp_path / "results"
+    output_dir.mkdir()
+    (output_dir / "summary.md").write_text("# Summary\n")
+
+    mock_api_post.return_value = {
+        "success": True,
+        "verification": {
+            "case_file_path": str(output_dir / "case.json"),
+            "output_dir": str(output_dir),
+            "md_json_files": [str(output_dir / "1_md.json")],
+        },
+        "reporting": {
+            "generated": True,
+            "summary_path": str(output_dir / "summary.md"),
+        },
+    }
+    mock_api_get.return_value = {
+        "output_dir": str(output_dir),
+        "count": 1,
+        "artifacts": [
+            {
+                "relative_path": "summary.md",
+                "size_bytes": 10,
+                "modified_epoch": 1234567890,
+            }
+        ],
+    }
+
+    response = client.post(
+        "/verify",
+        data={
+            "case_file_path": str(output_dir / "case.json"),
+            "output_dir": str(output_dir),
+            "data_file_path": "",
+            "library_json_path": "",
+            "plot_option": "all-compact",
+            "fig_width": "6.4",
+            "fig_height": "4.8",
+            "tolerances_file_path": "",
+            "log_level": "INFO",
+            "summary_file_name": "verification_summary.md",
+            "report_item_names": "",
+            "generate_summary": "on",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "Verification completed successfully" in response.text
+    assert "summary.md" in response.text
+    assert "10 bytes" in response.text
+    mock_api_post.assert_called_once()
+    mock_api_get.assert_called_once()
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
+def test_verify_api_error_is_rendered(mock_api_post: MagicMock, tmp_path: Path) -> None:
+    """Verify POST /verify renders API errors gracefully in HTML."""
+    output_dir = tmp_path / "results"
+    error_message = "Verification case file not found: /nonexistent/case.json"
+    mock_api_post.side_effect = Exception(error_message)
+
+    response = client.post(
+        "/verify",
+        data={
+            "case_file_path": "/nonexistent/case.json",
+            "output_dir": str(output_dir),
+            "data_file_path": "",
+            "library_json_path": "",
+            "plot_option": "all-compact",
+            "fig_width": "6.4",
+            "fig_height": "4.8",
+            "tolerances_file_path": "",
+            "log_level": "INFO",
+            "summary_file_name": "verification_summary.md",
+            "report_item_names": "",
+        },
+    )
+
+    assert response.status_code == 200
+    assert error_message in response.text
+    assert "execution-error" in response.text
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
+@patch("constrain.app.ai_workflow_ui._api_get")
+def test_verify_handles_missing_artifacts(
+    mock_api_get: MagicMock, mock_api_post: MagicMock, tmp_path: Path
+) -> None:
+    """Verify POST /verify handles case where no artifacts are present."""
+    output_dir = tmp_path / "results"
+    output_dir.mkdir()
+
+    mock_api_post.return_value = {
+        "success": True,
+        "verification": {
+            "case_file_path": str(output_dir / "case.json"),
+            "output_dir": str(output_dir),
+            "md_json_files": [],
+        },
+        "reporting": {"generated": False, "summary_path": None},
+    }
+    mock_api_get.return_value = {
+        "output_dir": str(output_dir),
+        "count": 0,
+        "artifacts": [],
+    }
+
+    response = client.post(
+        "/verify",
+        data={
+            "case_file_path": str(output_dir / "case.json"),
+            "output_dir": str(output_dir),
+            "data_file_path": "",
+            "library_json_path": "",
+            "plot_option": "all-compact",
+            "fig_width": "6.4",
+            "fig_height": "4.8",
+            "tolerances_file_path": "",
+            "log_level": "INFO",
+            "summary_file_name": "verification_summary.md",
+            "report_item_names": "",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "No artifacts listed yet" in response.text
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
+@patch("constrain.app.ai_workflow_ui._api_get")
+def test_verify_parses_report_item_names(
+    mock_api_get: MagicMock, mock_api_post: MagicMock, tmp_path: Path
+) -> None:
+    """Verify POST /verify correctly parses comma-separated report item names."""
+    output_dir = tmp_path / "results"
+    output_dir.mkdir(parents=True)
+
+    # Ensure mocks are configured to respond successfully
+    mock_api_post.return_value = {
+        "success": True,
+        "verification": {"case_file_path": "", "output_dir": str(output_dir), "md_json_files": []},
+        "reporting": {"generated": False, "summary_path": None},
+    }
+    mock_api_get.return_value = {
+        "output_dir": str(output_dir),
+        "count": 0,
+        "artifacts": [],
+    }
+
+    response = client.post(
+        "/verify",
+        data={
+            "case_file_path": "test.json",
+            "output_dir": str(output_dir),
+            "data_file_path": "",
+            "library_json_path": "",
+            "plot_option": "all-compact",
+            "fig_width": "6.4",
+            "fig_height": "4.8",
+            "tolerances_file_path": "",
+            "log_level": "INFO",
+            "summary_file_name": "verification_summary.md",
+            "report_item_names": "G36FreezeProtectionStage1, G36FreezeProtectionStage2, G36SupplyAirTemperatureSetpoint",
+        },
+    )
+
+    # Verify the response is successful
+    assert response.status_code == 200
+
+    # Verify _api_post was called with the correct report_item_names
+    assert mock_api_post.called, "_api_post should have been called"
+    call_args = mock_api_post.call_args
+    payload = call_args.args[1]  # Get the payload argument (second positional arg)
+    expected_items = [
+        "G36FreezeProtectionStage1",
+        "G36FreezeProtectionStage2",
+        "G36SupplyAirTemperatureSetpoint",
+    ]
+    assert payload["report_item_names"] == expected_items
+
+
+def test_artifact_download_redirect() -> None:
+    """Verify /artifact/download redirects to the backend API endpoint."""
+    response = client.get(
+        "/artifact/download",
+        params={"output_dir": "/results", "relative_path": "file.md"},
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 307
+    assert "/ai/artifacts/download" in response.headers["location"]
+    assert "output_dir=%2Fresults" in response.headers["location"]
+    assert "relative_path=file.md" in response.headers["location"]
+
+
+def test_artifact_download_zip_redirect() -> None:
+    """Verify /artifact/download-zip redirects to the backend API endpoint."""
+    response = client.get(
+        "/artifact/download-zip", params={"output_dir": "/results"}, follow_redirects=False
+    )
+
+    assert response.status_code == 307
+    assert "/ai/artifacts/download-zip" in response.headers["location"]
+    assert "output_dir=%2Fresults" in response.headers["location"]
