@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install patched packaging toolchain and uvicorn runtime.
 RUN pip install --no-cache-dir --upgrade \
-    "setuptools>=78.1.1" \
+    "setuptools>=78.1.1,<81" \
     "wheel>=0.46.2" \
     uvicorn[standard]==0.24.0 \
     packaging
