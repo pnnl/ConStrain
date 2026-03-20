@@ -100,18 +100,37 @@ jobs:
 
       - name: Trigger host verify run for artifact checks
         run: |
+          curl -f http://localhost:8000/health
+          curl -f http://localhost:8080/health
+
           response_file=$(mktemp)
-          curl -fsS -o "$response_file" -X POST http://localhost:8080/verify \
-            --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
-            --data-urlencode 'output_dir=/data/results/ci-e2e' \
-            --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
-            --data-urlencode 'library_json_path=/data/schema/library.json' \
-            --data-urlencode 'plot_option=all-compact' \
-            --data-urlencode 'fig_width=6.4' \
-            --data-urlencode 'fig_height=4.8' \
-            --data-urlencode 'log_level=INFO' \
-            --data-urlencode 'summary_file_name=verification_summary.md' \
-            --data-urlencode 'generate_summary=on'
+          verify_ok=0
+          for _ in $(seq 1 8); do
+            http_code=$(curl -sS -o "$response_file" -w '%{http_code}' -X POST http://localhost:8080/verify \
+              --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
+              --data-urlencode 'output_dir=/data/results/ci-e2e' \
+              --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
+              --data-urlencode 'library_json_path=/data/schema/library.json' \
+              --data-urlencode 'plot_option=all-compact' \
+              --data-urlencode 'fig_width=6.4' \
+              --data-urlencode 'fig_height=4.8' \
+              --data-urlencode 'log_level=INFO' \
+              --data-urlencode 'summary_file_name=verification_summary.md' \
+              --data-urlencode 'generate_summary=on' || true)
+            if [ "$http_code" = "200" ] || [ "$http_code" = "302" ] || [ "$http_code" = "303" ] || [ "$http_code" = "307" ]; then
+              verify_ok=1
+              break
+            fi
+            sleep 3
+          done
+
+          if [ "$verify_ok" -ne 1 ]; then
+            echo "[FAIL] /verify did not return a successful HTTP status after retries"
+            echo "Last response snippet:"
+            sed -n '1,120p' "$response_file" || true
+            docker compose -f docker/docker-compose.yml logs --tail=120 api-ui api-server || true
+            exit 1
+          fi
 
       - name: Wait for host artifacts
         run: |
