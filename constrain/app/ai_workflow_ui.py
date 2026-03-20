@@ -9,10 +9,13 @@ intended as a lightweight starting point rather than a full-featured GUI.
 from __future__ import annotations
 
 import json
+import os
+from urllib.parse import urlencode
+from urllib.request import Request as UrlRequest, urlopen
 from typing import Any, Dict, Optional
 
 from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from constrain.ai.schema_utils import (
@@ -29,21 +32,62 @@ app = FastAPI(title="ConStrain AI Workflow Composer UI")
 templates = Jinja2Templates(directory="constrain/app/templates")
 
 
+def _api_base_url() -> str:
+    return os.getenv("CONSTRAIN_API_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
+
+
+def _api_post(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    request = UrlRequest(
+        f"{_api_base_url()}{path}",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    with urlopen(request, timeout=120) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def _api_get(path: str, query: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    query_str = f"?{urlencode(query or {}, doseq=True)}" if query else ""
+    with urlopen(f"{_api_base_url()}{path}{query_str}", timeout=120) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def _base_context(request: Request) -> Dict[str, Any]:
+    return {
+        "request": request,
+        "workflow_json": "",
+        "cases_json": "",
+        "workflow_issues": [],
+        "cases_issues": [],
+        "goal": "",
+        "execution_summary": None,
+        "execution_error": None,
+        "verification_result": None,
+        "verification_error": None,
+        "artifacts": [],
+        "artifacts_output_dir": "",
+        "api_base_url": _api_base_url(),
+        "verification_inputs": {
+            "case_file_path": "",
+            "output_dir": "",
+            "data_file_path": "",
+            "library_json_path": "",
+            "plot_option": "all-compact",
+            "fig_width": "6.4",
+            "fig_height": "4.8",
+            "tolerances_file_path": "",
+            "log_level": "INFO",
+            "summary_file_name": "verification_summary.md",
+            "report_item_names": "",
+            "generate_summary": True,
+        },
+    }
+
+
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(
-        "ai_workflow_index.html",
-        {
-            "request": request,
-            "workflow_json": "",
-            "cases_json": "",
-            "workflow_issues": [],
-            "cases_issues": [],
-            "goal": "",
-            "execution_summary": None,
-            "execution_error": None,
-        },
-    )
+    return templates.TemplateResponse("ai_workflow_index.html", _base_context(request))
 
 
 @app.post("/compose", response_class=HTMLResponse)
@@ -55,6 +99,7 @@ def compose(
     existing_workflow: str = Form(""),
     existing_cases: str = Form(""),
 ) -> HTMLResponse:
+    context = _base_context(request)
     # Parse optional JSON inputs if provided.
     data_ctx: Optional[Dict[str, Any]] = None
     if data_context.strip():
@@ -99,19 +144,16 @@ def compose(
     workflow_json = json.dumps(wf_result.data or {}, indent=2)
     cases_json = json.dumps(cases_result.data or {}, indent=2)
 
-    return templates.TemplateResponse(
-        "ai_workflow_index.html",
+    context.update(
         {
-            "request": request,
             "workflow_json": workflow_json,
             "cases_json": cases_json,
             "workflow_issues": wf_result.validation.issues,
             "cases_issues": cases_result.validation.issues,
             "goal": goal,
-            "execution_summary": None,
-            "execution_error": None,
-        },
+        }
     )
+    return templates.TemplateResponse("ai_workflow_index.html", context)
 
 
 @app.post("/run", response_class=HTMLResponse)
@@ -139,19 +181,94 @@ def run(
         # Validation failed
         execution_error = "Workflow failed validation; see issues below."
 
-    return templates.TemplateResponse(
-        "ai_workflow_index.html",
+    context = _base_context(request)
+    context.update(
         {
-            "request": request,
             "workflow_json": workflow_json,
             "cases_json": cases_json,
             "workflow_issues": wf_validation.issues if wf_validation else [],
-            "cases_issues": [],
             "goal": goal,
             "execution_summary": execution_summary,
             "execution_error": execution_error,
-        },
+        }
     )
+    return templates.TemplateResponse("ai_workflow_index.html", context)
+
+
+@app.post("/verify", response_class=HTMLResponse)
+def verify(
+    request: Request,
+    case_file_path: str = Form(...),
+    output_dir: str = Form(...),
+    data_file_path: str = Form(""),
+    library_json_path: str = Form(""),
+    plot_option: str = Form("all-compact"),
+    fig_width: str = Form("6.4"),
+    fig_height: str = Form("4.8"),
+    tolerances_file_path: str = Form(""),
+    log_level: str = Form("INFO"),
+    summary_file_name: str = Form("verification_summary.md"),
+    report_item_names: str = Form(""),
+    generate_summary: Optional[str] = Form(None),
+) -> HTMLResponse:
+    context = _base_context(request)
+    verification_inputs = {
+        "case_file_path": case_file_path,
+        "output_dir": output_dir,
+        "data_file_path": data_file_path,
+        "library_json_path": library_json_path,
+        "plot_option": plot_option,
+        "fig_width": fig_width,
+        "fig_height": fig_height,
+        "tolerances_file_path": tolerances_file_path,
+        "log_level": log_level,
+        "summary_file_name": summary_file_name,
+        "report_item_names": report_item_names,
+        "generate_summary": bool(generate_summary),
+    }
+    context["verification_inputs"] = verification_inputs
+
+    try:
+        report_items = [item.strip() for item in report_item_names.split(",") if item.strip()]
+        payload = {
+            "case_file_path": case_file_path,
+            "output_dir": output_dir,
+            "data_file_path": data_file_path or None,
+            "library_json_path": library_json_path or None,
+            "plot_option": plot_option,
+            "fig_size": [float(fig_width), float(fig_height)],
+            "tolerances_file_path": tolerances_file_path or None,
+            "log_level": log_level,
+            "generate_summary": bool(generate_summary),
+            "summary_file_name": summary_file_name,
+            "report_item_names": report_items or None,
+        }
+        verification_result = _api_post("/ai/verification/execute", payload)
+        artifacts_payload = _api_get(
+            "/ai/artifacts/list",
+            {"output_dir": output_dir, "recursive": True},
+        )
+
+        context["verification_result"] = verification_result
+        context["artifacts"] = artifacts_payload.get("artifacts", [])
+        context["artifacts_output_dir"] = artifacts_payload.get("output_dir", output_dir)
+    except Exception as exc:
+        context["verification_error"] = str(exc)
+        context["artifacts_output_dir"] = output_dir
+
+    return templates.TemplateResponse("ai_workflow_index.html", context)
+
+
+@app.get("/artifact/download")
+def artifact_download(output_dir: str, relative_path: str) -> RedirectResponse:
+    query = urlencode({"output_dir": output_dir, "relative_path": relative_path})
+    return RedirectResponse(url=f"{_api_base_url()}/ai/artifacts/download?{query}")
+
+
+@app.get("/artifact/download-zip")
+def artifact_download_zip(output_dir: str) -> RedirectResponse:
+    query = urlencode({"output_dir": output_dir})
+    return RedirectResponse(url=f"{_api_base_url()}/ai/artifacts/download-zip?{query}")
 
 
 __all__ = ["app"]
