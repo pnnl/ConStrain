@@ -12,11 +12,19 @@ Endpoints (paths are intentionally simple and versionless for now):
 
 from __future__ import annotations
 
+import glob
+import io
+import logging
+import os
+from pathlib import Path
 from typing import Any, Dict, List, Optional
+import zipfile
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
+from constrain.api import DataProcessing, Reporting, Verification, VerificationCase
 from constrain.ai import (
     get_default_llm_client,
 )
@@ -66,6 +74,21 @@ class ExecuteWorkflowRequest(BaseModel):
     save_path: Optional[str] = None
 
 
+class ExecuteVerificationRequest(BaseModel):
+    case_file_path: str
+    output_dir: str
+    data_file_path: Optional[str] = None
+    data_source: str = "EnergyPlus"
+    library_json_path: Optional[str] = None
+    plot_option: str = "all-compact"
+    fig_size: List[float] = [6.4, 4.8]
+    tolerances_file_path: Optional[str] = None
+    log_level: str = "INFO"
+    generate_summary: bool = True
+    summary_file_name: str = "verification_summary.md"
+    report_item_names: Optional[List[str]] = None
+
+
 def _ensure_llm_available() -> None:
     if get_default_llm_client() is None:
         raise HTTPException(
@@ -76,6 +99,25 @@ def _ensure_llm_available() -> None:
                 "in the environment."
             ),
         )
+
+
+def _resolve_output_dir(output_dir: str) -> Path:
+    output_dir_path = Path(output_dir).expanduser().resolve()
+    if not output_dir_path.exists() or not output_dir_path.is_dir():
+        raise HTTPException(
+            status_code=400,
+            detail=f"Output directory not found: {output_dir_path}",
+        )
+    return output_dir_path
+
+
+def _resolve_artifact_path(output_dir_path: Path, relative_path: str) -> Path:
+    artifact_path = (output_dir_path / relative_path).resolve()
+    if artifact_path == output_dir_path or output_dir_path not in artifact_path.parents:
+        raise HTTPException(status_code=400, detail="Invalid artifact path.")
+    if not artifact_path.exists() or not artifact_path.is_file():
+        raise HTTPException(status_code=404, detail=f"Artifact not found: {relative_path}")
+    return artifact_path
 
 
 @app.post("/ai/workflow/suggest")
@@ -200,6 +242,184 @@ def api_execute_workflow(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
             "error": result.error,
         },
     }
+
+
+@app.post("/ai/verification/execute")
+def api_execute_verification(req: ExecuteVerificationRequest) -> Dict[str, Any]:
+    """Execute verification cases from JSON, and optionally generate a summary report."""
+    if not os.path.isfile(req.case_file_path):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Verification case file not found: {req.case_file_path}",
+        )
+
+    os.makedirs(req.output_dir, exist_ok=True)
+
+    if req.library_json_path:
+        library_json_path = req.library_json_path
+    else:
+        library_json_path = str(Path(__file__).resolve().parents[1] / "schema/library.json")
+
+    if not os.path.isfile(library_json_path):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Library JSON file not found: {library_json_path}",
+        )
+
+    if len(req.fig_size) != 2:
+        raise HTTPException(
+            status_code=400,
+            detail="fig_size must contain exactly two numbers: [width, height].",
+        )
+
+    if req.log_level.upper() not in {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}:
+        raise HTTPException(
+            status_code=400,
+            detail="log_level must be one of DEBUG, INFO, WARNING, ERROR, CRITICAL.",
+        )
+
+    logging.getLogger().setLevel(getattr(logging, req.log_level.upper()))
+
+    try:
+        verification_case = VerificationCase(json_case_path=req.case_file_path)
+        if len(verification_case.case_suite) == 0:
+            raise HTTPException(
+                status_code=400,
+                detail="No verification cases were loaded from the provided JSON file.",
+            )
+
+        preprocessed_data = None
+        if req.data_file_path:
+            if not os.path.isfile(req.data_file_path):
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Data file not found: {req.data_file_path}",
+                )
+            data_processing = DataProcessing(
+                data_path=req.data_file_path,
+                data_source=req.data_source,
+            )
+            preprocessed_data = data_processing.data
+            if preprocessed_data is None:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Failed to load preprocessed data from the provided data file.",
+                )
+
+        verification = Verification(verifications=verification_case)
+
+        tolerances_file_path = req.tolerances_file_path
+        if tolerances_file_path is None:
+            tolerances_file_path = str(Path(__file__).resolve().parents[1] / "tolerances.json")
+
+        verification.configure(
+            output_path=req.output_dir,
+            lib_items_path=library_json_path,
+            plot_option=req.plot_option,
+            fig_size=(req.fig_size[0], req.fig_size[1]),
+            num_threads=1,
+            preprocessed_data=preprocessed_data,
+            path_to_custom_tolerance_file=tolerances_file_path,
+        )
+        verification.run()
+
+        md_json_files = sorted(glob.glob(os.path.join(req.output_dir, "*_md.json")))
+        summary_path = None
+
+        if req.generate_summary and md_json_files:
+            reporting = Reporting(
+                verification_json=os.path.join(req.output_dir, "*_md.json"),
+                result_md_name=req.summary_file_name,
+                report_format="markdown",
+            )
+            reporting.report_multiple_cases(item_names=req.report_item_names or [])
+            summary_path = reporting.result_md_path
+
+        return {
+            "success": True,
+            "verification": {
+                "case_file_path": req.case_file_path,
+                "output_dir": req.output_dir,
+                "md_json_files": md_json_files,
+            },
+            "reporting": {
+                "generated": bool(summary_path),
+                "summary_path": summary_path,
+            },
+        }
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Verification execution failed: {exc}",
+        ) from exc
+
+
+@app.get("/ai/artifacts/list")
+def api_list_artifacts(
+    output_dir: str = Query(..., description="Directory containing generated artifacts."),
+    recursive: bool = Query(True, description="List files recursively."),
+) -> Dict[str, Any]:
+    output_dir_path = _resolve_output_dir(output_dir)
+
+    file_paths = (
+        output_dir_path.rglob("*") if recursive else output_dir_path.glob("*")
+    )
+    artifacts = []
+    for file_path in sorted(path for path in file_paths if path.is_file()):
+        stat = file_path.stat()
+        artifacts.append(
+            {
+                "relative_path": str(file_path.relative_to(output_dir_path)),
+                "size_bytes": stat.st_size,
+                "modified_epoch": int(stat.st_mtime),
+            }
+        )
+
+    return {
+        "output_dir": str(output_dir_path),
+        "count": len(artifacts),
+        "artifacts": artifacts,
+    }
+
+
+@app.get("/ai/artifacts/download")
+def api_download_artifact(
+    output_dir: str = Query(..., description="Directory containing generated artifacts."),
+    relative_path: str = Query(..., description="Relative path of artifact to download."),
+) -> FileResponse:
+    output_dir_path = _resolve_output_dir(output_dir)
+    artifact_path = _resolve_artifact_path(output_dir_path, relative_path)
+    return FileResponse(
+        path=str(artifact_path),
+        filename=artifact_path.name,
+        media_type="application/octet-stream",
+    )
+
+
+@app.get("/ai/artifacts/download-zip")
+def api_download_artifacts_zip(
+    output_dir: str = Query(..., description="Directory containing generated artifacts."),
+) -> StreamingResponse:
+    output_dir_path = _resolve_output_dir(output_dir)
+    files = sorted(path for path in output_dir_path.rglob("*") if path.is_file())
+    if not files:
+        raise HTTPException(status_code=404, detail="No artifacts found to zip.")
+
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+        for file_path in files:
+            zf.write(file_path, arcname=str(file_path.relative_to(output_dir_path)))
+    zip_buffer.seek(0)
+
+    return StreamingResponse(
+        zip_buffer,
+        media_type="application/zip",
+        headers={
+            "Content-Disposition": 'attachment; filename="verification_results.zip"'
+        },
+    )
 
 
 __all__ = ["app"]
