@@ -2,7 +2,7 @@
 # FastAPI-based web interface with Jinja2 templates
 # This replaces the Streamlit service and removes docker socket dependency
 
-FROM python:3.10-slim as builder
+FROM python:3.10-slim AS builder
 
 WORKDIR /app
 

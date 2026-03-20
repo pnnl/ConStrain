@@ -1,5 +1,9 @@
 name: Docker Tests
 
+permissions:
+  contents: read
+  security-events: write
+
 on:
   push:
     branches: [ '*' ]
@@ -21,6 +25,38 @@ jobs:
       - name: Build API-first images
         run: |
           docker-compose -f docker/docker-compose.yml build
+
+      - name: Scan api-server image with Trivy
+        uses: aquasecurity/trivy-action@v0.35.0
+        with:
+          image-ref: constrain-api-server:latest
+          format: sarif
+          output: trivy-api-server.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
+
+      - name: Upload api-server SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-api-server.sarif
+          category: trivy-api-server
+
+      - name: Scan api-ui image with Trivy
+        uses: aquasecurity/trivy-action@v0.35.0
+        with:
+          image-ref: constrain-api-ui:latest
+          format: sarif
+          output: trivy-api-ui.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
+
+      - name: Upload api-ui SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-api-ui.sarif
+          category: trivy-api-ui
 
       - name: Start compose stack
         run: |
@@ -103,6 +139,16 @@ jobs:
         with:
           name: docker-compose-log
           path: docker-compose.log
+          retention-days: 7
+
+      - name: Upload Trivy reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-api-stack-reports
+          path: |
+            trivy-api-server.sarif
+            trivy-api-ui.sarif
           retention-days: 7
 
       - name: Cleanup

@@ -2,7 +2,7 @@
 # Unified REST API for verification, reporting, and workflow execution
 # This consolidates the verification, reporting, and workflow services
 
-FROM python:3.10-slim as builder
+FROM python:3.10-slim AS builder
 
 WORKDIR /app
 
@@ -55,7 +55,7 @@ COPY docker/run_verification.py ./
 COPY docker/run_reporting.py ./
 
 # Set Python path for imports
-ENV PYTHONPATH=/app:${PYTHONPATH}
+ENV PYTHONPATH=/app
 
 # Create necessary directories for data and results
 RUN mkdir -p /data/data /data/results /data/verification_cases /data/schema
