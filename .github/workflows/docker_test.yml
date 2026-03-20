@@ -24,7 +24,7 @@ jobs:
 
       - name: Build API-first images
         run: |
-          docker-compose -f docker/docker-compose.yml build
+          docker compose -f docker/docker-compose.yml build
 
       - name: Scan api-server image with Trivy
         uses: aquasecurity/trivy-action@v0.35.0
@@ -62,7 +62,7 @@ jobs:
         run: |
           export APP_UID=$(id -u)
           export APP_GID=$(id -g)
-          docker-compose -f docker/docker-compose.yml up -d
+          docker compose -f docker/docker-compose.yml up -d
 
       - name: Wait for healthy services
         run: |
@@ -88,15 +88,15 @@ jobs:
       - name: Validate env override behavior
         run: |
           printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\nCONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000\nAPP_UID=%s\nAPP_GID=%s\n' "$(id -u)" "$(id -g)" > docker/.env
-          docker-compose -f docker/docker-compose.yml down
-          docker-compose --env-file docker/.env -f docker/docker-compose.yml up -d
+          docker compose -f docker/docker-compose.yml down
+          docker compose --env-file docker/.env -f docker/docker-compose.yml up -d
           timeout 120 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-server 2>/dev/null)" = "healthy" ] && [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-ui 2>/dev/null)" = "healthy" ]; do sleep 2; done'
-          docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q '^LOG_LEVEL=DEBUG$'
-          docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^LOG_LEVEL=DEBUG$'
-          docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^CONSTRAIN_API_BASE_URL=http://api-server:8000$'
-          docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^CONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000$'
-          docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q "^APP_UID=$(id -u)$"
-          docker-compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q "^APP_GID=$(id -g)$"
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q '^LOG_LEVEL=DEBUG$'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^LOG_LEVEL=DEBUG$'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^CONSTRAIN_API_BASE_URL=http://api-server:8000$'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^CONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000$'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q "^APP_UID=$(id -u)$"
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q "^APP_GID=$(id -g)$"
 
       - name: Verify host artifact redirects and downloads
         run: |
@@ -130,7 +130,7 @@ jobs:
 
       - name: Verify restart resilience for api-server
         run: |
-          docker-compose -f docker/docker-compose.yml restart api-server
+          docker compose -f docker/docker-compose.yml restart api-server
           timeout 120 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-server 2>/dev/null)" = "healthy" ]; do sleep 2; done'
 
           curl -f http://localhost:8000/health
@@ -156,7 +156,7 @@ jobs:
       - name: Dump service logs
         if: always()
         run: |
-          docker-compose -f docker/docker-compose.yml logs > docker-compose.log || true
+          docker compose -f docker/docker-compose.yml logs > docker-compose.log || true
 
       - name: Upload docker-compose log
         if: always()
@@ -180,7 +180,7 @@ jobs:
         if: always()
         run: |
           rm -f docker/.env || true
-          docker-compose -f docker/docker-compose.yml down --remove-orphans || true
+          docker compose -f docker/docker-compose.yml down --remove-orphans || true
 
   test-docker-workflow:
     name: Test Docker Workflow Image
