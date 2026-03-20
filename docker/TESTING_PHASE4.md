@@ -414,24 +414,32 @@ docker-compose exec api-ui nslookup api-server
 ## Success Criteria
 
 ✅ All tests pass if:
-- [ ] Both Dockerfiles build successfully
-- [ ] docker-compose up creates healthy services
-- [ ] Health endpoints respond with 200 OK
-- [ ] No docker socket mounts visible
-- [ ] No docker daemon inside containers
-- [ ] Service-to-service communication works
-- [ ] External access to web UI works
-- [ ] API endpoints are functional
-- [ ] Data volumes mount correctly
-- [ ] Environment variables are applied
-- [ ] Startup order respected
-- [ ] Graceful failure handling
+- [x] Both Dockerfiles build successfully
+- [x] docker-compose up creates healthy services
+- [x] Health endpoints respond with 200 OK
+- [x] No docker socket mounts visible
+- [x] No docker daemon inside containers
+- [x] Service-to-service communication works
+- [x] External access to web UI works
+- [x] API endpoints are functional
+- [x] Data volumes mount correctly
+- [x] Environment variables are applied
+- [x] Startup order respected
+- [x] Graceful failure handling
+
+## Execution Results (2026-03-20)
+
+- Updated compose mapping for UI to `8080:8000` to match Uvicorn listener.
+- Removed obsolete compose `version` key.
+- Added runtime `packaging` dependency to API UI image to prevent startup crash.
+- Enabled compose env overrides via `${VAR:-default}` for `LOG_LEVEL` and `CONSTRAIN_API_BASE_URL`.
+- Validated backend-dependent UI behavior: UI page renders while backend is down and verify route returns handled error text.
 
 ## Post-Test Checklist
 
 After successful testing:
-- [ ] Document any deployed differences from expected
-- [ ] Update docker/README.md with quick-start
-- [ ] Create troubleshooting guide for operators
+- [x] Document any deployed differences from expected
+- [x] Update docker/README.md with quick-start
+- [x] Create troubleshooting guide for operators
 - [ ] Update CI/CD pipeline if needed
-- [ ] Tag commit with "phase-4-docker-validated"
+- [x] Tag commit with "phase-4-docker-validated"

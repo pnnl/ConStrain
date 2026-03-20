@@ -1,42 +1,53 @@
 # Docker Configuration for ConStrain
 
-This directory contains all Docker-related files for running ConStrain workflows and verification cases in containers.
+This directory contains Docker assets for the API-first ConStrain runtime.
 
-## Files in this Directory
+## Services
 
-### Dockerfiles
+- `api-server`: Unified backend API for workflow composition, verification execution, and artifact management.
+- `api-ui`: FastAPI + Jinja web UI that calls the backend API.
 
-- **Dockerfile.workflow** - Container for running workflow JSON files via the Workflow API
-- **Dockerfile.verification** - Container for running verification case JSON files via the Verification API
-- **Dockerfile.reporting** - Container for generating summary reports from verification results
+## Key Files
 
-### Configuration Files
-
-- **.dockerignore** - Specifies files to exclude from Docker build context
+- `Dockerfile.api-server`
+- `Dockerfile.api-ui`
+- `docker-compose.yml`
+- `TESTING_PHASE4.md`
+- `TROUBLESHOOTING.md`
 
 ## Quick Start
 
-### Build Images
-
-From project root
+From repository root:
 
 ```bash
-docker build -f docker/Dockerfile.workflow -t constrain:latest .
-docker build -f docker/Dockerfile.verification -t constrain-verification:latest .
-docker build -f docker/Dockerfile.reporting -t constrain-reporting:latest .
+docker-compose -f docker/docker-compose.yml up -d --build
+docker-compose -f docker/docker-compose.yml ps
+curl http://localhost:8000/health
+curl http://localhost:8080/health
 ```
 
-## Documentation
+Stop services:
 
-For detailed usage instructions, see:
+```bash
+docker-compose -f docker/docker-compose.yml down
+```
 
-- **Workflow Container**: [DOCKER_WORKFLOW.md](./container_docs/DOCKER_WORKFLOW.md)
-- **Verification Container**: [DOCKER_VERIFICATION.md](./container_docs/DOCKER_VERIFICATION.md)
-- **Reporting Container**: [DOCKER_REPORTING.md](./container_docs/DOCKER_REPORTING.md)
-- **Streamlit UI**: [STREAMLIT_DOCKER.md](./container_docs/STREAMLIT_DOCKER.md)
+## Environment Overrides
 
-## Additional Resources
+Compose supports defaults and `.env` overrides for:
 
-- [ConStrain Documentation](https://pnnl.github.io/ConStrain/)
-- [Workflow API Guide](https://pnnl.github.io/ConStrain/api/workflow.html)
-- [Verification API Guide](https://pnnl.github.io/ConStrain/api/verification.html)
+- `LOG_LEVEL` (default `INFO`)
+- `CONSTRAIN_API_BASE_URL` (default `http://api-server:8000`)
+
+Example override (from `docker/` directory):
+
+```bash
+printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\n' > .env
+docker-compose up -d
+```
+
+## Notes
+
+- UI host port is `8080` mapped to container port `8000`.
+- Backend API is exposed on host port `8000`.
+- No Docker socket is mounted in containers.
