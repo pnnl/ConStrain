@@ -38,7 +38,11 @@ templates = Jinja2Templates(
 
 def _render_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
     try:
-        return templates.TemplateResponse("ai_workflow_index.html", context)
+        return templates.TemplateResponse(
+            request=request,
+            name="ai_workflow_index.html",
+            context=context,
+        )
     except Exception as exc:
         verification_result = context.get("verification_result")
         execution_summary = context.get("execution_summary")
