@@ -100,7 +100,7 @@ def _render_page(
                 '<!doctype html><html><head><meta charset="utf-8"><title>ConStrain AI Workflow Composer</title></head><body>',
                 "<h1>ConStrain AI Workflow Composer</h1>",
                 "<p>Template rendering fallback was used.</p>",
-                "<p><a href=\"/\">Home</a> | <a href=\"/workflow\">Workflow Composer</a> | <a href=\"/verification\">Verification Execution</a></p>",
+                '<p><a href="/">Home</a> | <a href="/workflow">Workflow Composer</a> | <a href="/verification">Verification Execution</a></p>',
                 "<p><strong>Template error:</strong> {}</p>".format(escape(str(exc))),
                 *fallback_sections,
                 "</body></html>",
@@ -121,7 +121,9 @@ def _render_workflow_page(request: Request, context: Dict[str, Any]) -> HTMLResp
     return _render_page(request, context, template_name="ai_workflow_index.html")
 
 
-def _render_verification_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
+def _render_verification_page(
+    request: Request, context: Dict[str, Any]
+) -> HTMLResponse:
     return _render_page(
         request,
         context,
@@ -245,7 +247,9 @@ def _normalize_llm_settings(raw_settings: Dict[str, str]) -> Dict[str, str]:
     }
 
 
-def _build_llm_client_from_form(settings: Dict[str, str]) -> Optional[HTTPJSONLLMClient]:
+def _build_llm_client_from_form(
+    settings: Dict[str, str]
+) -> Optional[HTTPJSONLLMClient]:
     normalized = _normalize_llm_settings(settings)
     has_any_value = any(normalized.values())
     if not has_any_value:

@@ -99,7 +99,9 @@ def test_workflow_suggest_rejects_partial_llm_settings() -> None:
 
 
 @patch("constrain.app.ai_workflow_server.get_default_llm_client")
-def test_workflow_suggest_keeps_existing_env_fallback(mock_get_default_llm_client) -> None:
+def test_workflow_suggest_keeps_existing_env_fallback(
+    mock_get_default_llm_client,
+) -> None:
     mock_get_default_llm_client.return_value = None
 
     response = client.post(
