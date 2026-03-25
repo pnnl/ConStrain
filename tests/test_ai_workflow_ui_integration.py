@@ -18,9 +18,9 @@ def test_index_returns_empty_form() -> None:
     """Verify the index page loads with an empty form ready for input."""
     response = client.get("/")
     assert response.status_code == 200
-    assert "ConStrain AI Workflow Composer" in response.text
-    assert "Verification execution via REST API" in response.text
-    assert 'action="/verify"' in response.text
+    assert "ConStrain Web UI" in response.text
+    assert "Workflow Composer" in response.text
+    assert 'href="/verification"' in response.text
 
 
 @patch("constrain.app.ai_workflow_ui.suggest_verification_cases")
@@ -42,10 +42,50 @@ def test_compose_endpoint_loads_form(
             "signals": "{}",
             "existing_workflow": "",
             "existing_cases": "",
+            "llm_api_base": "https://example-llm.test/v1",
+            "llm_model": "test-model",
+            "llm_api_key": "secret-token",
+            "llm_timeout": "45",
         },
     )
     assert response.status_code == 200
     assert "Test verification" in response.text
+    assert "https://example-llm.test/v1" in response.text
+    assert "test-model" in response.text
+
+    workflow_call = mock_suggest_workflow.call_args
+    assert workflow_call is not None
+    workflow_client = workflow_call.kwargs.get("llm_client")
+    assert workflow_client is not None
+
+    cases_call = mock_suggest_cases.call_args
+    assert cases_call is not None
+    cases_client = cases_call.kwargs.get("llm_client")
+    assert cases_client is workflow_client
+
+
+@patch("constrain.app.ai_workflow_ui.suggest_verification_cases")
+@patch("constrain.app.ai_workflow_ui.suggest_workflow")
+def test_compose_rejects_partial_llm_form_settings(
+    mock_suggest_workflow: MagicMock, mock_suggest_cases: MagicMock
+) -> None:
+    response = client.post(
+        "/compose",
+        data={
+            "goal": "Test verification",
+            "data_context": "{}",
+            "signals": "{}",
+            "existing_workflow": "",
+            "existing_cases": "",
+            "llm_api_base": "https://example-llm.test/v1",
+            "llm_model": "",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "both API base URL and model are required" in response.text
+    mock_suggest_workflow.assert_not_called()
+    mock_suggest_cases.assert_not_called()
 
 
 @patch("constrain.app.ai_workflow_ui._api_post")

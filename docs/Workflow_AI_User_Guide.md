@@ -104,10 +104,10 @@ uv run uvicorn constrain.app.ai_workflow_server:app --reload --host 127.0.0.1 --
 Key endpoints (default base: `http://127.0.0.1:8000`):
 
 - `POST /ai/workflow/suggest`
-  - Input: JSON with `goal_description`, optional `data_context`, `existing_workflow`, `cases_context`.
+  - Input: JSON with `goal_description`, optional `data_context`, `existing_workflow`, `cases_context`, and optional `llm_settings`.
   - Output: Suggested workflow JSON, validation status, and raw LLM text.
 - `POST /ai/cases/suggest`
-  - Input: JSON with `goal_description`, optional `signals_available`, `existing_cases`.
+  - Input: JSON with `goal_description`, optional `signals_available`, `existing_cases`, and optional `llm_settings`.
   - Output: Suggested verification-case suite JSON, validation status, and raw LLM text.
 - `POST /ai/workflow/validate`
   - Input: `{ "workflow": { ... } }`
@@ -140,6 +140,33 @@ Key endpoints (default base: `http://127.0.0.1:8000`):
 - `GET /ai/artifacts/download-zip`
   - Input: `output_dir`.
   - Output: Zip of all artifacts under the output directory.
+
+### 3.1.1 Request format example with per-request LLM settings
+
+You can now pass provider settings directly in the request body (instead of exporting
+`CONSTRAIN_LLM_*` in the server container/terminal).
+
+```json
+{
+  "goal_description": "Generate a workflow for G36 SAT and damper verification.",
+  "data_context": {
+    "data_path": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+    "data_source": "EnergyPlus"
+  },
+  "llm_settings": {
+    "api_base": "https://api.openai.com/v1",
+    "model": "gpt-4.1-mini",
+    "api_key": "YOUR_API_KEY_HERE",
+    "timeout": 30
+  }
+}
+```
+
+Notes:
+
+- `llm_settings` is optional. If omitted, server environment variables are used.
+- If `llm_settings` is provided, both `api_base` and `model` are required.
+- `timeout` is optional and defaults to `30` seconds.
 
 These endpoints are implemented in:
 

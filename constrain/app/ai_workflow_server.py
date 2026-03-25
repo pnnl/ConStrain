@@ -32,6 +32,7 @@ from constrain.api import DataProcessing, Reporting, Verification, VerificationC
 from constrain.ai import (
     get_default_llm_client,
 )
+from constrain.ai.llm_client import HTTPJSONLLMClient, LLMConfig
 from constrain.ai.introspection import (
     as_serializable,
     list_verification_classes,
@@ -57,17 +58,26 @@ _job_store_lock = Lock()
 _job_store: Dict[str, Dict[str, Any]] = {}
 
 
+class LLMSettingsRequest(BaseModel):
+    api_base: Optional[str] = None
+    model: Optional[str] = None
+    api_key: Optional[str] = None
+    timeout: Optional[float] = None
+
+
 class WorkflowSuggestRequest(BaseModel):
     goal_description: str
     data_context: Optional[Dict[str, Any]] = None
     existing_workflow: Optional[Dict[str, Any]] = None
     cases_context: Optional[Dict[str, Any]] = None
+    llm_settings: Optional[LLMSettingsRequest] = None
 
 
 class CasesSuggestRequest(BaseModel):
     goal_description: str
     signals_available: Optional[Dict[str, Any]] = None
     existing_cases: Optional[Dict[str, Any]] = None
+    llm_settings: Optional[LLMSettingsRequest] = None
 
 
 class ValidateWorkflowRequest(BaseModel):
@@ -243,6 +253,46 @@ def _run_workflow_execution(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
             "error": result.error,
         },
     }
+
+
+def _build_llm_client_from_request(
+    settings: Optional[LLMSettingsRequest],
+) -> Optional[HTTPJSONLLMClient]:
+    if settings is None:
+        return None
+
+    api_base = (settings.api_base or "").strip()
+    model = (settings.model or "").strip()
+    api_key = (settings.api_key or "").strip()
+    timeout = settings.timeout
+
+    has_any_value = bool(api_base or model or api_key or timeout is not None)
+    if not has_any_value:
+        return None
+
+    if not api_base or not model:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "When llm_settings is provided, both api_base and model are required."
+            ),
+        )
+
+    timeout_value = 30.0 if timeout is None else float(timeout)
+    if timeout_value <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="llm_settings.timeout must be greater than zero.",
+        )
+
+    return HTTPJSONLLMClient(
+        LLMConfig(
+            api_base=api_base,
+            api_key=api_key,
+            model=model,
+            timeout=timeout_value,
+        )
+    )
 
 
 def _resolve_relative_paths_in_case_suite(
@@ -437,12 +487,16 @@ def health_check() -> Dict[str, str]:
 
 @app.post("/ai/workflow/suggest")
 def api_suggest_workflow(req: WorkflowSuggestRequest) -> Dict[str, Any]:
-    _ensure_llm_available()
+    llm_client = _build_llm_client_from_request(req.llm_settings)
+    if llm_client is None:
+        _ensure_llm_available()
+
     result: ComposerResult = suggest_workflow(
         goal_description=req.goal_description,
         data_context=req.data_context,
         existing_workflow=req.existing_workflow,
         cases_context=req.cases_context,
+        llm_client=llm_client,
     )
     return {
         "ok": result.ok,
@@ -457,11 +511,15 @@ def api_suggest_workflow(req: WorkflowSuggestRequest) -> Dict[str, Any]:
 
 @app.post("/ai/cases/suggest")
 def api_suggest_cases(req: CasesSuggestRequest) -> Dict[str, Any]:
-    _ensure_llm_available()
+    llm_client = _build_llm_client_from_request(req.llm_settings)
+    if llm_client is None:
+        _ensure_llm_available()
+
     result: ComposerResult = suggest_verification_cases(
         goal_description=req.goal_description,
         signals_available=req.signals_available,
         existing_cases=req.existing_cases,
+        llm_client=llm_client,
     )
     return {
         "ok": result.ok,

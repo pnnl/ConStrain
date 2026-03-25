@@ -158,6 +158,11 @@
         font-size: 0.72rem;
         color: #9ca3af;
       }
+      .compose-error {
+        margin-top: 0.7rem;
+        font-size: 0.78rem;
+        color: #f97316;
+      }
       .artifact-list {
         margin-top: 0.5rem;
         max-height: 16rem;
@@ -251,9 +256,62 @@
               placeholder="Paste an existing verification-case suite JSON here to refine it..."
             ></textarea>
           </div>
+          <div class="subpanel">
+            <h3 style="margin: 0 0 0.6rem">GenAI provider settings (optional)</h3>
+            <p class="small-note" style="margin: 0 0 0.6rem">
+              These values are used for this compose request, so you do not need to export
+              CONSTRAIN_LLM_* variables in the Docker terminal.
+            </p>
+            <div class="field">
+              <label for="llm_api_base">LLM API base URL</label>
+              <input
+                id="llm_api_base"
+                name="llm_api_base"
+                type="text"
+                placeholder="https://api.openai.com/v1"
+                value="{{ llm_settings.api_base }}"
+              />
+            </div>
+            <div class="split-columns">
+              <div class="field">
+                <label for="llm_model">LLM model</label>
+                <input
+                  id="llm_model"
+                  name="llm_model"
+                  type="text"
+                  placeholder="gpt-4.1-mini"
+                  value="{{ llm_settings.model }}"
+                />
+              </div>
+              <div class="field">
+                <label for="llm_timeout">Timeout seconds (optional)</label>
+                <input
+                  id="llm_timeout"
+                  name="llm_timeout"
+                  type="text"
+                  placeholder="30"
+                  value="{{ llm_settings.timeout }}"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label for="llm_api_key">LLM API key (optional)</label>
+              <input
+                id="llm_api_key"
+                name="llm_api_key"
+                type="password"
+                placeholder="Token or API key"
+                value="{{ llm_settings.api_key }}"
+                autocomplete="off"
+              />
+            </div>
+          </div>
           <div class="button-row">
             <button type="submit">Generate workflow &amp; cases</button>
           </div>
+          {% if compose_error %}
+          <div class="compose-error">{{ compose_error }}</div>
+          {% endif %}
         </form>
       </section>
 

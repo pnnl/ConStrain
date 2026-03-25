@@ -25,6 +25,7 @@ from fastapi.templating import Jinja2Templates
 from constrain.ai.schema_utils import (
     validate_workflow_json_str,
 )
+from constrain.ai.llm_client import HTTPJSONLLMClient, LLMConfig
 from constrain.ai.workflow_composer import (
     suggest_verification_cases,
     suggest_workflow,
@@ -204,6 +205,7 @@ def _base_context(request: Request) -> Dict[str, Any]:
         "workflow_issues": [],
         "cases_issues": [],
         "goal": "",
+        "compose_error": None,
         "execution_summary": None,
         "execution_error": None,
         "verification_result": None,
@@ -211,6 +213,12 @@ def _base_context(request: Request) -> Dict[str, Any]:
         "artifacts": [],
         "artifacts_output_dir": "",
         "api_base_url": _public_api_base_url(),
+        "llm_settings": {
+            "api_base": os.getenv("CONSTRAIN_LLM_API_BASE", ""),
+            "model": os.getenv("CONSTRAIN_LLM_MODEL", ""),
+            "api_key": "",
+            "timeout": os.getenv("CONSTRAIN_LLM_TIMEOUT", ""),
+        },
         "verification_inputs": {
             "case_file_path": "",
             "output_dir": "",
@@ -226,6 +234,46 @@ def _base_context(request: Request) -> Dict[str, Any]:
             "generate_summary": True,
         },
     }
+
+
+def _normalize_llm_settings(raw_settings: Dict[str, str]) -> Dict[str, str]:
+    return {
+        "api_base": (raw_settings.get("api_base") or "").strip(),
+        "model": (raw_settings.get("model") or "").strip(),
+        "api_key": (raw_settings.get("api_key") or "").strip(),
+        "timeout": (raw_settings.get("timeout") or "").strip(),
+    }
+
+
+def _build_llm_client_from_form(settings: Dict[str, str]) -> Optional[HTTPJSONLLMClient]:
+    normalized = _normalize_llm_settings(settings)
+    has_any_value = any(normalized.values())
+    if not has_any_value:
+        return None
+
+    api_base = normalized["api_base"]
+    model = normalized["model"]
+    if not api_base or not model:
+        raise RuntimeError(
+            "When setting LLM options in the page, both API base URL and model are required."
+        )
+
+    timeout = 30.0
+    if normalized["timeout"]:
+        try:
+            timeout = float(normalized["timeout"])
+        except ValueError as exc:
+            raise RuntimeError("LLM timeout must be a valid number.") from exc
+        if timeout <= 0:
+            raise RuntimeError("LLM timeout must be greater than zero.")
+
+    config = LLMConfig(
+        api_base=api_base,
+        api_key=normalized["api_key"],
+        model=model,
+        timeout=timeout,
+    )
+    return HTTPJSONLLMClient(config)
 
 
 @app.get("/health")
@@ -257,8 +305,22 @@ def compose(
     signals: str = Form(""),
     existing_workflow: str = Form(""),
     existing_cases: str = Form(""),
+    llm_api_base: str = Form(""),
+    llm_model: str = Form(""),
+    llm_api_key: str = Form(""),
+    llm_timeout: str = Form(""),
 ) -> HTMLResponse:
     context = _base_context(request)
+    context["goal"] = goal
+    context["llm_settings"] = _normalize_llm_settings(
+        {
+            "api_base": llm_api_base,
+            "model": llm_model,
+            "api_key": llm_api_key,
+            "timeout": llm_timeout,
+        }
+    )
+
     # Parse optional JSON inputs if provided.
     data_ctx: Optional[Dict[str, Any]] = None
     if data_context.strip():
@@ -288,30 +350,37 @@ def compose(
         except json.JSONDecodeError:
             existing_cases_dict = None
 
-    wf_result = suggest_workflow(
-        goal_description=goal,
-        data_context=data_ctx,
-        existing_workflow=existing_wf_dict,
-        cases_context=existing_cases_dict,
-    )
-    cases_result = suggest_verification_cases(
-        goal_description=goal,
-        signals_available=signals_ctx,
-        existing_cases=existing_cases_dict,
-    )
+    try:
+        llm_client = _build_llm_client_from_form(context["llm_settings"])
 
-    workflow_json = json.dumps(wf_result.data or {}, indent=2)
-    cases_json = json.dumps(cases_result.data or {}, indent=2)
+        wf_result = suggest_workflow(
+            goal_description=goal,
+            data_context=data_ctx,
+            existing_workflow=existing_wf_dict,
+            cases_context=existing_cases_dict,
+            llm_client=llm_client,
+        )
+        cases_result = suggest_verification_cases(
+            goal_description=goal,
+            signals_available=signals_ctx,
+            existing_cases=existing_cases_dict,
+            llm_client=llm_client,
+        )
 
-    context.update(
-        {
-            "workflow_json": workflow_json,
-            "cases_json": cases_json,
-            "workflow_issues": wf_result.validation.issues,
-            "cases_issues": cases_result.validation.issues,
-            "goal": goal,
-        }
-    )
+        workflow_json = json.dumps(wf_result.data or {}, indent=2)
+        cases_json = json.dumps(cases_result.data or {}, indent=2)
+
+        context.update(
+            {
+                "workflow_json": workflow_json,
+                "cases_json": cases_json,
+                "workflow_issues": wf_result.validation.issues,
+                "cases_issues": cases_result.validation.issues,
+            }
+        )
+    except Exception as exc:
+        context["compose_error"] = str(exc)
+
     return _render_workflow_page(request, context)
 
 
