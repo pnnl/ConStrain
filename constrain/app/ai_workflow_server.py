@@ -245,6 +245,71 @@ def _run_workflow_execution(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
     }
 
 
+def _resolve_relative_paths_in_case_suite(
+    case_suite: Dict[str, Any], case_file_path: str
+) -> None:
+    """Resolve relative paths in verification cases to be absolute paths.
+    
+    This function modifies the case_suite in-place, converting relative paths in simulation_IO
+    to absolute paths. It tries multiple resolution strategies:
+    1. Check if path is already absolute or Windows path
+    2. Try resolving relative to /data (for data, schema subdirs)
+    3. Try resolving relative to /app (for resources, weather subdirs)
+    4. Fall back to resolving relative to case file directory
+    
+    Args:
+        case_suite: Dictionary of verification cases keyed by case ID
+        case_file_path: Absolute path to the verification case JSON file
+    """
+    case_dir = str(Path(case_file_path).parent.resolve())
+    
+    def resolve_path(path_str: str) -> str:
+        """Resolve a single path string to an absolute path."""
+        if not path_str:
+            return path_str
+            
+        path_str = path_str.strip()
+        
+        # Already absolute or Windows path - return as-is
+        if path_str.startswith("/") or path_str.startswith("~") or (len(path_str) >= 2 and path_str[1] == ":"):
+            return str(Path(path_str).expanduser().resolve())
+        
+        # Try relative to /data first (for ./data/... paths)
+        if path_str.startswith("./data/") or path_str.startswith("./schema/"):
+            candidate = Path("/data") / path_str.lstrip("./")
+            if candidate.exists():
+                return str(candidate.resolve())
+        
+        # Try relative to /app (for ./resources/... and ./weather/... paths)
+        if path_str.startswith("./resources/") or path_str.startswith("./weather/"):
+            candidate = Path("/app") / path_str.lstrip("./")
+            if candidate.exists():
+                return str(candidate.resolve())
+        
+        # Fall back to resolving relative to case directory
+        candidate = Path(case_dir) / path_str
+        if candidate.exists():
+            return str(candidate.resolve())
+        
+        # If nothing exists, return the /data or /app based guess anyway (for better error messages)
+        if path_str.startswith("./data/") or path_str.startswith("./schema/"):
+            return str((Path("/data") / path_str.lstrip("./")).resolve())
+        elif path_str.startswith("./resources/") or path_str.startswith("./weather/"):
+            return str((Path("/app") / path_str.lstrip("./")).resolve())
+        else:
+            return str((Path(case_dir) / path_str).resolve())
+    
+    for case_id, case in case_suite.items():
+        if "simulation_IO" in case:
+            sim_io = case["simulation_IO"]
+            # List of path fields that might be relative
+            path_fields = ["idf", "idd", "weather", "output", "ep_path"]
+            
+            for field in path_fields:
+                if field in sim_io and isinstance(sim_io[field], str):
+                    sim_io[field] = resolve_path(sim_io[field])
+
+
 def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, Any]:
     if not os.path.isfile(req.case_file_path):
         raise HTTPException(
@@ -288,6 +353,11 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
                 status_code=400,
                 detail="No verification cases were loaded from the provided JSON file.",
             )
+        
+        # Resolve relative paths in the verification case relative to the case file directory
+        _resolve_relative_paths_in_case_suite(
+            verification_case.case_suite, req.case_file_path
+        )
 
         preprocessed_data = None
         if req.data_file_path:

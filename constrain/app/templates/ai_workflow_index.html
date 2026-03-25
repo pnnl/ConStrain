@@ -192,6 +192,13 @@
         ConStrain AI Workflow Composer
         <span class="badge">Experimental</span>
       </h1>
+      <p class="small-note" style="margin: 0.5rem 0 0">
+        <a class="artifact-link" href="/">Home</a>
+        &nbsp;|&nbsp;
+        <a class="artifact-link" href="/workflow">Workflow Composer</a>
+        &nbsp;|&nbsp;
+        <a class="artifact-link" href="/verification">Verification Execution</a>
+      </p>
     </header>
     <main>
       <section class="panel">
@@ -336,189 +343,6 @@
               {% endfor %}
             </div>
           </div>
-        </div>
-      </section>
-    </main>
-    <main style="padding-top: 0">
-      <section class="panel">
-        <h2>Verification execution via REST API</h2>
-        <p class="small-note">
-          This panel calls backend APIs instead of local Docker commands.
-          API base: {{ api_base_url }}
-        </p>
-        <form method="post" action="/verify">
-          <div class="split-columns">
-            <div class="field">
-              <label for="case_file_path">Verification case JSON path</label>
-              <input
-                id="case_file_path"
-                type="text"
-                name="case_file_path"
-                value="{{ verification_inputs.case_file_path }}"
-                placeholder="/absolute/path/to/verification_case.json"
-                required
-              />
-            </div>
-            <div class="field">
-              <label for="output_dir">Output directory</label>
-              <input
-                id="output_dir"
-                type="text"
-                name="output_dir"
-                value="{{ verification_inputs.output_dir }}"
-                placeholder="/absolute/path/to/output"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="split-columns">
-            <div class="field">
-              <label for="data_file_path">Data CSV path (optional)</label>
-              <input
-                id="data_file_path"
-                type="text"
-                name="data_file_path"
-                value="{{ verification_inputs.data_file_path }}"
-                placeholder="/absolute/path/to/data.csv"
-              />
-            </div>
-            <div class="field">
-              <label for="library_json_path">Library JSON path (optional)</label>
-              <input
-                id="library_json_path"
-                type="text"
-                name="library_json_path"
-                value="{{ verification_inputs.library_json_path }}"
-                placeholder="/absolute/path/to/library.json"
-              />
-            </div>
-          </div>
-
-          <div class="split-columns">
-            <div class="field">
-              <label for="plot_option">Plot option</label>
-              <input
-                id="plot_option"
-                type="text"
-                name="plot_option"
-                value="{{ verification_inputs.plot_option }}"
-                placeholder="all-compact"
-              />
-            </div>
-            <div class="field">
-              <label for="log_level">Log level</label>
-              <input
-                id="log_level"
-                type="text"
-                name="log_level"
-                value="{{ verification_inputs.log_level }}"
-                placeholder="INFO"
-              />
-            </div>
-          </div>
-
-          <div class="split-columns">
-            <div class="field">
-              <label for="fig_width">Figure width</label>
-              <input
-                id="fig_width"
-                type="text"
-                name="fig_width"
-                value="{{ verification_inputs.fig_width }}"
-              />
-            </div>
-            <div class="field">
-              <label for="fig_height">Figure height</label>
-              <input
-                id="fig_height"
-                type="text"
-                name="fig_height"
-                value="{{ verification_inputs.fig_height }}"
-              />
-            </div>
-          </div>
-
-          <div class="split-columns">
-            <div class="field">
-              <label for="tolerances_file_path">Tolerances JSON path (optional)</label>
-              <input
-                id="tolerances_file_path"
-                type="text"
-                name="tolerances_file_path"
-                value="{{ verification_inputs.tolerances_file_path }}"
-                placeholder="/absolute/path/to/tolerances.json"
-              />
-            </div>
-            <div class="field">
-              <label for="summary_file_name">Summary file name</label>
-              <input
-                id="summary_file_name"
-                type="text"
-                name="summary_file_name"
-                value="{{ verification_inputs.summary_file_name }}"
-              />
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="report_item_names">Report item names (comma-separated, optional)</label>
-            <input
-              id="report_item_names"
-              type="text"
-              name="report_item_names"
-              value="{{ verification_inputs.report_item_names }}"
-              placeholder="G36FreezeProtectionStage1,G36FreezeProtectionStage2"
-            />
-          </div>
-
-          <div class="field">
-            <label>
-              <input type="checkbox" name="generate_summary" {% if verification_inputs.generate_summary %}checked{% endif %} />
-              Generate summary report
-            </label>
-          </div>
-
-          <div class="button-row">
-            <button type="submit">Run verification via API</button>
-          </div>
-        </form>
-
-        <div class="subpanel">
-          <h3>Verification run status</h3>
-          {% if verification_result %}
-          <div class="issue-item execution-ok">Verification completed successfully.</div>
-          <div class="code-block"><pre>{{ verification_result }}</pre></div>
-          {% elif verification_error %}
-          <div class="issue-item execution-error">{{ verification_error }}</div>
-          {% else %}
-          <div class="issue-item">No verification execution requested yet.</div>
-          {% endif %}
-        </div>
-
-        <div class="subpanel">
-          <h3>Artifacts</h3>
-          {% if artifacts_output_dir %}
-          <div class="small-note">Output dir: {{ artifacts_output_dir }}</div>
-          {% endif %}
-          {% if artifacts and artifacts|length > 0 %}
-          <div class="button-row" style="justify-content:flex-start; margin-bottom:0.5rem">
-            <a class="artifact-link" href="/artifact/download-zip?output_dir={{ artifacts_output_dir }}">Download all artifacts (.zip)</a>
-          </div>
-          <div class="artifact-list">
-            {% for artifact in artifacts %}
-            <div class="artifact-item">
-              <a
-                class="artifact-link"
-                href="/artifact/download?output_dir={{ artifacts_output_dir }}&relative_path={{ artifact.relative_path }}"
-              >{{ artifact.relative_path }}</a>
-              <span>{{ artifact.size_bytes }} bytes</span>
-            </div>
-            {% endfor %}
-          </div>
-          {% else %}
-          <div class="issue-item">No artifacts listed yet.</div>
-          {% endif %}
         </div>
       </section>
     </main>

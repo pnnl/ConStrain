@@ -14,6 +14,7 @@ import time
 from html import escape
 from pathlib import Path
 from urllib.parse import urlencode
+from urllib.error import HTTPError, URLError
 from urllib.request import Request as UrlRequest, urlopen
 from typing import Any, Dict, Optional
 
@@ -36,11 +37,15 @@ templates = Jinja2Templates(
 )
 
 
-def _render_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
+def _render_page(
+    request: Request,
+    context: Dict[str, Any],
+    template_name: str = "ai_workflow_index.html",
+) -> HTMLResponse:
     try:
         return templates.TemplateResponse(
             request=request,
-            name="ai_workflow_index.html",
+            name=template_name,
             context=context,
         )
     except Exception as exc:
@@ -94,12 +99,33 @@ def _render_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
                 '<!doctype html><html><head><meta charset="utf-8"><title>ConStrain AI Workflow Composer</title></head><body>',
                 "<h1>ConStrain AI Workflow Composer</h1>",
                 "<p>Template rendering fallback was used.</p>",
+                "<p><a href=\"/\">Home</a> | <a href=\"/workflow\">Workflow Composer</a> | <a href=\"/verification\">Verification Execution</a></p>",
                 "<p><strong>Template error:</strong> {}</p>".format(escape(str(exc))),
                 *fallback_sections,
                 "</body></html>",
             ]
         )
         return HTMLResponse(content=html, status_code=200)
+
+
+def _render_landing_page(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(
+        request=request,
+        name="ai_workflow_landing.html",
+        context={"request": request},
+    )
+
+
+def _render_workflow_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
+    return _render_page(request, context, template_name="ai_workflow_index.html")
+
+
+def _render_verification_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
+    return _render_page(
+        request,
+        context,
+        template_name="ai_workflow_verification.html",
+    )
 
 
 def _api_base_url() -> str:
@@ -119,14 +145,34 @@ def _api_post(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urlopen(request, timeout=120) as response:
-        return json.loads(response.read().decode("utf-8"))
+    try:
+        with urlopen(request, timeout=120) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        detail = None
+        try:
+            raw_body = exc.read().decode("utf-8")
+            payload = json.loads(raw_body)
+            detail = payload.get("detail")
+        except Exception:
+            detail = None
+
+        if detail is not None:
+            raise RuntimeError(f"API error {exc.code}: {detail}") from exc
+        raise RuntimeError(f"API error {exc.code}: {exc.reason}") from exc
+    except URLError as exc:
+        raise RuntimeError(f"Unable to reach API server: {exc.reason}") from exc
 
 
 def _api_get(path: str, query: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     query_str = f"?{urlencode(query or {}, doseq=True)}" if query else ""
-    with urlopen(f"{_api_base_url()}{path}{query_str}", timeout=120) as response:
-        return json.loads(response.read().decode("utf-8"))
+    try:
+        with urlopen(f"{_api_base_url()}{path}{query_str}", timeout=120) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        raise RuntimeError(f"API error {exc.code}: {exc.reason}") from exc
+    except URLError as exc:
+        raise RuntimeError(f"Unable to reach API server: {exc.reason}") from exc
 
 
 def _wait_for_job(job_id: str, timeout_seconds: float = 120.0) -> Dict[str, Any]:
@@ -190,7 +236,17 @@ def health_check() -> Dict[str, str]:
 
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request) -> HTMLResponse:
-    return _render_page(request, _base_context(request))
+    return _render_landing_page(request)
+
+
+@app.get("/workflow", response_class=HTMLResponse)
+def workflow_page(request: Request) -> HTMLResponse:
+    return _render_workflow_page(request, _base_context(request))
+
+
+@app.get("/verification", response_class=HTMLResponse)
+def verification_page(request: Request) -> HTMLResponse:
+    return _render_verification_page(request, _base_context(request))
 
 
 @app.post("/compose", response_class=HTMLResponse)
@@ -256,7 +312,7 @@ def compose(
             "goal": goal,
         }
     )
-    return _render_page(request, context)
+    return _render_workflow_page(request, context)
 
 
 @app.post("/run", response_class=HTMLResponse)
@@ -301,7 +357,7 @@ def run(
             "execution_error": execution_error,
         }
     )
-    return _render_page(request, context)
+    return _render_workflow_page(request, context)
 
 
 @app.post("/verify", response_class=HTMLResponse)
@@ -369,7 +425,7 @@ def verify(
         context["verification_error"] = str(exc)
         context["artifacts_output_dir"] = output_dir
 
-    return _render_page(request, context)
+    return _render_verification_page(request, context)
 
 
 @app.get("/artifact/download")

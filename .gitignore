@@ -13,6 +13,8 @@ test_cases/verif_mtd_pp/idfs/
 dist/
 *.html
 !constrain/app/templates/ai_workflow_index.html
+!constrain/app/templates/ai_workflow_landing.html
+!constrain/app/templates/ai_workflow_verification.html
 *.js
 .buildinfo
 .nojekyll
