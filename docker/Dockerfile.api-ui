@@ -74,7 +74,7 @@ PY
 # Copy web UI and core modules
 COPY constrain/ ./constrain/
 COPY resources/ ./resources/
-
+COPY docs/ ./docs/
 # Set Python path
 ENV PYTHONPATH=/app
 

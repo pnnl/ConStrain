@@ -40,7 +40,7 @@ RUN pip install --no-cache-dir packaging typing_extensions
 COPY constrain/ ./constrain/
 COPY docker/run_workflow.py ./
 COPY resources/ ./resources/
-
+COPY docs/ ./docs/
 # Set Python path to include the constrain module
 ENV PYTHONPATH=/app
 

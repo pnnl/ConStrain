@@ -77,7 +77,7 @@ COPY constrain/ ./constrain/
 COPY resources/ ./resources/
 COPY docker/run_verification.py ./
 COPY docker/run_reporting.py ./
-
+COPY docs/ ./docs/
 # Set Python path for imports
 ENV PYTHONPATH=/app
 

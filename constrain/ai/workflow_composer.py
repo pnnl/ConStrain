@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from pathlib import Path
 from textwrap import dedent
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -51,48 +52,89 @@ def _ensure_client(llm_client: Optional[LLMClient]) -> LLMClient:
     return client
 
 
+def _load_workflow_reference_markdown() -> str:
+    """Load workflow JSON reference markdown used to ground workflow generation.
+
+    The file is maintained in docs/ and injected into the workflow composer
+    system prompt so the model can follow implementation-specific rules.
+
+    Searches multiple locations to handle both local development and Docker
+    deployments.
+    """
+    search_paths = [
+        Path(__file__).resolve().parents[2]
+        / "docs"
+        / "Workflow_JSON_Structure_Reference.md",
+        Path("/app/docs/Workflow_JSON_Structure_Reference.md"),
+        Path.cwd() / "docs" / "Workflow_JSON_Structure_Reference.md",
+        Path(__file__).resolve().parents[1]
+        / ".."
+        / "docs"
+        / "Workflow_JSON_Structure_Reference.md",
+    ]
+
+    for path in search_paths:
+        resolved_path = path.resolve()
+        if not resolved_path.exists():
+            continue
+        try:
+            return resolved_path.read_text(encoding="utf-8")
+        except Exception:
+            continue
+
+    # Keep composer operational even if docs are unavailable.
+    return ""
+
 def _build_workflow_system_prompt() -> str:
     callables = list_workflow_callables()
     verif_classes = list_verification_classes()
+    workflow_reference_md = _load_workflow_reference_markdown()
 
     callables_summary = json.dumps(as_serializable(callables), indent=2, default=str)
     verif_summary = json.dumps(as_serializable(verif_classes), indent=2, default=str)
 
-    return dedent(
-        f"""
-        You are an assistant that generates ConStrain workflow JSON definitions.
+    # Build the system prompt with reference markdown as the primary authoritative source
+    prompt_parts = [
+        "You are an assistant that generates ConStrain workflow JSON definitions.",
+        "",
+        "=== AUTHORITATIVE WORKFLOW REFERENCE (READ THIS FIRST) ===",
+        "The following is the complete specification for workflow JSON structure, semantics, and implementation details.",
+        "This is the authoritative source of truth for all workflow generation:",
+        "---BEGIN WORKFLOW REFERENCE---",
+        "",
+        workflow_reference_md,
+        "",
+        "---END WORKFLOW REFERENCE---",
+        "=== END AUTHORITATIVE REFERENCE ===",
+        "",
+        "IMPORTANT - Shorthand Notation for ConStrain API Classes:",
+        "- Do NOT import constrain API classes (DataProcessing, VerificationCase, Verification, Reporting)",
+        "- These classes are PRE-IMPORTED and available by their short name only",
+        "- When you see a qualified name like 'constrain.api.data_processing.DataProcessing.add_parameter' in the callable list,",
+        "  use ONLY the class method shorthand in MethodCall: 'DataProcessing.add_parameter'",
+        "- Examples:",
+        "  * 'constrain.api.data_processing.DataProcessing.add_parameter' → use 'DataProcessing.add_parameter'",
+        "  * 'constrain.api.verification_case.VerificationCase.load_verification_cases_from_json' → use 'VerificationCase.load_verification_cases_from_json'",
+        "  * 'constrain.api.verification.Verification.run' → use 'Verification.run'",
+        "- The imports array should ONLY contain non-ConStrain imports (e.g., 'pandas as pd', 'numpy as np')",
+        "",
+        "=== AVAILABLE CALLABLES FOR METHODCALL STATES ===",
+        callables_summary,
+        "",
+        "=== AVAILABLE VERIFICATION CLASSES ===",
+        verif_summary,
+        "",
+        "Your job:",
+        "- Propose a COMPLETE workflow JSON as a single JSON object.",
+        "- Use only the provided callables and verification classes.",
+        "- Use ONLY shorthand notation for ConStrain API methods (no full qualified names in MethodCall).",
+        "- Follow ALL rules and patterns specified in the authoritative reference above.",
+        "- Do NOT include constrain imports in the imports array.",
+        "- Ensure the result is structurally valid and consistent.",
+        "- Do NOT include comments or extra keys; return pure JSON.",
+    ]
 
-        A workflow JSON has this high-level structure (see docs and schema for details):
-        - workflow_name: string
-        - meta: {{ author, date (MM/DD/YYYY), version, description }}
-        - imports: array of python import strings
-        - states: object mapping state names to state definitions
-
-        Each state is either:
-        - Type: "MethodCall"
-          - MethodCall: a python expression that resolves to a callable
-          - Parameters: object (keyword args) or array (positional args)
-          - Payloads: optional object describing how to store results in Payloads
-          - Next: optional string name of next state
-          - Start / End: optional flags ("True"/"False")
-        or
-        - Type: "Choice"
-          - Choices: array of {{ Value, Equals, Next }} or logical expressions
-          - Default: name of next state if no Choice matches
-
-        The following callables are available for MethodCall states:
-        {callables_summary}
-
-        The following verification classes are available in the verification library:
-        {verif_summary}
-
-        Your job:
-        - Propose a COMPLETE workflow JSON as a single JSON object.
-        - Use only the provided callables and verification classes.
-        - Ensure the result is structurally valid and consistent.
-        - Do NOT include comments or extra keys; return pure JSON.
-        """
-    ).strip()
+    return "\n".join(prompt_parts)
 
 
 def _build_cases_system_prompt() -> str:
