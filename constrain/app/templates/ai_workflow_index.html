@@ -189,6 +189,15 @@
       .artifact-link:hover {
         text-decoration: underline;
       }
+      .running-banner {
+        margin: 0.8rem 0 0;
+        padding: 0.55rem 0.75rem;
+        border-radius: 0.55rem;
+        border: 1px solid #0ea5e9;
+        background: rgba(14, 165, 233, 0.12);
+        color: #bae6fd;
+        font-size: 0.8rem;
+      }
     </style>
   </head>
   <body>
@@ -204,11 +213,14 @@
         &nbsp;|&nbsp;
         <a class="artifact-link" href="/verification">Verification Execution</a>
       </p>
+      <div id="running-indicator" class="running-banner" style="display:none;">
+        Background task running: waiting for API/LLM execution to complete.
+      </div>
     </header>
     <main>
       <section class="panel">
         <h2>Describe your verification workflow</h2>
-        <form method="post" action="/compose">
+        <form method="post" action="/compose" id="compose-form">
           <div class="field">
             <label for="goal">Goal</label>
             <textarea
@@ -307,20 +319,25 @@
             </div>
           </div>
           <div class="button-row">
-            <button type="submit">Generate workflow &amp; cases</button>
+            <button type="submit" id="compose-submit">Generate workflow &amp; cases</button>
           </div>
           {% if compose_error %}
           <div class="compose-error">{{ compose_error }}</div>
+          {% endif %}
+          {% if compose_debug_download_path %}
+          <div class="small-note" style="margin-top:0.6rem;">
+            <a class="artifact-link" href="{{ compose_debug_download_path }}">Download full LLM prompts and responses (.md)</a>
+          </div>
           {% endif %}
         </form>
       </section>
 
       <section class="panel">
         <h2>AI proposals</h2>
+        <form method="post" action="/run" id="run-workflow-form">
         <div class="split-columns">
           <div>
             <h3>Workflow JSON</h3>
-            <form method="post" action="/run">
               <div class="code-block">
                 <textarea
                   id="workflow_json"
@@ -329,12 +346,12 @@
                   placeholder="Generated workflow JSON will appear here..."
                 >{{ workflow_json }}</textarea>
               </div>
-              <textarea name="cases_json" style="display:none" rows="1">{{ cases_json }}</textarea>
-              <input type="hidden" name="goal" value="{{ goal }}" />
               <div class="button-row">
-                <button type="submit">Run workflow</button>
+                <button type="submit" id="run-workflow-submit">Run workflow</button>
               </div>
-            </form>
+            <div id="run-workflow-progress" class="small-note" style="display:none; margin-top:0.5rem;">
+              Workflow execution is running in the background...
+            </div>
             <div class="issues">
               <h3>
                 Validation
@@ -378,7 +395,12 @@
           <div>
             <h3>Verification cases JSON</h3>
             <div class="code-block">
-              <pre>{{ cases_json }}</pre>
+              <textarea
+                id="cases_json"
+                name="cases_json"
+                rows="18"
+                placeholder="Generated verification-case suite JSON will appear here..."
+              >{{ cases_json }}</textarea>
             </div>
             <div class="issues">
               <h3>
@@ -402,8 +424,67 @@
             </div>
           </div>
         </div>
+        <input type="hidden" name="goal" value="{{ goal }}" />
+        </form>
       </section>
     </main>
+    <script>
+      (function () {
+        const runningIndicator = document.getElementById("running-indicator");
+        const composeForm = document.getElementById("compose-form");
+        const runForm = document.getElementById("run-workflow-form");
+        const composeSubmit = document.getElementById("compose-submit");
+        const runSubmit = document.getElementById("run-workflow-submit");
+        const runProgress = document.getElementById("run-workflow-progress");
+
+        function markRunning(message, submitButton, progressNode) {
+          if (runningIndicator) {
+            runningIndicator.textContent = message;
+            runningIndicator.style.display = "block";
+          }
+          if (submitButton) {
+            submitButton.disabled = true;
+          }
+          if (progressNode) {
+            progressNode.style.display = "block";
+          }
+          try {
+            window.sessionStorage.setItem("constrain_ui_running", "1");
+          } catch (_) {}
+        }
+
+        function clearRunning() {
+          try {
+            window.sessionStorage.removeItem("constrain_ui_running");
+          } catch (_) {}
+          if (runningIndicator) {
+            runningIndicator.style.display = "none";
+          }
+        }
+
+        if (composeForm) {
+          composeForm.addEventListener("submit", function () {
+            markRunning(
+              "Background task running: generating workflow and verification cases...",
+              composeSubmit,
+              null
+            );
+          });
+        }
+
+        if (runForm) {
+          runForm.addEventListener("submit", function () {
+            markRunning(
+              "Background task running: executing workflow...",
+              runSubmit,
+              runProgress
+            );
+          });
+        }
+
+        window.addEventListener("pageshow", clearRunning);
+      })();
+    </script>
   </body>
   </html>
 

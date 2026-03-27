@@ -162,6 +162,15 @@
         color: #bfdbfe;
         background: radial-gradient(circle at top left, #1e40af, #020617);
       }
+      .running-banner {
+        margin: 0.8rem 0 0;
+        padding: 0.55rem 0.75rem;
+        border-radius: 0.55rem;
+        border: 1px solid #0ea5e9;
+        background: rgba(14, 165, 233, 0.12);
+        color: #bae6fd;
+        font-size: 0.8rem;
+      }
     </style>
   </head>
   <body>
@@ -177,6 +186,9 @@
         &nbsp;|&nbsp;
         <a class="artifact-link" href="/verification">Verification Execution</a>
       </p>
+      <div id="running-indicator" class="running-banner" style="display:none;">
+        Background task running: verification execution in progress.
+      </div>
     </header>
     <main>
       <section class="panel">
@@ -373,6 +385,10 @@
         }
 
         form.addEventListener("submit", function () {
+          const indicator = document.getElementById("running-indicator");
+          if (indicator) {
+            indicator.style.display = "block";
+          }
           submit.disabled = true;
           submit.textContent = "Running verification...";
           progress.style.display = "block";

@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import time
+import uuid
 from html import escape
 from pathlib import Path
 from urllib.parse import urlencode
@@ -19,7 +20,7 @@ from urllib.request import Request as UrlRequest, urlopen
 from typing import Any, Dict, Optional
 
 from fastapi import FastAPI, Form, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from constrain.ai.schema_utils import (
@@ -27,6 +28,8 @@ from constrain.ai.schema_utils import (
 )
 from constrain.ai.llm_client import HTTPJSONLLMClient, LLMConfig
 from constrain.ai.workflow_composer import (
+    _build_cases_system_prompt,
+    _build_workflow_system_prompt,
     suggest_verification_cases,
     suggest_workflow,
 )
@@ -36,6 +39,114 @@ app = FastAPI(title="ConStrain AI Workflow Composer UI")
 templates = Jinja2Templates(
     directory=str(Path(__file__).resolve().parent / "templates")
 )
+_COMPOSE_DEBUG_REPORTS: Dict[str, Dict[str, Any]] = {}
+
+
+def _build_workflow_user_prompt(
+    goal_description: str,
+    data_context: Optional[Dict[str, Any]],
+    existing_workflow: Optional[Dict[str, Any]],
+    cases_context: Optional[Dict[str, Any]],
+) -> str:
+    user_parts = ["User goal:\n", goal_description]
+    if data_context:
+        user_parts.append("\nData context (paths, formats, notes):\n")
+        user_parts.append(json.dumps(data_context, indent=2, default=str))
+    if existing_workflow:
+        user_parts.append("\nExisting workflow to refine (JSON):\n")
+        user_parts.append(json.dumps(existing_workflow, indent=2, default=str))
+    if cases_context:
+        user_parts.append("\nVerification-case context (JSON):\n")
+        user_parts.append(json.dumps(cases_context, indent=2, default=str))
+    return "\n".join(user_parts)
+
+
+def _build_cases_user_prompt(
+    goal_description: str,
+    signals_available: Optional[Dict[str, Any]],
+    existing_cases: Optional[Dict[str, Any]],
+) -> str:
+    user_parts = ["User goal for verification cases:\n", goal_description]
+    if signals_available:
+        user_parts.append("\nSignals / datapoints available:\n")
+        user_parts.append(json.dumps(signals_available, indent=2, default=str))
+    if existing_cases:
+        user_parts.append("\nExisting verification-case suite to refine (JSON):\n")
+        user_parts.append(json.dumps(existing_cases, indent=2, default=str))
+    return "\n".join(user_parts)
+
+
+def _build_compose_debug_markdown(
+    goal: str,
+    wf_system_prompt: str,
+    wf_user_prompt: str,
+    wf_raw_response: str,
+    cases_system_prompt: str,
+    cases_user_prompt: str,
+    cases_raw_response: str,
+) -> str:
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+    return "\n".join(
+        [
+            "# Workflow Composer Debug Report",
+            "",
+            f"Generated at: {now}",
+            "",
+            "## Goal",
+            "",
+            goal,
+            "",
+            "## Workflow Suggestion Prompt",
+            "",
+            "### System Prompt",
+            "",
+            "```text",
+            wf_system_prompt,
+            "```",
+            "",
+            "### User Prompt",
+            "",
+            "```text",
+            wf_user_prompt,
+            "```",
+            "",
+            "### Raw LLM Response",
+            "",
+            "```text",
+            wf_raw_response,
+            "```",
+            "",
+            "## Verification Cases Suggestion Prompt",
+            "",
+            "### System Prompt",
+            "",
+            "```text",
+            cases_system_prompt,
+            "```",
+            "",
+            "### User Prompt",
+            "",
+            "```text",
+            cases_user_prompt,
+            "```",
+            "",
+            "### Raw LLM Response",
+            "",
+            "```text",
+            cases_raw_response,
+            "```",
+            "",
+        ]
+    )
+
+
+def _store_compose_debug_markdown(content: str) -> str:
+    debug_id = str(uuid.uuid4())
+    _COMPOSE_DEBUG_REPORTS[debug_id] = {
+        "created_at_epoch": time.time(),
+        "content": content,
+    }
+    return debug_id
 
 
 def _render_page(
@@ -208,6 +319,7 @@ def _base_context(request: Request) -> Dict[str, Any]:
         "cases_issues": [],
         "goal": "",
         "compose_error": None,
+        "compose_debug_download_path": "",
         "execution_summary": None,
         "execution_error": None,
         "verification_result": None,
@@ -357,6 +469,20 @@ def compose(
     try:
         llm_client = _build_llm_client_from_form(context["llm_settings"])
 
+        wf_system_prompt = _build_workflow_system_prompt()
+        wf_user_prompt = _build_workflow_user_prompt(
+            goal_description=goal,
+            data_context=data_ctx,
+            existing_workflow=existing_wf_dict,
+            cases_context=existing_cases_dict,
+        )
+        cases_system_prompt = _build_cases_system_prompt()
+        cases_user_prompt = _build_cases_user_prompt(
+            goal_description=goal,
+            signals_available=signals_ctx,
+            existing_cases=existing_cases_dict,
+        )
+
         wf_result = suggest_workflow(
             goal_description=goal,
             data_context=data_ctx,
@@ -382,10 +508,42 @@ def compose(
                 "cases_issues": cases_result.validation.issues,
             }
         )
+
+        debug_markdown = _build_compose_debug_markdown(
+            goal=goal,
+            wf_system_prompt=wf_system_prompt,
+            wf_user_prompt=wf_user_prompt,
+            wf_raw_response=wf_result.raw_text,
+            cases_system_prompt=cases_system_prompt,
+            cases_user_prompt=cases_user_prompt,
+            cases_raw_response=cases_result.raw_text,
+        )
+        debug_id = _store_compose_debug_markdown(debug_markdown)
+        context["compose_debug_download_path"] = (
+            f"/compose/debug-report/{debug_id}.md"
+        )
     except Exception as exc:
         context["compose_error"] = str(exc)
 
     return _render_workflow_page(request, context)
+
+
+@app.get("/compose/debug-report/{debug_id}.md")
+def download_compose_debug_report(debug_id: str) -> PlainTextResponse:
+    report = _COMPOSE_DEBUG_REPORTS.get(debug_id)
+    if report is None:
+        return PlainTextResponse("Debug report not found.", status_code=404)
+
+    headers = {
+        "Content-Disposition": (
+            f'attachment; filename="workflow-composer-debug-{debug_id}.md"'
+        )
+    }
+    return PlainTextResponse(
+        str(report.get("content", "")),
+        media_type="text/markdown; charset=utf-8",
+        headers=headers,
+    )
 
 
 @app.post("/run", response_class=HTMLResponse)
