@@ -417,8 +417,7 @@ def verification_page(request: Request) -> HTMLResponse:
 def compose(
     request: Request,
     goal: str = Form(...),
-    data_context: str = Form(""),
-    signals: str = Form(""),
+    data_source_annotation: str = Form(""),
     existing_workflow: str = Form(""),
     existing_cases: str = Form(""),
     llm_api_base: str = Form(""),
@@ -437,20 +436,13 @@ def compose(
         }
     )
 
-    # Parse optional JSON inputs if provided.
-    data_ctx: Optional[Dict[str, Any]] = None
-    if data_context.strip():
+    # Parse optional JSON: shared context for workflow + verification-case LLM prompts.
+    annotation_ctx: Optional[Dict[str, Any]] = None
+    if data_source_annotation.strip():
         try:
-            data_ctx = json.loads(data_context)
+            annotation_ctx = json.loads(data_source_annotation)
         except json.JSONDecodeError:
-            data_ctx = None
-
-    signals_ctx: Optional[Dict[str, Any]] = None
-    if signals.strip():
-        try:
-            signals_ctx = json.loads(signals)
-        except json.JSONDecodeError:
-            signals_ctx = None
+            annotation_ctx = None
 
     existing_wf_dict: Optional[Dict[str, Any]] = None
     if existing_workflow.strip():
@@ -472,27 +464,27 @@ def compose(
         wf_system_prompt = _build_workflow_system_prompt()
         wf_user_prompt = _build_workflow_user_prompt(
             goal_description=goal,
-            data_context=data_ctx,
+            data_context=annotation_ctx,
             existing_workflow=existing_wf_dict,
             cases_context=existing_cases_dict,
         )
         cases_system_prompt = _build_cases_system_prompt()
         cases_user_prompt = _build_cases_user_prompt(
             goal_description=goal,
-            signals_available=signals_ctx,
+            signals_available=annotation_ctx,
             existing_cases=existing_cases_dict,
         )
 
         wf_result = suggest_workflow(
             goal_description=goal,
-            data_context=data_ctx,
+            data_context=annotation_ctx,
             existing_workflow=existing_wf_dict,
             cases_context=existing_cases_dict,
             llm_client=llm_client,
         )
         cases_result = suggest_verification_cases(
             goal_description=goal,
-            signals_available=signals_ctx,
+            signals_available=annotation_ctx,
             existing_cases=existing_cases_dict,
             llm_client=llm_client,
         )

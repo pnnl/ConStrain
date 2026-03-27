@@ -242,19 +242,12 @@ With `constrain.app.ai_workflow_ui` running:
    - Uses the standard ConStrain verification library.
    ```
 
-3. (Optional) In **Data context (JSON)**, you can add specifics:
+3. (Optional) In **Data source annotation (JSON)**, add paths, formats, and how signals map to datapoints. The same JSON object is sent to both workflow and verification-case generation:
 
    ```json
    {
      "data_path": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
-     "data_source": "EnergyPlus"
-   }
-   ```
-
-4. (Optional) In **Available signals (JSON)**, describe your signal mapping:
-
-   ```json
-   {
+     "data_source": "EnergyPlus",
      "dev_settings": {
        "temperature_air_outdoor": "oa_t",
        "temperature_air_supply_setpoint": "sa_t_sp_ac"
@@ -262,8 +255,8 @@ With `constrain.app.ai_workflow_ui` running:
    }
    ```
 
-5. Leave **Existing workflow JSON** and **Existing cases JSON** empty for a first-time generation (you can paste JSON here later for refinements).
-6. Click **“Generate workflow & cases”**.
+4. Leave **Existing workflow JSON** and **Existing cases JSON** empty for a first-time generation (you can paste JSON here later for refinements).
+5. Click **“Generate workflow & cases”**.
 
 The UI will call:
 

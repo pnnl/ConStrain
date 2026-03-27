@@ -230,25 +230,19 @@
               placeholder="Example: Verify that G36 outdoor air damper and supply air temperature sequences are satisfied for my January dataset..."
             >{{ goal }}</textarea>
           </div>
-          <div class="split-columns">
-            <div class="field">
-              <label for="data_context">Data context (JSON, optional)</label>
-              <textarea
-                id="data_context"
-                name="data_context"
-                rows="6"
-                placeholder='{"data_path": "./demo/G36_demo/data/G36_Modelica_Jan.csv"}'
-              ></textarea>
-            </div>
-            <div class="field">
-              <label for="signals">Available signals (JSON, optional)</label>
-              <textarea
-                id="signals"
-                name="signals"
-                rows="6"
-                placeholder='{"dev_settings": {"temperature_air_outdoor": "oa_t", "...": "..."}}'
-              ></textarea>
-            </div>
+          <div class="field">
+            <label for="data_source_annotation">Data source annotation (JSON, optional)</label>
+            <p class="small-note" style="margin: 0 0 0.4rem">
+              Optional JSON describing your data files, paths, formats, and how columns or
+              signals map to datapoints. The same object is passed to both workflow and
+              verification-case generation.
+            </p>
+            <textarea
+              id="data_source_annotation"
+              name="data_source_annotation"
+              rows="8"
+              placeholder='{"data_path": "./demo/G36_demo/data/G36_Modelica_Jan.csv", "dev_settings": {"temperature_air_outdoor": "oa_t"}}'
+            ></textarea>
           </div>
           <div class="field">
             <label for="existing_workflow">Existing workflow JSON (optional)</label>

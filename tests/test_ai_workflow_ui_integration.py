@@ -38,8 +38,7 @@ def test_compose_endpoint_loads_form(
         "/compose",
         data={
             "goal": "Test verification",
-            "data_context": "{}",
-            "signals": "{}",
+            "data_source_annotation": "{}",
             "existing_workflow": "",
             "existing_cases": "",
             "llm_api_base": "https://example-llm.test/v1",
@@ -73,8 +72,7 @@ def test_compose_rejects_partial_llm_form_settings(
         "/compose",
         data={
             "goal": "Test verification",
-            "data_context": "{}",
-            "signals": "{}",
+            "data_source_annotation": "{}",
             "existing_workflow": "",
             "existing_cases": "",
             "llm_api_base": "https://example-llm.test/v1",
