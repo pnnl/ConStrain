@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import jsonschema
 import json
+import copy
 
 
 class JSONSchemaTest(unittest.TestCase):
@@ -43,6 +44,49 @@ class JSONSchemaTest(unittest.TestCase):
 
         with self.assertRaises(jsonschema.ValidationError):
             jsonschema.validate(instance=workflow_dict, schema=self.workflow_schema)
+
+    def test_workflow_schema_allows_working_dir(self):
+        workflow_path = "./constrain/demo/api_demo/demo_workflow.json"
+
+        with open(workflow_path, "r") as f:
+            workflow_dict = json.load(f)
+
+        workflow_dict["working_dir"] = "./demo/api_demo"
+
+        try:
+            jsonschema.validate(instance=workflow_dict, schema=self.workflow_schema)
+        except Exception as e:
+            self.fail(f"Validation failed: {e}")
+
+    def test_workflow_schema_allows_all_logical_choice(self):
+        workflow_path = "./constrain/demo/api_demo/demo_workflow.json"
+
+        with open(workflow_path, "r") as f:
+            workflow_dict = json.load(f)
+
+        workflow_dict = copy.deepcopy(workflow_dict)
+        workflow_dict["states"]["check original case length"]["Choices"] = [
+            {
+                "ALL": [
+                    {
+                        "Value": "len(Payloads['original_case_keys']) == 3",
+                        "Equals": "True",
+                        "Next": "validate cases"
+                    },
+                    {
+                        "Value": "'verification_case_obj' in Payloads",
+                        "Equals": "True",
+                        "Next": "validate cases"
+                    }
+                ],
+                "Next": "validate cases"
+            }
+        ]
+
+        try:
+            jsonschema.validate(instance=workflow_dict, schema=self.workflow_schema)
+        except Exception as e:
+            self.fail(f"Validation failed: {e}")
 
     def test_verification_cases_schema(self):
         verification_case_path = (

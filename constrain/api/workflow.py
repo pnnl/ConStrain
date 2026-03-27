@@ -107,10 +107,16 @@ class WorkflowEngine:
                         os.chdir(self.workflow_dict["working_dir"])
                     except Exception as e:
                         # If an invalid escape sequence string is specified. E.g. ".\tests\api\test"
-                        if e.winerror == 123:
+                        if getattr(e, "winerror", None) == 123:
                             # The error is : OSError: [WinError 123] The filename, directory name, or volume label syntax is incorrect.
                             logging.error(
                                 "The working directory specified is an invalid escape sequence string."
+                            )
+                        else:
+                            logging.error(
+                                "Unable to create or change to working directory '%s': %s",
+                                self.workflow_dict["working_dir"],
+                                e,
                             )
 
     def validate(self, verbose: bool = False) -> bool:
@@ -436,7 +442,21 @@ class Workflow:
                 - `detail`: detailed info about the validity check.
         """
 
-        temp_workflow_engine = Workflow.create_workflow_engine(workflow)
+        workflow_for_validation = workflow
+
+        # Validation should check workflow structure without creating directories
+        # or changing process working directory based on `working_dir`.
+        if isinstance(workflow, str) and os.path.isfile(workflow):
+            with open(workflow, "r") as workflow_file:
+                workflow_for_validation = json.load(workflow_file)
+
+        if isinstance(workflow_for_validation, dict):
+            workflow_for_validation = dict(workflow_for_validation)
+            workflow_for_validation.pop("working_dir", None)
+
+        temp_workflow_engine = Workflow.create_workflow_engine(workflow_for_validation)
+        if temp_workflow_engine is None:
+            return False
         return temp_workflow_engine.validate()
 
     def validate(self, verbose=False) -> dict:
@@ -592,16 +612,19 @@ class Choice:
         if "Value" not in choice:
             # when 'Value' is not in choice, a logical expression key is expected
             # check only one logic expression in the key
-            eligible_logic = ["ALL", "ANY", "NONE"]
+            eligible_logic = ["ALL", "ANY", "NONE", "AND"]
             keycheck_flag = [(ek in choice) for ek in eligible_logic]
             if sum(keycheck_flag) != 1:
                 logging.error(
-                    "For logical expression choices state, there needs to be exactly one key of either 'ALL', or 'ANY', or 'NONE'."
+                    "For logical expression choices state, there needs to be exactly one key of either 'ALL', 'ANY', 'NONE', or legacy 'AND'."
                 )
                 return None
 
-            if "ALL" in choice:
-                flag_list = [self.get_choice_value(x) for x in choice["AND"]]
+            if "ALL" in choice or "AND" in choice:
+                all_subchoices = choice.get("ALL")
+                if all_subchoices is None:
+                    all_subchoices = choice.get("AND", [])
+                flag_list = [self.get_choice_value(x) for x in all_subchoices]
                 choice_value = all(flag_list)
             if "NONE" in choice:
                 flag_list = [self.get_choice_value(x) for x in choice["NONE"]]
