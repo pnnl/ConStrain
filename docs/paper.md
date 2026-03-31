@@ -20,7 +20,7 @@ authors:
   - name: Julian Slane-Holloway
     orcid: 0009-0008-9572-9123
     affiliation: 1
-  - name: Fan Feng
+  - name: Fan Feng[^1]
     orcid: 0000-0002-6230-0063
     affiliation: 1
   - name: Yan Chen
@@ -33,6 +33,8 @@ affiliations:
 date: 28 May 2024
 bibliography: paper.bib
 ---
+
+[^1]: Fan Feng contributed to this work while affiliated with Pacific Northwest National Laboratory (PNNL). He is no longer affiliated with PNNL at the time of publication.
 
 # Summary
 
