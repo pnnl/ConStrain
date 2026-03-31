@@ -46,20 +46,32 @@ Advances in building control have shown significant potential for improving buil
 
 However, one of the challenges to realizing those savings is the correct implementation of such advanced control strategies and regularly verifying their actual operational performance. A field study found that only 50% of systems observed have their control system correctly configured to meet the energy codes requirement [@impl_ctrl], and control-related compliance verification is typically not included in the commissioning scope.
 
-Current control verification is often conducted manually, which is time-consuming, ad-hoc, incomplete, and error-prone.
-
 `ConStrain` focuses on formalizing and automating verification of HVAC controls by analyzing sensor and actuator data streams from building control systems.
 
 `ConStrain` is an open-source library and a Python application programming interface (API) for analyzing BAS data streams for adherence to an operational specification, which can correspond to code (e.g., ASHRAE 90.1) or to a high-performance control guideline (e.g., ASHRAE Guideline 36 [@g36]). Note that this API, at its current form, provides a software interface for other Python programs, not a web REST API service.
 
-`ConStrain` is also incorporating semantic modeling capabilities to enable automated configuration and deployment of verification. ConStrain has applications to code-compliance building performance standards (BPS), and commissioning.
+`ConStrain` is also incorporating semantic modeling capabilities to enable automated configuration and deployment of verification. `ConStrain` has applications to code-compliance building performance standards (BPS), and commissioning.
 
 `ConStrain` can be used as a standalone tool and can also be integrated into established workflows of third-party tools and practices. For instance, `ConStrain` has been successfully integrated as part of the continuous integration software development process of whole-building energy simulation-based software tool (e.g., Washington State's Total System Performance Ratio Analysis Tool [@tspr]) to make sure that software code contributions as well as simulation software updates do not have unexpected impacts on the simulated performance of building system controls. Moreover, a set of `OpenStudio` [@os] measures [@osm] have also been developed to enable building energy modelers using `OpenStudio` to have access to perform verification on their models with minimal configurations required.
 
 At present, `ConStrain` expects pre-harmonized input units for each verification case that align with expected data points units defined in its corresponding verification item; automatic unit conversion is not in the core workflow and needs to be handled before feeding data into `ConStrain`.
 
+## Comparison with existing tools and industry practices
+
+In current industry practices, HVAC control verification is often conducted manually by commissioning agents or facilities teams, or through proprietary trend data analytics solutions integrated into BAS. These tools, while valuable for fault detection and system monitoring, are generally vendor-specific, offer limited transparency, and are not purpose-built to ensure that control strategies intended to deliver energy savings, such as those specified in energy codes or design standards, are functioning as intended in actual operation.
+
+To our knowledge, `ConStrain` is the only open-source software framework focused specifically on automated control verification aligned with building energy code and advanced building control guidelines (e.g., ASHRAE 90.1, Guideline 36). It distinguishes itself by offering:
+
+- A growing library of modular, reusable control logic verification tests
+- A flexible and local API for custom verification logic and report generation
+- Integration with semantic models [@brick] to enable automated verification case setup
+- Compatibility with both simulated and real BAS data sources
+- Seamless use in simulation and CI pipelines (e.g., OpenStudio [@os], TSPR [@tspr])
+
+These capabilities enable `ConStrain` to bridge the gap between simulation-based design intent and real-world implementation, supporting code compliance, model-based commissioning, and continuous performance verification.
+
 # Acknowledgements
 
-ConStrain is developed at the Pacific Northwest National Laboratory and is funded by the U.S. Department of Energy (DOE) under Contract DE-AC05-76RL01830. It is actively being developed as an open-source project.
+`ConStrain` is developed at the Pacific Northwest National Laboratory and is funded by the U.S. Department of Energy (DOE) under Contract DE-AC05-76RL01830. It is actively being developed as an open-source project.
 
 # References
