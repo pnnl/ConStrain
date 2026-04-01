@@ -11,7 +11,14 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      # Mount directories for data access and results storage
+      # Primary shared user input/output root
+      - ../user_io:/user_io
+
+      # Mount existing example input/output under /user_io/examples for consistency
+      - ./examples:/user_io/examples/input:ro
+      - ./examples_results:/user_io/examples/output
+
+      # Legacy mounts retained during migration to /user_io paths
       - ./examples/data:/data/data:ro
       - ./examples/verification_cases:/data/verification_cases:ro
       - ./examples/schema:/data/schema:ro

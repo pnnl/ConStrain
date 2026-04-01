@@ -54,14 +54,23 @@ On Linux hosts, setting `APP_UID` and `APP_GID` to the current user avoids permi
 
 The UI verification form at `http://localhost:8080/verify` is synchronous. A request is expected to run to completion before a new verification is submitted.
 
+Primary Docker path convention:
+
+- Host shared root: `../user_io`
+- Container shared root: `/user_io`
+- Example inputs: `/user_io/examples/input/...`
+- Example outputs: `/user_io/examples/output/...`
+
+The compose file keeps legacy `/data/...` mounts during migration, but new usage should prefer `/user_io/...` paths.
+
 Example verification request through UI endpoint:
 
 ```bash
 curl -fsS -X POST http://localhost:8080/verify \
-  --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
-  --data-urlencode 'output_dir=/data/results/manual-run' \
-  --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
-  --data-urlencode 'library_json_path=/data/schema/library.json' \
+  --data-urlencode 'case_file_path=/user_io/examples/input/verification_cases/G36_library_verification_cases.json' \
+  --data-urlencode 'output_dir=/user_io/examples/output/manual-run' \
+  --data-urlencode 'data_file_path=/user_io/examples/input/data/G36_Modelica_Jan.csv' \
+  --data-urlencode 'library_json_path=/user_io/examples/input/schema/library.json' \
   --data-urlencode 'plot_option=all-compact' \
   --data-urlencode 'fig_width=6.4' \
   --data-urlencode 'fig_height=4.8' \
@@ -73,9 +82,9 @@ curl -fsS -X POST http://localhost:8080/verify \
 Artifact endpoints exposed by `api-server`:
 
 ```bash
-curl "http://localhost:8000/ai/artifacts/list?output_dir=/data/results/manual-run&recursive=true"
-curl -L -o verification_summary.md "http://localhost:8080/artifact/download?output_dir=/data/results/manual-run&relative_path=verification_summary.md"
-curl -L -o verification_results.zip "http://localhost:8080/artifact/download-zip?output_dir=/data/results/manual-run"
+curl "http://localhost:8000/ai/artifacts/list?output_dir=/user_io/examples/output/manual-run&recursive=true"
+curl -L -o verification_summary.md "http://localhost:8080/artifact/download?output_dir=/user_io/examples/output/manual-run&relative_path=verification_summary.md"
+curl -L -o verification_results.zip "http://localhost:8080/artifact/download-zip?output_dir=/user_io/examples/output/manual-run"
 ```
 
 ## Notes
