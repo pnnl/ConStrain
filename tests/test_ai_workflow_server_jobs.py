@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -91,3 +92,16 @@ def test_get_job_returns_404_for_unknown_id() -> None:
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Job not found: does-not-exist"
+
+
+def test_legacy_path_warning_prefers_user_io_root() -> None:
+    legacy_warning = server_mod._legacy_path_warning(
+        Path("/data/results/run-1"), "Output directory"
+    )
+    assert legacy_warning is not None
+    assert "legacy root '/data'" in legacy_warning
+
+    user_io_warning = server_mod._legacy_path_warning(
+        Path("/user_io/examples/output/run-1"), "Output directory"
+    )
+    assert user_io_warning is None

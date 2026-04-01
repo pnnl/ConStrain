@@ -148,6 +148,32 @@ def _is_path_within_roots(path: Path, allowed_roots: List[Path]) -> bool:
     return any(path == root or root in path.parents for root in allowed_roots)
 
 
+def _legacy_io_roots() -> List[Path]:
+    raw = (os.getenv("CONSTRAIN_LEGACY_IO_ROOTS") or "/data").strip()
+    if not raw:
+        return []
+    roots: List[Path] = []
+    for token in raw.split(","):
+        token = token.strip()
+        if not token:
+            continue
+        roots.append(Path(token).expanduser().resolve(strict=False))
+    return roots
+
+
+def _legacy_path_warning(path: Path, label: str) -> Optional[str]:
+    user_io_root = Path("/user_io").resolve(strict=False)
+    if path == user_io_root or user_io_root in path.parents:
+        return None
+    for legacy_root in _legacy_io_roots():
+        if path == legacy_root or legacy_root in path.parents:
+            return (
+                f"{label} uses legacy root '{legacy_root}'. Prefer /user_io paths "
+                "for new requests."
+            )
+    return None
+
+
 def _resolve_user_path(
     path_value: str,
     *,
@@ -454,6 +480,15 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
     )
     output_dir_path = _prepare_output_dir(req.output_dir)
 
+    warnings: List[str] = []
+    case_warning = _legacy_path_warning(case_file_path, "Verification case file")
+    if case_warning:
+        warnings.append(case_warning)
+
+    output_warning = _legacy_path_warning(output_dir_path, "Output directory")
+    if output_warning:
+        warnings.append(output_warning)
+
     if req.library_json_path:
         library_json_path = str(
             _resolve_user_path(
@@ -512,6 +547,9 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
                 expect="file",
                 must_exist=True,
             )
+            data_warning = _legacy_path_warning(data_file_path, "Data file")
+            if data_warning:
+                warnings.append(data_warning)
             data_processing = DataProcessing(
                 data_path=str(data_file_path),
                 data_source=req.data_source,
@@ -556,6 +594,7 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
 
         return {
             "success": True,
+            "warnings": warnings,
             "verification": {
                 "case_file_path": str(case_file_path),
                 "output_dir": str(output_dir_path),

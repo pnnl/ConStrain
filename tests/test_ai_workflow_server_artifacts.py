@@ -2,6 +2,7 @@ import io
 import zipfile
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 from constrain.app.ai_workflow_server import app
@@ -75,3 +76,35 @@ def test_download_zip_contains_all_artifacts(tmp_path: Path) -> None:
         names = set(zf.namelist())
 
     assert names == {"summary.md", "nested/case-1.md"}
+
+
+def test_list_artifacts_rejects_paths_outside_allowed_roots(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output_dir = _create_artifacts(tmp_path)
+    allowed_root = tmp_path / "allowed"
+    allowed_root.mkdir(parents=True)
+    monkeypatch.setenv("CONSTRAIN_ALLOWED_IO_ROOTS", str(allowed_root))
+
+    response = client.get(
+        "/ai/artifacts/list",
+        params={"output_dir": str(output_dir), "recursive": True},
+    )
+
+    assert response.status_code == 400
+    assert "must resolve within allowed roots" in response.json()["detail"]
+
+
+def test_list_artifacts_allows_paths_inside_allowed_roots(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    output_dir = _create_artifacts(tmp_path)
+    monkeypatch.setenv("CONSTRAIN_ALLOWED_IO_ROOTS", str(tmp_path))
+
+    response = client.get(
+        "/ai/artifacts/list",
+        params={"output_dir": str(output_dir), "recursive": True},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["count"] == 2
