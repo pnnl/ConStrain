@@ -196,6 +196,11 @@
           This page calls backend APIs instead of local Docker commands.
           API base: {{ api_base_url }}
         </p>
+        <p class="small-note">
+          Docker path convention: put files under host <strong>user_io/</strong> and
+          use container paths like <strong>/user_io/examples/input/...</strong> and
+          <strong>/user_io/examples/output/...</strong>.
+        </p>
         <form method="post" action="/verify" id="verification-form">
           <div class="split-columns">
             <div class="field">
@@ -205,7 +210,7 @@
                 type="text"
                 name="case_file_path"
                 value="{{ verification_inputs.case_file_path }}"
-                placeholder="/absolute/path/to/verification_case.json"
+                placeholder="/user_io/examples/input/verification_cases/G36_library_verification_cases.json"
                 required
               />
             </div>
@@ -216,7 +221,7 @@
                 type="text"
                 name="output_dir"
                 value="{{ verification_inputs.output_dir }}"
-                placeholder="/absolute/path/to/output"
+                placeholder="/user_io/examples/output/manual-run"
                 required
               />
             </div>
@@ -230,7 +235,7 @@
                 type="text"
                 name="data_file_path"
                 value="{{ verification_inputs.data_file_path }}"
-                placeholder="/absolute/path/to/data.csv"
+                placeholder="/user_io/examples/input/data/G36_Modelica_Jan.csv"
               />
             </div>
             <div class="field">
@@ -240,7 +245,7 @@
                 type="text"
                 name="library_json_path"
                 value="{{ verification_inputs.library_json_path }}"
-                placeholder="/absolute/path/to/library.json"
+                placeholder="/user_io/examples/input/schema/library.json"
               />
             </div>
           </div>
@@ -297,7 +302,7 @@
                 type="text"
                 name="tolerances_file_path"
                 value="{{ verification_inputs.tolerances_file_path }}"
-                placeholder="/absolute/path/to/tolerances.json"
+                placeholder="/app/tolerances.json"
               />
             </div>
             <div class="field">
