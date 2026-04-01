@@ -236,6 +236,28 @@
         color: #bae6fd;
         font-size: 0.8rem;
       }
+      .warning-banner {
+        margin: 1rem 2rem 0;
+        border: 1px solid #f59e0b;
+        background: rgba(245, 158, 11, 0.12);
+        border-radius: 0.7rem;
+        padding: 0.9rem 1rem;
+        color: #fde68a;
+      }
+      .warning-banner h2 {
+        margin: 0 0 0.45rem;
+        font-size: 0.95rem;
+        color: #fef3c7;
+      }
+      .warning-banner ul {
+        margin: 0;
+        padding-left: 1.15rem;
+      }
+      .warning-banner li {
+        margin: 0.35rem 0;
+        font-size: 0.8rem;
+        line-height: 1.35;
+      }
     </style>
   </head>
   <body>
@@ -255,6 +277,14 @@
         Background task running: waiting for API/LLM execution to complete.
       </div>
     </header>
+    <section class="warning-banner" aria-label="Important usage warnings">
+      <h2>Important Usage Notes</h2>
+      <ul>
+        <li>This front end and its supporting services are currently in BETA and may contain bugs or unstable behavior.</li>
+        <li>AI-agent features are experimental. Generated workflows and verification cases should be treated as starting-point templates, not plug-and-play final products.</li>
+        <li>Output quality is highly sensitive to the context you provide and the selected generative AI model.</li>
+      </ul>
+    </section>
     <main>
       <section class="panel">
         <h2>Describe your verification workflow</h2>
