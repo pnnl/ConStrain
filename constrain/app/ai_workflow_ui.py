@@ -24,6 +24,7 @@ from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from constrain.ai.schema_utils import (
+    validate_case_suite_json_str,
     validate_workflow_json_str,
 )
 from constrain.ai.llm_client import HTTPJSONLLMClient, LLMConfig
@@ -602,6 +603,34 @@ def validate_workflow(
             "workflow_json": workflow_json,
             "cases_json": cases_json,
             "workflow_issues": wf_validation.issues if wf_validation else [],
+            "goal": goal,
+            "compose_debug_download_path": compose_debug_download_path,
+            "execution_summary": None,
+            "execution_error": None,
+        }
+    )
+    return _render_workflow_page(request, context)
+
+
+@app.post("/validate-cases", response_class=HTMLResponse)
+def validate_cases(
+    request: Request,
+    workflow_json: str = Form(...),
+    cases_json: str = Form(""),
+    goal: str = Form(""),
+    compose_debug_download_path: str = Form(""),
+) -> HTMLResponse:
+    """Validate the provided verification cases JSON without execution."""
+    _, cases_validation = validate_case_suite_json_str(cases_json)
+    _, wf_validation = validate_workflow_json_str(workflow_json)
+
+    context = _base_context(request)
+    context.update(
+        {
+            "workflow_json": workflow_json,
+            "cases_json": cases_json,
+            "workflow_issues": wf_validation.issues if wf_validation else [],
+            "cases_issues": cases_validation.issues if cases_validation else [],
             "goal": goal,
             "compose_debug_download_path": compose_debug_download_path,
             "execution_summary": None,

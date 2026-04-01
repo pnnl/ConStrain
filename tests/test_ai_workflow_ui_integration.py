@@ -186,6 +186,53 @@ def test_validate_workflow_endpoint_validates_without_running(
 
 
 @patch("constrain.app.ai_workflow_ui._api_post")
+def test_validate_cases_endpoint_validates_without_running(
+    mock_api_post: MagicMock,
+) -> None:
+    workflow = {
+        "workflow_name": "Test workflow",
+        "meta": {
+            "author": "Test",
+            "date": "01/01/2024",
+            "version": "1.0",
+            "description": "Manual validation test workflow",
+        },
+        "imports": [],
+        "states": {
+            "Success": {
+                "Type": "MethodCall",
+                "MethodCall": "print",
+                "Parameters": ["ok"],
+                "Start": "True",
+                "End": "True",
+            }
+        },
+    }
+    cases = {
+        "cases": [
+            {
+                "name": "dummy"
+            }
+        ]
+    }
+
+    response = client.post(
+        "/validate-cases",
+        data={
+            "workflow_json": json.dumps(workflow),
+            "cases_json": json.dumps(cases),
+            "goal": "Validate cases",
+            "compose_debug_download_path": "/compose/debug-report/test-debug.md",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "No execution requested yet." in response.text
+    assert "/compose/debug-report/test-debug.md" in response.text
+    mock_api_post.assert_not_called()
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
 @patch("constrain.app.ai_workflow_ui._api_get")
 def test_verify_success_with_artifacts(
     mock_api_get: MagicMock, mock_api_post: MagicMock, tmp_path: Path
