@@ -544,6 +544,7 @@ def run(
     workflow_json: str = Form(...),
     cases_json: str = Form(""),
     goal: str = Form(""),
+    compose_debug_download_path: str = Form(""),
 ) -> HTMLResponse:
     """Run the provided workflow JSON using the ConStrain API."""
     wf_dict, wf_validation = validate_workflow_json_str(workflow_json)
@@ -576,8 +577,35 @@ def run(
             "cases_json": cases_json,
             "workflow_issues": wf_validation.issues if wf_validation else [],
             "goal": goal,
+            "compose_debug_download_path": compose_debug_download_path,
             "execution_summary": execution_summary,
             "execution_error": execution_error,
+        }
+    )
+    return _render_workflow_page(request, context)
+
+
+@app.post("/validate-workflow", response_class=HTMLResponse)
+def validate_workflow(
+    request: Request,
+    workflow_json: str = Form(...),
+    cases_json: str = Form(""),
+    goal: str = Form(""),
+    compose_debug_download_path: str = Form(""),
+) -> HTMLResponse:
+    """Validate the provided workflow JSON without executing it."""
+    _, wf_validation = validate_workflow_json_str(workflow_json)
+
+    context = _base_context(request)
+    context.update(
+        {
+            "workflow_json": workflow_json,
+            "cases_json": cases_json,
+            "workflow_issues": wf_validation.issues if wf_validation else [],
+            "goal": goal,
+            "compose_debug_download_path": compose_debug_download_path,
+            "execution_summary": None,
+            "execution_error": None,
         }
     )
     return _render_workflow_page(request, context)

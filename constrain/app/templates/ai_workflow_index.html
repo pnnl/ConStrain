@@ -329,6 +329,11 @@
       <section class="panel">
         <h2>AI proposals</h2>
         <form method="post" action="/run" id="run-workflow-form">
+        <input
+          type="hidden"
+          name="compose_debug_download_path"
+          value="{{ compose_debug_download_path }}"
+        />
         <div class="split-columns">
           <div>
             <h3>Workflow JSON</h3>
@@ -341,6 +346,7 @@
                 >{{ workflow_json }}</textarea>
               </div>
               <div class="button-row">
+                <button type="submit" formaction="/validate-workflow" id="validate-workflow-submit">Validate workflow</button>
                 <button type="submit" id="run-workflow-submit">Run workflow</button>
               </div>
             <div id="run-workflow-progress" class="small-note" style="display:none; margin-top:0.5rem;">

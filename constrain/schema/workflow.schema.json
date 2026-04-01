@@ -112,13 +112,7 @@
         "parameterValue": {
             "anyOf": [
                 {
-                    "type": "string"
-                },
-                {
-                    "type": "number"
-                },
-                {
-                    "type": "boolean"
+                    "$ref": "#/$defs/jsonValue"
                 },
                 {
                     "$ref": "#/$defs/embeddedMethodCall"

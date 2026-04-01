@@ -132,14 +132,57 @@ def test_run_endpoint_uses_workflow_job_api(
             "workflow_json": json.dumps(workflow),
             "cases_json": "",
             "goal": "Run test workflow",
+            "compose_debug_download_path": "/compose/debug-report/test-debug.md",
         },
     )
 
     assert response.status_code == 200
+    assert "/compose/debug-report/test-debug.md" in response.text
     mock_api_post.assert_called_once_with(
         "/ai/workflow/jobs", {"workflow": workflow, "save_path": None}
     )
     mock_api_get.assert_called_once_with("/ai/jobs/workflow-job-1")
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
+def test_validate_workflow_endpoint_validates_without_running(
+    mock_api_post: MagicMock,
+) -> None:
+    workflow = {
+        "workflow_name": "Test workflow",
+        "meta": {
+            "author": "Test",
+            "date": "01/01/2024",
+            "version": "1.0",
+            "description": "Manual validation test workflow",
+        },
+        "imports": [],
+        "states": {
+            "Success": {
+                "Type": "MethodCall",
+                "MethodCall": "print",
+                "Parameters": ["ok"],
+                "Start": "True",
+                "End": "True",
+            }
+        },
+    }
+
+    response = client.post(
+        "/validate-workflow",
+        data={
+            "workflow_json": json.dumps(workflow),
+            "cases_json": "",
+            "goal": "Validate test workflow",
+            "compose_debug_download_path": "/compose/debug-report/test-debug.md",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "No issues detected" in response.text
+    assert "No execution requested yet." in response.text
+    assert "/compose/debug-report/test-debug.md" in response.text
+    mock_api_post.assert_not_called()
 
 
 @patch("constrain.app.ai_workflow_ui._api_post")
