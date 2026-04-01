@@ -40,6 +40,7 @@ Compose supports defaults and `.env` overrides for:
 - `CONSTRAIN_API_BASE_URL` (default `http://api-server:8000`) for server-side UI-to-API calls inside Compose
 - `CONSTRAIN_PUBLIC_API_BASE_URL` (default `http://localhost:8000`) for browser-facing artifact download redirects
 - `APP_UID` / `APP_GID` (default `1000`) to run the API containers as a non-root user that matches the host on Linux
+- `CONSTRAIN_ALLOWED_IO_ROOTS` (default `/user_io,/data,/app` in compose) to limit API path access for verification and artifacts
 
 Example override (from `docker/` directory):
 

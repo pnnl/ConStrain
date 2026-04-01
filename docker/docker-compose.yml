@@ -29,6 +29,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - OUTPUT_DIR=/data/results
+      - CONSTRAIN_ALLOWED_IO_ROOTS=/user_io,/data,/app
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - APP_UID=${APP_UID:-1000}
       - APP_GID=${APP_GID:-1000}

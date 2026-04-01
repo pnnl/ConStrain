@@ -131,8 +131,88 @@ def _ensure_llm_available() -> None:
         )
 
 
+def _allowed_io_roots() -> List[Path]:
+    raw = (os.getenv("CONSTRAIN_ALLOWED_IO_ROOTS") or "").strip()
+    if not raw:
+        return []
+    roots: List[Path] = []
+    for token in raw.split(","):
+        token = token.strip()
+        if not token:
+            continue
+        roots.append(Path(token).expanduser().resolve(strict=False))
+    return roots
+
+
+def _is_path_within_roots(path: Path, allowed_roots: List[Path]) -> bool:
+    return any(path == root or root in path.parents for root in allowed_roots)
+
+
+def _resolve_user_path(
+    path_value: str,
+    *,
+    label: str,
+    expect: Literal["file", "dir", "any"] = "any",
+    must_exist: bool = True,
+) -> Path:
+    resolved_path = Path(path_value).expanduser().resolve(strict=False)
+    allowed_roots = _allowed_io_roots()
+
+    if allowed_roots and not _is_path_within_roots(resolved_path, allowed_roots):
+        allowed_roots_display = ", ".join(str(path) for path in allowed_roots)
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"{label} must resolve within allowed roots: {allowed_roots_display}. "
+                f"Received: {resolved_path}. Example Docker paths: "
+                "/user_io/examples/input/... and /user_io/examples/output/..."
+            ),
+        )
+
+    if must_exist and not resolved_path.exists():
+        raise HTTPException(
+            status_code=400,
+            detail=f"{label} not found: {resolved_path}",
+        )
+
+    if expect == "file" and resolved_path.exists() and not resolved_path.is_file():
+        raise HTTPException(
+            status_code=400,
+            detail=f"{label} must be a file: {resolved_path}",
+        )
+
+    if expect == "dir" and resolved_path.exists() and not resolved_path.is_dir():
+        raise HTTPException(
+            status_code=400,
+            detail=f"{label} must be a directory: {resolved_path}",
+        )
+
+    return resolved_path
+
+
+def _prepare_output_dir(output_dir: str) -> Path:
+    output_dir_path = _resolve_user_path(
+        output_dir,
+        label="Output directory",
+        expect="dir",
+        must_exist=False,
+    )
+    output_dir_path.mkdir(parents=True, exist_ok=True)
+    if not output_dir_path.is_dir():
+        raise HTTPException(
+            status_code=400,
+            detail=f"Output directory is invalid: {output_dir_path}",
+        )
+    return output_dir_path
+
+
 def _resolve_output_dir(output_dir: str) -> Path:
-    output_dir_path = Path(output_dir).expanduser().resolve()
+    output_dir_path = _resolve_user_path(
+        output_dir,
+        label="Output directory",
+        expect="dir",
+        must_exist=True,
+    )
     if not output_dir_path.exists() or not output_dir_path.is_dir():
         raise HTTPException(
             status_code=400,
@@ -366,26 +446,36 @@ def _resolve_relative_paths_in_case_suite(
 
 
 def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, Any]:
-    if not os.path.isfile(req.case_file_path):
-        raise HTTPException(
-            status_code=400,
-            detail=f"Verification case file not found: {req.case_file_path}",
-        )
-
-    os.makedirs(req.output_dir, exist_ok=True)
+    case_file_path = _resolve_user_path(
+        req.case_file_path,
+        label="Verification case file",
+        expect="file",
+        must_exist=True,
+    )
+    output_dir_path = _prepare_output_dir(req.output_dir)
 
     if req.library_json_path:
-        library_json_path = req.library_json_path
+        library_json_path = str(
+            _resolve_user_path(
+                req.library_json_path,
+                label="Library JSON file",
+                expect="file",
+                must_exist=True,
+            )
+        )
     else:
         library_json_path = str(
             Path(__file__).resolve().parents[1] / "schema/library.json"
         )
 
-    if not os.path.isfile(library_json_path):
-        raise HTTPException(
-            status_code=400,
-            detail=f"Library JSON file not found: {library_json_path}",
+    library_json_path = str(
+        _resolve_user_path(
+            library_json_path,
+            label="Library JSON file",
+            expect="file",
+            must_exist=True,
         )
+    )
 
     if len(req.fig_size) != 2:
         raise HTTPException(
@@ -402,7 +492,7 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
     logging.getLogger().setLevel(getattr(logging, req.log_level.upper()))
 
     try:
-        verification_case = VerificationCase(json_case_path=req.case_file_path)
+        verification_case = VerificationCase(json_case_path=str(case_file_path))
         if len(verification_case.case_suite) == 0:
             raise HTTPException(
                 status_code=400,
@@ -411,18 +501,19 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
 
         # Resolve relative paths in the verification case relative to the case file directory
         _resolve_relative_paths_in_case_suite(
-            verification_case.case_suite, req.case_file_path
+            verification_case.case_suite, str(case_file_path)
         )
 
         preprocessed_data = None
         if req.data_file_path:
-            if not os.path.isfile(req.data_file_path):
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Data file not found: {req.data_file_path}",
-                )
+            data_file_path = _resolve_user_path(
+                req.data_file_path,
+                label="Data file",
+                expect="file",
+                must_exist=True,
+            )
             data_processing = DataProcessing(
-                data_path=req.data_file_path,
+                data_path=str(data_file_path),
                 data_source=req.data_source,
             )
             preprocessed_data = data_processing.data
@@ -441,7 +532,7 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
             )
 
         verification.configure(
-            output_path=req.output_dir,
+            output_path=str(output_dir_path),
             lib_items_path=library_json_path,
             plot_option=req.plot_option,
             fig_size=(req.fig_size[0], req.fig_size[1]),
@@ -451,12 +542,12 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
         )
         verification.run()
 
-        md_json_files = sorted(glob.glob(os.path.join(req.output_dir, "*_md.json")))
+        md_json_files = sorted(glob.glob(os.path.join(str(output_dir_path), "*_md.json")))
         summary_path = None
 
         if req.generate_summary and md_json_files:
             reporting = Reporting(
-                verification_json=os.path.join(req.output_dir, "*_md.json"),
+                verification_json=os.path.join(str(output_dir_path), "*_md.json"),
                 result_md_name=req.summary_file_name,
                 report_format="markdown",
             )
@@ -466,8 +557,8 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
         return {
             "success": True,
             "verification": {
-                "case_file_path": req.case_file_path,
-                "output_dir": req.output_dir,
+                "case_file_path": str(case_file_path),
+                "output_dir": str(output_dir_path),
                 "md_json_files": md_json_files,
             },
             "reporting": {
