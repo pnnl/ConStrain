@@ -149,6 +149,22 @@
       .execution-error {
         color: #f97316;
       }
+      .error-meta {
+        margin-top: 0.4rem;
+        color: #fcd34d;
+      }
+      .stack-trace {
+        margin-top: 0.45rem;
+        border: 1px solid #7c2d12;
+        border-radius: 0.45rem;
+        background: #111827;
+        color: #fca5a5;
+        padding: 0.55rem;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
       .subpanel {
         margin-top: 1rem;
         border-top: 1px solid #1f2937;
@@ -384,6 +400,17 @@
               {% elif execution_error %}
               <div class="issue-item execution-error">
                 {{ execution_error }}
+                {% if execution_error_details and execution_error_details.failing_state %}
+                <div class="error-meta">
+                  State: {{ execution_error_details.failing_state }}
+                  {% if execution_error_details.state_line %}
+                  (line {{ execution_error_details.state_line }})
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if execution_error_details and execution_error_details.traceback %}
+                <pre class="stack-trace">{{ execution_error_details.traceback }}</pre>
+                {% endif %}
               </div>
               {% else %}
               <div class="issue-item">

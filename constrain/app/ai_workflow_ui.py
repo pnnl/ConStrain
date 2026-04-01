@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 import uuid
 from html import escape
@@ -393,6 +394,21 @@ def _build_llm_client_from_form(
     return HTTPJSONLLMClient(config)
 
 
+def _find_state_line_in_workflow_json(
+    workflow_json: str, failing_state: Optional[str]
+) -> Optional[int]:
+    """Return 1-based line number for a state key in the submitted workflow text."""
+    if not workflow_json or not failing_state:
+        return None
+
+    state_literal = json.dumps(failing_state)
+    state_pattern = re.compile(rf"^\s*{re.escape(state_literal)}\s*:\s*\{{")
+    for idx, line in enumerate(workflow_json.splitlines(), start=1):
+        if state_pattern.search(line):
+            return idx
+    return None
+
+
 @app.get("/health")
 def health_check() -> Dict[str, str]:
     """Health check endpoint for container orchestration."""
@@ -550,6 +566,7 @@ def run(
 
     execution_summary = None
     execution_error = None
+    execution_error_details = None
 
     if wf_dict is not None and wf_validation.valid:
         try:
@@ -561,6 +578,19 @@ def run(
                 execution_summary = result.get("execution", {}).get("summary")
             else:
                 execution_error = result.get("execution", {}).get("error")
+                execution_error_details = result.get("execution", {}).get(
+                    "error_details"
+                )
+                if isinstance(execution_error_details, dict):
+                    state_name = execution_error_details.get("failing_state")
+                    line_number = _find_state_line_in_workflow_json(
+                        workflow_json=workflow_json,
+                        failing_state=(
+                            state_name if isinstance(state_name, str) else None
+                        ),
+                    )
+                    if line_number is not None:
+                        execution_error_details["state_line"] = line_number
         except Exception as exc:
             execution_error = str(exc)
     elif wf_dict is None:
@@ -579,6 +609,7 @@ def run(
             "compose_debug_download_path": compose_debug_download_path,
             "execution_summary": execution_summary,
             "execution_error": execution_error,
+            "execution_error_details": execution_error_details,
         }
     )
     return _render_workflow_page(request, context)

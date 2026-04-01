@@ -251,6 +251,7 @@ def _run_workflow_execution(req: ExecuteWorkflowRequest) -> Dict[str, Any]:
             "saved_to": result.saved_to,
             "summary": result.summary,
             "error": result.error,
+            "error_details": result.error_details,
         },
     }
 

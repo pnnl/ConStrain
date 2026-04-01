@@ -228,6 +228,75 @@ def test_validate_cases_endpoint_validates_without_running(
 
 @patch("constrain.app.ai_workflow_ui._api_post")
 @patch("constrain.app.ai_workflow_ui._api_get")
+def test_run_endpoint_renders_detailed_execution_error(
+    mock_api_get: MagicMock, mock_api_post: MagicMock
+) -> None:
+    workflow = {
+        "workflow_name": "Test workflow",
+        "meta": {
+            "author": "Test",
+            "date": "01/01/2024",
+            "version": "1.0",
+            "description": "Workflow with a failing state",
+        },
+        "imports": [],
+        "states": {
+            "load data": {
+                "Type": "MethodCall",
+                "MethodCall": "print",
+                "Parameters": ["ok"],
+                "Start": "True",
+                "Next": "failing state",
+            },
+            "failing state": {
+                "Type": "MethodCall",
+                "MethodCall": "unknown_symbol",
+                "Parameters": [],
+                "End": "True",
+            },
+        },
+    }
+
+    mock_api_post.return_value = {"job_id": "workflow-job-2", "status": "queued"}
+    mock_api_get.return_value = {
+        "job_id": "workflow-job-2",
+        "status": "succeeded",
+        "result": {
+            "success": False,
+            "validation": {"valid": True, "issues": []},
+            "execution": {
+                "saved_to": None,
+                "summary": None,
+                "error": "State 'failing state' failed: name 'unknown_symbol' is not defined",
+                "error_details": {
+                    "failing_state": "failing state",
+                    "state_line": 999,
+                    "traceback": "Traceback (most recent call last):\\nNameError: name 'unknown_symbol' is not defined",
+                },
+            },
+        },
+    }
+
+    response = client.post(
+        "/run",
+        data={
+            "workflow_json": json.dumps(workflow, indent=2),
+            "cases_json": "",
+            "goal": "Run failure test",
+            "compose_debug_download_path": "/compose/debug-report/test-debug.md",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "State &#39;failing state&#39; failed" in response.text
+    assert "State: failing state" in response.text
+    assert "line" in response.text
+    assert "Traceback (most recent call last):" in response.text
+    assert "unknown_symbol" in response.text
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
+@patch("constrain.app.ai_workflow_ui._api_get")
 def test_verify_success_with_artifacts(
     mock_api_get: MagicMock, mock_api_post: MagicMock, tmp_path: Path
 ) -> None:
