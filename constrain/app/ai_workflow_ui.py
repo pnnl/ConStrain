@@ -18,7 +18,7 @@ from pathlib import Path
 from urllib.parse import urlencode
 from urllib.error import HTTPError, URLError
 from urllib.request import Request as UrlRequest, urlopen
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
@@ -231,6 +231,14 @@ def _render_landing_page(request: Request) -> HTMLResponse:
 
 
 def _render_workflow_page(request: Request, context: Dict[str, Any]) -> HTMLResponse:
+    context["workflow_issues"] = _annotate_issues_with_line_numbers(
+        json_text=str(context.get("workflow_json") or ""),
+        issues=context.get("workflow_issues") or [],
+    )
+    context["cases_issues"] = _annotate_issues_with_line_numbers(
+        json_text=str(context.get("cases_json") or ""),
+        issues=context.get("cases_issues") or [],
+    )
     return _render_page(request, context, template_name="ai_workflow_index.html")
 
 
@@ -407,6 +415,79 @@ def _find_state_line_in_workflow_json(
         if state_pattern.search(line):
             return idx
     return None
+
+
+def _find_first_key_line(
+    json_text: str, key: str, start_line: int = 1
+) -> Optional[int]:
+    key_literal = json.dumps(key)
+    key_pattern = re.compile(rf"^\s*{re.escape(key_literal)}\s*:")
+    for idx, line in enumerate(json_text.splitlines(), start=1):
+        if idx < start_line:
+            continue
+        if key_pattern.search(line):
+            return idx
+    return None
+
+
+def _get_issue_loc(issue: Any) -> List[Any]:
+    loc = getattr(issue, "loc", None)
+    if loc is None and isinstance(issue, dict):
+        loc = issue.get("loc", [])
+    if not isinstance(loc, list):
+        return []
+    return loc
+
+
+def _get_issue_message(issue: Any) -> str:
+    message = getattr(issue, "message", None)
+    if message is None and isinstance(issue, dict):
+        message = issue.get("message", "")
+    return str(message or "")
+
+
+def _get_issue_validator(issue: Any) -> Optional[str]:
+    validator = getattr(issue, "validator", None)
+    if validator is None and isinstance(issue, dict):
+        validator = issue.get("validator")
+    return str(validator) if validator is not None else None
+
+
+def _find_line_for_issue_location(json_text: str, loc: List[Any]) -> Optional[int]:
+    if not json_text:
+        return None
+    if not loc:
+        return 1
+
+    # Prefer the most specific named key in the location path.
+    for seg in reversed(loc):
+        if isinstance(seg, str):
+            line = _find_first_key_line(json_text, seg)
+            if line is not None:
+                return line
+
+    # Fall back to top-level first key in path.
+    if isinstance(loc[0], str):
+        return _find_first_key_line(json_text, loc[0])
+
+    return None
+
+
+def _annotate_issues_with_line_numbers(
+    json_text: str, issues: List[Any]
+) -> List[Dict[str, Any]]:
+    annotated: List[Dict[str, Any]] = []
+    for issue in issues:
+        loc = _get_issue_loc(issue)
+        annotated.append(
+            {
+                "loc": loc,
+                "message": _get_issue_message(issue),
+                "validator": _get_issue_validator(issue),
+                "line": _find_line_for_issue_location(json_text, loc),
+            }
+        )
+    return annotated
 
 
 @app.get("/health")

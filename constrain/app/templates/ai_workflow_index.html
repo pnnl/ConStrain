@@ -103,6 +103,28 @@
         padding: 0.55rem 0.6rem;
         border: 1px solid #1e293b;
       }
+      .editor-wrap {
+        display: grid;
+        grid-template-columns: 3.2rem 1fr;
+        gap: 0.45rem;
+        align-items: stretch;
+      }
+      .line-numbers {
+        margin: 0;
+        padding: 0.6rem 0.35rem;
+        border-right: 1px solid #1f2937;
+        color: #64748b;
+        text-align: right;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        overflow: hidden;
+        user-select: none;
+      }
+      .editor-textarea {
+        margin: 0;
+      }
       .code-block pre {
         margin: 0;
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
@@ -354,12 +376,16 @@
           <div>
             <h3>Workflow JSON</h3>
               <div class="code-block">
-                <textarea
-                  id="workflow_json"
-                  name="workflow_json"
-                  rows="18"
-                  placeholder="Generated workflow JSON will appear here..."
-                >{{ workflow_json }}</textarea>
+                <div class="editor-wrap">
+                  <pre id="workflow_json_lines" class="line-numbers" aria-hidden="true">1</pre>
+                  <textarea
+                    id="workflow_json"
+                    name="workflow_json"
+                    class="editor-textarea"
+                    rows="18"
+                    placeholder="Generated workflow JSON will appear here..."
+                  >{{ workflow_json }}</textarea>
+                </div>
               </div>
               <div class="button-row">
                 <button type="submit" formaction="/validate-workflow" id="validate-workflow-submit">Validate workflow</button>
@@ -384,6 +410,9 @@
                 <span class="issue-loc">
                   {{ issue.loc }}
                 </span>
+                {% if issue.line %}
+                (line {{ issue.line }})
+                {% endif %}
                 – {{ issue.message }}
               </div>
               {% endfor %}
@@ -422,12 +451,16 @@
           <div>
             <h3>Verification cases JSON</h3>
             <div class="code-block">
-              <textarea
-                id="cases_json"
-                name="cases_json"
-                rows="18"
-                placeholder="Generated verification-case suite JSON will appear here..."
-              >{{ cases_json }}</textarea>
+              <div class="editor-wrap">
+                <pre id="cases_json_lines" class="line-numbers" aria-hidden="true">1</pre>
+                <textarea
+                  id="cases_json"
+                  name="cases_json"
+                  class="editor-textarea"
+                  rows="18"
+                  placeholder="Generated verification-case suite JSON will appear here..."
+                >{{ cases_json }}</textarea>
+              </div>
             </div>
             <div class="button-row">
               <button type="submit" formaction="/validate-cases" id="validate-cases-submit">Validate cases</button>
@@ -448,6 +481,9 @@
                 <span class="issue-loc">
                   {{ issue.loc }}
                 </span>
+                {% if issue.line %}
+                (line {{ issue.line }})
+                {% endif %}
                 – {{ issue.message }}
               </div>
               {% endfor %}
@@ -466,6 +502,37 @@
         const composeSubmit = document.getElementById("compose-submit");
         const runSubmit = document.getElementById("run-workflow-submit");
         const runProgress = document.getElementById("run-workflow-progress");
+        const workflowEditor = document.getElementById("workflow_json");
+        const workflowLines = document.getElementById("workflow_json_lines");
+        const casesEditor = document.getElementById("cases_json");
+        const casesLines = document.getElementById("cases_json_lines");
+
+        function updateLineNumbers(textarea, lineBlock) {
+          if (!textarea || !lineBlock) {
+            return;
+          }
+          const lineCount = Math.max(1, textarea.value.split("\n").length);
+          const lines = [];
+          for (let i = 1; i <= lineCount; i += 1) {
+            lines.push(String(i));
+          }
+          lineBlock.textContent = lines.join("\n");
+          lineBlock.scrollTop = textarea.scrollTop;
+        }
+
+        function bindLineNumbers(textarea, lineBlock) {
+          if (!textarea || !lineBlock) {
+            return;
+          }
+          const refresh = function () {
+            updateLineNumbers(textarea, lineBlock);
+          };
+          textarea.addEventListener("input", refresh);
+          textarea.addEventListener("scroll", function () {
+            lineBlock.scrollTop = textarea.scrollTop;
+          });
+          refresh();
+        }
 
         function markRunning(message, submitButton, progressNode) {
           if (runningIndicator) {
@@ -511,6 +578,9 @@
             );
           });
         }
+
+        bindLineNumbers(workflowEditor, workflowLines);
+        bindLineNumbers(casesEditor, casesLines);
 
         window.addEventListener("pageshow", clearRunning);
       })();

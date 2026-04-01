@@ -186,6 +186,42 @@ def test_validate_workflow_endpoint_validates_without_running(
 
 
 @patch("constrain.app.ai_workflow_ui._api_post")
+def test_validate_workflow_shows_issue_line_number(
+    mock_api_post: MagicMock,
+) -> None:
+    invalid_workflow_json = """{
+    \"workflow_name\": \"Bad workflow\",
+    \"meta\": {
+        \"author\": \"Test\",
+        \"date\": \"01/01/2024\",
+        \"version\": \"1.0\",
+        \"description\": \"Missing required fields in state\"
+    },
+    \"imports\": [],
+    \"states\": {
+        \"broken_state\": {
+            \"Type\": \"MethodCall\"
+        }
+    }
+}"""
+
+    response = client.post(
+        "/validate-workflow",
+        data={
+            "workflow_json": invalid_workflow_json,
+            "cases_json": "",
+            "goal": "Validate bad workflow",
+            "compose_debug_download_path": "",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "broken_state" in response.text
+    assert "(line" in response.text
+    mock_api_post.assert_not_called()
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
 def test_validate_cases_endpoint_validates_without_running(
     mock_api_post: MagicMock,
 ) -> None:
@@ -223,6 +259,53 @@ def test_validate_cases_endpoint_validates_without_running(
     assert response.status_code == 200
     assert "No execution requested yet." in response.text
     assert "/compose/debug-report/test-debug.md" in response.text
+    mock_api_post.assert_not_called()
+
+
+@patch("constrain.app.ai_workflow_ui._api_post")
+def test_validate_cases_shows_issue_line_number(
+    mock_api_post: MagicMock,
+) -> None:
+    workflow = {
+        "workflow_name": "Test workflow",
+        "meta": {
+            "author": "Test",
+            "date": "01/01/2024",
+            "version": "1.0",
+            "description": "Manual validation test workflow",
+        },
+        "imports": [],
+        "states": {
+            "Success": {
+                "Type": "MethodCall",
+                "MethodCall": "print",
+                "Parameters": ["ok"],
+                "Start": "True",
+                "End": "True",
+            }
+        },
+    }
+    invalid_cases_json = """{
+  \"cases\": [
+    {
+      \"name\": \"dummy\"
+    }
+  ]
+}"""
+
+    response = client.post(
+        "/validate-cases",
+        data={
+            "workflow_json": json.dumps(workflow),
+            "cases_json": invalid_cases_json,
+            "goal": "Validate bad cases",
+            "compose_debug_download_path": "",
+        },
+    )
+
+    assert response.status_code == 200
+    assert "cases" in response.text
+    assert "(line" in response.text
     mock_api_post.assert_not_called()
 
 
