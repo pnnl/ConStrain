@@ -7,7 +7,11 @@ from constrain.api.workflow import Choice, Workflow
 
 def _load_valid_workflow() -> dict:
     workflow_path = (
-        Path(__file__).resolve().parents[1] / "tests" / "api" / "data" / "testworkflow.json"
+        Path(__file__).resolve().parents[1]
+        / "tests"
+        / "api"
+        / "data"
+        / "testworkflow.json"
     )
     with workflow_path.open("r", encoding="utf-8") as workflow_file:
         return json.load(workflow_file)
@@ -18,7 +22,9 @@ def test_validate_workflow_dict_ignores_working_dir_side_effects(monkeypatch):
     workflow["working_dir"] = "g36_jan_verification"
 
     def fail_if_called(*args, **kwargs):
-        raise AssertionError("validation should not attempt to create a working directory")
+        raise AssertionError(
+            "validation should not attempt to create a working directory"
+        )
 
     monkeypatch.setattr("pathlib.Path.mkdir", fail_if_called)
 

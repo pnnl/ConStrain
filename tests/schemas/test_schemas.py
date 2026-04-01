@@ -71,15 +71,15 @@ class JSONSchemaTest(unittest.TestCase):
                     {
                         "Value": "len(Payloads['original_case_keys']) == 3",
                         "Equals": "True",
-                        "Next": "validate cases"
+                        "Next": "validate cases",
                     },
                     {
                         "Value": "'verification_case_obj' in Payloads",
                         "Equals": "True",
-                        "Next": "validate cases"
-                    }
+                        "Next": "validate cases",
+                    },
                 ],
-                "Next": "validate cases"
+                "Next": "validate cases",
             }
         ]
 

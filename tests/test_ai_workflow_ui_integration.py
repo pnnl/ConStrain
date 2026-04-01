@@ -208,13 +208,7 @@ def test_validate_cases_endpoint_validates_without_running(
             }
         },
     }
-    cases = {
-        "cases": [
-            {
-                "name": "dummy"
-            }
-        ]
-    }
+    cases = {"cases": [{"name": "dummy"}]}
 
     response = client.post(
         "/validate-cases",

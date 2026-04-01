@@ -512,9 +512,7 @@ def compose(
             cases_raw_response=cases_result.raw_text,
         )
         debug_id = _store_compose_debug_markdown(debug_markdown)
-        context["compose_debug_download_path"] = (
-            f"/compose/debug-report/{debug_id}.md"
-        )
+        context["compose_debug_download_path"] = f"/compose/debug-report/{debug_id}.md"
     except Exception as exc:
         context["compose_error"] = str(exc)
 

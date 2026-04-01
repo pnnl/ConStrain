@@ -85,6 +85,7 @@ def _load_workflow_reference_markdown() -> str:
     # Keep composer operational even if docs are unavailable.
     return ""
 
+
 def _build_workflow_system_prompt() -> str:
     callables = list_workflow_callables()
     verif_classes = list_verification_classes()
