@@ -171,6 +171,35 @@
         color: #bae6fd;
         font-size: 0.8rem;
       }
+      .io-guide {
+        margin: 0.8rem 0 1rem;
+        padding: 0.8rem 0.9rem;
+        border-radius: 0.6rem;
+        border: 1px solid #155e75;
+        background: rgba(8, 47, 73, 0.45);
+      }
+      .io-guide h3 {
+        margin: 0 0 0.45rem;
+        font-size: 0.92rem;
+        color: #67e8f9;
+      }
+      .io-guide ul {
+        margin: 0;
+        padding-left: 1.1rem;
+      }
+      .io-guide li {
+        margin: 0.25rem 0;
+        font-size: 0.78rem;
+        color: #cbd5e1;
+      }
+      .io-guide code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid #1e293b;
+        border-radius: 0.35rem;
+        padding: 0.05rem 0.28rem;
+      }
     </style>
   </head>
   <body>
@@ -201,6 +230,30 @@
           use container paths like <strong>/user_io/examples/input/...</strong> and
           <strong>/user_io/examples/output/...</strong>.
         </p>
+        <div class="io-guide">
+          <h3>IO Requirements (Docker)</h3>
+          <ul>
+            <li>
+              Put user files in host <code>user_io/</code>. The container sees the
+              same files at <code>/user_io/</code>.
+            </li>
+            <li>
+              Use <code>/user_io/examples/input/...</code> for inputs and
+              <code>/user_io/examples/output/&lt;run-name&gt;</code> for outputs.
+            </li>
+            <li>
+              Allowed roots are enforced by the API. Primary root is
+              <code>/user_io</code>. Legacy roots like <code>/data</code> are
+              accepted during migration.
+            </li>
+            <li>
+              Typical values:
+              <code>/user_io/examples/input/verification_cases/G36_library_verification_cases.json</code>,
+              <code>/user_io/examples/input/data/G36_Modelica_Jan.csv</code>,
+              <code>/user_io/examples/output/manual-run</code>.
+            </li>
+          </ul>
+        </div>
         <form method="post" action="/verify" id="verification-form">
           <div class="split-columns">
             <div class="field">
