@@ -234,23 +234,26 @@
           <h3>IO Requirements (Docker)</h3>
           <ul>
             <li>
-              Put user files in host <code>user_io/</code>. The container sees the
-              same files at <code>/user_io/</code>.
+              <strong>Your files:</strong> Put inputs under host <code>user_io/input/</code>
+              and outputs under host <code>user_io/output/</code>. Reference them in forms as
+              <code>/user_io/input/...</code> and <code>/user_io/output/...</code>.
             </li>
             <li>
-              Use <code>/user_io/examples/input/...</code> for inputs and
-              <code>/user_io/examples/output/&lt;run-name&gt;</code> for outputs.
+              <strong>Example files:</strong> Sample data is auto-mounted at
+              <code>/user_io/examples/input/...</code> and
+              <code>/user_io/examples/output/...</code>.
             </li>
             <li>
-              Allowed roots are enforced by the API. Primary root is
-              <code>/user_io</code>. Legacy roots like <code>/data</code> are
-              accepted during migration.
+              Allowed roots: <code>/user_io</code> is primary. Legacy roots like
+              <code>/data</code> are accepted during migration.
             </li>
             <li>
-              Typical values:
+              Example paths:
               <code>/user_io/examples/input/verification_cases/G36_library_verification_cases.json</code>,
               <code>/user_io/examples/input/data/G36_Modelica_Jan.csv</code>,
-              <code>/user_io/examples/output/manual-run</code>.
+              <code>/user_io/examples/output/manual-run</code>. Or use your own:
+              <code>/user_io/input/my_case.json</code>,
+              <code>/user_io/output/my_run</code>.
             </li>
           </ul>
         </div>
@@ -263,7 +266,7 @@
                 type="text"
                 name="case_file_path"
                 value="{{ verification_inputs.case_file_path }}"
-                placeholder="/user_io/examples/input/verification_cases/G36_library_verification_cases.json"
+                placeholder="/user_io/input/verification_cases/case.json"
                 required
               />
             </div>
@@ -274,7 +277,7 @@
                 type="text"
                 name="output_dir"
                 value="{{ verification_inputs.output_dir }}"
-                placeholder="/user_io/examples/output/manual-run"
+                placeholder="/user_io/output/run-1"
                 required
               />
             </div>
@@ -288,7 +291,7 @@
                 type="text"
                 name="data_file_path"
                 value="{{ verification_inputs.data_file_path }}"
-                placeholder="/user_io/examples/input/data/G36_Modelica_Jan.csv"
+                placeholder="/user_io/input/data/data.csv"
               />
             </div>
             <div class="field">
@@ -298,7 +301,7 @@
                 type="text"
                 name="library_json_path"
                 value="{{ verification_inputs.library_json_path }}"
-                placeholder="/user_io/examples/input/schema/library.json"
+                placeholder="/user_io/input/schema/library.json"
               />
             </div>
           </div>

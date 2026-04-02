@@ -319,22 +319,26 @@
       <h2>IO Requirements (Docker)</h2>
       <ul>
         <li>
-          Put user files under host <code>user_io/</code>. Containers access the same files under
-          <code>/user_io/</code>.
+          <strong>Your files:</strong> Put inputs under host <code>user_io/input/</code>
+          and outputs under host <code>user_io/output/</code>. Reference them as
+          <code>/user_io/input/...</code> and <code>/user_io/output/...</code> in forms.
         </li>
         <li>
-          Use <code>/user_io/examples/input/...</code> for input references and
-          <code>/user_io/examples/output/&lt;run-name&gt;</code> for output locations.
+          <strong>Example files:</strong> Sample data is auto-mounted at
+          <code>/user_io/examples/input/...</code> and
+          <code>/user_io/examples/output/...</code>.
         </li>
         <li>
           API path checks enforce allowed roots. <code>/user_io</code> is the primary root,
           while legacy roots like <code>/data</code> are accepted during migration.
         </li>
         <li>
-          Example paths:
+          Example data source paths:
           <code>/user_io/examples/input/data/G36_Modelica_Jan.csv</code>,
-          <code>/user_io/examples/input/verification_cases/G36_library_verification_cases.json</code>,
-          <code>/user_io/examples/output/manual-run</code>.
+          <code>/user_io/examples/input/verification_cases/G36_library_verification_cases.json</code>.
+          Or use your own:
+          <code>/user_io/input/my_data.csv</code>,
+          <code>/user_io/output/my_results</code>.
         </li>
       </ul>
     </section>
@@ -362,7 +366,7 @@
               id="data_source_annotation"
               name="data_source_annotation"
               rows="8"
-              placeholder='{"data_path": "/user_io/examples/input/data/G36_Modelica_Jan.csv", "dev_settings": {"temperature_air_outdoor": "oa_t"}}'
+              placeholder='{"data_path": "/user_io/input/data/my_data.csv", "dev_settings": {"temperature_air_outdoor": "oa_t"}}'
             ></textarea>
           </div>
           <div class="field">

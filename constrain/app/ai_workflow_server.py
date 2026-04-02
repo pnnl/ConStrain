@@ -191,7 +191,8 @@ def _resolve_user_path(
             detail=(
                 f"{label} must resolve within allowed roots: {allowed_roots_display}. "
                 f"Received: {resolved_path}. Example Docker paths: "
-                "/user_io/examples/input/... and /user_io/examples/output/..."
+                "/user_io/input/..., /user_io/output/... (user files) or "
+                "/user_io/examples/input/..., /user_io/examples/output/... (example files)"
             ),
         )
 
