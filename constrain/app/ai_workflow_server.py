@@ -581,7 +581,9 @@ def _run_verification_execution(req: ExecuteVerificationRequest) -> Dict[str, An
         )
         verification.run()
 
-        md_json_files = sorted(glob.glob(os.path.join(str(output_dir_path), "*_md.json")))
+        md_json_files = sorted(
+            glob.glob(os.path.join(str(output_dir_path), "*_md.json"))
+        )
         summary_path = None
 
         if req.generate_summary and md_json_files:
