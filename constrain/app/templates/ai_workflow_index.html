@@ -258,6 +258,36 @@
         font-size: 0.8rem;
         line-height: 1.35;
       }
+      .io-banner {
+        margin: 1rem 2rem 0;
+        border: 1px solid #155e75;
+        background: rgba(8, 47, 73, 0.45);
+        border-radius: 0.7rem;
+        padding: 0.9rem 1rem;
+        color: #bae6fd;
+      }
+      .io-banner h2 {
+        margin: 0 0 0.45rem;
+        font-size: 0.95rem;
+        color: #67e8f9;
+      }
+      .io-banner ul {
+        margin: 0;
+        padding-left: 1.15rem;
+      }
+      .io-banner li {
+        margin: 0.35rem 0;
+        font-size: 0.8rem;
+        line-height: 1.35;
+      }
+      .io-banner code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid #1e293b;
+        border-radius: 0.35rem;
+        padding: 0.05rem 0.28rem;
+      }
     </style>
   </head>
   <body>
@@ -285,6 +315,29 @@
         <li>Output quality is highly sensitive to the context you provide and the selected generative AI model.</li>
       </ul>
     </section>
+    <section class="io-banner" aria-label="Docker IO requirements">
+      <h2>IO Requirements (Docker)</h2>
+      <ul>
+        <li>
+          Put user files under host <code>user_io/</code>. Containers access the same files under
+          <code>/user_io/</code>.
+        </li>
+        <li>
+          Use <code>/user_io/examples/input/...</code> for input references and
+          <code>/user_io/examples/output/&lt;run-name&gt;</code> for output locations.
+        </li>
+        <li>
+          API path checks enforce allowed roots. <code>/user_io</code> is the primary root,
+          while legacy roots like <code>/data</code> are accepted during migration.
+        </li>
+        <li>
+          Example paths:
+          <code>/user_io/examples/input/data/G36_Modelica_Jan.csv</code>,
+          <code>/user_io/examples/input/verification_cases/G36_library_verification_cases.json</code>,
+          <code>/user_io/examples/output/manual-run</code>.
+        </li>
+      </ul>
+    </section>
     <main>
       <section class="panel">
         <h2>Describe your verification workflow</h2>
@@ -309,7 +362,7 @@
               id="data_source_annotation"
               name="data_source_annotation"
               rows="8"
-              placeholder='{"data_path": "./demo/G36_demo/data/G36_Modelica_Jan.csv", "dev_settings": {"temperature_air_outdoor": "oa_t"}}'
+              placeholder='{"data_path": "/user_io/examples/input/data/G36_Modelica_Jan.csv", "dev_settings": {"temperature_air_outdoor": "oa_t"}}'
             ></textarea>
           </div>
           <div class="field">
