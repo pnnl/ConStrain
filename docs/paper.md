@@ -46,13 +46,13 @@ Advances in building control have shown significant potential for reducing the c
 
 `ConStrain` focuses on formalizing and automating verification of HVAC controls by analyzing sensor and actuator data streams from building control systems [@bs2021_30725].
 
-`ConStrain` is an open-source library and a Python application programming interface (API) for analyzing BAS data streams for adherence to an operational specification, which can correspond to the building and building owner's needs [@lei2023ashrae]. Note that this API, at its current form, provides a software interface for other Python programs, not a web REST API service.
+`ConStrain` is an open-source library and a Python application programming interface (API) for analyzing building automation system (BAS) data streams for adherence to an operational specification, which can correspond to the building and building owner's needs [@lei2023ashrae]. Note that this API, in its current form, provides a software interface for other Python programs, not a web REST API service.
 
 `ConStrain` is also incorporating semantic modeling capabilities to enable automated configuration and deployment of verification [@bs2023_1660].
 
 `ConStrain` can be used as a standalone tool and can also be integrated into established workflows of third-party tools and practices. For instance, `ConStrain` has been successfully integrated as part of the continuous integration software development process of whole-building energy simulation-based software tool (e.g., Washington State's Total System Performance Ratio Analysis Tool [@tspr]) to make sure that software code contributions as well as simulation software updates do not have unexpected impacts on the simulated performance of building system controls. Moreover, a set of `OpenStudio` [@os] measures [@osm] have also been developed to enable building energy modelers using `OpenStudio` to have access to perform verification on their models with minimal configurations required.
 
-At present, `ConStrain` expects pre-harmonized input units for each verification case that align with expected data points units defined in its corresponding verification item; automatic unit conversion is not in the core workflow and needs to be handled before feeding data into `ConStrain`.
+Currently, `ConStrain` requires each verification case to provide inputs in the same units as the expected data points defined for its verification item. Automatic unit conversion is not in the core workflow of `ConStrain`, so inputs shall be converted to the required units before being passed to `ConStrain`.
 
 ## Comparison with existing tools and industry practices
 
