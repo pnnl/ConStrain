@@ -65,9 +65,6 @@ jupytext = "^1.18.1"
 [tool.pytest.ini_options]
 pythonpath = ["."]
 
-[tool.pytest.ini_options]
-pythonpath = ["."]
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
