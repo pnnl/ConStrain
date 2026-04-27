@@ -12,17 +12,17 @@ PATH = pathlib.Path(__file__).parent.resolve()
 
 # Load examples from JSON file
 def _load_examples():
-    examples_file = path / "examples.json"
+    examples_file = PATH / "examples.json"
     with open(examples_file, "r") as f:
         data = json.load(f)
 
     # Convert relative paths to absolute paths
     for example_name, example_data in data.items():
         if "path_to_data" in example_data:
-            example_data["path_to_data"] = str(path / example_data["path_to_data"])
+            example_data["path_to_data"] = str(PATH / example_data["path_to_data"])
         if "path_to_verifications" in example_data:
             example_data["path_to_verifications"] = str(
-                path / example_data["path_to_verifications"]
+                PATH / example_data["path_to_verifications"]
             )
 
     return data
@@ -33,7 +33,7 @@ examples = _load_examples()
 
 class Examples:
     def __init__(self):
-        self.info = EXAMPLES
+        self.info = examples
 
     def check_example(self, example_name):
         if example_name in self.info.keys():
