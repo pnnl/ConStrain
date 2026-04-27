@@ -564,26 +564,10 @@ def main():
 
     from datetimeep import DateTimeEP
 
-    # check dimming control example
-
-    # df1 = DateTimeEP(
-    #     pd.read_csv(
-    #         "../resources/ASHRAE901_SchoolPrimary_STD2019_ElPaso/ASHRAE901_SchoolPrimary_STD2019_ElPaso.csv"
-    #     )
-    # ).transform()
-
-    # dimming_item = items[0]
-    # point_map = dimming_item["datapoints_source"]["output_variables"]
-    # point_map_reverse = {value.strip(): key.strip() for key, value in point_map.items()}
-    # new_df1 = df1.rename(str.strip, axis="columns")
-    # new_df1 = new_df1.rename(columns=point_map_reverse)
-    # cdc = ContinuousDimmingCompliance(new_df1["2000-07-21"]).get_checks
-
     # check rule based examples
     df_rule = DateTimeEP(
         pd.read_csv(
             "../resources/ASHRAE901_Hospital_STD2016_Tampa/ASHRAE901_Hospital_STD2016_Tampa.csv"  # hudmidity
-            # "../resources/ASHRAE901_SchoolPrimary_STD2004_ElPaso_Injected/eplusout.csv" # non-int economizer
         )
     ).transform()
 

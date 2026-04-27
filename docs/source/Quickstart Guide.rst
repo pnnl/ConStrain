@@ -41,11 +41,11 @@ Running Verifications using **ConStrain**
               "no": 1,
               "run_simulation": false,
               "simulation_IO": {
-                "idf": "modelica_dataset_set",
-                "idd": "./resources/Energy+V9_0_1.idd",
-                "weather": "./weather/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw",
-                "output": "./demo/G36_demo/data/G36_demo.csv",
-                "ep_path": "C:\\EnergyPlusV9-0-1\\energyplus.exe"
+                "idf": "",
+                "idd": "",
+                "weather": "",
+                "output": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
+                "ep_path": ""
               },
               "expected_result": "pass",
               "datapoints_source": {
@@ -98,8 +98,8 @@ First, let's import the package.
     # Load examples
     examples = cs.Examples()
     
-    # Get the data
-    data = examples.info
+    # Get the information about the examples
+    print(examples.info)
 
 Let's proceed with :python:`example_1` which according to its description aims to:
 
