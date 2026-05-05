@@ -1,42 +1,42 @@
 Code Documentation
 ===================
 
-.. automodule:: checklib
+.. automodule:: constrain.checklib
     :members:
     :inherited-members:
     :undoc-members:
     :show-inheritance:
-.. automodule:: api.brick_compliance
+.. automodule:: constrain.api.brick_compliance
     :members:
     :inherited-members:
     :undoc-members:
     :show-inheritance:
-.. automodule:: api.data_processing
+.. automodule:: constrain.api.data_processing
     :members:
     :inherited-members:
     :undoc-members:
     :show-inheritance:
-.. automodule:: api.reporting
+.. automodule:: constrain.api.reporting
     :members:
     :inherited-members:
     :undoc-members:
     :show-inheritance:
-.. automodule:: api.verification_case
+.. automodule:: constrain.api.verification_case
     :members:
     :inherited-members:
     :undoc-members:
     :show-inheritance:
-.. automodule:: api.verification_library
+.. automodule:: constrain.api.verification_library
     :members:
     :inherited-members:
     :undoc-members:
     :show-inheritance:
-.. automodule:: api.verification
+.. automodule:: constrain.api.verification
     :members:
     :inherited-members:
     :undoc-members:
     :show-inheritance:
-.. automodule:: api.workflow
+.. automodule:: constrain.api.workflow
     :members:
     :inherited-members:
     :undoc-members:

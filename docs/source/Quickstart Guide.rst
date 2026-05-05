@@ -10,6 +10,12 @@ Quickstart Guide
 
 This guide provides a quick overview of how to get started with **ConStrain**. Verifications of building system control related timeseries using **ConStrain** can either be done by using **ConStrain** as a Python library or by using a **ConStrain** workflow.
 
+What? Who? How?
+------------------
+**ConStrain** is a data-driven knowledge-integrated framework that automatically verifies that controls function as intended. As such, **ConStrain** might be of interest to a wide audience: from commissioning agents, to building operators, building energy modeling software users and developers and more. 
+
+The first step towards using the tool is to gather timeseries data that can be used to verify a specific sequence of operation or the correct behavior of an equipment. **ConStrain**'s library_ provide a list of the different verifications that can be performed, not that they can it can be expanded see documentation section on that topic. For each, it provides some general description and references, and also provides a list of the data points needed to carry out verifications. For example, the ASHRAE Guideline 36 verification named `G36ReheatTerminalBoxDeadbandAirflowSetpoint` aims to very that terminal boxes with reheat when the zone state is deadband following the Guideline 36 recommendations as described in Section 5.6.5.2 in ASHRAE Guideline 36 2021. For this verification to be carried out, a user would have to gather timeseries (or static parameter values when applicable) for the following datapoints: system operation mode, zone state, minimum airflow setpoint during occupied mode, airflow setpoint, heating coil command, discharge air temperature, minimum discharge air temperature setpoint. Note that the timeseries can come from any sources: from a building management system or from simulation. When completed, one is ready to use ConStrain. Note that if the data needs to be pre-processed, **ConStrain**'s pre-processing API_ could help.
+
 Installing **ConStrain**
 -------------------------
 **ConStrain** can be installed from PyPI by running the following command.
@@ -24,8 +30,8 @@ Running Verifications using **ConStrain**
 **ConStrain** relies on verification case files to perform verifications. These are JSON files that contain all the necessary information about data points, reference to verification logics, and simulation parameters when applicable. A verification case file can be built as follows:
 
   1. Identify if the desired verification is already part of the default library. **ConStrain**'s default verifications are documented :doc:`here <../Verifications>`. If not, consider expanding the default verifications, help is provided :doc:`here <../Expand Exisiting Verifications>`.
-  2. Create a JSON file that contains all the information needed by ConStrain to run the verification as detailed below or as defined on this schema (TBD).
-  3. Run the verification either using **ConStrain** as a :ref:`library <library>` or using a **ConStrain** :ref:`workflow <workflow>`.
+  2. Create a JSON file that contains all the information needed by ConStrain to run the verification as detailed below or as defined in this schema_.
+  3. Run the verification either using **ConStrain** as a :ref:`library <lib>` or using a **ConStrain** :ref:`workflow <wf>`.
 
 .. sourcecode:: JSON
 
@@ -74,7 +80,7 @@ Running Verifications using **ConStrain**
     }
   }
 
-.. _library:
+.. _lib:
 
 Using **ConStrain** as a Python Library
 ----------------------------------------
@@ -138,191 +144,82 @@ Finally, we can create summary report. A summary report for all verification wil
 
     reporting.report_multiple_cases()
 
-.. _workflow:
+.. _wf:
 
-Using **ConStrain**'s' Workflows
+Using **ConStrain**'s Workflows
 ----------------------------------
 
 A workflow is a group of instructions that define an end-to-end verification, from data parsing and manipulation to running the verfication(s) and reporting the results. Workflows are defined using the JSON file format so once they have been established they can be re-used easily without making significant modifications. Workflows rely on **ConStrain**'s APIs.
 
-Below is shown a valid workflow.
-
-.. sourcecode:: JSON
-
-    {
-      "workflow_name": "G36 Demo workflow",
-      "meta": {
-        "author": "ConStrain Team",
-        "date": "06/29/2023",
-        "version": "1.0",
-        "description": "Demo workflow to showcase G36 verification item development"
-      },
-      "imports": [
-        "numpy as np",
-        "pandas as pd"
-      ],
-      "states": {
-        "load data": {
-          "Type": "MethodCall",
-          "MethodCall": "DataProcessing",
-          "Parameters": {
-            "data_path": "./demo/G36_demo/data/G36_Modelica_Jan.csv",
-            "data_source": "EnergyPlus"
-          },
-          "Payloads": {
-            "data_processing_obj": "$",
-            "data": "$.data"
-          },
-          "Start": "True",
-          "Next": "load verification cases"
-        },
-        "load verification cases": {
-          "Type": "MethodCall",
-          "MethodCall": "VerificationCase",
-          "Parameters": {
-            "json_case_path": "./demo/G36_demo/data/G36_library_verification_cases.json"
-          },
-          "Payloads": {
-            "verification_case_obj": "$",
-            "original_case_keys": "$.case_suite.keys()"
-          },
-          "Next": "check original case length"
-        },
-        "check original case length": {
-          "Type": "Choice",
-          "Choices": [
-            {
-              "Value": "len(Payloads['original_case_keys']) == 3",
-              "Equals": "True",
-              "Next": "validate cases"
-            }
-          ],
-          "Default": "Report Error in workflow"
-        },
-        "validate cases": {
-          "Type": "Choice",
-          "Choices": [
-            {
-              "Value": "Payloads['verification_case_obj'].validate()",
-              "Equals": "True",
-              "Next": "setup verification"
-            }
-          ],
-          "Default": "Report Error in workflow"
-        },
-        "setup verification": {
-          "Type": "MethodCall",
-          "MethodCall": "Verification",
-          "Parameters": {
-            "verifications": "Payloads['verification_case_obj']"
-          },
-          "Payloads": {
-            "verification_obj": "$"
-          },
-          "Next": "configure verification runner"
-        },
-        "configure verification runner": {
-          "Type": "MethodCall",
-          "MethodCall": "Payloads['verification_obj'].configure",
-          "Parameters": {
-            "output_path": "./demo/G36_demo",
-            "lib_items_path": "./schema/library.json",
-            "plot_option": "+x None",
-            "fig_size": "+x (6, 5)",
-            "num_threads": 1,
-            "preprocessed_data": "Payloads['data']"
-          },
-          "Payloads": {},
-          "Next": "run verification"
-        },
-        "run verification": {
-          "Type": "MethodCall",
-          "MethodCall": "Payloads['verification_obj'].run",
-          "Parameters": {},
-          "Payloads": {
-            "verification_return": "$"
-          },
-          "Next": "check results"
-        },
-        "check results": {
-          "Type": "MethodCall",
-          "MethodCall": "glob.glob",
-          "Parameters": [
-            "./demo/G36_demo/*_md.json"
-          ],
-          "Payloads": {
-            "length_of_mdjson": "len($)"
-          },
-          "Next": "check number of result files"
-        },
-        "check number of result files": {
-          "Type": "Choice",
-          "Choices": [
-            {
-              "Value": "Payloads['length_of_mdjson']",
-              "Equals": "3",
-              "Next": "reporting_object_instantiation"
-            }
-          ],
-          "Default": "Report Error in workflow"
-        },
-        "reporting_object_instantiation": {
-          "Type": "MethodCall",
-          "MethodCall": "Reporting",
-          "Parameters": {
-            "verification_json": "./demo/G36_demo/*_md.json",
-            "result_md_name": "report_summary.md",
-            "report_format": "markdown"
-          },
-          "Payloads": {
-            "reporting_obj": "$"
-          },
-          "Next": "report_cases"
-        },
-        "report_cases": {
-          "Type": "MethodCall",
-          "MethodCall": "Payloads['reporting_obj'].report_multiple_cases",
-          "Parameters": {},
-          "Payloads": {},
-          "Next": "Success"
-        },
-        "Success": {
-          "Type": "MethodCall",
-          "MethodCall": "print",
-          "Parameters": [
-            "Congratulations! the demo workflow is executed with expected results and no error!"
-          ],
-          "End": "True"
-        },
-        "Report Error in workflow": {
-          "Type": "MethodCall",
-          "MethodCall": "logging.error",
-          "Parameters": [
-            "Something is wrong in the workflow execution"
-          ],
-          "End": "True"
-        }
-      }
-    }
-
-Where:
+Here is a valid workflow_. Where:
 
 - :json:`"workflow_name"`: Name of the workflow
 - :json:`"meta"`: Metadata about the workflow
 - :json:`"imports"`: Python package import needed to run the workflow
 - :json:`"states"`: Sequential steps to follow to perform the verification; :json:`"states"` can either be :json:`"MethodCall"` which represent a method call to one of **ConStrain**'s APIs or a :json:`"Choice"` which can be used to help define alternative steps in a workflow based on the result (referred to as payloads in a workflow).
 
-Running a workflow can be done as follows.
+Running a workflow can be done as follows:
 
 .. sourcecode:: python
 
     import constrain as cs
+    import requests, json, os
+    from pathlib import Path
 
-    workflow_file = "./demo/G36_demo/G36_demo_workflow.json"
-    workflow = cs.Workflow(workflow=workflow_file)
+    # 1 - Get workflow file
+    url = "https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/G36_demo_workflow.json"
+    response = requests.get(url)
+    data = json.loads(response.content)
+    with open("G36_demo_workflow.json", "wb") as f:
+        f.write(response.content)
+
+    # 2 - Get the timeseries
+    url_data = "https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/data/G36_demo.csv"
+    response = requests.get(url_data)
+    with open("./G36_demo.csv", "wb") as f:
+        f.write(response.content)
+
+    # 3 - Get the verification cases
+    url_verification_cases = "https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/data/G36_library_verification_cases.json"
+    response = requests.get(url_verification_cases)
+    with open("./G36_library_verification_cases.json", "wb") as f:
+        f.write(response.content)
+
+    # 3 - Get the ConStrain library
+    url_lib = "https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/schema/library.json"
+    response = requests.get(url_lib)
+    with open("./library.json", "wb") as f:
+        f.write(response.content)
+
+    # 4 - Change data path
+    data["states"]["load data"]["Parameters"]["data_path"] = str("./G36_demo.csv")
+    data["states"]["load verification cases"]["Parameters"]["json_case_path"] = str("./G36_library_verification_cases.json")
+    data["states"]["configure verification runner"]["Parameters"]["output_path"] = "./"
+    data["states"]["configure verification runner"]["Parameters"]["lib_items_path"] = ("./library.json")
+    data["states"]["check results"]["Parameters"][0] = "./*_md.json"
+    data["states"]["reporting_object_instantiation"]["Parameters"][
+        "verification_json"
+    ] = "./*_md.json"
+
+    # 3 - Run workflow
+    workflow = cs.Workflow(workflow=data)
     workflow.run_workflow(verbose=True)
+
+Interpreting Results
+---------------------
+
+After running the verifications defined above, whether it is using **ConStrain** as a library or using its Workflow capability, a `report_summary.md` file will be generated. The files contains a table that provide high-level information about the verifications that have been performed, including: case index, name of the data set, type of verification, number of samples analyzed, number of successful verifications, number of failed verifications, number of untested samples, and a general pass/fail assessement for the verification.
+
+The markdown file contains hyperlinks so users can open a more detailed report for each verification. Detailed reports include three main sections: 1) Pass/Fail check results, 2) Result visualization, and 3) Verification case definition. The former is a repeat of what is included in the main summary report previously described. The Result visualization section shows, depending on the plotting option documented here_, one or multiple charts depicting for a specific time period or a day, the values of the different variables used by the verification and the results of the verification. The Pass / Fail flag plot shows passing verification as `1` and failing verifications as `0`. The last section provide a summary of settings used to perform the verification.
 
 Using **ConStrain**'s Graphical User Interface (GUI)
 -----------------------------------------------------
 
-Workflow can be pretty complex and difficult to fully visualise from JSON files. **ConStrain** includes a GUI to help user create, edit, and picture workflows. If **ConStrain** has been installed, the GUI can be run by just running :bash:`constrain` in a command prompt or terminal.
+Workflow can be pretty complex and difficult to fully visualise from JSON files. **ConStrain** includes a GUI to help user create, edit, and picture workflows. If **ConStrain** has been installed, the GUI can be run by just running :bash:`constrain` in a command prompt or terminal. It is documented in this file_.
+
+.. _schema: https://github.com/pnnl/ConStrain/blob/develop/constrain/schema/verification_cases.schema.json
+.. _here: https://pnnl.github.io/ConStrain/Code%20Documentation.html#api.verification.Verification.configure
+.. _library: https://github.com/pnnl/ConStrain/blob/develop/constrain/schema/library.json
+.. _API: https://pnnl.github.io/ConStrain/Code%20Documentation.html#data-processing-py
+.. _file: https://github.com/pnnl/ConStrain/blob/develop/constrain/app/README.md
+.. _workflow: https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/G36_demo_workflow.json

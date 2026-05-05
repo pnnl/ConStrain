@@ -61,6 +61,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from constrain.checklib import RuleCheckBase
+import logging
 
 
 class SupplyAirTempReset(RuleCheckBase):
@@ -104,7 +105,7 @@ class SupplyAirTempReset(RuleCheckBase):
         return n_bins
 
     def plot(self, plot_option, fig_size=(6.4, 4.8), plt_pts=None):
-        print(
+        logging.info(
             "Specific plot method implemented, additional distribution plot is being added!"
         )
         sns.histplot(

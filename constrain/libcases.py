@@ -6,9 +6,9 @@ This file contains the runner of verification cases to be called by the user wit
 from constrain.workflowsteps import *
 from constrain.library import *
 from constrain.datetimeep import DateTimeEP
-import sys, os, pathlib
+import sys, os, pathlib, logging
 
-path = pathlib.Path(__file__).parent.resolve()
+PATH = pathlib.Path(__file__).parent.resolve()
 
 
 def run_libcase(
@@ -31,7 +31,9 @@ def run_libcase(
     """
 
     item = build_an_item(item_dict)
-    print(f"===========\nRunning case - {item.item['verification_class']}\n===========")
+    logging.info(
+        f"===========\nRunning case - {item.item['verification_class']}\n==========="
+    )
 
     idf_outputs = []
     idf_outputs.extend(read_injection_points(item))
@@ -72,15 +74,17 @@ def run_libcase(
 
     if run_sim:
         weather_path = item.item["simulation_IO"]["weather"].strip()
+        idd_path = item.item["simulation_IO"]["idd"].strip()
         if "ep_path" in list(item.item["simulation_IO"].keys()):
             run_simulation(
                 idfpath=run_idf_path,
                 weatherpath=weather_path,
+                idd_path=idd_path,
                 ep_path=item.item["simulation_IO"]["ep_path"],
             )
         else:
             run_simulation(idfpath=run_idf_path, weatherpath=weather_path)
-        print("Simulation done")
+        logging.info("Simulation done")
 
     if not preprocessed_data is None:
         df = item.read_points_values(
@@ -147,25 +151,25 @@ def main():
     num_argv = len(sys.argv)
     # NOTE: all relative paths in the json files should be based on "./" being "./constrain"
     cases_path = "../test_cases/verif_mtd_pp/verification_cases.json"
-    lib_items_path = f"{path}/schema/library.json"
+    lib_items_path = f"{PATH}/schema/library.json"
     items = assemble_verification_items(
         cases_path=cases_path, lib_items_path=lib_items_path
     )
     if num_argv == 1:
-        print(
+        logging.info(
             f"No command line argument provided, running all {len(items)} verification cases from {cases_path} sequentially with one thread"
         )
         for item in items:
             run_libcase(item_dict=item)
     elif num_argv == 2:
         case_no = int(sys.argv[1])
-        print(f"Running verification case {case_no}")
+        logging.info(f"Running verification case {case_no}")
         run_libcase(item_dict=items[case_no])
     else:
-        print(f"Error: Invalid number of arguments provided: {sys.argv}")
+        logging.error(f"Error: Invalid number of arguments provided: {sys.argv}")
 
 
 if __name__ == "__main__":
-    print(f"Running main() in {os.getcwd()}...")
+    logging.info(f"Running main() in {os.getcwd()}...")
     main()
-    print("Running of main() completed!")
+    logging.info("Running of main() completed!")

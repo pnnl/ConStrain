@@ -14,8 +14,8 @@
 #
 import sys, os
 
-sys.path.insert(0, os.path.abspath("../../constrain"))
-import api
+sys.path.insert(0, os.path.abspath("../.."))
+import constrain.api as api
 
 sys.path.append(os.getcwd())
 import generate_verification_docs
@@ -55,7 +55,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.autodoc",
-    #'sphinx.ext.napoleon'
+    "sphinx.ext.napoleon",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

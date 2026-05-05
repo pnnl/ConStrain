@@ -67,6 +67,8 @@ else:
   
 """
 
+import logging
+
 import pandas as pd
 from constrain.checklib import RuleCheckBase
 
@@ -134,7 +136,7 @@ class G36ReheatTerminalBoxHeatingCoilTracking(RuleCheckBase):
                     else:
                         result_flag = False
                 else:
-                    print("invalid error time")
+                    logging.error("invalid error time")
                     return False
 
             self.result.loc[cur_time] = result_flag

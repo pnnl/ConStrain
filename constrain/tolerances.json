@@ -23,6 +23,7 @@
         "unit": "m3/s",
         "types": {
             "hot": 0.0,
+            "chilled": 0.0,
             "general": 0.0
         }
     },
