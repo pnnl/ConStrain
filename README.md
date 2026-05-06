@@ -55,6 +55,6 @@ See the Publications section for more information and example of uses of the fra
 
 ## Referencing
 
-If you wish to cite ConStrain in academic work please use: Lei, X., Lerond, J., Jung, Y. J., & Chen, Y. (2025). ConStrain (Version 0.6.0) [Computer software]. https://github.com/pnnl/ConStrain
+If you wish to cite ConStrain in academic work please use: Lei, X., Lerond, J., Jung, Y. J., & Chen, Y. (2026). ConStrain (Version 0.7.0) [Computer software]. https://github.com/pnnl/ConStrain
 
 <!-- Pending DOI for new ConStrain -->
