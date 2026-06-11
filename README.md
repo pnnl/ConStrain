@@ -2,6 +2,8 @@
 
 <!-- # ANIMATE: a dAtadriveN buildIng perforMance verificATion framEwork -->
 
+DOI: [![DOI](https://zenodo.org/badge/626583761.svg)](https://doi.org/10.5281/zenodo.20649191)
+
 Unit tests status: ![Tests](https://github.com/pnnl/ConStrain/actions/workflows/unit_tests.yml/badge.svg)
 
 # Background and Motivation
