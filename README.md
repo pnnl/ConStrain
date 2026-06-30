@@ -33,7 +33,7 @@ While the development of ConStrain was motivated by use cases with building ener
 
 # Current Version of _ConStrain_?
 
-The current version of ConStrain includes the framework implementation, a preliminary development and implementation of the verification library (based on ASHRAE 90.1-2016 control related requirement), and the test cases of verification algorithms using prototype building models. The current list of implemented verification algorithms includes supply air temperature control, economizer high limit, integrated economizer control, zone temperature control (dead band), zone temperature control (setback), hot water temperature reset, chilled water temperature reset, etc.
+The current version of ConStrain includes the framework implementation, a preliminary development and implementation of the verification library (based on ASHRAE Guideline 36-2021 and 90.1-2016 control related requirement), and the test cases of verification algorithms using prototype building models. The current list of implemented verification algorithms includes supply air temperature control, economizer high limit, integrated economizer control, zone temperature control (dead band), zone temperature control (setback), hot water temperature reset, chilled water temperature reset, etc.
 
 See the Publications section for more information and example of uses of the framework.
 
