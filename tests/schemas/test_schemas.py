@@ -46,7 +46,7 @@ class JSONSchemaTest(unittest.TestCase):
             jsonschema.validate(instance=workflow_dict, schema=self.workflow_schema)
 
     def test_workflow_schema_allows_working_dir(self):
-        workflow_path = "./constrain/demo/G36_demo/data/G36_demo.csv"
+        workflow_path = "./constrain/demo/api_demo/demo_workflow.json"
 
         with open(workflow_path, "r") as f:
             workflow_dict = json.load(f)
@@ -59,7 +59,7 @@ class JSONSchemaTest(unittest.TestCase):
             self.fail(f"Validation failed: {e}")
 
     def test_workflow_schema_allows_all_logical_choice(self):
-        workflow_path = "./constrain/demo/G36_demo/data/G36_demo.csv"
+        workflow_path = "./constrain/demo/api_demo/demo_workflow.json"
 
         with open(workflow_path, "r") as f:
             workflow_dict = json.load(f)

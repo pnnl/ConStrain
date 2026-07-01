@@ -7,7 +7,7 @@
 				"idf": "",
 				"idd": "",
 				"weather": "",
-				"output": "./demo/G36_demo/data/G36_demo.csv",
+				"output": "./demo/api_demo/demo_dataset.csv",
 				"ep_path": ""
 			},
 			"expected_result": "pass",
@@ -32,7 +32,7 @@
 				"idf": "",
 				"idd": "",
 				"weather": "",
-				"output": "./demo/G36_demo/data/G36_demo.csv",
+				"output": "./demo/api_demo/demo_dataset.csv",
 				"ep_path": ""
 			},
 			"expected_result": "pass",
@@ -57,7 +57,7 @@
 				"idf": "",
 				"idd": "",
 				"weather": "",
-				"output": "./demo/G36_demo/data/G36_demo.csv",
+				"output": "./demo/api_demo/demo_dataset.csv",
 				"ep_path": ""
 			},
 			"expected_result": "pass",

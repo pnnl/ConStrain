@@ -25,7 +25,7 @@ The simplest way to test the container:
 docker run --rm constrain-workflow:latest
 ```
 
-This runs the default demo workflow located at `./constrain/demo/G36_demo/data/G36_demo.csv`.
+This runs the default demo workflow located at `./constrain/demo/api_demo/demo_workflow.json`.
 
 ### Available Options
 
