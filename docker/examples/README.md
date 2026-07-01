@@ -1,1 +1,1 @@
-This example is identical to `./constrain/demo/api_demo/demo_workflow.json` (which is also the default workflow), except that it uses different file paths.
+This example is identical to `./constrain/demo/G36_demo/G36_demo_workflow.json` (which is also the default workflow), except that it uses different file paths.
