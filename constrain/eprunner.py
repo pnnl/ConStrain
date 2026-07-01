@@ -55,7 +55,7 @@ class EPRunner:
         Path(self.output_path).mkdir(parents=True, exist_ok=True)
         shutil.copyfile(
             self.weather_path,
-            "".join(self.output_path, "/", self.weather_path.split("/")[-1]),
+            "".join([self.output_path, "/", self.weather_path.split("/")[-1]]),
         )  # weather_path should perhaps be renamed
         self.weather_path = self.output_path + "/" + self.weather_path.split("/")[-1]
 
@@ -67,7 +67,6 @@ class EPRunner:
             self.output_path,
             "--idd",
             self.idd_path,
-            "--expandobjects",
             "-r",  # use to do read vars
         ]
 
@@ -76,7 +75,7 @@ class EPRunner:
 
         command.append(self.idf_path)
 
-        self.process_run = subprocess.run(command, shell=True, capture_output=True)
+        self.process_run = subprocess.run(command, shell=False, capture_output=True)
 
         return self.process_run
 

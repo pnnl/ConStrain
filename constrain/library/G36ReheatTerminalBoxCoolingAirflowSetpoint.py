@@ -84,6 +84,8 @@ else:
 
 """
 
+import logging
+
 from constrain.checklib import RuleCheckBase
 
 
@@ -126,7 +128,7 @@ class G36ReheatTerminalBoxCoolingAirflowSetpoint(RuleCheckBase):
                 cooling_maximum = 0
                 cooling_minimum = 0
             case _:
-                print("invalid operation mode value")
+                logging.info("invalid operation mode value")
                 return "Untested"
 
         if cooling_minimum <= v_sp <= cooling_maximum:

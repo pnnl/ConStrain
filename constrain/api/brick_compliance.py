@@ -1,3 +1,9 @@
+"""
+brick_compliance.py
+====================================
+Brick Compliance API
+"""
+
 import ast
 import copy
 import json
@@ -12,9 +18,7 @@ import yaml
 import pathlib
 from pydash import filter_, flatten_deep
 
-path = pathlib.Path(__file__).parent.resolve()
-sys.path.append("..")
-
+PATH = pathlib.Path(__file__).parent.resolve()
 HVAC_ZONE_NAME_PARSE_RE = r"\?(\w+) a brick:HVAC_Zone \."
 CASE_KEY_NAMES = [
     "no",
@@ -58,38 +62,56 @@ class BrickCompliance:
             logging.error(
                 f"The `brick_schema_path` argument type must be str, but {type(brick_schema_path)} type is provided."
             )
-            return None
+            raise TypeError(
+                f"brick_schema_path must be str, got {type(brick_schema_path)}"
+            )
 
         if not isinstance(brick_instance_path, str):
             logging.error(
                 f"The `brick_instance_path` argument type must be str, but {type(brick_instance_path)} type is provided."
             )
-            return None
+            raise TypeError(
+                f"brick_instance_path must be str, got {type(brick_instance_path)}"
+            )
 
         if not isinstance(datapoint_name_conversion_path, str):
             logging.error(
                 f"The `datapoint_name_conversion_path` argument type must be str, but {type(datapoint_name_conversion_path)} type is provided."
             )
-            return None
+            raise TypeError(
+                f"datapoint_name_conversion_path must be str, got {type(datapoint_name_conversion_path)}"
+            )
+
+        if not isinstance(query_statement_path, str):
+            logging.error(
+                f"The `query_statement_path` argument type must be str, but {type(query_statement_path)} type is provided."
+            )
+            raise TypeError(
+                f"query_statement_path must be str, got {type(query_statement_path)}"
+            )
 
         if not isinstance(perform_reasoning, bool):
             logging.error(
                 f"The `perform_reasoning` argument type must be bool, but {type(perform_reasoning)} type is provided."
             )
-            return None
+            raise TypeError(
+                f"perform_reasoning must be bool, got {type(perform_reasoning)}"
+            )
 
         # check if the files exist in the given directory
         if not os.path.exists(brick_schema_path):
             logging.error(
                 f"The file doesn't exist in the provided directory. Please make sure to provide a correct `brick_schema_path`."
             )
-            return None
+            raise FileNotFoundError(f"Brick schema file not found: {brick_schema_path}")
 
         if not os.path.exists(brick_instance_path):
             logging.error(
                 f"The file doesn't exist in the provided directory. Please make sure to provide a correct `brick_instance_path`."
             )
-            return None
+            raise FileNotFoundError(
+                f"Brick instance file not found: {brick_instance_path}"
+            )
 
         # define variables
         self.brick_schema_path = brick_schema_path
@@ -131,7 +153,9 @@ class BrickCompliance:
             logging.error(
                 f"The query statement file isn't found. Please verify the {query_statement_path} path."
             )
-            return None
+            raise FileNotFoundError(
+                f"Query statement file not found: {query_statement_path}"
+            )
 
         # find all the HVAC_ZONE brick class names
         self.hvac_zone_name_container = list(
@@ -155,16 +179,20 @@ class BrickCompliance:
             logging.error(
                 f"The datapoint name conversion file isn't found. Please verify the {datapoint_name_conversion_path} path."
             )
-            return None
+            raise FileNotFoundError(
+                f"Datapoint name conversion file not found: {datapoint_name_conversion_path}"
+            )
 
         try:
-            with open(f"{path}/../schema/library.json", "r") as file:
+            with open(f"{PATH}/../schema/library.json", "r") as file:
                 self.library_json = json.load(file)
         except FileNotFoundError:
             logging.error(
                 f"The library json file isn't found. Please verify that the file exists in the `schema` folder."
             )
-            return None
+            raise FileNotFoundError(
+                f"Library json file not found: {PATH}/../schema/library.json"
+            )
 
     def validate_brick_instance(self):
         """Validate a brick instance against the brick schema.

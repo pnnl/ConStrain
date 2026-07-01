@@ -1,5 +1,7 @@
 """Take in all info about one item and process"""
 
+import logging
+
 from constrain.datapoint import IdfOutputPoint, IdfInfoPoint, DevSettingPoint
 from constrain.epreader import CSVReader, IDFReader
 from constrain.datetimeep import DateTimeEP
@@ -77,7 +79,7 @@ class Item:
                 self.idf_simcontrol["run_sizing"] = True
             if each.lower().strip() in "specific periods":
                 if run_full_year:
-                    print(
+                    logging.warning(
                         "WARNING: setting annual and specific periods simulaton at the same time"
                     )
                 run_period_dict = self.item["run_period"]
@@ -99,9 +101,9 @@ class Item:
         """set different types of data points for use by other modules"""
         self.points = self.item["datapoints_source"]
         for pointtype, points in self.points.items():
-            print("=======")
-            print(pointtype)
-            print(points)
+            logging.info("=======")
+            logging.info(pointtype)
+            logging.info(points)
 
             for pointname, pointinfo in points.items():
                 self.pointnamelist.append(pointname)
@@ -249,7 +251,7 @@ class TimeSeriesFilterElement:
             self.type = "filter"
             self.content = filter_str.split("filter:")[1].strip()
         else:
-            print("ERROR! Invalid apply type")
+            logging.error("ERROR! Invalid apply type")
 
     def __repr__(self):
         """for debugging use"""

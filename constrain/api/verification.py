@@ -10,12 +10,10 @@ import pandas as pd
 from typing import Dict, List, Tuple, Union
 from pathlib import Path
 
-sys.path.append("..")
-
 from .verification_case import *
-from constrain.run_verification_case import *
-from constrain.workflowsteps import *
-from constrain.libcases import *
+from ..run_verification_case import *
+from ..workflowsteps import *
+from ..libcases import *
 
 
 class Verification:
@@ -72,7 +70,7 @@ class Verification:
             time_series_csv_export_name_prefix (str, optional): CSV file name prefix for saving a complete data csv file with verification result flags. Defaults to None, which will not save any time series data archives.
             lib_items_path (str, optional): User provided verification item json path (include name of the file with extension).
             lib_classes_py_file (str, optional): User provided verification item python classes file.
-            plot_option (str, optional): Type of plots to include. It should either be all-compact, all-expand, day-compact, or day-expand. It can also be None, which will plot all types. Default to None.
+            plot_option (str, optional): Type of plots to include. It should either be all-compact (all variables are plotted into one single plot), all-expand (individual plots for each variables), day-compact (all variables are plotted into one single plot and only cover one day), or day-expand (individual plots for each variables and only cover one day). It can also be None, which will plot all types. Default to None.
             fig_size (tuple, optional): Tuple of integers (length, height) describing the size of the figure to plot. Defaults to (6.4, 4.8).
             num_threads (int, optional): Number of threads to run verifications in parallel. Defaults to 1.
             preprocessed_data (pd.DataFrame, optional): Pre-processed data stored in the data frame. Default to None.
@@ -173,8 +171,8 @@ class Verification:
                     Path(__file__).parent.parent / "tolerances.json"
                 )
         else:
-            logging.error(
-                f"path_to_custom_tolerance_file should be a string. The default tolerances will be used."
+            logging.info(
+                f"path_to_custom_tolerance_file was not specified. The default tolerances will be used."
             )
             path_to_custom_tolerance_file = (
                 Path(__file__).parent.parent / "tolerances.json"

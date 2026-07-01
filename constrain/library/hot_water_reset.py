@@ -1,8 +1,8 @@
 """
 ### Description
 
-6.5.4.4 Chilled- and Hot-Water Temperature Reset Controls
-- Chilled- and hot-water systems with a design capacity exceeding 300,000 Btu/h supplying chilled or heated water to comfort conditioning systems shall include controls that automatically
+6.5.4.4 Hot-Water Temperature Reset Controls
+- hot-water systems with a design capacity exceeding 300,000 Btu/h supplying heated water to comfort conditioning systems shall include controls that automatically
 reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. Where DDC is used to control valves, the
 set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached.
 
@@ -10,7 +10,7 @@ set point shall be reset based on valve positions until one valve is nearly wide
 
 - Code Name: ASHRAE 90.1
 - Code Year: 2016
-- Code Section: 6.5.4.4 Chilled- and Hot-Water Temperature Reset Controls
+- Code Section: 6.5.4.4 Hot-Water Temperature Reset Controls
 
 ### Verification Approach
 
@@ -88,6 +88,7 @@ elif temperature_air_outdoor_min < temperature_air_outdoor < temperature_air_out
 import matplotlib.pyplot as plt
 import seaborn as sns
 from constrain.checklib import RuleCheckBase
+import logging
 
 
 class HWReset(RuleCheckBase):
@@ -147,12 +148,12 @@ class HWReset(RuleCheckBase):
                     (
                         self.df["temperature_water_hot"]
                         >= self.df["temperature_water_hot_setpoint_min"]
-                        + self.get_tolerance("temperature", "general")
+                        - self.get_tolerance("temperature", "general")
                     )
                     & (
                         self.df["temperature_water_hot"]
                         <= self.df["temperature_water_hot_setpoint_max"]
-                        - self.get_tolerance("temperature", "general")
+                        + self.get_tolerance("temperature", "general")
                     )
                 )
             )
@@ -160,7 +161,7 @@ class HWReset(RuleCheckBase):
 
     # Add a correlation scatter plot of t_oa and t_hw
     def plot(self, plot_option, fig_size, plt_pts=None):
-        print(
+        logging.info(
             "Specific plot method implemented, additional scatter plot is being added!"
         )
         plt.subplots()

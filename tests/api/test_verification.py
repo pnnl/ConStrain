@@ -2,12 +2,14 @@ import glob
 import shutil
 import unittest, sys, os, pathlib
 
-sys.path.append("./constrain")
-from api import VerificationCase
-from api import Verification
-from api import DataProcessing
+# Add the project root to the path so we can import constrain
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
-path = pathlib.Path(__file__).parent.resolve()
+from constrain.api import VerificationCase
+from constrain.api import Verification
+from constrain.api import DataProcessing
+
+PATH = pathlib.Path(__file__).parent.resolve()
 
 
 class TestVerification(unittest.TestCase):

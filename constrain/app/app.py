@@ -1,3 +1,4 @@
+import logging
 import sys
 import warnings
 import json
@@ -199,7 +200,7 @@ class GUI(QMainWindow):
                 with open(fp, "w", encoding="utf-8") as f:
                     json.dump(self.create_json(workflow), f, indent=4)
             except Exception:
-                print("error")
+                logging.error("error")
 
     def exportAsPng(self):
         """Exports current state as a .png to local storage"""
@@ -257,7 +258,7 @@ class GUI(QMainWindow):
                     self.get_workflow()
                 else:
                     # error if selected file cannot be converted to a dict
-                    print("error")
+                    logging.error("error")
 
     def display_form(self, current_item):
         """Displays tab that is selected

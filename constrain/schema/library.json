@@ -534,11 +534,11 @@
             "mode_operation": "System operation mode",
             "temperature_air_outdoor": "Outdoor air temperature",
             "temperature_air_supply_max": "Maximum supply air temperature setpoint based on requests",
-			"temperature_air_outdoor_supply_max": "Maximum outdoor air temperature for linear SAT reset",
+            "temperature_air_outdoor_supply_max": "Maximum outdoor air temperature for linear SAT reset",
             "temperature_air_outdoor_supply_min": "Minimum outdoor air temperature for linear SAT reset",
             "temperature_air_supply_setpoint_cool_min": "Minimum cooling supply air temperature setpoint",
             "temperature_air_supply_setpoint_cool_max": "Maximum cooling supply air temperature setpoint",
-			"temperature_air_supply_setpoint": "Supply air temperature setpoint"
+            "temperature_air_supply_setpoint": "Supply air temperature setpoint"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -776,7 +776,7 @@
             "output_coil_cooling": "AHU cooling coil heat transfer rate",
             "position_damper_air_return_max": "Maximum return air damper position",
             "position_damper_air_return": "Return air damper position",
-			"position_damper_air_relief": "Relief air damper position"
+            "position_damper_air_relief": "Relief air damper position"
         },
         "description_verification_type": "procedure-based",
         "assertions_type": "pass",
@@ -1556,7 +1556,7 @@
             "end"
         ]
     },
-	"VAVMinimumTurndownDuringReheatPressureReset": {
+    "VAVMinimumTurndownDuringReheatPressureReset": {
         "library_item_id": 69,
         "description_brief": "When a VAV box is in reheat mode, the ratio of VAV airflow rate to VAV max airflow rate must not be greater than the min design turndown ratio and the pressure setpoint must remain the same",
         "description_index": [
@@ -1577,11 +1577,11 @@
             "     Untested",
             "  if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:",
             "    if pressure_static_setpoint_prev is None:",
-			"        Untested",
-			"    elif abs(pressure_static_setpoint - pressure_static_setpoint_prev) > 0:",
-			"        Untested",
-			"    else:",
-			"        fail",
+            "        Untested",
+            "    elif abs(pressure_static_setpoint - pressure_static_setpoint_prev) > 0:",
+            "        Untested",
+            "    else:",
+            "        fail",
             "  else:",
             "     pass",
             "else: ",
@@ -1613,11 +1613,11 @@
             "    pass",
             "  else: ",
             "    fail",
-			"  end",
+            "  end",
             "end"
         ]
     },
-	"ChilledWaterPlantSizingWholePlant": {
+    "ChilledWaterPlantSizingWholePlant": {
         "library_item_id": 71,
         "description_brief": "",
         "description_index": [
@@ -1625,7 +1625,7 @@
         ],
         "description_datapoints": {
             "load_plant_water_chilled": "Chilled water plant load",
-			"temperature_air_outdoor": "Outdoor air temperature",
+            "temperature_air_outdoor": "Outdoor air temperature",
             "capacity_nominal_plant_water_chilled": "Nominal capacity of the chilled water plant",
             "temperature_drybulb_day_design_cooling": "Cooling design day drybulb temperature",
             "factor_oversizing": "Oversizing factor"

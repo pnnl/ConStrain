@@ -1,5 +1,7 @@
 """Module implementing data structures of datapoints"""
 
+import logging
+
 
 class Datapoint:
     """Data point super class, mostly a placeholder for now
@@ -109,7 +111,7 @@ class IdfOutputPoint(Datapoint):
             self.outputobj = "Override, manually provided full variable string, should have NO injection!"
             self.variable_name = pointdict
         else:
-            print("output variable setup in the case json file has errors!")
+            logging.error("output variable setup in the case json file has errors!")
 
     def __hash__(self):
         """only designed to be used for picking unique output variables"""

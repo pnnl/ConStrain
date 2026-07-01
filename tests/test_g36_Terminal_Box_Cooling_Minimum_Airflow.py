@@ -5,6 +5,7 @@ from lib_unit_test_runner import *
 from library import *
 
 import pandas as pd
+import logging
 
 
 class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
@@ -58,7 +59,7 @@ class TestG36TerminalBoxCoolingMinimumAirflow(unittest.TestCase):
                 ).result
             )
         )
-        print(results)
+        logging.info(results)
         self.assertTrue(results.equals(expected_results))
 
 

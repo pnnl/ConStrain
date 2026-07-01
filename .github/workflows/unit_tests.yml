@@ -38,5 +38,7 @@ jobs:
           key: venv-${{ hashFiles('poetry.lock') }}
       - name: Install the project dependencies
         run: poetry install --with dev
+      - name: Use Jupytext to convert notebooks to scripts
+        run: poetry run python -m jupytext --to py ./constrain/demo/tspr_cases/tspr_cases.ipynb
       - name: Run the tests
         run: poetry run pytest -v

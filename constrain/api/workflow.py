@@ -9,9 +9,7 @@ import sys, logging, json, os, datetime, platform
 from pathlib import Path
 from typing import Union
 
-sys.path.append("./constrain")
-sys.path.append("..")
-from constrain.api import (
+from . import (
     BrickCompliance,
     VerificationLibrary,
     DataProcessing,
@@ -171,7 +169,7 @@ class WorkflowEngine:
                             return False
                         else:
                             if verbose:
-                                print(
+                                logging.info(
                                     f"The type of {key} has the correct type {schema_value}"
                                 )
             return True
@@ -273,15 +271,15 @@ class WorkflowEngine:
             max_states (int, optional): Maximum number of states to run allowed. Defaults to 1000.
         """
         start_time = timenow()
-        print(f"Start running workflow at {start_time.strftime('%H:%M:%S')}")
+        logging.info(f"Start running workflow at {start_time.strftime('%H:%M:%S')}")
 
         if verbose:
-            print(f"Importing packages specified in workflow -- [{strnow()}]")
+            logging.info(f"Importing packages specified in workflow -- [{strnow()}]")
         self.import_package()
         current_state_name = self.start_state_name
 
         if verbose:
-            print(
+            logging.info(
                 f"Start running workflow with start state [{self.start_state_name}] with maximum allowable number of states being [{max_states}] -- [{strnow()}]"
             )
 
@@ -291,22 +289,20 @@ class WorkflowEngine:
             state_count += 1
 
             if verbose:
-                print(
-                    f"Running state {state_count}: [{current_state_name}] ...", end=" "
-                )
+                logging.info(f"Running state {state_count}: [{current_state_name}] ...")
 
             self.running_sequence.append(current_state_name)
             current_state_name = self.run_state(current_state_name)
 
             if verbose:
-                print(f"Done. -- [{strnow()}]")
+                logging.info(f"Done. -- [{strnow()}]")
 
             if state_count > max_states:
                 e_msg = (
                     "Reaching maximum allowable number of states. Workflow terminated."
                 )
                 if verbose:
-                    print(e_msg)
+                    logging.info(e_msg)
                 touch_limit = True
                 logging.warning(
                     "Reaching maximum allowable number of states. Workflow terminated."
@@ -315,7 +311,7 @@ class WorkflowEngine:
 
         end_time = timenow()
         duration = end_time - start_time
-        print(
+        logging.info(
             f"Workflow done at {end_time.strftime('%H:%M:%S')}, a total of {state_count} states were executed in {duration}."
         )
 
@@ -325,13 +321,13 @@ class WorkflowEngine:
         Returns:
             dict: a summary dictionary with two keys: `total_states_executed` and `state_running_sequence`.
         """
-        print(
+        logging.info(
             f"A total of {len(self.running_sequence)} states were executed with the following sequence:"
         )
         step_count = 0
         for element in self.running_sequence:
             step_count += 1
-            print(f"State {step_count}: {element}")
+            logging.info(f"State {step_count}: {element}")
 
         return {
             "total_states_executed": step_count,

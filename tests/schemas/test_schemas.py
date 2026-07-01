@@ -24,7 +24,7 @@ class JSONSchemaTest(unittest.TestCase):
             self.verification_cases_schema = json.load(f)
 
     def test_workflow_schema_pass(self):
-        workflow_path = "./constrain/demo/api_demo/demo_workflow.json"
+        workflow_path = "./constrain/demo/G36_demo/G36_demo_workflow.json"
 
         with open(workflow_path, "r") as f:
             workflow_dict = json.load(f)
@@ -35,7 +35,7 @@ class JSONSchemaTest(unittest.TestCase):
             self.fail(f"Validation failed: {e}")
 
     def test_workflow_schema_fail(self):
-        workflow_path = "./constrain/demo/api_demo/demo_workflow.json"
+        workflow_path = "./constrain/demo/G36_demo/G36_demo_workflow.json"
 
         with open(workflow_path, "r") as f:
             workflow_dict = json.load(f)
@@ -89,9 +89,7 @@ class JSONSchemaTest(unittest.TestCase):
             self.fail(f"Validation failed: {e}")
 
     def test_verification_cases_schema(self):
-        verification_case_path = (
-            "./constrain/demo/api_demo/demo_verification_cases.json"
-        )
+        verification_case_path = "./tests/schemas/demo_verification_cases.json"
 
         with open(verification_case_path, "r") as f:
             verification_cases_dict = json.load(f)

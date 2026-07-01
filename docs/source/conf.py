@@ -14,8 +14,8 @@
 #
 import sys, os
 
-sys.path.insert(0, os.path.abspath("../../constrain"))
-import api
+sys.path.insert(0, os.path.abspath("../.."))
+import constrain.api as api
 
 sys.path.append(os.getcwd())
 import generate_verification_docs
@@ -29,9 +29,9 @@ copyright = "2023, Pacific Northwest National Laboratory"
 author = "Pacific Northwest National Laboratory"
 
 # The short X.Y version
-version = "0.6.0"
+version = "0.7.0"
 # The full version, including alpha/beta/rc tags
-release = "0.6.0"
+release = "0.7.0"
 
 # Document class docstrings
 autoclass_content = "both"
@@ -55,7 +55,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
     "sphinx.ext.autodoc",
-    #'sphinx.ext.napoleon'
+    "sphinx.ext.napoleon",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
