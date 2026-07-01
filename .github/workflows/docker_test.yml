@@ -1,0 +1,438 @@
+name: Docker Tests
+
+permissions:
+  contents: read
+  security-events: write
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ develop, main, master ]
+
+jobs:
+  test-docker-api-stack:
+    name: Test Docker API Stack (Phase 4)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build API-first images
+        run: |
+          docker compose -f docker/docker-compose.yml build
+
+      - name: Scan api-server image with Trivy
+        uses: aquasecurity/trivy-action@v0.35.0
+        with:
+          image-ref: constrain-api-server:latest
+          format: sarif
+          output: trivy-api-server.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
+
+      - name: Upload api-server SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-api-server.sarif
+          category: trivy-api-server
+
+      - name: Scan api-ui image with Trivy
+        uses: aquasecurity/trivy-action@v0.35.0
+        with:
+          image-ref: constrain-api-ui:latest
+          format: sarif
+          output: trivy-api-ui.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '0'
+
+      - name: Upload api-ui SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-api-ui.sarif
+          category: trivy-api-ui
+
+      - name: Start compose stack
+        run: |
+          # Ensure examples_results directory exists and is writable by all users (for container access)
+          export APP_UID=$(id -u)
+          export APP_GID=$(id -g)
+          mkdir -p docker/examples_results
+          chmod 777 docker/examples_results
+          docker compose -f docker/docker-compose.yml up -d
+
+      - name: Wait for healthy services
+        run: |
+          timeout 120 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-server 2>/dev/null)" = "healthy" ] && [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-ui 2>/dev/null)" = "healthy" ]; do sleep 2; done'
+
+      - name: Verify host health endpoints
+        run: |
+          curl -f http://localhost:8000/health
+          curl -f http://localhost:8080/health
+
+      - name: Verify service connectivity and security posture
+        run: |
+          docker exec constrain-api-ui python -c "import urllib.request; urllib.request.urlopen('http://api-server:8000/health', timeout=5).read()"
+          docker inspect constrain-api-ui --format '{{json .Mounts}}' | grep -q docker.sock && { echo "[FAIL] docker.sock mounted"; exit 1; } || echo "[PASS] no docker.sock mount"
+          docker exec constrain-api-ui sh -c 'command -v docker >/dev/null && { echo "[FAIL] docker cli found"; exit 1; } || echo "[PASS] docker cli not present"'
+          test "$(docker exec constrain-api-server id -u)" != "0"
+          test "$(docker exec constrain-api-ui id -u)" != "0"
+          docker inspect constrain-api-server --format '{{json .HostConfig.SecurityOpt}}' | grep -q 'no-new-privileges:true'
+          docker inspect constrain-api-ui --format '{{json .HostConfig.SecurityOpt}}' | grep -q 'no-new-privileges:true'
+          docker inspect constrain-api-server --format '{{json .HostConfig.CapDrop}}' | grep -q 'ALL'
+          docker inspect constrain-api-ui --format '{{json .HostConfig.CapDrop}}' | grep -q 'ALL'
+
+      - name: Validate env override behavior
+        run: |
+          printf 'LOG_LEVEL=DEBUG\nCONSTRAIN_API_BASE_URL=http://api-server:8000\nCONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000\nAPP_UID=%s\nAPP_GID=%s\n' "$(id -u)" "$(id -g)" > docker/.env
+          docker compose -f docker/docker-compose.yml down
+          chmod 777 docker/examples_results
+          docker compose --env-file docker/.env -f docker/docker-compose.yml up -d
+          timeout 120 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-server 2>/dev/null)" = "healthy" ] && [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-ui 2>/dev/null)" = "healthy" ]; do sleep 2; done'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q '^LOG_LEVEL=DEBUG$'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^LOG_LEVEL=DEBUG$'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^CONSTRAIN_API_BASE_URL=http://api-server:8000$'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-ui env | grep -q '^CONSTRAIN_PUBLIC_API_BASE_URL=http://localhost:8000$'
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q "^APP_UID=$(id -u)$"
+          docker compose --env-file docker/.env -f docker/docker-compose.yml exec -T api-server env | grep -q "^APP_GID=$(id -g)$"
+
+      - name: Trigger host verify run for artifact checks
+        run: |
+          echo "Health checks..."
+          curl -f http://localhost:8000/health
+          curl -f http://localhost:8080/health
+
+          echo "Submitting verification request..."
+          response_file=$(mktemp)
+          http_code=$(curl -sS -o "$response_file" -w '%{http_code}' -X POST http://localhost:8080/verify \
+            --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
+            --data-urlencode 'output_dir=/data/results/ci-e2e' \
+            --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
+            --data-urlencode 'library_json_path=/data/schema/library.json' \
+            --data-urlencode 'plot_option=all-compact' \
+            --data-urlencode 'fig_width=6.4' \
+            --data-urlencode 'fig_height=4.8' \
+            --data-urlencode 'log_level=INFO' \
+            --data-urlencode 'summary_file_name=verification_summary.md' \
+            --data-urlencode 'generate_summary=on')
+
+          if [ "$http_code" != "200" ]; then
+            echo "Verify request failed with HTTP $http_code"
+            echo "----- /verify response body (first 120 lines) -----"
+            sed -n '1,120p' "$response_file" || true
+            echo "----- api-ui logs (last 200 lines) -----"
+            docker compose -f docker/docker-compose.yml logs --no-color --tail=200 api-ui || true
+            echo "----- api-server logs (last 200 lines) -----"
+            docker compose -f docker/docker-compose.yml logs --no-color --tail=200 api-server || true
+            exit 1
+          fi
+          echo "Verification request completed successfully"
+
+      - name: Wait for host artifacts
+        run: |
+          artifact_count=$(curl -fsS 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/ci-e2e&recursive=true' | python -c 'import json,sys; print(json.load(sys.stdin)["count"])')
+          test "$artifact_count" -gt 0
+
+      - name: Verify host artifact redirect headers
+        run: |
+          redirect_headers=$(mktemp)
+          curl -fsS -D "$redirect_headers" -o /dev/null 'http://localhost:8080/artifact/download?output_dir=/data/results/ci-e2e&relative_path=verification_summary.md'
+          grep -Eqi '^location: http://(localhost|127\.0\.0\.1):8000/ai/artifacts/download\?' "$redirect_headers"
+          grep -qi 'relative_path=verification_summary.md' "$redirect_headers"
+          grep -Eqi 'output_dir=(%2F)?data(%2F)?results(%2F)?ci-e2e' "$redirect_headers"
+
+      - name: Verify host artifact downloads
+        run: |
+          summary_file=$(mktemp)
+          zip_file=$(mktemp).zip
+          curl -fsSL -o "$summary_file" 'http://localhost:8080/artifact/download?output_dir=/data/results/ci-e2e&relative_path=verification_summary.md'
+          grep -q '# Verification Results:' "$summary_file"
+
+          curl -fsSL -o "$zip_file" 'http://localhost:8080/artifact/download-zip?output_dir=/data/results/ci-e2e'
+          test -s "$zip_file"
+
+      - name: Verify restart resilience for api-server
+        run: |
+          docker compose -f docker/docker-compose.yml restart api-server
+          timeout 120 bash -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" constrain-api-server 2>/dev/null)" = "healthy" ]; do sleep 2; done'
+
+          curl -f http://localhost:8000/health
+          curl -f http://localhost:8080/health
+
+          response_file=$(mktemp)
+          curl -fsS -o "$response_file" -X POST http://localhost:8080/verify \
+            --data-urlencode 'case_file_path=/data/verification_cases/G36_library_verification_cases.json' \
+            --data-urlencode 'output_dir=/data/results/ci-e2e-restart' \
+            --data-urlencode 'data_file_path=/data/data/G36_Modelica_Jan.csv' \
+            --data-urlencode 'library_json_path=/data/schema/library.json' \
+            --data-urlencode 'plot_option=all-compact' \
+            --data-urlencode 'fig_width=6.4' \
+            --data-urlencode 'fig_height=4.8' \
+            --data-urlencode 'log_level=INFO' \
+            --data-urlencode 'summary_file_name=verification_summary.md' \
+            --data-urlencode 'generate_summary=on'
+
+          artifact_count=$(curl -fsS 'http://localhost:8000/ai/artifacts/list?output_dir=/data/results/ci-e2e-restart&recursive=true' | python -c 'import json,sys; print(json.load(sys.stdin)["count"])')
+          test "$artifact_count" -gt 0
+
+      - name: Dump service logs
+        if: always()
+        run: |
+          docker compose -f docker/docker-compose.yml logs > docker-compose.log || true
+
+      - name: Upload docker-compose log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-compose-log
+          path: docker-compose.log
+          retention-days: 7
+
+      - name: Upload Trivy reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-api-stack-reports
+          path: |
+            trivy-api-server.sarif
+            trivy-api-ui.sarif
+          retention-days: 7
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f docker/.env || true
+          docker compose -f docker/docker-compose.yml down --remove-orphans || true
+
+  test-docker-workflow:
+    name: Test Docker Workflow Image
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build Docker workflow image
+        run: |
+          docker build -f docker/Dockerfile.workflow -t constrain:test .
+      
+      - name: Test default workflow execution
+        run: |
+          echo "Running default G36 demo workflow..."
+          docker run --rm constrain:test > docker_workflow_output.log 2>&1
+          
+          # Check if workflow completed successfully
+          if grep -q "Workflow completed successfully!" docker_workflow_output.log; then
+            echo "[PASS] Docker workflow test PASSED - Workflow completed successfully"
+            cat docker_workflow_output.log
+            exit 0
+          else
+            echo "[FAIL] Docker workflow test FAILED - 'Workflow completed successfully!' not found in output"
+            echo "Docker output:"
+            cat docker_workflow_output.log
+            exit 1
+          fi
+      
+      - name: Upload Docker workflow output log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-workflow-output
+          path: docker_workflow_output.log
+          retention-days: 7
+
+  test-docker-verification:
+    name: Test Docker Verification Image
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build Docker verification image
+        run: |
+          docker build -f docker/Dockerfile.verification -t constrain-verification:test .
+      
+      - name: Test help command
+        run: |
+          echo "Testing help command..."
+          docker run --rm constrain-verification:test --help > docker_verification_help.log 2>&1
+          
+          # Check if help text is displayed
+          if grep -qi "usage:" docker_verification_help.log || grep -q "Run a single ConStrain verification case" docker_verification_help.log; then
+            echo "[PASS] Help command test PASSED"
+            cat docker_verification_help.log
+          else
+            echo "[FAIL] Help command test FAILED - Expected help text not found"
+            cat docker_verification_help.log
+            exit 1
+          fi
+      
+      - name: Test verification execution with example data
+        run: |
+          echo "Running verification case with example data..."
+          docker run --rm \
+            -v ${{ github.workspace }}/docker/examples/verification_cases:/app/workflows \
+            -v ${{ github.workspace }}/docker/examples/data:/app/data \
+            -v ${{ github.workspace }}/docker/examples/schema:/app/schema \
+            constrain-verification:test \
+            /app/workflows/G36_library_verification_cases.json \
+            --data /app/data/G36_Modelica_Jan.csv \
+            --lib-items /app/schema/library.json > docker_verification_output.log 2>&1
+          
+          # Check if verification completed successfully
+          if grep -q "Verification completed successfully!" docker_verification_output.log; then
+            echo "[PASS] Docker verification test PASSED - Verification completed successfully"
+            cat docker_verification_output.log
+            exit 0
+          else
+            echo "[FAIL] Docker verification test FAILED - 'Verification completed successfully!' not found in output"
+            echo "Docker output:"
+            cat docker_verification_output.log
+            exit 1
+          fi
+      
+      - name: Upload Docker verification output log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-verification-output
+          path: docker_verification_output.log
+          retention-days: 7
+      
+      - name: Upload Docker verification help log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-verification-help
+          path: docker_verification_help.log
+          retention-days: 7
+
+  test-docker-reporting:
+    name: Test Docker Reporting Image
+    runs-on: ubuntu-latest
+    needs: test-docker-verification  # Run after verification to use its results
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build Docker reporting image
+        run: |
+          docker build -f docker/Dockerfile.reporting -t constrain-reporting:test .
+      
+      - name: Test help command
+        run: |
+          echo "Testing help command..."
+          docker run --rm constrain-reporting:test --help > docker_reporting_help.log 2>&1
+          
+          # Check if help text is displayed
+          if grep -qi "usage:" docker_reporting_help.log || grep -q "Generate summary reports from verification case results" docker_reporting_help.log; then
+            echo "[PASS] Help command test PASSED"
+            cat docker_reporting_help.log
+          else
+            echo "[FAIL] Help command test FAILED - Expected help text not found"
+            cat docker_reporting_help.log
+            exit 1
+          fi
+      
+      - name: Build verification image for test data
+        run: |
+          docker build -f docker/Dockerfile.verification -t constrain-verification:test .
+      
+      - name: Generate test verification results
+        run: |
+          echo "Generating verification results for reporting test..."
+          mkdir -p ${{ github.workspace }}/docker/examples_results_test
+          docker run --rm \
+            -v ${{ github.workspace }}/docker/examples/verification_cases:/app/workflows \
+            -v ${{ github.workspace }}/docker/examples/data:/app/data \
+            -v ${{ github.workspace }}/docker/examples/schema:/app/schema \
+            -v ${{ github.workspace }}/docker/examples_results_test:/app/results \
+            constrain-verification:test \
+            /app/workflows/G36_library_verification_cases.json \
+            --data /app/data/G36_Modelica_Jan.csv \
+            --lib-items /app/schema/library.json \
+            --output /app/results > docker_verification_setup.log 2>&1 || true
+          
+          echo "Verification results generated (or using existing results)"
+      
+      - name: Test reporting execution
+        run: |
+          echo "Running reporting with verification results..."
+          docker run --rm \
+            -v ${{ github.workspace }}/docker/examples_results_test:/app/results \
+            constrain-reporting:test \
+            "/app/results/*_md.json" \
+            --output test_summary.md > docker_reporting_output.log 2>&1
+          
+          # Check if reporting completed successfully
+          if grep -q "Report generated successfully!" docker_reporting_output.log; then
+            echo "[PASS] Docker reporting test PASSED - Report generated successfully"
+            cat docker_reporting_output.log
+            exit 0
+          else
+            echo "[FAIL] Docker reporting test FAILED - 'Report generated successfully!' not found in output"
+            echo "Docker output:"
+            cat docker_reporting_output.log
+            exit 1
+          fi
+      
+      - name: Test log-level option
+        run: |
+          echo "Testing --log-level option..."
+          docker run --rm \
+            -v ${{ github.workspace }}/docker/examples_results_test:/app/results \
+            constrain-reporting:test \
+            "/app/results/*_md.json" \
+            --output test_summary.md \
+            --log-level DEBUG > docker_reporting_loglevel.log 2>&1 || true
+          
+          # Check that --log-level is accepted (no "unrecognized arguments" error)
+          if grep -q "unrecognized arguments.*--log-level" docker_reporting_loglevel.log; then
+            echo "[FAIL] Log level test FAILED - --log-level not recognized"
+            cat docker_reporting_loglevel.log
+            exit 1
+          else
+            echo "[PASS] Log level test PASSED - --log-level option accepted"
+            cat docker_reporting_loglevel.log
+          fi
+      
+      - name: Upload Docker reporting output log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-reporting-output
+          path: docker_reporting_output.log
+          retention-days: 7
+      
+      - name: Upload Docker reporting help log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-reporting-help
+          path: docker_reporting_help.log
+          retention-days: 7
+      
+      - name: Upload Docker reporting log-level test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-reporting-loglevel
+          path: docker_reporting_loglevel.log
+          retention-days: 7

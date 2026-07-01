@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ConStrain AI Workflow Composer</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #0f172a;
+        color: #e5e7eb;
+      }
+      header {
+        padding: 1rem 2rem;
+        border-bottom: 1px solid #1f2937;
+      }
+      main {
+        padding: 1.5rem 2rem 2rem;
+        display: grid;
+        grid-template-columns: 1.1fr 1.3fr;
+        gap: 1.5rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin: 0;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin-top: 0;
+      }
+      .panel {
+        background: #020617;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        border: 1px solid #1f2937;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+      }
+      label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.25rem;
+        color: #9ca3af;
+      }
+      textarea,
+      input[type="text"] {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 0.5rem;
+        border: 1px solid #374151;
+        background: #020617;
+        color: #e5e7eb;
+        padding: 0.6rem 0.7rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.78rem;
+        resize: vertical;
+        min-height: 2.5rem;
+      }
+      textarea:focus,
+      input[type="text"]:focus {
+        outline: none;
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 1px #38bdf8;
+      }
+      .field {
+        margin-bottom: 0.7rem;
+      }
+      button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border: none;
+        color: #022c22;
+        font-weight: 600;
+        padding: 0.55rem 1.15rem;
+        font-size: 0.82rem;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(22, 163, 74, 0.45);
+      }
+      button:hover {
+        filter: brightness(1.06);
+      }
+      .button-row {
+        margin-top: 0.4rem;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .split-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+      .code-block {
+        background: #020617;
+        border-radius: 0.6rem;
+        padding: 0.55rem 0.6rem;
+        border: 1px solid #1e293b;
+      }
+      .editor-wrap {
+        display: grid;
+        grid-template-columns: 3.2rem 1fr;
+        gap: 0.45rem;
+        align-items: stretch;
+      }
+      .line-numbers {
+        margin: 0;
+        padding: 0.6rem 0.35rem;
+        border-right: 1px solid #1f2937;
+        color: #64748b;
+        text-align: right;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.78rem;
+        line-height: 1.35;
+        overflow: hidden;
+        user-select: none;
+      }
+      .editor-textarea {
+        margin: 0;
+      }
+      .code-block pre {
+        margin: 0;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        font-size: 0.76rem;
+        white-space: pre;
+        overflow-x: auto;
+      }
+      .issues {
+        margin-top: 0.5rem;
+        font-size: 0.76rem;
+      }
+      .issues h3 {
+        font-size: 0.8rem;
+        margin: 0 0 0.25rem;
+      }
+      .issue-item {
+        margin-bottom: 0.15rem;
+        color: #f97316;
+      }
+      .issue-loc {
+        color: #9ca3af;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        padding: 0.18rem 0.55rem;
+        margin-left: 0.4rem;
+        border: 1px solid rgba(37, 99, 235, 0.5);
+        color: #bfdbfe;
+        background: radial-gradient(circle at top left, #1e40af, #020617);
+      }
+      .status-valid {
+        color: #22c55e;
+      }
+      .status-invalid {
+        color: #f97316;
+      }
+      .execution-ok {
+        color: #22c55e;
+      }
+      .execution-error {
+        color: #f97316;
+      }
+      .error-meta {
+        margin-top: 0.4rem;
+        color: #fcd34d;
+      }
+      .stack-trace {
+        margin-top: 0.45rem;
+        border: 1px solid #7c2d12;
+        border-radius: 0.45rem;
+        background: #111827;
+        color: #fca5a5;
+        padding: 0.55rem;
+        white-space: pre-wrap;
+        overflow-x: auto;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+      }
+      .subpanel {
+        margin-top: 1rem;
+        border-top: 1px solid #1f2937;
+        padding-top: 1rem;
+      }
+      .small-note {
+        font-size: 0.72rem;
+        color: #9ca3af;
+      }
+      .compose-error {
+        margin-top: 0.7rem;
+        font-size: 0.78rem;
+        color: #f97316;
+      }
+      .artifact-list {
+        margin-top: 0.5rem;
+        max-height: 16rem;
+        overflow-y: auto;
+        border: 1px solid #1f2937;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+      }
+      .artifact-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.7rem;
+        font-size: 0.75rem;
+        padding: 0.25rem 0;
+        border-bottom: 1px solid #111827;
+      }
+      .artifact-item:last-child {
+        border-bottom: none;
+      }
+      .artifact-link {
+        color: #7dd3fc;
+        text-decoration: none;
+      }
+      .artifact-link:hover {
+        text-decoration: underline;
+      }
+      .running-banner {
+        margin: 0.8rem 0 0;
+        padding: 0.55rem 0.75rem;
+        border-radius: 0.55rem;
+        border: 1px solid #0ea5e9;
+        background: rgba(14, 165, 233, 0.12);
+        color: #bae6fd;
+        font-size: 0.8rem;
+      }
+      .warning-banner {
+        margin: 1rem 2rem 0;
+        border: 1px solid #f59e0b;
+        background: rgba(245, 158, 11, 0.12);
+        border-radius: 0.7rem;
+        padding: 0.9rem 1rem;
+        color: #fde68a;
+      }
+      .warning-banner h2 {
+        margin: 0 0 0.45rem;
+        font-size: 0.95rem;
+        color: #fef3c7;
+      }
+      .warning-banner ul {
+        margin: 0;
+        padding-left: 1.15rem;
+      }
+      .warning-banner li {
+        margin: 0.35rem 0;
+        font-size: 0.8rem;
+        line-height: 1.35;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>
+        ConStrain AI Workflow Composer
+        <span class="badge">Experimental</span>
+      </h1>
+      <p class="small-note" style="margin: 0.5rem 0 0">
+        <a class="artifact-link" href="/">Home</a>
+        &nbsp;|&nbsp;
+        <a class="artifact-link" href="/workflow">Workflow Composer</a>
+        &nbsp;|&nbsp;
+        <a class="artifact-link" href="/verification">Verification Execution</a>
+      </p>
+      <div id="running-indicator" class="running-banner" style="display:none;">
+        Background task running: waiting for API/LLM execution to complete.
+      </div>
+    </header>
+    <section class="warning-banner" aria-label="Important usage warnings">
+      <h2>Important Usage Notes</h2>
+      <ul>
+        <li>This front end and its supporting services are currently in BETA and may contain bugs or unstable behavior.</li>
+        <li>AI-agent features are experimental. Generated workflows and verification cases should be treated as starting-point templates, not plug-and-play final products.</li>
+        <li>Output quality is highly sensitive to the context you provide and the selected generative AI model.</li>
+      </ul>
+    </section>
+    <main>
+      <section class="panel">
+        <h2>Describe your verification workflow</h2>
+        <form method="post" action="/compose" id="compose-form">
+          <div class="field">
+            <label for="goal">Goal</label>
+            <textarea
+              id="goal"
+              name="goal"
+              rows="5"
+              placeholder="Example: Verify that G36 outdoor air damper and supply air temperature sequences are satisfied for my January dataset..."
+            >{{ goal }}</textarea>
+          </div>
+          <div class="field">
+            <label for="data_source_annotation">Data source annotation (JSON, optional)</label>
+            <p class="small-note" style="margin: 0 0 0.4rem">
+              Optional JSON describing your data files, paths, formats, and how columns or
+              signals map to datapoints. The same object is passed to both workflow and
+              verification-case generation.
+            </p>
+            <textarea
+              id="data_source_annotation"
+              name="data_source_annotation"
+              rows="8"
+              placeholder='{"data_path": "./demo/G36_demo/data/G36_Modelica_Jan.csv", "dev_settings": {"temperature_air_outdoor": "oa_t"}}'
+            ></textarea>
+          </div>
+          <div class="field">
+            <label for="existing_workflow">Existing workflow JSON (optional)</label>
+            <textarea
+              id="existing_workflow"
+              name="existing_workflow"
+              rows="4"
+              placeholder="Paste an existing workflow JSON here to refine it..."
+            ></textarea>
+          </div>
+          <div class="field">
+            <label for="existing_cases">Existing cases JSON (optional)</label>
+            <textarea
+              id="existing_cases"
+              name="existing_cases"
+              rows="4"
+              placeholder="Paste an existing verification-case suite JSON here to refine it..."
+            ></textarea>
+          </div>
+          <div class="subpanel">
+            <h3 style="margin: 0 0 0.6rem">GenAI provider settings (optional)</h3>
+            <p class="small-note" style="margin: 0 0 0.6rem">
+              These values are used for this compose request, so you do not need to export
+              CONSTRAIN_LLM_* variables in the Docker terminal.
+            </p>
+            <div class="field">
+              <label for="llm_api_base">LLM API base URL</label>
+              <input
+                id="llm_api_base"
+                name="llm_api_base"
+                type="text"
+                placeholder="https://api.openai.com/v1"
+                value="{{ llm_settings.api_base }}"
+              />
+            </div>
+            <div class="split-columns">
+              <div class="field">
+                <label for="llm_model">LLM model</label>
+                <input
+                  id="llm_model"
+                  name="llm_model"
+                  type="text"
+                  placeholder="gpt-4.1-mini"
+                  value="{{ llm_settings.model }}"
+                />
+              </div>
+              <div class="field">
+                <label for="llm_timeout">Timeout seconds (optional)</label>
+                <input
+                  id="llm_timeout"
+                  name="llm_timeout"
+                  type="text"
+                  placeholder="30"
+                  value="{{ llm_settings.timeout }}"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label for="llm_api_key">LLM API key (optional)</label>
+              <input
+                id="llm_api_key"
+                name="llm_api_key"
+                type="password"
+                placeholder="Token or API key"
+                value="{{ llm_settings.api_key }}"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+          <div class="button-row">
+            <button type="submit" id="compose-submit">Generate workflow &amp; cases</button>
+          </div>
+          {% if compose_error %}
+          <div class="compose-error">{{ compose_error }}</div>
+          {% endif %}
+          {% if compose_debug_download_path %}
+          <div class="small-note" style="margin-top:0.6rem;">
+            <a class="artifact-link" href="{{ compose_debug_download_path }}">Download full LLM prompts and responses (.md)</a>
+          </div>
+          {% endif %}
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>AI proposals</h2>
+        <form method="post" action="/run" id="run-workflow-form">
+        <input
+          type="hidden"
+          name="compose_debug_download_path"
+          value="{{ compose_debug_download_path }}"
+        />
+        <div class="split-columns">
+          <div>
+            <h3>Workflow JSON</h3>
+              <div class="code-block">
+                <div class="editor-wrap">
+                  <pre id="workflow_json_lines" class="line-numbers" aria-hidden="true">1</pre>
+                  <textarea
+                    id="workflow_json"
+                    name="workflow_json"
+                    class="editor-textarea"
+                    rows="18"
+                    placeholder="Generated workflow JSON will appear here..."
+                  >{{ workflow_json }}</textarea>
+                </div>
+              </div>
+              <div class="button-row">
+                <button type="submit" formaction="/validate-workflow" id="validate-workflow-submit">Validate workflow</button>
+                <button type="submit" id="run-workflow-submit">Run workflow</button>
+              </div>
+            <div id="run-workflow-progress" class="small-note" style="display:none; margin-top:0.5rem;">
+              Workflow execution is running in the background...
+            </div>
+            <div class="issues">
+              <h3>
+                Validation
+                {% if workflow_issues and workflow_issues|length > 0 %}
+                <span class="status-invalid">
+                  {{ workflow_issues|length }} issue(s)
+                </span>
+                {% else %}
+                <span class="status-valid">No issues detected</span>
+                {% endif %}
+              </h3>
+              {% for issue in workflow_issues %}
+              <div class="issue-item">
+                <span class="issue-loc">
+                  {{ issue.loc }}
+                </span>
+                {% if issue.line %}
+                (line {{ issue.line }})
+                {% endif %}
+                – {{ issue.message }}
+              </div>
+              {% endfor %}
+            </div>
+            <div class="issues">
+              <h3>Execution</h3>
+              {% if execution_summary %}
+              <div class="issue-item execution-ok">
+                Workflow executed successfully.
+                {% if execution_summary.total_states_executed is defined %}
+                States executed: {{ execution_summary.total_states_executed }}
+                {% endif %}
+              </div>
+              {% elif execution_error %}
+              <div class="issue-item execution-error">
+                {{ execution_error }}
+                {% if execution_error_details and execution_error_details.failing_state %}
+                <div class="error-meta">
+                  State: {{ execution_error_details.failing_state }}
+                  {% if execution_error_details.state_line %}
+                  (line {{ execution_error_details.state_line }})
+                  {% endif %}
+                </div>
+                {% endif %}
+                {% if execution_error_details and execution_error_details.traceback %}
+                <pre class="stack-trace">{{ execution_error_details.traceback }}</pre>
+                {% endif %}
+              </div>
+              {% else %}
+              <div class="issue-item">
+                No execution requested yet.
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <div>
+            <h3>Verification cases JSON</h3>
+            <div class="code-block">
+              <div class="editor-wrap">
+                <pre id="cases_json_lines" class="line-numbers" aria-hidden="true">1</pre>
+                <textarea
+                  id="cases_json"
+                  name="cases_json"
+                  class="editor-textarea"
+                  rows="18"
+                  placeholder="Generated verification-case suite JSON will appear here..."
+                >{{ cases_json }}</textarea>
+              </div>
+            </div>
+            <div class="button-row">
+              <button type="submit" formaction="/validate-cases" id="validate-cases-submit">Validate cases</button>
+            </div>
+            <div class="issues">
+              <h3>
+                Validation
+                {% if cases_issues and cases_issues|length > 0 %}
+                <span class="status-invalid">
+                  {{ cases_issues|length }} issue(s)
+                </span>
+                {% else %}
+                <span class="status-valid">No issues detected</span>
+                {% endif %}
+              </h3>
+              {% for issue in cases_issues %}
+              <div class="issue-item">
+                <span class="issue-loc">
+                  {{ issue.loc }}
+                </span>
+                {% if issue.line %}
+                (line {{ issue.line }})
+                {% endif %}
+                – {{ issue.message }}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="goal" value="{{ goal }}" />
+        </form>
+      </section>
+    </main>
+    <script>
+      (function () {
+        const runningIndicator = document.getElementById("running-indicator");
+        const composeForm = document.getElementById("compose-form");
+        const runForm = document.getElementById("run-workflow-form");
+        const composeSubmit = document.getElementById("compose-submit");
+        const runSubmit = document.getElementById("run-workflow-submit");
+        const runProgress = document.getElementById("run-workflow-progress");
+        const workflowEditor = document.getElementById("workflow_json");
+        const workflowLines = document.getElementById("workflow_json_lines");
+        const casesEditor = document.getElementById("cases_json");
+        const casesLines = document.getElementById("cases_json_lines");
+
+        function updateLineNumbers(textarea, lineBlock) {
+          if (!textarea || !lineBlock) {
+            return;
+          }
+          const lineCount = Math.max(1, textarea.value.split("\n").length);
+          const lines = [];
+          for (let i = 1; i <= lineCount; i += 1) {
+            lines.push(String(i));
+          }
+          lineBlock.textContent = lines.join("\n");
+          lineBlock.scrollTop = textarea.scrollTop;
+        }
+
+        function bindLineNumbers(textarea, lineBlock) {
+          if (!textarea || !lineBlock) {
+            return;
+          }
+          const refresh = function () {
+            updateLineNumbers(textarea, lineBlock);
+          };
+          textarea.addEventListener("input", refresh);
+          textarea.addEventListener("scroll", function () {
+            lineBlock.scrollTop = textarea.scrollTop;
+          });
+          refresh();
+        }
+
+        function markRunning(message, submitButton, progressNode) {
+          if (runningIndicator) {
+            runningIndicator.textContent = message;
+            runningIndicator.style.display = "block";
+          }
+          if (submitButton) {
+            submitButton.disabled = true;
+          }
+          if (progressNode) {
+            progressNode.style.display = "block";
+          }
+          try {
+            window.sessionStorage.setItem("constrain_ui_running", "1");
+          } catch (_) {}
+        }
+
+        function clearRunning() {
+          try {
+            window.sessionStorage.removeItem("constrain_ui_running");
+          } catch (_) {}
+          if (runningIndicator) {
+            runningIndicator.style.display = "none";
+          }
+        }
+
+        if (composeForm) {
+          composeForm.addEventListener("submit", function () {
+            markRunning(
+              "Background task running: generating workflow and verification cases...",
+              composeSubmit,
+              null
+            );
+          });
+        }
+
+        if (runForm) {
+          runForm.addEventListener("submit", function () {
+            markRunning(
+              "Background task running: executing workflow...",
+              runSubmit,
+              runProgress
+            );
+          });
+        }
+
+        bindLineNumbers(workflowEditor, workflowLines);
+        bindLineNumbers(casesEditor, casesLines);
+
+        window.addEventListener("pageshow", clearRunning);
+      })();
+    </script>
+  </body>
+  </html>
+

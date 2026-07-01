@@ -61,6 +61,7 @@ class Reporting:
         self.result_md_path = f"{self.result_md_dir}/{self.result_md_name}"
         self.md_dict_dump = {}
         self.verification_item_case_id_mapping = {}
+        self.caseids_sorted = []
 
         # TODO: refactor below to make mapping creation more efficient
         for json_file in glob.glob(self.verification_json):

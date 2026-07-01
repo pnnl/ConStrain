@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ConStrain UI Home</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #0f172a;
+        color: #e5e7eb;
+      }
+      header {
+        padding: 1.5rem 2rem 1rem;
+        border-bottom: 1px solid #1f2937;
+      }
+      main {
+        padding: 2rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.6rem;
+      }
+      .subtitle {
+        margin: 0.5rem 0 0;
+        color: #9ca3af;
+        font-size: 0.9rem;
+      }
+      .card-grid {
+        margin-top: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1rem;
+      }
+      .card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        background: #020617;
+        border: 1px solid #1f2937;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+      }
+      .card:hover {
+        border-color: #38bdf8;
+      }
+      .card h2 {
+        margin: 0 0 0.4rem;
+        font-size: 1.05rem;
+      }
+      .card p {
+        margin: 0;
+        font-size: 0.86rem;
+        color: #9ca3af;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        padding: 0.18rem 0.55rem;
+        margin-left: 0.4rem;
+        border: 1px solid rgba(37, 99, 235, 0.5);
+        color: #bfdbfe;
+        background: radial-gradient(circle at top left, #1e40af, #020617);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>
+        ConStrain Web UI
+        <span class="pill">Experimental</span>
+      </h1>
+      <p class="subtitle">Choose a focused page for AI workflow composition or verification execution.</p>
+    </header>
+    <main>
+      <div class="card-grid">
+        <a class="card" href="/workflow">
+          <h2>Workflow Composer</h2>
+          <p>Describe goals, generate workflow and verification-case JSON, validate, and run workflow jobs.</p>
+        </a>
+        <a class="card" href="/verification">
+          <h2>Verification Execution</h2>
+          <p>Run verification directly via REST API, inspect status, and download generated artifacts.</p>
+        </a>
+      </div>
+    </main>
+  </body>
+</html>

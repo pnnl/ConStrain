@@ -36,6 +36,9 @@
                 "type": "string"
             }
         },
+        "working_dir": {
+            "type": "string"
+        },
         "states": {
             "type": "object",
             "additionalProperties": {
@@ -52,105 +55,126 @@
     ],
     "additionalProperties": false,
     "$defs": {
-        "state": {
+        "flagString": {
+            "enum": [
+                "True",
+                "False"
+            ]
+        },
+        "jsonValue": {
+            "anyOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/jsonValue"
+                    }
+                },
+                {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/$defs/jsonValue"
+                    }
+                }
+            ]
+        },
+        "embeddedMethodCall": {
             "type": "object",
             "properties": {
                 "Type": {
-                    "enum": ["MethodCall", "Choice"]
+                    "const": "Embedded MethodCall"
                 },
                 "MethodCall": {
                     "type": "string"
                 },
                 "Parameters": {
-                    "oneOf": [
-                        {
-                            "type": "object"
-                        },
-                        {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    ]
-                },
-                "Payloads": {
-                    "type": "object"
-                },
-                "Choices": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/choice"
-                    }
-                },
-                "Default": {
-                    "type": "string"
-                },
-                "Next": {
-                    "type": "string"
-                },
-                "Start": {
-                    "enum": [
-                        "True",
-                        "False"
-                    ]
-                },
-                "End": {
-                    "enum": [
-                        "True",
-                        "False"
-                    ]
+                    "$ref": "#/$defs/parameters"
                 }
             },
             "required": [
-                "Type"
+                "Type",
+                "MethodCall",
+                "Parameters"
             ],
-            "if": {
-                "properties": {
-                    "Type": {
-                        "const": "MethodCall"
+            "additionalProperties": false
+        },
+        "parameterValue": {
+            "anyOf": [
+                {
+                    "$ref": "#/$defs/jsonValue"
+                },
+                {
+                    "$ref": "#/$defs/embeddedMethodCall"
+                }
+            ]
+        },
+        "parameters": {
+            "oneOf": [
+                {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/$defs/parameterValue"
+                    }
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/parameterValue"
                     }
                 }
-            },
-            "then": {
-                "required": [
-                    "Parameters"
-                ],
-                "not": {
-                    "anyOf": [
-                        {
-                            "required": [
-                                "Choices"
-                            ]
-                        },
-                        {
-                            "required": [
-                                "Default"
-                            ]
-                        }
-                    ]
-                }
-            },
-            "else": {
-                "required": [
-                    "Choices",
-                    "Default"
-                ],
-                "not": {
-                    "required": [
-                        "Parameters"
-                    ]
-                }
+            ]
+        },
+        "payloads": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/$defs/jsonValue"
             }
         },
-        "choice": {
+        "choicePredicate": {
             "type": "object",
             "properties": {
                 "Value": {
-                    "type": "string"
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "Equals": {
-                    "type": "string"
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "number"
+                        },
+                        {
+                            "type": "boolean"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
                 },
                 "Next": {
                     "type": "string"
@@ -160,6 +184,187 @@
                 "Value",
                 "Equals",
                 "Next"
+            ],
+            "additionalProperties": false
+        },
+        "logicalAllChoice": {
+            "type": "object",
+            "properties": {
+                "ALL": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/choicePredicate"
+                    },
+                    "minItems": 1
+                },
+                "AND": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/choicePredicate"
+                    },
+                    "minItems": 1
+                },
+                "Next": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "Next"
+            ],
+            "oneOf": [
+                {
+                    "required": [
+                        "ALL"
+                    ]
+                },
+                {
+                    "required": [
+                        "AND"
+                    ]
+                }
+            ],
+            "additionalProperties": false
+        },
+        "logicalAnyChoice": {
+            "type": "object",
+            "properties": {
+                "ANY": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/choicePredicate"
+                    },
+                    "minItems": 1
+                },
+                "Next": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "ANY",
+                "Next"
+            ],
+            "additionalProperties": false
+        },
+        "logicalNoneChoice": {
+            "type": "object",
+            "properties": {
+                "NONE": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/$defs/choicePredicate"
+                    },
+                    "minItems": 1
+                },
+                "Next": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "NONE",
+                "Next"
+            ],
+            "additionalProperties": false
+        },
+        "state": {
+            "oneOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "Type": {
+                            "const": "MethodCall"
+                        },
+                        "MethodCall": {
+                            "type": "string"
+                        },
+                        "Parameters": {
+                            "$ref": "#/$defs/parameters"
+                        },
+                        "Payloads": {
+                            "$ref": "#/$defs/payloads"
+                        },
+                        "Next": {
+                            "type": "string"
+                        },
+                        "Start": {
+                            "$ref": "#/$defs/flagString"
+                        },
+                        "End": {
+                            "$ref": "#/$defs/flagString"
+                        }
+                    },
+                    "required": [
+                        "Type",
+                        "MethodCall",
+                        "Parameters"
+                    ],
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "End": {
+                                        "const": "True"
+                                    }
+                                },
+                                "required": [
+                                    "End"
+                                ]
+                            },
+                            "then": true,
+                            "else": {
+                                "required": [
+                                    "Next"
+                                ]
+                            }
+                        }
+                    ],
+                    "additionalProperties": false
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "Type": {
+                            "const": "Choice"
+                        },
+                        "Choices": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/$defs/choice"
+                            },
+                            "minItems": 1
+                        },
+                        "Default": {
+                            "type": "string"
+                        },
+                        "Start": {
+                            "$ref": "#/$defs/flagString"
+                        },
+                        "End": {
+                            "$ref": "#/$defs/flagString"
+                        }
+                    },
+                    "required": [
+                        "Type",
+                        "Choices",
+                        "Default"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "choice": {
+            "oneOf": [
+                {
+                    "$ref": "#/$defs/choicePredicate"
+                },
+                {
+                    "$ref": "#/$defs/logicalAllChoice"
+                },
+                {
+                    "$ref": "#/$defs/logicalAnyChoice"
+                },
+                {
+                    "$ref": "#/$defs/logicalNoneChoice"
+                }
             ]
         }
     }

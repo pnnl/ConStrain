@@ -6,6 +6,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from constrain.api import VerificationCase
 
+# Get the base test directory
+TEST_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(TEST_DIR))
+
 
 class TestVerificationCase(unittest.TestCase):
     case = {
@@ -32,8 +36,11 @@ class TestVerificationCase(unittest.TestCase):
         "verification_class": "SupplyAirTempReset",
     }
 
-    json_case_path = (
-        "./tests/api/data/verification_case_unit_test/verification_case_unit_test.json"
+    json_case_path = os.path.join(
+        TEST_DIR,
+        "data",
+        "verification_case_unit_test",
+        "verification_case_unit_test.json",
     )
 
     example_base_case = {

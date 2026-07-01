@@ -1,0 +1,35 @@
+## DEPRECATED: Legacy Streamlit runtime kept temporarily as reference/fallback.
+## This image is not part of the supported docker-compose stack.
+FROM python:3.10-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Docker
+RUN curl -fsSL https://get.docker.com -o get-docker.sh && \
+    sh get-docker.sh && \
+    rm get-docker.sh
+
+# Install Python dependencies
+RUN pip install --no-cache-dir \
+    streamlit==1.31.0 \
+    pandas==2.2.0
+
+# Copy the Streamlit app and config
+COPY streamlit_app.py ./streamlit_app.py
+COPY .streamlit /app/.streamlit
+
+# Create directories for file uploads and results
+RUN mkdir -p /app/uploads /app/results
+
+# Expose Streamlit port
+EXPOSE 8501
+
+# Run Streamlit
+CMD ["streamlit", "run", "streamlit_app.py", "--server.address", "0.0.0.0", "--server.port", "8501"]

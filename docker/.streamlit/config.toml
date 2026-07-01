@@ -1,0 +1,26 @@
+[comment]
+deprecated = "Legacy Streamlit config retained temporarily as archived fallback/reference; not used by the supported compose stack."
+
+[theme]
+base = "light"
+primaryColor = "#ff4b4b"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "#31333F"
+font = "sans serif"
+
+[ui]
+hideTopBar = false
+
+[client]
+showSidebarNavigation = true
+showErrorDetails = true
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true
+port = 8501
+enableCORS = false
+enableXsrfProtection = false

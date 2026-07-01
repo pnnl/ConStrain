@@ -5,7 +5,13 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from constrain.api import VerificationLibrary
 
-LIB_PATH = "./constrain/schema/library.json"
+# Get absolute path to library.json relative to this test file
+LIB_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "constrain",
+    "schema",
+    "library.json",
+)
 
 
 class TestVerificationLibrary(unittest.TestCase):
