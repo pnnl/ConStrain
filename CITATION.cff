@@ -36,5 +36,5 @@ abstract: >-
   ANIMATE)
 license: BSD-2-Clause
 commit: 7f1798889b07e02cd126549e1c8ae5b1c89f24cd
-version: 0.7.0
+version: 0.8.0
 date-released: '2026-05-05'
