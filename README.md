@@ -52,9 +52,9 @@ See the Publications section for more information and example of uses of the fra
 ## Publications
 
 - [Lei X., J. Lerond, Y. Jung, J. Slane‑Holloway, F. Feng and Y. Chen. 2026. "Control Strainer (ConStrain): a data‑driven control verification framework." Journal of Open Source Software, 11(122), 8083. DOI: 10.21105/joss.08083](https://doi.org/10.21105/joss.08083)
-- [Chen Y., M. Wetter, X. Lei, J. Lerond, P.K. Anand, Y. Jung, P. Ehrlich, and D.L. Vrabie. 2023. "Control Performance Verification – The Hidden Opportunity of Ensuring High Performance of Building Control System." In Building Simulation 2023 Conference](https://publications.ibpsa.org/conference/paper/?id=bs2023_1660)
+- [Chen Y., M. Wetter, X. Lei, J. Lerond, P.K. Anand, Y. Jung, P. Ehrlich, and D.L. Vrabie. 2023. "Control Performance Verification – The Hidden Opportunity of Ensuring High Performance of Building Control System." In Building Simulation 2023 Conference. DOI: 10.26868/25222708.2023.1660](https://doi.org/10.26868/25222708.2023.1660)
 - [Lei X., J. Lerond, Y. Jung, and Y. Chen. 2023. "Development of an Application Programming Interface for a Building Systems Control Performance Verification Framework." In 2023 ASHRAE Annual Conference. DOI: 10.63044/s23lei50](https://doi.org/10.63044/s23lei50)
-- [Chen Y., J. Lerond, X. Lei, and M.I. Rosenberg. 2021. "A Knowledge-based Framework for Building Energy Model Performance Verification." In Building Simulation 2021 Conference](https://publications.ibpsa.org/conference/paper/?id=bs2021_30725)
+- [Chen Y., J. Lerond, X. Lei, and M.I. Rosenberg. 2021. "A Knowledge-based Framework for Building Energy Model Performance Verification." In Building Simulation 2021 Conference. DOI: 10.26868/25222708.2021.30725](https://doi.org/10.26868/25222708.2021.30725)
 
 ## Referencing
 
