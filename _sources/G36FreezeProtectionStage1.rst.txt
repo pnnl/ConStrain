@@ -1,0 +1,45 @@
+G36FreezeProtectionStage1
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+G36 freeze protection stage 1 requirements
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.12.1. in Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * temperature_air_supply_setpoint: Supply air temperature
+   * position_damper_air_outdoor: Outdoor air damper position
+   * position_damper_air_outdoor_min: Minimum outdoor air damper position
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if temperature_air_supply_setpoint < 4.4 (continuously 5 minutes) and position_damper_air_outdoor > position_damper_air_outdoor_min:
+
+   *   fail
+
+   * elif position_damper_air_outdoor > position_damper_air_outdoor_min and not (temperature_air_supply_setpoint > 7 (continuously 5 minutes)):
+
+   *   fail
+
+   * else: 
+
+   *   pass
+
+   * 
+
+   * if never (temperature_air_supply_setpoint < 4.4 (continuously 5 minutes)):
+
+   *   untested
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

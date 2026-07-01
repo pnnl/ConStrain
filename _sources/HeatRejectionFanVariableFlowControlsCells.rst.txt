@@ -1,0 +1,32 @@
+HeatRejectionFanVariableFlowControlsCells
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Heat rejection fan variable flow controls cells
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.5.5.2.2 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * number_cells_coolingtower_operation: Number of operating cooling tower cells
+   * number_cells_coolingtower: Number of cooling tower cells
+   * flow_mass_coolingtower: Cooling tower mass flow rate
+   * flow_mass_coolingtower_design: Cooling tower design mass flow rate
+   * fraction_flow_min_cell: Minimum flow fraction per cooling tower cell
+   * power_fan_coolingtower: Cooling tower fan power
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if the number of operating cooling tower cells is equal to the maximum number of cooling tower cells then pass else fail
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

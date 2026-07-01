@@ -1,0 +1,37 @@
+HWReset
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Hot water supply water temperature reset
+
+Detailed Description
+-------------------------------------------------------------------------------
+Hot-water systems with a design capacity exceeding 300,000 btu/h supplying heated water to comfort conditioning systems shall include controls that automatically reset supply water temperatures by representative building loads (including return water temperature) or by outdoor air temperature. where ddc is used to control valves, the set point shall be reset based on valve positions until one valve is nearly wide open or setpoint limits of the system equipment or application have been reached. (case study)
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.5.4.4 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * temperature_air_outdoor: Outdoor air temperature
+   * temperature_air_outdoor_max: Outdoor air temperature upper threshold
+   * temperature_air_outdoor_min: Outdoor air temperature lower threshold
+   * temperature_water_hot: Hot water temperature
+   * flow_mass_water_hot: Hot water mass flow rate
+   * temperature_water_hot_setpoint_max: Hot water maximum temperature setpoint
+   * temperature_water_hot_setpoint_min: Hot water minimum temperature setpoint
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * When flow_mass_water_hot > 0, temperature_water_hot <= temperature_water_hot_setpoint_max and temperature_water_hot >= temperature_water_hot_setpoint_min; When flow_mass_water_hot < 0, always pass
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

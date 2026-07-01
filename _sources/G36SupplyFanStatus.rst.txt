@@ -1,0 +1,51 @@
+G36SupplyFanStatus
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+G36 supply fan on/off requirements
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.1.1. in Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * mode_operation: System operation mode
+   * flag_reheat_perimeter: Flag indicating VAV-reheat boxes on perimeter zones
+   * status_fan_supply: Supply fan status
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if flag_reheat_perimeter == True:
+
+   *     if mode_operation != 'unoccupied' and status_fan_supply == 'off':
+
+   *         fail
+
+   * 
+
+   * else: 
+
+   *     if mode_operation in ['occupied', 'setup', 'cooldown'] and status_fan_supply == 'off':
+
+   *         fail
+
+   * 
+
+   * if ['occupied', 'unoccupied'] in mode_operation:
+
+   *   pass
+
+   * else: 
+
+   *   untested
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

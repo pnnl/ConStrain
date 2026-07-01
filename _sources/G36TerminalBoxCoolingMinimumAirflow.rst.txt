@@ -1,0 +1,56 @@
+G36TerminalBoxCoolingMinimumAirflow
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Terminal box in cooling mode needs maintain minimum airflow when supply air temperature is high following the guideline 36 recommendations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.5.5.1.a in Guideline 36-2021
+
+   * Section 5.6.5.1.a in Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * mode_operation: System operation mode
+   * state_zone: Zone state (heating, cooling, or deadband)
+   * flow_volumetric_air_setpoint_min: Minimum airflow setpoint during occupied mode
+   * temperature_air_supply_setpoint: Supply air temperature setpoint
+   * flow_volumetric_air_setpoint: Airflow setpoint
+   * temperature_air_room: Room temperature
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if temperature_air_supply_setpoint <= temperature_air_room:
+
+   *     untested
+
+   * else: 
+
+   *     switch mode_operation
+
+   *         case 'occupied'
+
+   *             minimum = v_min
+
+   *         case 'cooldown', 'setup', 'warmup', 'setback', 'unoccupied'
+
+   *             minimum = 0
+
+   *     if flow_volumetric_air_setpoint > minimum:
+
+   *         fail
+
+   *     else:
+
+   *         pass
+

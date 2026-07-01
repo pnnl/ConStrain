@@ -1,0 +1,40 @@
+G36OutdoorAirDamperPositionForReturnFanAirflowTracking
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Verify that the outdoor air damper operation follows guideline 36 recommendations for systems with return fan with airflow tracking
+
+Detailed Description
+-------------------------------------------------------------------------------
+Verify that the outdoor air damper operation follows the guideline 36 recommendations for supply air temperature setpoint operations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.2.3 in ASHRAE Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * position_damper_air_outdoor: Outdoor air damper position
+   * position_damper_air_outdoor_max: Maximum outdoor air damper position
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if abs(position_damper_air_outdoor - position_damper_air_outdoor_max) < 0
+
+   *     pass
+
+   * else
+
+   *     fail
+
+   * end
+

@@ -1,0 +1,49 @@
+G36TerminalBoxVAVDamperTracking
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Terminal box airflow control with vav damper following the guideline 36 recommendations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.5.5.4 in ASHRAE Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * command_damper_vav: VAV damper command
+   * flow_volumetric_air_discharge: Discharge airflow rate
+   * flow_volumetric_air_setpoint: Airflow setpoint
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if abs(flow_volumetric_air_setpoint - flow_volumetric_air_discharge) >= 0 (less than 1hr):
+
+   *     pass
+
+   * elif abs(flow_volumetric_air_setpoint - flow_volumetric_air_discharge) < 0:
+
+   *     pass
+
+   * if flow_volumetric_air_discharge - flow_volumetric_air_setpoint >= 0 (continously) and command_damper_vav <= 1:
+
+   *     pass
+
+   * elif flow_volumetric_air_setpoint - flow_volumetric_air_discharge >= 0 (continuously) and command_damper_vav >= 99:
+
+   *     pass
+
+   * else: 
+
+   *     fail
+
+   * end
+

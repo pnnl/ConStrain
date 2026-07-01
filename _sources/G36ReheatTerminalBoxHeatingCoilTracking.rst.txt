@@ -1,0 +1,52 @@
+G36ReheatTerminalBoxHeatingCoilTracking
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Terminal box with reheat heating coil tracking discharge temperature at setpoint following the guideline 36 recommendations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.6.5.3 c in ASHRAE Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * mode_operation: System operation mode
+   * command_coil_heat: Heating coil command
+   * temperature_air_discharge: Discharge air temperature
+   * temperature_air_discharge_setpoint: Discharge air temperature setpoint
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * only check the following if mode_system is heating
+
+   * if abs(temperature_air_discharge_setpoint - temperature_air_discharge) >= 0 (less than 1hr):
+
+   *     pass
+
+   * elif abs(temperature_air_discharge_setpoint - temperature_air_discharge) < 0:
+
+   *     pass
+
+   * if temperature_air_discharge - temperature_air_discharge_setpoint >= 0 (continously) and command_coil_heat <= 1:
+
+   *     pass
+
+   * elif temperature_air_discharge_setpoint - temperature_air_discharge >= 0 (continuously) and cmd_damper_vav >= 99:
+
+   *     pass
+
+   * else: 
+
+   *     fail
+
+   * end
+

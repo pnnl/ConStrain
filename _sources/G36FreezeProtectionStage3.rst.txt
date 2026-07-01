@@ -1,0 +1,72 @@
+G36FreezeProtectionStage3
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+G36 freeze protection stage 3 (highest) requirements
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.12.3. in Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * status_freeze: (optional, set to False if system does not have it) Binary freeze-stat
+   * temperature_air_supply: Supply air temperature
+   * position_damper_air_outdoor: Outdoor air damper position
+   * status_fan_supply: Supply fan status
+   * status_fan_return: (optional, set to False if system does not have it) Return fan status
+   * status_fan_relief: (optional, set to False if system does not have it) Relief fan status
+   * command_coil_cool: Cooling coil command
+   * command_coil_heat: Heating coil command
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if temperature_air_supply < 3.3 (continuously 15 minutes) or
+
+   *   temperature_air_supply < 1 (continuously 5 minutes) or
+
+   *   status_freeze == True
+
+   *   if not (
+
+   *     position_damper_air_outdoor == 0 and
+
+   *     status_fan_supply == 'off' and
+
+   *     status_fan_return == 'off' and
+
+   *     status_fan_relief == 'off' and
+
+   *     command_coil_cool == 100 and
+
+   *     command_coil_heat > 0
+
+   *   ):
+
+   *     fail
+
+   *   else:
+
+   *     pass
+
+   * if never (
+
+   *   temperature_air_supply < 3.3 (continuously 15 minutes) or
+
+   *   temperature_air_supply < 1 (continuously 5 minutes) or
+
+   *   status_freeze == True
+
+   * ):
+
+   *   untested
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

@@ -1,0 +1,26 @@
+LocalLoopSaturationDirectActingMin
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Local loop performance verification - direct acting loop actuator minimum saturation
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * value_sensor: Feedback sensor reading
+   * value_setpoint: Setpoint value
+   * command_control: Control command
+   * command_min: Minimum control command value
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * If the sensed data values are consistently below its set point, and after a default of 1 hour, the control command is still not saturated to minimum, then the verification fails; Otherwise, it passes.
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

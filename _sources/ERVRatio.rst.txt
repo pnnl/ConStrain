@@ -1,0 +1,33 @@
+ERVRatio
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Erv ratio of at least 50%
+
+Detailed Description
+-------------------------------------------------------------------------------
+Energy recovery systems required by this section shall result in an enthalpy recovery ratio of at least 50%. a 50% enthalpy recovery ratio shall mean a change in the enthalpy of the outdoor air supply equal to 50% of the difference between the outdoor air and entering exhaust air enthalpies at design conditions.
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.5.6.1 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * enthalpy_air_outdoor: Outdoor air enthalpy
+   * enthalpy_air_return: Return air enthalpy
+   * enthalpy_air_outdoor_erv: Outdoor air enthalpy after ERV
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * (enthalpy_air_outdoor_erv - enthalpy_air_outdoor)/(enthalpy_air_return - enthalpy_air_outdoor) >= 50%  happens at least once in winter design day
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

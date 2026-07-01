@@ -1,0 +1,808 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>constrain.checklib &mdash; ConStrain 0.8.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=486e5634"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B87333" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ConStrain
+              <img src="../../_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Statement%20of%20Need.html">Statement of Need</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Quickstart%20Guide.html">Quickstart Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Verifications.html">Verifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Expand%20Exisiting%20Verifications.html">Expand Exisiting Verifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Code%20Documentation.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Acknowledgment.html">Acknowledgement</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B87333" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ConStrain</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">constrain.checklib</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for constrain.checklib</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">checklib.py</span>
+<span class="sd">====================================</span>
+<span class="sd">This file containing the high level interface for implementing verification item classes in library.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">date</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">pandas.plotting</span> <span class="kn">import</span> <span class="n">register_matplotlib_converters</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CheckLibBase">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase">[docs]</a>
+<span class="k">class</span> <span class="nc">CheckLibBase</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class defining interfaces for item-specific verification classes&quot;&quot;&quot;</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">results_folder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tolerances</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">points_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span>
+        <span class="n">full_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">full_df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="n">col_list</span> <span class="o">=</span> <span class="n">full_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">points_list</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">col_list</span><span class="p">)):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Dataset is not sufficient for running </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">col_list</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="n">full_df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">points_list</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_folder</span> <span class="o">=</span> <span class="n">results_folder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tolerances</span> <span class="o">=</span> <span class="n">tolerances</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verify</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Verification Result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span>
+
+<div class="viewcode-block" id="CheckLibBase.check_bool">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.check_bool">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">check_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;implementation of the checking boolean return&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.check_detail">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.check_detail">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">check_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;implementation of the checking detailed return in Dict&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.verify">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.verify">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;checking logic implementation, not for user&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">get_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_bool</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_detail</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CheckLibBase.add_md">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.add_md">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_md</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">md_file_path</span><span class="p">,</span>
+        <span class="n">img_folder</span><span class="p">,</span>
+        <span class="n">relative_path_to_img_in_md</span><span class="p">,</span>
+        <span class="n">item_dict</span><span class="p">,</span>
+        <span class="n">plot_option</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fig_size</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">),</span>
+    <span class="p">):</span>
+        <span class="n">outcome_bool</span><span class="p">,</span> <span class="n">outcome_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_checks</span>
+
+        <span class="n">img_folder</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_folder</span><span class="si">}</span><span class="s2">/VerificationCase</span><span class="si">{</span><span class="n">item_dict</span><span class="p">[</span><span class="s1">&#39;no&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">relative_path_to_img_in_md</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">relative_path_to_img_in_md</span><span class="si">}</span><span class="s2">/VerificationCase</span><span class="si">{</span><span class="n">item_dict</span><span class="p">[</span><span class="s1">&#39;no&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">img_folder</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">img_folder</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_folder</span> <span class="o">=</span> <span class="n">img_folder</span>
+        <span class="k">if</span> <span class="n">plot_option</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">plot_option</span><span class="o">=</span><span class="s2">&quot;all-compact&quot;</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="n">fig_size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">plot_option</span><span class="o">=</span><span class="s2">&quot;all-expand&quot;</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="n">fig_size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">plot_option</span><span class="o">=</span><span class="s2">&quot;day-compact&quot;</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="n">fig_size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">plot_option</span><span class="o">=</span><span class="s2">&quot;day-expand&quot;</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="n">fig_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">plot_option</span><span class="o">=</span><span class="n">plot_option</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="n">fig_size</span><span class="p">)</span>
+        <span class="n">image_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_folder</span><span class="si">}</span><span class="s2">/*.png&quot;</span><span class="p">)</span>
+        <span class="n">image_md_path_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">img_folder</span><span class="p">,</span> <span class="n">relative_path_to_img_in_md</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">image_list</span>
+        <span class="p">]</span>
+        <span class="n">img_md</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image_list</span><span class="p">)):</span>
+            <span class="n">img_def_path</span> <span class="o">=</span> <span class="n">image_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">img_rel_path</span> <span class="o">=</span> <span class="n">image_md_path_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">img_md</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">![</span><span class="si">{</span><span class="n">img_def_path</span><span class="si">}</span><span class="s2">](</span><span class="si">{</span><span class="n">img_rel_path</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+        <span class="n">md_content</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">## Results for Verification Case ID </span><span class="si">{</span><span class="n">item_dict</span><span class="p">[</span><span class="s1">&#39;no&#39;</span><span class="p">]</span><span class="si">}</span>
+
+<span class="s2">### Pass/Fail check result</span>
+<span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">outcome_dict</span><span class="p">)</span><span class="si">}</span>
+
+<span class="s2">### Result visualization</span>
+<span class="si">{</span><span class="n">img_md</span><span class="si">}</span>
+
+<span class="s2">### Verification case definition</span>
+<span class="s2">```</span>
+<span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">item_dict</span><span class="p">,</span><span class="w"> </span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">```</span>
+
+<span class="s2">---</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">md_file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">md_file_path</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fw</span><span class="p">:</span>
+                <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">md_content</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;md_content&quot;</span><span class="p">:</span> <span class="n">md_content</span><span class="p">,</span>
+            <span class="s2">&quot;outcome_notes&quot;</span><span class="p">:</span> <span class="n">outcome_dict</span><span class="p">,</span>
+            <span class="s2">&quot;model_file&quot;</span><span class="p">:</span> <span class="n">item_dict</span><span class="p">[</span><span class="s2">&quot;simulation_IO&quot;</span><span class="p">][</span><span class="s2">&quot;idf&quot;</span><span class="p">]</span>
+            <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.idf&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;verification_class&quot;</span><span class="p">:</span> <span class="n">item_dict</span><span class="p">[</span><span class="s2">&quot;verification_class&quot;</span><span class="p">],</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.save_data">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.save_data">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.get_tolerance">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.get_tolerance">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_tolerance</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">variable_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">variable_subtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;general&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get tolerance for a specific variable type.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            variable_type (str): Type of variable. For example: &quot;temperature&quot;.</span>
+<span class="sd">            variable_subtype (str): Variable subtype. For example: &quot;outdoor_air&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float tolerance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerances</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">variable_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerances</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tolerances</span><span class="p">[</span><span class="n">variable_type</span><span class="p">][</span><span class="s2">&quot;types&quot;</span><span class="p">][</span><span class="n">variable_subtype</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.plot">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.plot">[docs]</a>
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_option</span><span class="p">,</span> <span class="n">plt_pts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">)):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;default plot function for showing result&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">plt_pts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt_pts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">plot_option</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">plot_option</span> <span class="o">=</span> <span class="n">plot_option</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="c1"># filter out &quot;Untested&quot; to prevent an error when plotting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_filtered</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">!=</span> <span class="s2">&quot;Untested&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">plot_option</span> <span class="o">==</span> <span class="s2">&quot;all-compact&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">all_plot_aio</span><span class="p">(</span><span class="n">plt_pts</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">plot_option</span> <span class="o">==</span> <span class="s2">&quot;all-expand&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">all_plot_obo</span><span class="p">(</span><span class="n">plt_pts</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">plot_option</span> <span class="o">==</span> <span class="s2">&quot;day-compact&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">day_plot_aio</span><span class="p">(</span><span class="n">plt_pts</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">plot_option</span> <span class="o">==</span> <span class="s2">&quot;day-expand&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">day_plot_obo</span><span class="p">(</span><span class="n">plt_pts</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Invalid plot option!&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.all_plot_aio">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.all_plot_aio">[docs]</a>
+    <span class="k">def</span> <span class="nf">all_plot_aio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plt_pts</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;All in one plot of all samples&quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">fig_size</span><span class="p">)</span>
+
+        <span class="c1"># flag</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">result_filtered</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">result_filtered</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All samples Pass / Fail flag plot - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># datapoints</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">plt_pts</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+        <span class="n">pt_nan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ax2</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()):</span>
+            <span class="n">line_label</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">pt_nan</span><span class="p">[</span><span class="n">line_label</span><span class="p">]:</span>
+                <span class="n">line</span><span class="o">.</span><span class="n">set_marker</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">useOffset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All samples data points plot - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_folder</span><span class="si">}</span><span class="s2">/All_plot_aio.png&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.all_plot_obo">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.all_plot_obo">[docs]</a>
+    <span class="k">def</span> <span class="nf">all_plot_obo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plt_pts</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;One by one plot of all samples&quot;&quot;&quot;</span>
+        <span class="n">num_plots</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">plt_pts</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">fig_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fig_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_plots</span><span class="p">))</span>
+
+        <span class="c1"># flag</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">num_plots</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">result_filtered</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">result_filtered</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All samples Pass / Fail flag plot - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># datapoints</span>
+        <span class="n">pt_nan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">plt_pts</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">axx</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">num_plots</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">pt_nan</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axx</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># check if values in the series are boolean</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axx</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All samples - </span><span class="si">{</span><span class="n">pt</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">axx</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">useOffset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pt</span><span class="si">}</span><span class="s2"> cannot be plotted by itself, ignored in the plot.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_folder</span><span class="si">}</span><span class="s2">/All_plot_obo.png&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.calculate_plot_day">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.calculate_plot_day">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_plot_day</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">trueday</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">truedaydf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">falseday</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">falsedaydf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mixday</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mixdaydf</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">ratio</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span>
+
+        <span class="c1"># Looking for day with most balanced pass/fail samples</span>
+        <span class="k">for</span> <span class="n">one_day</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">daterange</span><span class="p">(</span>
+            <span class="n">date</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">day</span><span class="p">),</span>
+            <span class="n">date</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">day</span>
+            <span class="p">),</span>
+        <span class="p">):</span>
+            <span class="n">daystr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">one_day</span><span class="o">.</span><span class="n">year</span><span class="p">)</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">one_day</span><span class="o">.</span><span class="n">month</span><span class="p">)</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">one_day</span><span class="o">.</span><span class="n">day</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">daydf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">daystr</span><span class="p">]</span>
+            <span class="n">day</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="n">daystr</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">trueday</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">day</span><span class="p">[</span><span class="n">day</span> <span class="o">==</span> <span class="kc">True</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">trueday</span> <span class="o">=</span> <span class="n">day</span>
+                <span class="n">truedaydf</span> <span class="o">=</span> <span class="n">daydf</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">falseday</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">day</span><span class="p">[</span><span class="n">day</span> <span class="o">==</span> <span class="kc">False</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">falseday</span> <span class="o">=</span> <span class="n">day</span>
+                <span class="n">falsedaydf</span> <span class="o">=</span> <span class="n">daydf</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">day</span><span class="p">[</span><span class="n">day</span> <span class="o">==</span> <span class="kc">False</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">day</span><span class="p">[</span><span class="n">day</span> <span class="o">==</span> <span class="kc">True</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">new_ratio</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">day</span><span class="p">[</span><span class="n">day</span> <span class="o">==</span> <span class="kc">True</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">day</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span>
+
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">new_ratio</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ratio</span><span class="p">):</span>
+                <span class="n">ratio</span> <span class="o">=</span> <span class="n">new_ratio</span>
+                <span class="n">mixday</span> <span class="o">=</span> <span class="n">day</span>
+                <span class="n">mixdaydf</span> <span class="o">=</span> <span class="n">daydf</span>
+
+        <span class="k">if</span> <span class="n">mixdaydf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plotdaydf</span> <span class="o">=</span> <span class="n">daydf</span>
+            <span class="n">plotday</span> <span class="o">=</span> <span class="n">day</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plotdaydf</span> <span class="o">=</span> <span class="n">mixdaydf</span>
+            <span class="n">plotday</span> <span class="o">=</span> <span class="n">mixday</span>
+
+        <span class="k">return</span> <span class="n">plotday</span><span class="p">,</span> <span class="n">plotdaydf</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.day_plot_aio">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.day_plot_aio">[docs]</a>
+    <span class="k">def</span> <span class="nf">day_plot_aio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plt_pts</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ALl in one plot for one day&quot;&quot;&quot;</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">fig_size</span><span class="p">)</span>
+
+        <span class="n">plotday</span><span class="p">,</span> <span class="n">plotdaydf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_plot_day</span><span class="p">()</span>
+        <span class="n">plotday_filtered</span> <span class="o">=</span> <span class="n">plotday</span><span class="p">[</span><span class="n">plotday</span> <span class="o">!=</span> <span class="s2">&quot;Untested&quot;</span><span class="p">]</span>
+
+        <span class="c1"># flag</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">plotday_filtered</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">plotday_filtered</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="n">plotday</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">plotday</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Example day Pass / Fail flag - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># datapoints</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">plotdaydf</span><span class="p">[</span><span class="n">plt_pts</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+        <span class="n">pt_nan</span> <span class="o">=</span> <span class="n">plotdaydf</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ax2</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()):</span>
+            <span class="n">line_label</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">pt_nan</span><span class="p">[</span><span class="n">line_label</span><span class="p">]:</span>
+                <span class="n">line</span><span class="o">.</span><span class="n">set_marker</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">useOffset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Example day data points plot - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_folder</span><span class="si">}</span><span class="s2">/Day_plot_aio.png&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.day_plot_obo">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.day_plot_obo">[docs]</a>
+    <span class="k">def</span> <span class="nf">day_plot_obo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plt_pts</span><span class="p">,</span> <span class="n">fig_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;One by one plot of all samples&quot;&quot;&quot;</span>
+        <span class="n">num_plots</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">plt_pts</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">fig_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fig_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_plots</span><span class="p">))</span>
+
+        <span class="n">plotday</span><span class="p">,</span> <span class="n">plotdaydf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_plot_day</span><span class="p">()</span>
+        <span class="n">plotday_filtered</span> <span class="o">=</span> <span class="n">plotday</span><span class="p">[</span><span class="n">plotday</span> <span class="o">!=</span> <span class="s2">&quot;Untested&quot;</span><span class="p">]</span>
+        <span class="c1"># flag</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">num_plots</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">plotday_filtered</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">plotday_filtered</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="n">plotday</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">plotday</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Example day Pass / Fail flag plot - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># datapoints</span>
+        <span class="n">pt_nan</span> <span class="o">=</span> <span class="n">plotdaydf</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">plt_pts</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">axx</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">num_plots</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">pt_nan</span><span class="p">[</span><span class="n">pt</span><span class="p">]:</span>
+                    <span class="n">plotdaydf</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axx</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># check if values in the series are boolean</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                    <span class="n">plotdaydf</span><span class="p">[</span><span class="n">pt</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axx</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Example day - </span><span class="si">{</span><span class="n">pt</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">axx</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">useOffset</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pt</span><span class="si">}</span><span class="s2"> cannot be plotted by itself, ignored in the plot.&quot;</span>
+                <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">results_folder</span><span class="si">}</span><span class="s2">/Day_plot_obo.png&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CheckLibBase.daterange">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.CheckLibBase.daterange">[docs]</a>
+    <span class="k">def</span> <span class="nf">daterange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">end_date</span> <span class="o">-</span> <span class="n">start_date</span><span class="p">)</span><span class="o">.</span><span class="n">days</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="n">start_date</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RuleCheckBase">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.RuleCheckBase">[docs]</a>
+<span class="k">class</span> <span class="nc">RuleCheckBase</span><span class="p">(</span><span class="n">CheckLibBase</span><span class="p">):</span>
+<div class="viewcode-block" id="RuleCheckBase.check_bool">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.RuleCheckBase.check_bool">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Untested&quot;</span></div>
+
+
+<div class="viewcode-block" id="RuleCheckBase.check_detail">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.RuleCheckBase.check_detail">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Sample #&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">),</span>
+            <span class="s2">&quot;Pass #&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]),</span>
+            <span class="s2">&quot;Fail #&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]),</span>
+            <span class="s2">&quot;Untested #&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">==</span> <span class="s2">&quot;Untested&quot;</span><span class="p">]),</span>
+            <span class="s2">&quot;Verification Passed?&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_bool</span><span class="p">(),</span>
+        <span class="p">}</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Verification results dict: &quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EconomizerIntegrationCompliance">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.EconomizerIntegrationCompliance">[docs]</a>
+<span class="k">class</span> <span class="nc">EconomizerIntegrationCompliance</span><span class="p">(</span><span class="n">RuleCheckBase</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OA_min_sys&quot;</span><span class="p">,</span> <span class="s2">&quot;OA_timestep&quot;</span><span class="p">,</span> <span class="s2">&quot;Cool_sys_out&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="EconomizerIntegrationCompliance.verify">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.EconomizerIntegrationCompliance.verify">[docs]</a>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Economizer Integration: Non-Integrated Economizer Operation</span>
+
+<span class="sd">        &quot;assertions_type&quot;: &quot;fail&quot;,</span>
+<span class="sd">        &quot;assertion_level&quot;: &quot;sample&quot;,</span>
+<span class="sd">        &quot;assertions&quot;: [&quot;$OA_timestep &gt; $OA_min_sys and $Cool_sys_out &gt; 0&quot;],</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Logical Operators in Pandas are &amp;, | and ~, and parentheses (...) is important!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;OA_timestep&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;OA_min_sys&quot;</span><span class="p">])</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Cool_sys_out&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EconomizerHeatingCompliance">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.EconomizerHeatingCompliance">[docs]</a>
+<span class="k">class</span> <span class="nc">EconomizerHeatingCompliance</span><span class="p">(</span><span class="n">RuleCheckBase</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OA_min_sys&quot;</span><span class="p">,</span> <span class="s2">&quot;OA_timestep&quot;</span><span class="p">,</span> <span class="s2">&quot;Heat_sys_out&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="EconomizerHeatingCompliance.verify">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.EconomizerHeatingCompliance.verify">[docs]</a>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;OA_timestep&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;OA_min_sys&quot;</span><span class="p">])</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Heat_sys_out&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="HeatRecoveryCompliance">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.HeatRecoveryCompliance">[docs]</a>
+<span class="k">class</span> <span class="nc">HeatRecoveryCompliance</span><span class="p">(</span><span class="n">RuleCheckBase</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OA_timestep&quot;</span><span class="p">,</span> <span class="s2">&quot;Heat_rec&quot;</span><span class="p">,</span> <span class="s2">&quot;Cool_rec&quot;</span><span class="p">,</span> <span class="s2">&quot;OA_min_sys&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="HeatRecoveryCompliance.verify">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.HeatRecoveryCompliance.verify">[docs]</a>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;OA_timestep&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;OA_min_sys&quot;</span><span class="p">])</span>
+            <span class="o">&amp;</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Heat_rec&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Cool_rec&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SimultaneousHeatingCoolingCompliance">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.SimultaneousHeatingCoolingCompliance">[docs]</a>
+<span class="k">class</span> <span class="nc">SimultaneousHeatingCoolingCompliance</span><span class="p">(</span><span class="n">RuleCheckBase</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Cool_sys_out&quot;</span><span class="p">,</span> <span class="s2">&quot;Heat_sys_out&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="SimultaneousHeatingCoolingCompliance.verify">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.SimultaneousHeatingCoolingCompliance.verify">[docs]</a>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="o">~</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Cool_sys_out&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Heat_sys_out&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="HumidityWithinBoundaries">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.HumidityWithinBoundaries">[docs]</a>
+<span class="k">class</span> <span class="nc">HumidityWithinBoundaries</span><span class="p">(</span><span class="n">RuleCheckBase</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Zone_hum&quot;</span><span class="p">,</span> <span class="s2">&quot;Hum_up_bound&quot;</span><span class="p">,</span> <span class="s2">&quot;Hum_low_bound&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="HumidityWithinBoundaries.verify">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.HumidityWithinBoundaries.verify">[docs]</a>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Zone_hum&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Hum_up_bound&quot;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Zone_hum&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Hum_low_bound&quot;</span><span class="p">]</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ContinuousDimmingCompliance">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.ContinuousDimmingCompliance">[docs]</a>
+<span class="k">class</span> <span class="nc">ContinuousDimmingCompliance</span><span class="p">(</span><span class="n">CheckLibBase</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Electric_light_power&quot;</span><span class="p">]</span>
+    <span class="n">flat_min_threshold</span> <span class="o">=</span> <span class="mi">60</span>
+
+<div class="viewcode-block" id="ContinuousDimmingCompliance.check_bool">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.ContinuousDimmingCompliance.check_bool">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_bool</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_up_period</span> <span class="o">&gt;</span> <span class="mi">60</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_down_period</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="ContinuousDimmingCompliance.check_detail">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.ContinuousDimmingCompliance.check_detail">[docs]</a>
+    <span class="k">def</span> <span class="nf">check_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;max_up_period&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_up_period</span><span class="p">,</span>
+            <span class="s2">&quot;max_down_period&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_down_period</span><span class="p">,</span>
+            <span class="s2">&quot;max_up_start&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_up_start</span><span class="p">,</span>
+            <span class="s2">&quot;max_up_end&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_up_end</span><span class="p">,</span>
+            <span class="s2">&quot;max_down_start&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_down_start</span><span class="p">,</span>
+            <span class="s2">&quot;max_down_end&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_down_end</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Electric_light_power&quot;</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;max_up_start&quot;</span><span class="p">],</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;max_up_end&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span>
+            <span class="n">output</span><span class="p">[</span><span class="s2">&quot;max_down_start&quot;</span><span class="p">],</span> <span class="n">output</span><span class="p">[</span><span class="s2">&quot;max_down_end&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+
+<div class="viewcode-block" id="ContinuousDimmingCompliance.verify">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.ContinuousDimmingCompliance.verify">[docs]</a>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">max_up_period</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">max_down_period</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">trend_period</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">v_prev</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">trend</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">start_time_flat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">end_time_flat</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">max_up_start</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">max_up_end</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">max_down_start</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">max_down_end</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">flat_flag</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Electric_light_power&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">v_prev</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">v_prev</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="n">start_time</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">end_time</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="n">v_prev</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">trend</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">start_time</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">trend</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">flat_flag</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">end_time</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">v_prev</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">trend</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">start_time</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="n">trend</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">flat_flag</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">end_time</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">v_prev</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">flat_flag</span><span class="p">:</span>
+                    <span class="n">end_time_flat</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">start_time_flat</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="n">flat_flag</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">v_prev</span> <span class="o">=</span> <span class="n">v</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">delta_minutes</span><span class="p">(</span><span class="n">start_time_flat</span><span class="p">,</span> <span class="n">end_time_flat</span><span class="p">)</span>
+                    <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flat_min_threshold</span>
+                <span class="p">):</span>
+                    <span class="n">trend_period</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">v_prev</span> <span class="o">=</span> <span class="n">v</span>
+                    <span class="n">start_time</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="n">end_time</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="k">continue</span>
+            <span class="n">trend_period</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_minutes</span><span class="p">(</span><span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">trend</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">trend_period</span> <span class="o">&gt;</span> <span class="n">max_up_period</span><span class="p">:</span>
+                <span class="n">max_up_period</span> <span class="o">=</span> <span class="n">trend_period</span>
+                <span class="n">max_up_start</span> <span class="o">=</span> <span class="n">start_time</span>
+                <span class="n">max_up_end</span> <span class="o">=</span> <span class="n">end_time</span>
+            <span class="k">if</span> <span class="n">trend</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">trend_period</span> <span class="o">&gt;</span> <span class="n">max_down_period</span><span class="p">:</span>
+                <span class="n">max_down_period</span> <span class="o">=</span> <span class="n">trend_period</span>
+                <span class="n">max_down_start</span> <span class="o">=</span> <span class="n">start_time</span>
+                <span class="n">max_down_end</span> <span class="o">=</span> <span class="n">end_time</span>
+
+            <span class="n">v_prev</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_up_start</span> <span class="o">=</span> <span class="n">max_up_start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_up_end</span> <span class="o">=</span> <span class="n">max_up_end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_down_start</span> <span class="o">=</span> <span class="n">max_down_start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_down_end</span> <span class="o">=</span> <span class="n">max_down_end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_up_period</span> <span class="o">=</span> <span class="n">max_up_period</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_down_period</span> <span class="o">=</span> <span class="n">max_down_period</span></div>
+
+
+<div class="viewcode-block" id="ContinuousDimmingCompliance.delta_minutes">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.ContinuousDimmingCompliance.delta_minutes">[docs]</a>
+    <span class="k">def</span> <span class="nf">delta_minutes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">start_time_flat</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">end_time_flat</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">end_time_flat</span> <span class="o">-</span> <span class="n">start_time_flat</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">60</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../Code%20Documentation.html#constrain.checklib.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+    <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;../schema/simplified2items.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;items&quot;</span><span class="p">]</span>
+
+    <span class="kn">from</span> <span class="nn">datetimeep</span> <span class="kn">import</span> <span class="n">DateTimeEP</span>
+
+    <span class="c1"># check rule based examples</span>
+    <span class="n">df_rule</span> <span class="o">=</span> <span class="n">DateTimeEP</span><span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+            <span class="s2">&quot;../resources/ASHRAE901_Hospital_STD2016_Tampa/ASHRAE901_Hospital_STD2016_Tampa.csv&quot;</span>  <span class="c1"># hudmidity</span>
+        <span class="p">)</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">()</span>
+
+    <span class="c1"># rule_items_id = [1] # non-int economizer</span>
+    <span class="n">rule_items_id</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># humidity</span>
+    <span class="k">for</span> <span class="n">item_id</span> <span class="ow">in</span> <span class="n">rule_items_id</span><span class="p">:</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">item_id</span><span class="p">]</span>
+        <span class="n">point_map</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;datapoints_source&quot;</span><span class="p">][</span><span class="s2">&quot;output_variables&quot;</span><span class="p">]</span>
+        <span class="n">point_map_reverse</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span> <span class="n">key</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">point_map</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="n">new_df</span> <span class="o">=</span> <span class="n">df_rule</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+        <span class="n">new_df</span> <span class="o">=</span> <span class="n">new_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">point_map_reverse</span><span class="p">)</span>
+
+        <span class="bp">cls</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;verification_class&quot;</span><span class="p">]]</span>
+        <span class="n">parameter</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">item</span><span class="p">[</span><span class="s2">&quot;datapoints_source&quot;</span><span class="p">][</span><span class="s2">&quot;parameters&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;parameters&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;datapoints_source&quot;</span><span class="p">])</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">new_df</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;datapoints_source&quot;</span><span class="p">][</span><span class="s2">&quot;parameters&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">get_checks</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;verification_class&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+<span class="c1"># %%</span>
+<span class="c1">#</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pacific Northwest National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

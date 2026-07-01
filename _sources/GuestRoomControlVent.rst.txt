@@ -1,0 +1,31 @@
+GuestRoomControlVent
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Verify whether there is guest room outdoor airflow control during operation hours
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.4.3.3.5.2 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * flow_volumetric_air_outdoor: Outdoor air volume flow
+   * schedule_occupancy: Occupancy schedule
+   * area_zone: Thermal zone area
+   * height_zone: Thermal zone height
+   * flow_volumetric_air_outdoor_per_area: Outdoor air volume flow per zone area
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * Check the two different airflow control logics when the room is/isn't rented out
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

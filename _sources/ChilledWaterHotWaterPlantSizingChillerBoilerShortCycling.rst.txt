@@ -1,0 +1,43 @@
+ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+
+
+Index Description
+-------------------------------------------------------------------------------
+   * N/A
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * status_equipment: Equipment status
+   * cycles_number_maximum: Maximum allowed number of cycles per hour
+   * system_type: System type (Chiller or Boiler)
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * For each hour, count the number of transitions between on and off states
+
+   * Compare the count with the maximum allowed cycles
+
+   * For each timestep i:
+
+   *   if ratio_loading_max > ratio_loading_max_min
+
+   *     pass
+
+   *   else
+
+   *     fail
+
+   *   end
+

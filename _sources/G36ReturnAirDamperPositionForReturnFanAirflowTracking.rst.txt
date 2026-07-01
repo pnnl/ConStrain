@@ -1,0 +1,31 @@
+G36ReturnAirDamperPositionForReturnFanAirflowTracking
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Verify that the return air damper operation follows guideline 36 recommendations for systems with return fan with airflow tracking
+
+Detailed Description
+-------------------------------------------------------------------------------
+Verify that the return air damper operation follows the guideline 36 recommendations for supply air temperature setpoint operations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.2.3 in ASHRAE Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * output_coil_heating: AHU heating coil heat transfer rate
+   * output_coil_cooling: AHU cooling coil heat transfer rate
+   * position_damper_air_return_max: Maximum return air damper position
+   * position_damper_air_return: Return air damper position
+   * position_damper_relief: Relief air damper position
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

@@ -1,0 +1,26 @@
+ExteriorLightingControlDaylightOff
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Exterior lighting control occupancy sensing reduction
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * flag_sun_up: Sun risen flag
+   * value_daylight: Measured daylight level
+   * value_daylight_setpoint: Daylight setpoint
+   * power_light_total: Total lighting power
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * The algorithm verifies that the exterior lighting is off when the sun has risen, or when there is a sufficient amount of daylight. If the exterior lighting system is not off during these situation, the verification fails, otherwise it passes.
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

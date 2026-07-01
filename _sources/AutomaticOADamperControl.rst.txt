@@ -1,0 +1,30 @@
+AutomaticOADamperControl
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Hvac system shall be turned on and off everyday
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.4.3.4.2 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * number_occupants: Number of occupants
+   * flow_volumetric_air_outdoor: Outdoor air volume flow
+   * flow_volumetric_air_exhaust: Exhaust air volume flow
+   * status_economizer: Economizer status
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if number_occupants = 0 and flow_volumetric_air_exhaust + flow_volumetric_air_outdoor > 0 and status_economizer = 0, then false else pass
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

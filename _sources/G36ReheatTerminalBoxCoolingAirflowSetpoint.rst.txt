@@ -1,0 +1,70 @@
+G36ReheatTerminalBoxCoolingAirflowSetpoint
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Terminal box with reheat when the zone state is cooling following the guideline 36 recommendations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.6.5.1 in ASHRAE Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * mode_operation: System operation mode
+   * state_zone: Zone state (heating, cooling, or deadband)
+   * flow_volumetric_air_cool_max: Maximum cooling airflow setpoint
+   * flow_volumetric_air_setpoint_min: Minimum airflow setpoint during occupied mode
+   * flow_volumetric_air_setpoint: Airflow setpoint
+   * command_coil_heat: Heating coil command
+   * temperature_air_discharge: Discharge air temperature
+   * temperature_air_discharge_setpoint_min: Minimum discharge air temperature setpoint
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if temperature_air_discharge > temperature_air_discharge_setpoint_min and command_coil_heat > 0
+
+   *     fail
+
+   * else
+
+   *    switch mode_operation
+
+   *    case 'occupied'
+
+   *        cooling_maximum = flow_volumetric_air_cool_max
+
+   *        minimum = v_min
+
+   *    case 'cooldown', 'setup'
+
+   *        cooling_maximum = flow_volumetric_air_cool_max
+
+   *        minimum = 0
+
+   *    case 'warmup', 'setback', 'unoccupied'
+
+   *        cooling_maximum = 0
+
+   *        minimum = 0
+
+   *    
+
+   *    if minimum <= flow_volumetric_air_setpoint <= cooling_maximum
+
+   *        pass
+
+   *    else
+
+   *        fail
+
+   * end
+

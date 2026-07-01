@@ -1,0 +1,25 @@
+MZSystemOccupiedStandbyVentilationZoneControl
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Multizone system zone standby model ventilation control
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * flag_zone_standby: Zone in standby mode flag
+   * flow_volumetric_air_outdoor_system_setpoint: System outdoor air volume flow setpoint
+   * flow_volumetric_air_outdoor_zone_req: Zone required outdoor air volume flow
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * If the targted zone is in standby mode and if the difference between the outdoor air setpoint and the last reported outdoor air setpoint when the zone was not in standby mode is greater than the outdoor air required for the zone the verification passes, it otherwise fails.
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

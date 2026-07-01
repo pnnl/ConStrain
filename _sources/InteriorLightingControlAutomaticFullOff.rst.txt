@@ -1,0 +1,25 @@
+InteriorLightingControlAutomaticFullOff
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Interior lighting control automatic full off
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * number_occupants: Number of occupants
+   * power_light_total: Total lighting power
+   * area_lit: Lit floor area
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * The algorithm verifies that the device/system doesn't serves more than 5,000 ft2 and that if it doesn't, if occupants are not present for at least 20 minutes, the lighting power of the device/system should be less or equal to 0.02 W/ft2, otherwise, the verification fails.
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

@@ -1,0 +1,27 @@
+ZoneHeatingResetDepth
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Heating systems shall be equipped with controls capable of and configured to automatically restart and temporarily operate the system as required to maintain zone temperatures above an adjustable heating set point at least 10°f below (will be 60°f) the occupied heating set point. (case study)
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.4.3.3.2 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * temperature_air_zone_heat_setpoint: Zone heating temperature setpoint
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if max(temperature_air_zone_heat_setpoint) - min(temperature_air_zone_heat_setpoint) >= 10F, then pass
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

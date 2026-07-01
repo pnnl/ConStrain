@@ -1,0 +1,43 @@
+ChilledWaterPlantSizingWholePlant
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+
+
+Index Description
+-------------------------------------------------------------------------------
+   * N/A
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * load_plant_water_chilled: Chilled water plant load
+   * temperature_air_outdoor: Outdoor air temperature
+   * capacity_nominal_plant_water_chilled: Nominal capacity of the chilled water plant
+   * temperature_drybulb_day_design_cooling: Cooling design day drybulb temperature
+   * factor_oversizing: Oversizing factor
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if temperature_drybulb_day_design_cooling is in dataset
+
+   *     if peak_load >= capacity_nominal_plant_water_chilled / factor_oversizing
+
+   *         return True
+
+   *     else
+
+   *         return False
+
+   * else
+
+   *     return 'Untested'
+

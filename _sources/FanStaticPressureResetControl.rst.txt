@@ -1,0 +1,28 @@
+FanStaticPressureResetControl
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+The set point is reset lower until one zone damper is nearly wide open
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.5.3.2.3 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * pressure_static_setpoint: Static pressure setpoint
+   * position_damper_vav: VAV damper position
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if position_damper_vav(n) (n=1,2,...,N) < 0.9 and pressure_static_setpoint(t) > pressure_static_setpoint(t-1), then fail else pass
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

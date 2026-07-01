@@ -1,0 +1,37 @@
+ERVTemperatureControl
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Tspr tool software development
+
+Index Description
+-------------------------------------------------------------------------------
+   * None
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * flow_volumetric_air_outdoor_setpoint_min: Minimum outdoor air volume flow
+   * flow_volumetric_air_outdoor: Outdoor air volume flow
+   * flow_volumetric_air_heatexchanger_nom: Heat exchanger nominal volume flow
+   * effectiveness_heatexchanger_heat: Heat exchanger heating effectiveness at nominal flow
+   * effectiveness_heatexchanger_heat_75: Heat exchanger heating effectiveness at 75% flow
+   * effectiveness_heatexchanger_cool: Heat exchanger cooling effectiveness at nominal flow
+   * effectiveness_heatexchanger_cool_75: Heat exchanger cooling effectiveness at 75% flow
+   * temperature_air_outdoor: Outdoor air temperature
+   * temperature_air_supply_setpoint: Supply air temperature
+   * temperature_air_supply: Supply air temperature setpoint
+   * temperature_air_zone: Zone air temperature
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * Check that the ERV is bypassed during economizer operation; During non-economizer operation, if the outdoor air flow rate, 1) if t_sa > t_sa_sp the ERV is not operating correctly if t_oa < t_z and the ERV is running, t_oa > t_z and the ERV is NOT running and the operating sensible efficiency of the ERV is NOT close to the operating design value, 2) if t_sa < t_sa_sp the ERV is NOT running and the operating sensible efficiency of the ERV is NOT close to the operating design value
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

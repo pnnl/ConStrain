@@ -1,0 +1,61 @@
+G36MinOAwoEconomizer
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+G36 minimum outdoor air control when economizer is in lockout
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16 in Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * temperature_air_outdoor: Outdoor air temperature
+   * temperature_air_economizer_limit: Economizer lockout temperature limit
+   * position_damper_air_outdoor: Outdoor air damper position
+   * position_damper_air_return: Return air damper position
+   * flow_volumetric_air_outdoor: Outdoor air volume flow
+   * flow_volumetric_air_outdoor_setpoint_min: Minimum outdoor air volume flow setpoint
+   * mode_operation: System operation mode
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_operation == 'occupied':
+
+   *   if flow_volumetric_air_outdoor < flow_volumetric_air_outdoor_setpoint_min (continuously (e.g. fall below the sp for a consecutive 1 hr)):
+
+   *     if position_damper_air_outdoor == 100 and position_damper_air_return == 0:
+
+   *       pass
+
+   *     else:
+
+   *       fail
+
+   *   elif flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min (continuously):
+
+   *     if position_damper_air_outdoor == 0 and position_damper_air_return == 100:
+
+   *       pass
+
+   *     else:
+
+   *       fail
+
+   *   else:
+
+   *     pass (essentially untested yet)
+
+   * else: 
+
+   *   untested
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

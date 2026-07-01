@@ -1,0 +1,29 @@
+GuestRoomControlTemp
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Verify whether there is guest room temperature control during operation hours
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.4.3.3.5 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * temperature_air_zone_heat_setpoint: Zone heating temperature setpoint
+   * temperature_air_zone_cool_setpoint: Zone cooling temperature setpoint
+   * schedule_occupancy: Occupancy schedule
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * Check the two different temperature control logics when the room is/isn't rented out
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

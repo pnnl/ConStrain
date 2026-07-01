@@ -1,0 +1,30 @@
+DemandControlVentilation
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Demand control ventilation verification for high-occupancy areas
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.4.3.8 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * flow_volumetric_air_outdoor: Outdoor air volume flow
+   * status_ahu: HVAC system operation status
+   * status_economizer: Economizer status
+   * number_occupants: Number of occupants
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * i) If flow_volumetric_air_outdoor is constant over time, NO DCV presents. ii) If flow_volumetric_air_outdoor has two clusters, DCV with hbinary control presents. iii) flow_volumetric_air_outdoor is linearly correlated to status_ahu, DCV with occupant-counting based control presents
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

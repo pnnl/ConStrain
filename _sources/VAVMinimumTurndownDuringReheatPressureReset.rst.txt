@@ -1,0 +1,59 @@
+VAVMinimumTurndownDuringReheatPressureReset
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+When a vav box is in reheat mode, the ratio of vav airflow rate to vav max airflow rate must not be greater than the min design turndown ratio and the pressure setpoint must remain the same
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.5.2.1 ASHRAE 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * flag_coil_reheat: VAV box reheat coil operation status
+   * flow_volumetric_air_vav: VAV airflow rate
+   * flow_volumetric_air_max: VAV maximum airflow rate
+   * ratio_turndown_min: Minimum VAV turndown ratio
+   * pressure_static_setpoint: Duct static pressure setpoint
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if flag_coil_reheat:
+
+   *   if flow_volumetric_air_max == 0:
+
+   *      Untested
+
+   *   if flow_volumetric_air_max > 0.0 and flow_volumetric_air_vav / flow_volumetric_air_max > ratio_turndown_min:
+
+   *     if pressure_static_setpoint_prev is None:
+
+   *         Untested
+
+   *     elif abs(pressure_static_setpoint - pressure_static_setpoint_prev) > 0:
+
+   *         Untested
+
+   *     else:
+
+   *         fail
+
+   *   else:
+
+   *      pass
+
+   * else: 
+
+   *     Untested
+
+   * end
+

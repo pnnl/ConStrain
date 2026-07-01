@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quickstart Guide &mdash; ConStrain 0.8.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=486e5634"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Verifications" href="Verifications.html" />
+    <link rel="prev" title="Statement of Need" href="Statement%20of%20Need.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B87333" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ConStrain
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Statement%20of%20Need.html">Statement of Need</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-who-how">What? Who? How?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-constrain">Installing <strong>ConStrain</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-verifications-using-constrain">Running Verifications using <strong>ConStrain</strong></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-constrain-as-a-python-library">Using <strong>ConStrain</strong> as a Python Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-constrain-s-workflows">Using <strong>ConStrain</strong>’s Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interpreting-results">Interpreting Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-constrain-s-graphical-user-interface-gui">Using <strong>ConStrain</strong>’s Graphical User Interface (GUI)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Verifications.html">Verifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Expand%20Exisiting%20Verifications.html">Expand Exisiting Verifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Code%20Documentation.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Acknowledgment.html">Acknowledgement</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B87333" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ConStrain</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quickstart Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Quickstart Guide.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quickstart-guide">
+<h1>Quickstart Guide<a class="headerlink" href="#quickstart-guide" title="Link to this heading"></a></h1>
+<p>This guide provides a quick overview of how to get started with <strong>ConStrain</strong>. Verifications of building system control related timeseries using <strong>ConStrain</strong> can either be done by using <strong>ConStrain</strong> as a Python library or by using a <strong>ConStrain</strong> workflow.</p>
+<section id="what-who-how">
+<h2>What? Who? How?<a class="headerlink" href="#what-who-how" title="Link to this heading"></a></h2>
+<p><strong>ConStrain</strong> is a data-driven knowledge-integrated framework that automatically verifies that controls function as intended. As such, <strong>ConStrain</strong> might be of interest to a wide audience: from commissioning agents, to building operators, building energy modeling software users and developers and more.</p>
+<p>The first step towards using the tool is to gather timeseries data that can be used to verify a specific sequence of operation or the correct behavior of an equipment. <strong>ConStrain</strong>’s <a class="reference external" href="https://github.com/pnnl/ConStrain/blob/develop/constrain/schema/library.json">library</a> provide a list of the different verifications that can be performed, not that they can it can be expanded see documentation section on that topic. For each, it provides some general description and references, and also provides a list of the data points needed to carry out verifications. For example, the ASHRAE Guideline 36 verification named <cite>G36ReheatTerminalBoxDeadbandAirflowSetpoint</cite> aims to very that terminal boxes with reheat when the zone state is deadband following the Guideline 36 recommendations as described in Section 5.6.5.2 in ASHRAE Guideline 36 2021. For this verification to be carried out, a user would have to gather timeseries (or static parameter values when applicable) for the following datapoints: system operation mode, zone state, minimum airflow setpoint during occupied mode, airflow setpoint, heating coil command, discharge air temperature, minimum discharge air temperature setpoint. Note that the timeseries can come from any sources: from a building management system or from simulation. When completed, one is ready to use ConStrain. Note that if the data needs to be pre-processed, <strong>ConStrain</strong>’s pre-processing <a class="reference external" href="https://pnnl.github.io/ConStrain/Code%20Documentation.html#data-processing-py">API</a> could help.</p>
+</section>
+<section id="installing-constrain">
+<h2>Installing <strong>ConStrain</strong><a class="headerlink" href="#installing-constrain" title="Link to this heading"></a></h2>
+<p><strong>ConStrain</strong> can be installed from PyPI by running the following command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>constrain
+</pre></div>
+</div>
+</section>
+<section id="running-verifications-using-constrain">
+<h2>Running Verifications using <strong>ConStrain</strong><a class="headerlink" href="#running-verifications-using-constrain" title="Link to this heading"></a></h2>
+<p><strong>ConStrain</strong> relies on verification case files to perform verifications. These are JSON files that contain all the necessary information about data points, reference to verification logics, and simulation parameters when applicable. A verification case file can be built as follows:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Identify if the desired verification is already part of the default library. <strong>ConStrain</strong>’s default verifications are documented <a class="reference internal" href="Verifications.html"><span class="doc">here</span></a>. If not, consider expanding the default verifications, help is provided <a class="reference internal" href="Expand%20Exisiting%20Verifications.html"><span class="doc">here</span></a>.</p></li>
+<li><p>Create a JSON file that contains all the information needed by ConStrain to run the verification as detailed below or as defined in this <a class="reference external" href="https://github.com/pnnl/ConStrain/blob/develop/constrain/schema/verification_cases.schema.json">schema</a>.</p></li>
+<li><p>Run the verification either using <strong>ConStrain</strong> as a <a class="reference internal" href="#lib"><span class="std std-ref">library</span></a> or using a <strong>ConStrain</strong> <a class="reference internal" href="#wf"><span class="std std-ref">workflow</span></a>.</p></li>
+</ol>
+</div></blockquote>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;no&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;run_simulation&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;simulation_IO&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="nt">&quot;idf&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;idd&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;weather&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./demo/G36_demo/data/G36_Modelica_Jan.csv&quot;</span><span class="p">,</span>
+<span class="w">              </span><span class="nt">&quot;ep_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;expected_result&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;pass&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;datapoints_source&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;dev_settings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;heating_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heating_output&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;cooling_output&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cooling_output&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;ra_p&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ra_p&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;max_ra_p&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;max_ra_p&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;oa_p&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;oa_p&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;max_oa_p&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;max_oa_p&quot;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;verification_class&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;G36ReturnAirDamperPositionForReliefDamperOrFan&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;no&quot;</span></code>: A verification case JSON file can contain multiple cases, this corresponds to the ID of a case</p></li>
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;run_simulation&quot;</span></code>: Is a flag (<code class="code highlight json JSON docutils literal highlight-JSON"><span class="kc">true</span></code> or <code class="code highlight json JSON docutils literal highlight-JSON"><span class="kc">false</span></code>) that indicates if an EnergyPlus simulation should be performed</p></li>
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;simulation_IO&quot;</span></code>: Is a dictionary that contains information about what reference files should be used for the simulation if a simulation is not required the <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;output&quot;</span></code> is still required, it corresponds to the file that <strong>ConStrain</strong> will use to run verifications</p></li>
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;expected_result&quot;</span></code>: Expected result from the verification, either <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;pass&quot;</span></code> or <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;fail&quot;</span></code></p></li>
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;verification_class&quot;</span></code>: Name of the verification from the library to carry out</p></li>
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;datapoints_source&quot;</span></code>: Dictionary that contains information on the data points used for the verification; They can be of different types: <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;parameters&quot;</span></code> (constant values), <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;dev_settings&quot;</span></code> (mapping of the expected datapoint for the verification to column headers in the data), or <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;idf_output_variables&quot;</span></code> (for EnergyPlus-based simulations); The latter should be defined also as a dictionary where each variable is expressed through a <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;subject&quot;</span></code> (EnergyPlus output variable name), <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;variable&quot;</span></code> (EnergyPlus output variable type), and <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;frequency&quot;</span></code> (EnergyPlus output variable reporting frequency), see an example below</p></li>
+</ul>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;idf_output_variables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;temperature_air_supply&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;VAV_1 Supply Equipment Outlet Node&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;variable&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;System Node Setpoint Temperature&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;frequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;detailed&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="using-constrain-as-a-python-library">
+<span id="lib"></span><h2>Using <strong>ConStrain</strong> as a Python Library<a class="headerlink" href="#using-constrain-as-a-python-library" title="Link to this heading"></a></h2>
+<p>First, let’s import the package.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">constrain</span> <span class="k">as</span> <span class="nn">cs</span>
+</pre></div>
+</div>
+<p><strong>ConStrain</strong> includes an <code class="code highlight python docutils literal highlight-python"><span class="n">Examples</span></code> module which contains sample data and examples of verifications. Information about each example can be obtained by running the following command. A dictionary is returned which shows information about each example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load examples</span>
+<span class="n">examples</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">Examples</span><span class="p">()</span>
+
+<span class="c1"># Get the information about the examples</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">examples</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Let’s proceed with <code class="code highlight python docutils literal highlight-python"><span class="n">example_1</span></code> which according to its description aims to:</p>
+<blockquote>
+<div><p><em>Perform verification of ASHRAE Guideline 36-2021 sequence of operation on a dataset generated through the simulation of an AHU in Modelica. The verifications include the following: supply temperature reset, outdoor air damper psition for relief damper/fan, and return air damper psition for relief damper/fan</em>.</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get the data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">examples</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s2">&quot;example_1&quot;</span><span class="p">)</span>
+
+<span class="c1"># Loading the verification cases</span>
+<span class="n">cases</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">VerificationCase</span><span class="p">(</span><span class="n">json_case_path</span><span class="o">=</span><span class="n">examples</span><span class="o">.</span><span class="n">verifications</span><span class="p">(</span><span class="s2">&quot;example_1&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Here, <code class="code highlight python docutils literal highlight-python"><span class="n">data</span></code> is a <code class="code highlight python docutils literal highlight-python"><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span></code> which contains the timeseries for the verification, and <code class="code highlight python docutils literal highlight-python"><span class="n">cases</span></code> is a <strong>ConStrain</strong> <code class="xref py py-meth docutils literal notranslate"><span class="pre">api.verification_case.VerificationCase()</span></code> that contains all the information needed to perform a verification. To see the case information in a readable format (dictionary), run <code class="code highlight python docutils literal highlight-python"><span class="n">cases</span><span class="o">.</span><span class="n">case_suite</span></code>. Outside of examples, data for verifications can be directly loaded as <code class="code highlight python docutils literal highlight-python"><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span></code> and pre-processed using the functions in <code class="xref py py-meth docutils literal notranslate"><span class="pre">api.data_processing()</span></code> of <strong>ConStrain</strong>.</p>
+<p>Next, we want to validate <code class="code highlight python docutils literal highlight-python"><span class="n">cases</span></code> by calling <code class="xref py py-meth docutils literal notranslate"><span class="pre">api.verification_case.VerificationCase.validate()</span></code> to make sure that the verification structure is correct.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cases</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Then, we’ll want to instantiate a verification and configure it, and run the verifications. Note that if you are using <cite>num_thread &gt; 1</cite> you will need to wrap your code under the following statement <cite>if __name__ == “__main__”:</cite>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">verif</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">Verification</span><span class="p">(</span><span class="n">verifications</span><span class="o">=</span><span class="n">cases</span><span class="p">)</span>
+<span class="n">verif</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">output_path</span> <span class="o">=</span> <span class="s2">&quot;./&quot;</span><span class="p">,</span>
+                <span class="n">lib_items_path</span> <span class="o">=</span> <span class="n">examples</span><span class="o">.</span><span class="n">library</span><span class="p">(),</span>
+                <span class="n">plot_option</span> <span class="o">=</span> <span class="s2">&quot;all-expand&quot;</span><span class="p">,</span>
+                <span class="n">fig_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                <span class="n">num_threads</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="n">preprocessed_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">)</span>
+<span class="n">verif</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Finally, we can create summary report. A summary report for all verification will be created which will show the status of each verification</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reporting</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">Reporting</span><span class="p">(</span><span class="n">verification_json</span><span class="o">=</span> <span class="s2">&quot;./*_md.json&quot;</span><span class="p">,</span>
+                            <span class="n">result_md_name</span> <span class="o">=</span> <span class="s2">&quot;report_summary.md&quot;</span><span class="p">,</span>
+                            <span class="n">report_format</span> <span class="o">=</span> <span class="s2">&quot;markdown&quot;</span><span class="p">)</span>
+
+<span class="n">reporting</span><span class="o">.</span><span class="n">report_multiple_cases</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="using-constrain-s-workflows">
+<span id="wf"></span><h2>Using <strong>ConStrain</strong>’s Workflows<a class="headerlink" href="#using-constrain-s-workflows" title="Link to this heading"></a></h2>
+<p>A workflow is a group of instructions that define an end-to-end verification, from data parsing and manipulation to running the verfication(s) and reporting the results. Workflows are defined using the JSON file format so once they have been established they can be re-used easily without making significant modifications. Workflows rely on <strong>ConStrain</strong>’s APIs.</p>
+<p>Here is a valid <a class="reference external" href="https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/G36_demo_workflow.json">workflow</a>. Where:</p>
+<ul class="simple">
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;workflow_name&quot;</span></code>: Name of the workflow</p></li>
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;meta&quot;</span></code>: Metadata about the workflow</p></li>
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;imports&quot;</span></code>: Python package import needed to run the workflow</p></li>
+<li><p><code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;states&quot;</span></code>: Sequential steps to follow to perform the verification; <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;states&quot;</span></code> can either be <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;MethodCall&quot;</span></code> which represent a method call to one of <strong>ConStrain</strong>’s APIs or a <code class="code highlight json JSON docutils literal highlight-JSON"><span class="s2">&quot;Choice&quot;</span></code> which can be used to help define alternative steps in a workflow based on the result (referred to as payloads in a workflow).</p></li>
+</ul>
+<p>Running a workflow can be done as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">constrain</span> <span class="k">as</span> <span class="nn">cs</span>
+<span class="kn">import</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># 1 - Get workflow file</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/G36_demo_workflow.json&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;G36_demo_workflow.json&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># 2 - Get the timeseries</span>
+<span class="n">url_data</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/data/G36_demo.csv&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_data</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./G36_demo.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># 3 - Get the verification cases</span>
+<span class="n">url_verification_cases</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/demo/G36_demo/data/G36_library_verification_cases.json&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_verification_cases</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./G36_library_verification_cases.json&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># 3 - Get the ConStrain library</span>
+<span class="n">url_lib</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/pnnl/ConStrain/refs/heads/develop/constrain/schema/library.json&quot;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_lib</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;./library.json&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># 4 - Change data path</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">][</span><span class="s2">&quot;load data&quot;</span><span class="p">][</span><span class="s2">&quot;Parameters&quot;</span><span class="p">][</span><span class="s2">&quot;data_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;./G36_demo.csv&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">][</span><span class="s2">&quot;load verification cases&quot;</span><span class="p">][</span><span class="s2">&quot;Parameters&quot;</span><span class="p">][</span><span class="s2">&quot;json_case_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="s2">&quot;./G36_library_verification_cases.json&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">][</span><span class="s2">&quot;configure verification runner&quot;</span><span class="p">][</span><span class="s2">&quot;Parameters&quot;</span><span class="p">][</span><span class="s2">&quot;output_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./&quot;</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">][</span><span class="s2">&quot;configure verification runner&quot;</span><span class="p">][</span><span class="s2">&quot;Parameters&quot;</span><span class="p">][</span><span class="s2">&quot;lib_items_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;./library.json&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">][</span><span class="s2">&quot;check results&quot;</span><span class="p">][</span><span class="s2">&quot;Parameters&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./*_md.json&quot;</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">&quot;states&quot;</span><span class="p">][</span><span class="s2">&quot;reporting_object_instantiation&quot;</span><span class="p">][</span><span class="s2">&quot;Parameters&quot;</span><span class="p">][</span>
+    <span class="s2">&quot;verification_json&quot;</span>
+<span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;./*_md.json&quot;</span>
+
+<span class="c1"># 3 - Run workflow</span>
+<span class="n">workflow</span> <span class="o">=</span> <span class="n">cs</span><span class="o">.</span><span class="n">Workflow</span><span class="p">(</span><span class="n">workflow</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">workflow</span><span class="o">.</span><span class="n">run_workflow</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="interpreting-results">
+<h2>Interpreting Results<a class="headerlink" href="#interpreting-results" title="Link to this heading"></a></h2>
+<p>After running the verifications defined above, whether it is using <strong>ConStrain</strong> as a library or using its Workflow capability, a <cite>report_summary.md</cite> file will be generated. The files contains a table that provide high-level information about the verifications that have been performed, including: case index, name of the data set, type of verification, number of samples analyzed, number of successful verifications, number of failed verifications, number of untested samples, and a general pass/fail assessement for the verification.</p>
+<p>The markdown file contains hyperlinks so users can open a more detailed report for each verification. Detailed reports include three main sections: 1) Pass/Fail check results, 2) Result visualization, and 3) Verification case definition. The former is a repeat of what is included in the main summary report previously described. The Result visualization section shows, depending on the plotting option documented <a class="reference external" href="https://pnnl.github.io/ConStrain/Code%20Documentation.html#api.verification.Verification.configure">here</a>, one or multiple charts depicting for a specific time period or a day, the values of the different variables used by the verification and the results of the verification. The Pass / Fail flag plot shows passing verification as <cite>1</cite> and failing verifications as <cite>0</cite>. The last section provide a summary of settings used to perform the verification.</p>
+</section>
+<section id="using-constrain-s-graphical-user-interface-gui">
+<h2>Using <strong>ConStrain</strong>’s Graphical User Interface (GUI)<a class="headerlink" href="#using-constrain-s-graphical-user-interface-gui" title="Link to this heading"></a></h2>
+<p>Workflow can be pretty complex and difficult to fully visualise from JSON files. <strong>ConStrain</strong> includes a GUI to help user create, edit, and picture workflows. If <strong>ConStrain</strong> has been installed, the GUI can be run by just running <code class="code highlight bash docutils literal highlight-bash">constrain</code> in a command prompt or terminal. It is documented in this <a class="reference external" href="https://github.com/pnnl/ConStrain/blob/develop/constrain/app/README.md">file</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Statement%20of%20Need.html" class="btn btn-neutral float-left" title="Statement of Need" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Verifications.html" class="btn btn-neutral float-right" title="Verifications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pacific Northwest National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

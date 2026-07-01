@@ -1,0 +1,42 @@
+G36ReliefDamperStatus
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+G36 relief dampers shall be enabled when the associated supply fan is proven on, and disabled otherwise.
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.8.1 in Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * position_damper_relief: Relief damper position (0-100)
+   * status_fan_supply: Supply fan status
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if position_damper_relief > 0 and status_fan_supply == 'on':
+
+   *   pass
+
+   * elif status_fan_supply == 'off' and position_damper_relief == 0:
+
+   *   pass
+
+   * else: 
+
+   *   fail
+
+   * if not ['on', 'off'] in supply_fan_status:
+
+   *   untested
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

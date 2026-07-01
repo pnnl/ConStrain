@@ -1,0 +1,84 @@
+G36ReturnAirDamperPositionForReliefDamperOrFan
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Verify that the return air damper operation follows guideline 36 recommendations for systems with relief damper/fan
+
+Detailed Description
+-------------------------------------------------------------------------------
+Verify that the return air damper operation follows the guideline 36 recommendations for supply air temperature setpoint operations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.2.3 in ASHRAE Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * output_coil_heating: Heating output
+   * output_coil_cooling: Cooling output
+   * position_damper_air_return_max: Maximum return air damper position
+   * position_damper_air_return: Return air damper position
+   * position_damper_air_outdoor: Outdoor air damper position
+   * position_damper_air_outdoor_max: Maximum outdoor air damper position
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if output_coil_heating > 0
+
+   *     if abs(position_damper_air_return - position_damper_air_return_max) < 0
+
+   *         pass
+
+   *     else
+
+   *         fail
+
+   *     end
+
+   * else if output_coil_cooling > 0
+
+   *     if abs(position_damper_air_return) < 0
+
+   *         pass
+
+   *     else
+
+   *         fail
+
+   *     end
+
+   * else if pos_damper_oa < position_damper_air_outdoor_max
+
+   *     if abs(position_damper_air_return - position_damper_air_return_max) < 0
+
+   *         pass
+
+   *     else
+
+   *         fail
+
+   *     end
+
+   * else if abs(pos_damper_oa - position_damper_air_outdoor_max) < 0
+
+   *     if position_damper_air_return < position_damper_air_return_max
+
+   *         pass
+
+   *     else
+
+   *         fail
+
+   *     end
+
+   * end
+

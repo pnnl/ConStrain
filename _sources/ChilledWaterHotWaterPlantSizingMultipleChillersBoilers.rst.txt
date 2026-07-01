@@ -1,0 +1,71 @@
+ChilledWaterHotWaterPlantSizingMultipleChillersBoilers
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+
+
+Index Description
+-------------------------------------------------------------------------------
+   * N/A
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * status_equipment: Equipment status
+   * load_plant_water: Chilled water/Hot water plant load
+   * system_type: System type (Chiller or Boiler)
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * For each timestep i:
+
+   *   If status_equipment[i] > 0: 
+
+   *     duration_equipment[i] = timestep[i] - timestep[i-1]
+
+   *   else: 
+
+   *     duration_equipment[i] = 0
+
+   *   end
+
+   * equipment_load_hours = Sum(duration_equipment)
+
+   * 
+
+   * For each timestep i:
+
+   *   If load_plant_water[i] > 0: 
+
+   *     duration_plant[i] = timestep[i] - timestep[i-1] 
+
+   *   else:
+
+   *     duration_plant[i] = 0
+
+   *   end
+
+   * plant_load_hours = Sum(duration_plant)
+
+   *  
+
+   * operation_ratio = equipment_load_hours / plant_load_hours
+
+   * If operation_ratio >= tolerance
+
+   *   pass
+
+   * else: 
+
+   *   fail
+
+   * end
+

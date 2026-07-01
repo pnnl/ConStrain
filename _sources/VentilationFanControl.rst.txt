@@ -1,0 +1,29 @@
+VentilationFanControl
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Ventilation fan control
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.4.3.4.4 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * number_occupants: Number of occupants
+   * heat_sensible: Zone sensible heat load
+   * power_fan: Fan power
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if heat_sensible = 0 and number_occupants = 0 and power_fan != 0 then fail else pass
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

@@ -1,0 +1,230 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExteriorLightingControlOccupancySensingReduction &mdash; ConStrain 0.8.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=486e5634"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint" href="G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint.html" />
+    <link rel="prev" title="ExteriorLightingControlDaylightOff" href="ExteriorLightingControlDaylightOff.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #B87333" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ConStrain
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Statement%20of%20Need.html">Statement of Need</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart%20Guide.html">Quickstart Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="Verifications.html">Verifications</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="SupplyAirTempReset.html">SupplyAirTempReset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EconomizerHighLimitA.html">EconomizerHighLimitA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EconomizerHighLimitB.html">EconomizerHighLimitB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EconomizerHighLimitC.html">EconomizerHighLimitC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EconomizerHighLimitD.html">EconomizerHighLimitD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="IntegratedEconomizerControl.html">IntegratedEconomizerControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ERVRatio.html">ERVRatio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ZoneTempControl.html">ZoneTempControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HWReset.html">HWReset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CHWReset.html">CHWReset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ZoneHeatSetpointMinimum.html">ZoneHeatSetpointMinimum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ZoneCoolingSetpointMaximum.html">ZoneCoolingSetpointMaximum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ZoneHeatingResetDepth.html">ZoneHeatingResetDepth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ZoneCoolingResetDepth.html">ZoneCoolingResetDepth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="NightCycleOperation.html">NightCycleOperation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ERVTemperatureControl.html">ERVTemperatureControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AutomaticOADamperControl.html">AutomaticOADamperControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FanStaticPressureResetControl.html">FanStaticPressureResetControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HeatRejectionFanVariableFlowControlsCells.html">HeatRejectionFanVariableFlowControlsCells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ServiceWaterHeatingSystemControl.html">ServiceWaterHeatingSystemControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VAVStaticPressureSensorLocation.html">VAVStaticPressureSensorLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VentilationFanControl.html">VentilationFanControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="WLHPLoopHeatRejectionControl.html">WLHPLoopHeatRejectionControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AutomaticShutdown.html">AutomaticShutdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HeatPumpSupplementalHeatLockout.html">HeatPumpSupplementalHeatLockout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HeatRejectionFanVariableFlowControl.html">HeatRejectionFanVariableFlowControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DemandControlVentilation.html">DemandControlVentilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GuestRoomControlTemp.html">GuestRoomControlTemp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GuestRoomControlVent.html">GuestRoomControlVent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36SupplyAirTemperatureSetpoint.html">G36SupplyAirTemperatureSetpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36SimultaneousHeatingCooling.html">G36SimultaneousHeatingCooling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReturnAirDamperPositionForReliefDamperOrFan.html">G36ReturnAirDamperPositionForReliefDamperOrFan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36OutdoorAirDamperPositionForReliefDamperOrFan.html">G36OutdoorAirDamperPositionForReliefDamperOrFan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReturnAirDamperPositionForReturnFanAirflowTracking.html">G36ReturnAirDamperPositionForReturnFanAirflowTracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36OutdoorAirDamperPositionForReturnFanAirflowTracking.html">G36OutdoorAirDamperPositionForReturnFanAirflowTracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReliefAirDamperPositionForReturnFanAirflowTracking.html">G36ReliefAirDamperPositionForReturnFanAirflowTracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure.html">G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure.html">G36OutdoorAirDamperPositionForReturnFanDirectBuildingPressure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36FreezeProtectionStage1.html">G36FreezeProtectionStage1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36FreezeProtectionStage2.html">G36FreezeProtectionStage2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36FreezeProtectionStage3.html">G36FreezeProtectionStage3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36MinOAwEconomizer.html">G36MinOAwEconomizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36MinOAwoEconomizer.html">G36MinOAwoEconomizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36OutputChangeRateLimit.html">G36OutputChangeRateLimit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReliefDamperStatus.html">G36ReliefDamperStatus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36SupplyFanStatus.html">G36SupplyFanStatus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LocalLoopSetPointTracking.html">LocalLoopSetPointTracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LocalLoopUnmetHours.html">LocalLoopUnmetHours</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LocalLoopSaturationDirectActingMax.html">LocalLoopSaturationDirectActingMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LocalLoopSaturationDirectActingMin.html">LocalLoopSaturationDirectActingMin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LocalLoopSaturationReverseActingMax.html">LocalLoopSaturationReverseActingMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LocalLoopSaturationReverseActingMin.html">LocalLoopSaturationReverseActingMin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MZSystemOccupiedStandbyVentilationZoneControl.html">MZSystemOccupiedStandbyVentilationZoneControl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="AppendixGHVACSystemFanOperation.html">AppendixGHVACSystemFanOperation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="InteriorLightingControlAutomaticFullOff.html">InteriorLightingControlAutomaticFullOff</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ExteriorLightingControlDaylightOff.html">ExteriorLightingControlDaylightOff</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ExteriorLightingControlOccupancySensingReduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#brief-description">Brief Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#datapoints-description">Datapoints Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#assertions-description">Assertions Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#type-verification-description">Type Verification Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#assertions-type">Assertions Type</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint.html">G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint.html">G36CoolingOnlyTerminalBoxDeadbandAirflowSetpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint.html">G36CoolingOnlyTerminalBoxHeatingAirflowSetpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36TerminalBoxVAVDamperTracking.html">G36TerminalBoxVAVDamperTracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36TerminalBoxCoolingMinimumAirflow.html">G36TerminalBoxCoolingMinimumAirflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReheatTerminalBoxCoolingAirflowSetpoint.html">G36ReheatTerminalBoxCoolingAirflowSetpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReheatTerminalBoxDeadbandAirflowSetpoint.html">G36ReheatTerminalBoxDeadbandAirflowSetpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReheatTerminalBoxHeatingAirflowSetpoint.html">G36ReheatTerminalBoxHeatingAirflowSetpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReheatTerminalBoxHeatingCoilTracking.html">G36ReheatTerminalBoxHeatingCoilTracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="G36ReheatTerminalBoxHeatingCoilLowerBound.html">G36ReheatTerminalBoxHeatingCoilLowerBound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VAVMinimumTurndownDuringReheat.html">VAVMinimumTurndownDuringReheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VAVMinimumTurndownDuringReheatPressureReset.html">VAVMinimumTurndownDuringReheatPressureReset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="VAVTurndownDuringReheat.html">VAVTurndownDuringReheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ChilledWaterPlantSizingWholePlant.html">ChilledWaterPlantSizingWholePlant</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ChilledWaterHotWaterPlantSizingMultipleChillersBoilers.html">ChilledWaterHotWaterPlantSizingMultipleChillersBoilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading.html">ChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling.html">ChilledWaterHotWaterPlantSizingChillerBoilerShortCycling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="HotWaterPlantSizingWholePlant.html">HotWaterPlantSizingWholePlant</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Expand%20Exisiting%20Verifications.html">Expand Exisiting Verifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Code%20Documentation.html">Code Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="License.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Acknowledgment.html">Acknowledgement</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #B87333" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ConStrain</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="Verifications.html">Verifications</a></li>
+      <li class="breadcrumb-item active">ExteriorLightingControlOccupancySensingReduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ExteriorLightingControlOccupancySensingReduction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="exteriorlightingcontroloccupancysensingreduction">
+<h1>ExteriorLightingControlOccupancySensingReduction<a class="headerlink" href="#exteriorlightingcontroloccupancysensingreduction" title="Link to this heading"></a></h1>
+<section id="brief-description">
+<h2>Brief Description<a class="headerlink" href="#brief-description" title="Link to this heading"></a></h2>
+<p>Exterior lighting control occupancy sensing reduction</p>
+</section>
+<section id="datapoints-description">
+<h2>Datapoints Description<a class="headerlink" href="#datapoints-description" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>number_occupants: Number of occupants</p></li>
+<li><p>power_light_total: Total lighting power</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="assertions-description">
+<h2>Assertions Description<a class="headerlink" href="#assertions-description" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>The algorithm verifies that the exterior lighting is controlled based on occupancy. It fails if the maximum reported total lighting power is greater than 1500 W and if the total mnaximum lighting power is not reduced by half when occupancy has not been detected for 15 mins. Otherwise, it passes.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="type-verification-description">
+<h2>Type Verification Description<a class="headerlink" href="#type-verification-description" title="Link to this heading"></a></h2>
+<p>Procedure-based</p>
+</section>
+<section id="assertions-type">
+<h2>Assertions Type<a class="headerlink" href="#assertions-type" title="Link to this heading"></a></h2>
+<p>Pass</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ExteriorLightingControlDaylightOff.html" class="btn btn-neutral float-left" title="ExteriorLightingControlDaylightOff" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint.html" class="btn btn-neutral float-right" title="G36CoolingOnlyTerminalBoxCoolingAirflowSetpoint" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Pacific Northwest National Laboratory.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

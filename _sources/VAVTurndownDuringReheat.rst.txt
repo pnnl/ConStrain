@@ -1,0 +1,51 @@
+VAVTurndownDuringReheat
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+When a vav box is in reheat mode, the ratio of v_dot_vav to v_dot_vav_max should be higher than when it isn't in reheat mode
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.5.2.1 ASHRAE 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * flag_coil_reheat: VAV box reheat coil operation status
+   * flow_volumetric_air_vav: VAV airflow rate
+   * flow_volumetric_air_max: VAV maximum airflow rate
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if (flag_coil_reheat == False).all():
+
+   *     Untested
+
+   * else: 
+
+   *   ratio_vav = flow_volumetric_air_vav/flow_volumetric_air_max
+
+   *   mean_reheat_ratio = df.loc[self.df[`flag_coil_reheat`], `ratio_vav`].mean()
+
+   *   mean_no_reheat_ratio = df.loc[~self.df[`flag_coil_reheat`], `ratio_vav`].mean()
+
+   *   if mean_reheat_ratio < mean_no_reheat_ratio:
+
+   *     pass
+
+   *   else: 
+
+   *     fail
+
+   *   end
+
+   * end
+

@@ -1,0 +1,86 @@
+G36SupplyAirTemperatureSetpoint
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Supply air temperature operation following the guideline 36 recommendations
+
+Detailed Description
+-------------------------------------------------------------------------------
+Verify that the supply air temperature setpoint of a system follows the guideline 36 recommendations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.2.2 in ASHRAE Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * mode_operation: System operation mode
+   * temperature_air_outdoor: Outdoor air temperature
+   * temperature_air_supply_max: Maximum supply air temperature setpoint based on requests
+   * temperature_air_outdoor_supply_max: Maximum outdoor air temperature for linear SAT reset
+   * temperature_air_outdoor_supply_min: Minimum outdoor air temperature for linear SAT reset
+   * temperature_air_supply_setpoint_cool_min: Minimum cooling supply air temperature setpoint
+   * temperature_air_supply_setpoint_cool_max: Maximum cooling supply air temperature setpoint
+   * temperature_air_supply_setpoint: Supply air temperature setpoint
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if temperature_air_supply_max > temperature_air_supply_setpoint_cool_max
+
+   *     fail
+
+   * end
+
+   * 
+
+   * switch mode_operation
+
+   * case 'cooldown'
+
+   *     t_sa_sp = temperature_air_supply_setpoint_cool_min
+
+   * case 'warmup', 'setback
+
+   *     t_sa_sp = 35 # 95 F
+
+   * case 'occupied', 'setup'
+
+   *     if temperature_air_outdoor <= temperature_air_outdoor_supply_min
+
+   *         t_sa_sp = temperature_air_supply_max
+
+   *     else if temperature_air_outdoor >= temperature_air_outdoor_supply_max
+
+   *         t_sa_sp = temperature_air_supply_setpoint_cool_min
+
+   *     else
+
+   *         t_sa_sp = (temperature_air_outdoor - temperature_air_outdoor_supply_min) * (temperature_air_supply_max - temperature_air_supply_setpoint_cool_min) / (temperature_air_outdoor_supply_min - temperature_air_outdoor_supply_max) + temperature_air_supply_max 
+
+   * # linear interpolation
+
+   *     end
+
+   * end
+
+   * 
+
+   * if abs(t_sa_sp - temperature_air_supply_setpoint) = 0
+
+   *     pass
+
+   * else
+
+   *     fail
+
+   * end
+

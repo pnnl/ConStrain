@@ -1,0 +1,36 @@
+EconomizerHighLimitC
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Fixed enthalpy + fixed dry bulb economizer high limit
+
+Detailed Description
+-------------------------------------------------------------------------------
+N/a
+
+Index Description
+-------------------------------------------------------------------------------
+   * Table 6.5.1.1.3 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * temperature_air_outdoor: Outdoor air temperature
+   * temperature_air_outdoor_threshold: Outdoor air temperature threshold
+   * flow_volumetric_air_outdoor_setpoint_min: Minimum outdoor air volume flow setpoint
+   * flow_volumetric_air_outdoor: Outdoor air volume flow
+   * enthalpy_air_outdoor: Outdoor air enthalpy
+   * enthalpy_air_outdoor_threshold: Outdoor air enthalpy threshold
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * (flow_volumetric_air_outdoor > flow_volumetric_air_outdoor_setpoint_min) AND ((temperature_air_outdoor > temperature_air_outdoor_threshold) OR (enthalpy_air_outdoor > enthalpy_air_outdoor_threshold))
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Fail
+

@@ -1,0 +1,31 @@
+ZoneHeatSetpointMinimum
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Zone heating setpoint reset temperature minimum value check
+
+Detailed Description
+-------------------------------------------------------------------------------
+Heating systems located in climate zones 2-8 shall be equipped with controls that have the capability to automatically restart and temporarily operate the system as required to maintain zone temperatures above a heating setpoint adjustable down to 55°f or lower. (case study)
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.4.3.2.2 in 90.1-2004
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * temperature_air_zone_heat_setpoint: Zone heating temperature setpoint
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if min(temperature_air_zone_heat_setpoint) <= 55°F, then pass
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

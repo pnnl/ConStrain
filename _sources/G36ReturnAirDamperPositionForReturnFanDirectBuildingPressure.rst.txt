@@ -1,0 +1,67 @@
+G36ReturnAirDamperPositionForReturnFanDirectBuildingPressure
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Verify that the return air damper operation follows guideline 36 recommendations for systems with return fan with direct building pressure control
+
+Detailed Description
+-------------------------------------------------------------------------------
+Verify that the return air damper operation follows the guideline 36 recommendations for supply air temperature setpoint operations
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16.2.3 in ASHRAE Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * output_coil_heating: AHU heating coil heat transfer rate
+   * output_coil_cooling: AHU cooling coil heat transfer rate
+   * position_damper_air_return_max: Maximum return air damper position
+   * position_damper_air_return: Return air damper position
+   * position_damper_air_relief: Relief air damper position
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Procedure-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if output_coil_heating > 0
+
+   *     if abs(position_damper_air_return - position_damper_air_return_max) < 0
+
+   *         pass
+
+   *     else
+
+   *         fail
+
+   *     end
+
+   * else if output_coil_cooling > 0
+
+   *     if abs(position_damper_air_return - 0) < 0
+
+   *         pass
+
+   *     else
+
+   *         fail
+
+   *     end
+
+   * else if abs(position_damper_air_return - (1 - position_damper_air_relief) * position_damper_air_return_max) < 0
+
+   *     pass
+
+   * else
+
+   *     fail
+
+   * end
+

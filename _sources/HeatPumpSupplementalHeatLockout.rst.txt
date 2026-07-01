@@ -1,0 +1,32 @@
+HeatPumpSupplementalHeatLockout
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+Supplemental heating coil should be off when the heat pump can meet the load by itself
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.4.3.5 Heat Pump Auxiliary Heat Control and 6.3.2.h Criteria in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * capacity_full_load: Heating Coil Reference Capacity
+   * load_operation: Heating Coil Runtime Fraction
+   * capacity_modifier_temperature: Heating Coil Heating Rate
+   * power_heating_supplemental: Supplemental Heating Rate
+   * capacity_modifier_fraction_flow: Heating Capacity Function of Flow Fraction Curve
+   * load_defrost: Defrost load on the heating coil
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * If capacity_full_load * capacity_modifier_temperature >= load_operation and power_heating_supplemental == 0 then pass else fail
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

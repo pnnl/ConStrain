@@ -1,0 +1,30 @@
+HeatRejectionFanVariableFlowControl
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+The cooling tower fan power is 30% of the design value at 50% flow
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 6.5.5.2.1 in 90.1-2016
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * power_fan_coolingtower: Cooling tower fan power
+   * power_fan_coolingtower_design: Cooling tower design fan power
+   * ratio_flow_coolingtower: Cooling tower airflow ratio
+   * flow_volumetric_air_coolingtower_design: Cooling tower design airflow
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * Verify that at 5% flow, the cooling tower fan power is 30% of the design value. Since simulation results might not include that exact point, we use a regression based approach to determining if the code requirement is met
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+

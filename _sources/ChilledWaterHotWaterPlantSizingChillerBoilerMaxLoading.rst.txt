@@ -1,0 +1,40 @@
+ChilledWaterHotWaterPlantSizingChillerBoilerMaxLoading
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+
+
+Index Description
+-------------------------------------------------------------------------------
+   * N/A
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * ratio_loading: loading ratio
+   * ratio_loading_max_min: Minimum acceptable maximum loading ratio
+   * ratio_loading_average_min: Minimum acceptable average loading ratio
+   * system_type: System type (Chiller or Boiler)
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * For each timestep i:
+
+   *   if ratio_loading_max > ratio_loading_max_min and ratio_loading_average > ratio_loading_average_min
+
+   *     pass
+
+   *   else
+
+   *     fail
+
+   *   end
+

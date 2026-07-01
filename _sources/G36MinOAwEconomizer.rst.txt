@@ -1,0 +1,45 @@
+G36MinOAwEconomizer
+====================================================================
+
+Brief Description
+-------------------------------------------------------------------------------
+G36 minimum outdoor air control when economizer is active
+
+Index Description
+-------------------------------------------------------------------------------
+   * Section 5.16 in Guideline 36-2021
+
+Datapoints Description
+-------------------------------------------------------------------------------
+   * temperature_air_outdoor: Outdoor air temperature
+   * temperature_air_economizer_limit: Economizer lockout temperature limit
+   * position_damper_air_outdoor: Outdoor air damper position
+   * position_damper_air_outdoor_min: Minimum outdoor air damper position
+   * flow_volumetric_air_outdoor_setpoint_min: Minimum outdoor air volume flow setpoint
+   * flow_volumetric_air_outdoor: Outdoor air volume flow
+   * mode_operation: System operation mode
+
+Assertions Description
+-------------------------------------------------------------------------------
+   * if not economizer_lockout(temperature_air_outdoor, temperature_air_economizer_limit) and mode_operation == 'occupied':
+
+   *   if position_damper_air_outdoor >= position_damper_air_outdoor_min and flow_volumetric_air_outdoor >= flow_volumetric_air_outdoor_setpoint_min:
+
+   *     pass
+
+   *   else:
+
+   *     fail
+
+   * else: 
+
+   *   untested
+
+Type Verification Description
+-------------------------------------------------------------------------------
+Rule-based
+
+Assertions Type
+-------------------------------------------------------------------------------
+Pass
+
